@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS — Institutional Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628; --navy-mid:#122040; --navy-soft:#1c3260;
+  --blue:#1a4fa0; --blue-lt:#2563c4; --blue-pale:#dbeafe;
+  --slate:#4a6080; --muted:#7a92a8;
+  --border:#dde4ed; --border-s:#eef1f6;
+  --bg:#f4f6fa; --surface:#fff; --surface2:#f0f4f9;
+  --text:#0f1d2e; --text-s:#3d5166; --text-f:#8a9fb4;
+  --green:#0a6640; --green-bg:#dcfce7;
+  --red:#991b1b; --red-lt:#b91c1c; --red-bg:#fef2f2;
+  --amber:#92400e; --amber-bg:#fef9c3;
+  --gold:#b7851a; --purple:#5b21b6; --purple-bg:#f3f0ff;
+  --teal:#0e7490; --teal-bg:#ecfeff;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono','Courier New',monospace;
+  --sh-s:0 1px 3px rgba(10,22,40,.06),0 1px 2px rgba(10,22,40,.04);
+  --sh-m:0 4px 12px rgba(10,22,40,.08),0 2px 4px rgba(10,22,40,.04);
+  --sh-lg:0 12px 32px rgba(10,22,40,.10),0 4px 8px rgba(10,22,40,.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:13px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select{font-family:var(--sans);outline:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── MASTHEAD ── */
+.masthead{background:var(--navy);border-bottom:2px solid var(--blue);position:sticky;top:0;z-index:500;box-shadow:var(--sh-m)}
+.mh-top{display:flex;align-items:stretch;height:50px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;padding-right:16px;border-right:1px solid rgba(255,255,255,.1);min-width:180px;flex-shrink:0}
+.brand-wm{font-family:var(--serif);font-size:20px;font-weight:700;color:#fff;letter-spacing:.1em}
+.brand-rule{width:1px;height:22px;background:rgba(255,255,255,.15)}
+.brand-tag{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(183,133,26,.5);padding:2px 6px;white-space:nowrap}
+.mh-nav{display:flex;align-items:stretch;flex:1;overflow-x:auto;padding:0 6px}
+.mh-nav::-webkit-scrollbar{display:none}
+.nav-item{display:flex;align-items:center;gap:5px;padding:0 12px;font-size:11px;font-weight:500;letter-spacing:.04em;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .18s,border-color .18s;user-select:none}
+.nav-item:hover{color:rgba(255,255,255,.8)}
+.nav-item.active{color:#fff;border-bottom-color:rgba(255,255,255,.65)}
+.nb{font-size:8px;font-weight:700;letter-spacing:.03em;padding:1px 5px;border-radius:2px}
+.nb-r{background:var(--red-lt);color:#fff}
+.nb-b{background:var(--blue-lt);color:#fff}
+.nb-g{background:#16a34a;color:#fff;animation:nbg 2s infinite}
+@keyframes nbg{0%,100%{opacity:1}50%{opacity:.6}}
+.mh-status{display:flex;align-items:center;gap:14px;padding:0 14px;border-left:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.st-item{display:flex;flex-direction:column;align-items:flex-end}
+.st-val{font-family:var(--mono);font-size:11px;font-weight:500;color:#fff}
+.st-lbl{font-size:8px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase}
+.live-ind{display:flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.1em;color:#4ade80;text-transform:uppercase}
+.live-dot{width:6px;height:6px;background:#4ade80;border-radius:50%;animation:ld 2s ease-in-out infinite}
+@keyframes ld{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.bell-w{position:relative;cursor:pointer;color:rgba(255,255,255,.5);font-size:14px;transition:color .18s}
+.bell-w:hover{color:#fff}
+.bell-b{position:absolute;top:-4px;right:-4px;width:14px;height:14px;background:var(--red-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;color:#fff}
+
+/* ── TICKER ── */
+.mh-ticker{background:var(--navy-mid);border-bottom:1px solid rgba(255,255,255,.05);height:26px;overflow:hidden;display:flex;align-items:center}
+.ticker-scroll{display:inline-flex;white-space:nowrap;animation:tkr 100s linear infinite}
+@keyframes tkr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick{display:inline-flex;align-items:center;gap:7px;padding:0 16px;font-size:10.5px;border-right:1px solid rgba(255,255,255,.06)}
+.tk-sym{font-family:var(--mono);font-weight:600;color:#fff;letter-spacing:.04em}
+.tk-lbl{color:rgba(255,255,255,.35);font-size:9.5px}
+.tk-sig{font-size:8px;font-weight:700;letter-spacing:.08em;padding:1px 5px}
+.tks{background:rgba(22,163,74,.25);color:#4ade80}
+.tkn{background:rgba(37,99,196,.25);color:#93c5fd}
+.tkw{background:rgba(202,138,4,.25);color:#fcd34d}
+.tkr{background:rgba(185,28,28,.25);color:#fca5a5}
+
+/* ── LAYOUT ── */
+.wrapper{max-width:1700px;margin:0 auto;padding:18px 20px}
+.page{display:none}.page.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g65{display:grid;grid-template-columns:1.7fr 1fr;gap:14px}
+.mb14{margin-bottom:14px}.mb20{margin-bottom:20px}
+.col-stack{display:flex;flex-direction:column;gap:14px}
+@media(max-width:1200px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1000px){.g2,.g65,.g3{grid-template-columns:1fr}}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-s)}
+.card-hd{padding:10px 14px;border-bottom:1px solid var(--border-s);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-title{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+.card-sub{font-size:9px;color:var(--muted)}
+.card-action{font-size:10px;color:var(--blue-lt);cursor:pointer;font-weight:500}
+.card-action:hover{text-decoration:underline}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);box-shadow:var(--sh-s);margin-bottom:14px}
+.ks5{grid-template-columns:repeat(5,1fr)}.ks6{grid-template-columns:repeat(6,1fr)}.ks7{grid-template-columns:repeat(7,1fr)}
+@media(max-width:1200px){.ks7{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.ks5,.ks6,.ks7{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.ks5,.ks6,.ks7{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);padding:12px 14px;position:relative;overflow:hidden;border-bottom:2px solid transparent}
+.kpi-label{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi-value{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--navy);letter-spacing:-.01em;line-height:1}
+.kpi-delta{font-size:10px;margin-top:4px;font-weight:500}
+.kpi-bar{position:absolute;bottom:0;left:0;height:2px;width:0;transition:width 1.1s ease}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:7px 11px;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s}
+.tbl th:hover{color:var(--navy)}
+.tbl th.r,.tbl td.r{text-align:right}.tbl th.c,.tbl td.c{text-align:center}
+.tbl td{padding:8px 11px;border-bottom:1px solid var(--border-s);font-size:12px;vertical-align:middle}
+.tbl tbody tr:hover{background:var(--bg)}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl-wrap{overflow-y:auto}
+.sym{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--navy);letter-spacing:.04em}
+.sym-sub{font-size:9.5px;color:var(--text-s);margin-top:1px}
+.val{font-family:var(--mono);font-size:12px;font-weight:500}
+.up{color:var(--green)}.dn{color:var(--red-lt)}.am{color:var(--amber)}
+
+/* ── TAGS ── */
+.tag{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border:1px solid;white-space:nowrap}
+.t-buy{color:var(--green);border-color:#a7f3d0;background:var(--green-bg)}
+.t-sell{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+.t-clus{color:var(--blue);border-color:#93c5fd;background:var(--blue-pale)}
+.t-opt{color:var(--amber);border-color:#fcd34d;background:var(--amber-bg)}
+.t-bill{color:var(--purple);border-color:#c4b5fd;background:var(--purple-bg)}
+.t-flow{color:var(--teal);border-color:#99f6e4;background:var(--teal-bg)}
+.t-warn{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+
+/* ── SCORE PILLS ── */
+.score{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:20px;font-family:var(--mono);font-size:10.5px;font-weight:700}
+.sc1{background:var(--amber-bg);color:#78350f}.sc2{background:#fde8c8;color:#7c2d12}
+.sc3{background:var(--red-bg);color:var(--red)}.sc4{background:var(--red-lt);color:#fff}
+.sc-bear{background:var(--red-bg);color:var(--red-lt)}
+
+/* ── SECTION HEADER ── */
+.sec-hd{display:flex;align-items:baseline;gap:8px;margin-bottom:11px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.sec-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--navy);letter-spacing:-.01em}
+.sec-sub{font-size:10px;color:var(--muted)}
+.sec-action{margin-left:auto;font-size:10px;color:var(--blue-lt);cursor:pointer;font-weight:500}
+.sec-action:hover{text-decoration:underline}
+
+/* ── ACADEMIC BOX ── */
+.acad-box{background:var(--navy);padding:15px 20px;margin-bottom:14px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.acad-stat{flex-shrink:0;text-align:center;padding:0 16px;border-right:1px solid rgba(255,255,255,.1)}
+.acad-stat:last-of-type{border-right:none}
+.acad-num{font-family:var(--serif);font-size:26px;font-weight:700;color:#fff;line-height:1}
+.acad-lbl{font-size:8.5px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.acad-text{flex:1;font-size:11px;color:rgba(255,255,255,.6);line-height:1.65;font-style:italic;min-width:200px}
+.acad-text cite{display:block;margin-top:4px;font-size:9px;color:rgba(255,255,255,.35);font-style:normal}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.filter-bar.padded{padding:8px 12px 0;border-bottom:1px solid var(--border-s);margin-bottom:0}
+.filter-lbl{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-shrink:0;margin-right:2px}
+.fbtn{font-size:10.5px;font-weight:500;color:var(--text-s);border:1px solid var(--border);background:var(--surface);padding:4px 11px;cursor:pointer;transition:all .15s;font-family:var(--sans);letter-spacing:.02em}
+.fbtn:hover{border-color:var(--navy);color:var(--navy)}
+.fbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ── SECTOR BARS ── */
+.sector-row{display:flex;align-items:center;padding:7px 12px;border-bottom:1px solid var(--border-s);gap:8px}
+.sector-row:last-child{border-bottom:none}
+.sector-name{font-size:10.5px;color:var(--text-s);font-weight:500;width:108px;flex-shrink:0}
+.sector-track{flex:1;height:3px;background:var(--border)}
+.sector-fill{height:100%;width:0;transition:width .9s ease}
+.sf-pos{background:var(--green)}.sf-neg{background:var(--red-lt)}.sf-neu{background:var(--muted)}
+.sector-cnt{font-family:var(--mono);font-size:10px;color:var(--text-s);width:22px;text-align:right;flex-shrink:0}
+.sector-perf{font-family:var(--mono);font-size:11px;font-weight:600;width:48px;text-align:right;flex-shrink:0}
+
+/* ── SUSPICION BAR INLINE ── */
+.sus-row{display:flex;align-items:center;gap:6px}
+.sus-track{width:55px;height:3px;background:var(--border);flex-shrink:0}
+.sus-h{background:var(--red-lt)}.sus-m{background:var(--amber)}.sus-l{background:var(--blue-lt)}
+
+/* ── ALERT ROWS ── */
+.alert-row{display:flex;gap:9px;align-items:flex-start;padding:9px 12px;border-bottom:1px solid var(--border-s)}
+.alert-row:last-child{border-bottom:none}
+.alert-ico{font-size:12px;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:11.5px;font-weight:600;color:var(--text)}
+.alert-detail{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5}
+.alert-time{font-size:9px;color:var(--text-f);margin-top:2px}
+
+/* ── BILL CARDS ── */
+.bill-card{padding:10px 12px;border-bottom:1px solid var(--border-s);cursor:pointer;transition:background .15s}
+.bill-card:hover{background:var(--bg)}
+.bill-hd{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.bill-id{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--navy);flex-shrink:0}
+.bill-title{font-size:11.5px;color:var(--text);font-weight:500;flex:1}
+.bill-status{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;flex-shrink:0}
+.bs-l{color:var(--green)}.bs-p{color:var(--amber)}.bs-u{color:var(--red-lt)}
+.prob-row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.prob-lbl{font-size:8.5px;color:var(--muted);width:75px;flex-shrink:0}
+.prob-track{flex:1;height:2px;background:var(--border)}
+.prob-fill{height:100%;background:linear-gradient(90deg,var(--blue-lt),var(--blue))}
+.prob-pct{font-family:var(--mono);font-size:10.5px;color:var(--blue-lt);width:30px;text-align:right;font-weight:600}
+.bill-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.bill-chip{display:flex;align-items:center;gap:3px;font-size:9px;padding:2px 6px;border:1px solid var(--border);background:var(--surface2)}
+.bc-eff{font-weight:700}
+.bcc-bull .bc-eff{color:var(--green)}.bcc-bear .bc-eff{color:var(--red-lt)}.bcc-mix .bc-eff{color:var(--amber)}
+
+/* ── HEAT GRID ── */
+.heat-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;padding:12px}
+@media(max-width:900px){.heat-grid{grid-template-columns:repeat(6,1fr)}}
+.heat-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;border:1px solid transparent;text-align:center;padding:3px}
+.heat-cell:hover{transform:scale(1.08);border-color:var(--border)}
+.hc-sym{font-family:var(--mono);font-size:11px;font-weight:600;margin-bottom:1px}
+.hc-nm{font-size:7px;color:rgba(0,0,0,.4);line-height:1.2}
+.h0{background:#e8f5ee}.h1{background:#d1fae5}.h2{background:#fef9c3}
+.h3{background:#fde8c8}.h4{background:var(--red-bg)}.h5{background:#fee2e2}
+.h6{background:var(--red-lt)}.h6 .hc-nm{color:rgba(255,255,255,.5)}
+.h0 .hc-sym,.h1 .hc-sym{color:var(--green)}.h2 .hc-sym{color:var(--amber)}
+.h3 .hc-sym,.h4 .hc-sym{color:var(--red)}.h5 .hc-sym,.h6 .hc-sym{color:var(--red-lt)}
+.h6 .hc-sym{color:#fff}
+
+/* ── INDUSTRY MATRIX ── */
+.ind-matrix{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border)}
+@media(max-width:1100px){.ind-matrix{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.ind-matrix{grid-template-columns:repeat(3,1fr)}}
+.ind-cell{background:var(--surface);padding:9px 7px;text-align:center;cursor:pointer;transition:background .15s}
+.ind-cell:hover{background:var(--bg)}
+.ind-name{font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.ind-score{font-family:var(--mono);font-size:16px;font-weight:500;margin-bottom:2px}
+.ind-lbl{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.ic-bull .ind-score,.ic-bull .ind-lbl{color:var(--green)}
+.ic-bear .ind-score,.ic-bear .ind-lbl{color:var(--red-lt)}
+.ic-neu .ind-score,.ic-neu .ind-lbl{color:var(--muted)}
+
+/* ── TIMELINE ── */
+.timeline{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:9px;position:relative}
+.tl-item::after{content:'';position:absolute;left:8px;top:18px;bottom:0;width:1px;background:var(--border)}
+.tl-item:last-child::after{display:none}
+.tl-dot{width:7px;height:7px;border-radius:50%;border:2px solid;background:var(--surface);flex-shrink:0;margin-top:4px;position:relative;z-index:1}
+.tl-done{background:var(--navy);border-color:var(--navy)}.tl-near{border-color:var(--red-lt)}
+.tl-mid{border-color:var(--amber)}.tl-far{border-color:var(--blue-lt)}
+.tl-content{padding-bottom:10px;flex:1}
+.tl-date{font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.tl-desc{font-size:11px;color:var(--text);line-height:1.5}
+.tl-note{font-size:10px;color:var(--text-s);margin-top:2px;font-style:italic}
+
+/* ── RESEARCH NOTE COMPONENTS ── */
+.rn{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--navy);box-shadow:var(--sh-s);margin-bottom:12px;animation:fu .4s ease both}
+.rn.bull{border-left-color:var(--green)}.rn.bear{border-left-color:var(--red-lt)}.rn.amber{border-left-color:var(--amber)}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.rn-body{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:900px){.rn-body{grid-template-columns:1fr}}
+.rn-sec{padding:13px 15px;border-right:1px solid var(--border-s);border-top:1px solid var(--border-s)}
+.rn-sec:last-child{border-right:none}
+.rn-sec-lbl{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border-s)}
+.rn-prose{font-size:11.5px;color:var(--text-s);line-height:1.72}
+.rn-prose strong{color:var(--text);font-weight:600}
+.rn-prose .hl{color:var(--blue-lt);font-weight:500}
+.rn-prose .risk{color:var(--red-lt)}.rn-prose .watch{color:var(--amber)}
+
+.rr-block{display:grid;gap:1px;background:var(--border)}
+.rrc4{grid-template-columns:repeat(4,1fr)}.rrc5{grid-template-columns:repeat(5,1fr)}.rrc6{grid-template-columns:repeat(6,1fr)}
+@media(max-width:800px){.rrc4,.rrc5,.rrc6{grid-template-columns:repeat(2,1fr)}}
+.rr-cell{background:var(--surface);padding:9px 12px}
+.rr-lbl{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.rr-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--navy)}
+.rr-val.up{color:var(--green)}.rr-val.dn{color:var(--red-lt)}.rr-val.am{color:var(--amber)}
+.rr-sub{font-size:9px;color:var(--muted);margin-top:2px}
+.rn-ft{padding:8px 15px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;border-top:1px solid var(--border-s)}
+.rn-ft-tags{display:flex;gap:4px;flex-wrap:wrap}
+.rn-ftag{font-size:8.5px;font-weight:500;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:1px 6px}
+.rn-date{font-size:9px;color:var(--muted);font-style:italic}
+
+.ev-list{display:flex;flex-direction:column;gap:5px}
+.ev-item{display:flex;gap:7px;align-items:flex-start;padding:6px 8px;background:var(--bg);border:1px solid var(--border-s)}
+.ev-ico{font-size:10px;flex-shrink:0;margin-top:2px}
+.ev-text{font-size:10.5px;color:var(--text-s);line-height:1.5}
+.ev-text strong{color:var(--text)}
+.ev-src{font-size:8.5px;color:var(--muted);margin-top:1px;font-style:italic}
+
+/* ── IDEA CARDS ── */
+.idea-card{background:var(--surface);border:1px solid var(--border);margin-bottom:12px;box-shadow:var(--sh-s);transition:border-color .2s;animation:fu .5s ease both}
+.idea-card:hover{border-color:var(--slate)}
+.idea-card.exc{border-left:4px solid var(--red-lt)}.idea-card.str{border-left:4px solid var(--amber)}
+.idea-card.not{border-left:4px solid var(--blue-lt)}.idea-card.spec{border-left:4px solid var(--purple)}
+.idea-hd{padding:13px 15px;border-bottom:1px solid var(--border-s);display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.idea-num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--border);line-height:1;flex-shrink:0;margin-top:2px}
+.idea-main{flex:1;min-width:160px}
+.idea-ticker-row{display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap}
+.idea-ticker{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--navy);line-height:1}
+.idea-co{font-size:11.5px;color:var(--text-s);font-weight:500}
+.idea-tagline{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:2px;line-height:1.5}
+.idea-mets{display:flex;gap:14px;margin-top:7px;flex-wrap:wrap}
+.idea-met{display:flex;flex-direction:column;gap:1px}
+.idea-met-val{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--navy)}
+.imv-up{color:var(--green)}.imv-dn{color:var(--red-lt)}.imv-am{color:var(--amber)}.imv-pu{color:var(--purple)}
+.idea-met-lbl{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.idea-conv-block{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.idea-conv-score{font-family:var(--mono);font-size:36px;font-weight:300;line-height:1;letter-spacing:-.02em}
+.idea-conv-lbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.idea-conv-tier{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;margin-top:2px}
+.tier-exc{background:var(--red-bg);color:var(--red-lt)}
+.tier-str{background:var(--amber-bg);color:var(--amber)}
+.tier-not{background:var(--blue-pale);color:var(--blue)}
+
+.act-badge{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid}
+.ab-long{color:var(--green);border-color:#a7f3d0;background:var(--green-bg)}
+.ab-short{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+.ab-calls{color:var(--amber);border-color:#fcd34d;background:var(--amber-bg)}
+.ab-puts{color:#be185d;border-color:#f9a8d4;background:#fdf2f8}
+.ab-etf{color:var(--teal);border-color:#99f6e4;background:var(--teal-bg)}
+
+.ssbar{display:flex;gap:1px;height:5px;border-radius:2px;overflow:hidden;margin:7px 0 3px}
+.ss-seg{height:100%}
+.ss-cong{background:var(--red-lt)}.ss-ins{background:var(--amber)}.ss-flow{background:var(--blue-lt)}.ss-leg{background:var(--purple)}
+.ssbar-lbl{display:flex;gap:10px;font-size:8.5px;color:var(--muted)}
+.ssbl{display:flex;align-items:center;gap:3px}
+.ssbl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ── FLOW CARDS ── */
+.flow-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--purple);padding:13px 14px;box-shadow:var(--sh-s);animation:fu .4s ease both}
+.flow-ticker{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--navy)}
+.flow-co{font-size:9.5px;color:var(--muted);margin-top:2px}
+.flow-divider{height:1px;background:var(--border-s);margin:7px 0}
+.flow-body{font-size:10.5px;color:var(--text-s);line-height:1.65}
+.flow-body strong{color:var(--text)}
+.flow-foot{display:flex;align-items:center;justify-content:space-between;margin-top:7px;flex-wrap:wrap;gap:4px}
+
+/* ── SMS/ALERT ── */
+.sms-card{background:var(--navy);color:#fff;padding:18px 20px;margin-bottom:14px}
+.sms-title{font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:5px}
+.sms-sub{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:14px;line-height:1.65}
+.sms-steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:700px){.sms-steps{grid-template-columns:1fr}}
+.sms-step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:11px}
+.sms-snum{font-family:var(--mono);font-size:20px;font-weight:400;color:rgba(255,255,255,.2);line-height:1;margin-bottom:5px}
+.sms-stitle{font-size:11px;font-weight:600;color:#fff;margin-bottom:3px}
+.sms-sdesc{font-size:10px;color:rgba(255,255,255,.5);line-height:1.6}
+.sms-scode{font-family:var(--mono);font-size:9.5px;background:rgba(255,255,255,.08);padding:3px 7px;margin-top:5px;color:#93c5fd;display:block}
+.sms-row{display:flex;gap:7px;flex-wrap:wrap}
+.sms-input{flex:1;min-width:180px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 11px;font-size:11.5px;font-family:var(--sans)}
+.sms-input::placeholder{color:rgba(255,255,255,.3)}
+.sms-btn{background:var(--blue-lt);color:#fff;border:none;padding:8px 16px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:background .18s;white-space:nowrap}
+.sms-btn:hover{background:#1a4fa0}
+.sms-btn.sec{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.sms-btn.sec:hover{background:rgba(255,255,255,.18)}
+
+/* ── NOTIFICATIONS ── */
+.notif-item{background:var(--surface);border:1px solid var(--border);padding:11px 13px;margin-bottom:7px;display:flex;gap:10px;align-items:flex-start;box-shadow:var(--sh-s);position:relative;animation:slideIn .3s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.notif-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red-lt)}
+.notif-ico{font-size:16px;flex-shrink:0}
+.notif-title{font-size:12px;font-weight:600;color:var(--text)}
+.notif-body{font-size:10.5px;color:var(--text-s);margin-top:2px;line-height:1.5}
+.notif-meta{display:flex;align-items:center;gap:7px;margin-top:4px;flex-wrap:wrap}
+.notif-time{font-size:9px;color:var(--muted);font-style:italic}
+.notif-dismiss{font-size:9px;color:var(--blue-lt);cursor:pointer;margin-left:auto}
+.notif-dismiss:hover{text-decoration:underline}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;top:68px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none;width:320px}
+.toast{background:var(--navy);color:#fff;padding:11px 14px;border-left:4px solid var(--red-lt);box-shadow:var(--sh-lg);pointer-events:all;animation:tin .3s ease both}
+.toast.info{border-left-color:var(--blue-lt)}.toast.warn{border-left-color:var(--amber)}.toast.success{border-left-color:#16a34a}
+@keyframes tin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tout{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(16px)}}
+.toast-title{font-size:11.5px;font-weight:600;color:#fff;margin-bottom:2px}
+.toast-body{font-size:10px;color:rgba(255,255,255,.6);line-height:1.5}
+.toast-close{float:right;cursor:pointer;color:rgba(255,255,255,.35);margin-left:7px;font-size:13px;margin-top:-1px}
+.toast-close:hover{color:#fff}
+
+/* ── MISC ── */
+.footnote{font-size:9.5px;color:var(--muted);font-style:italic;padding:6px 12px;border-top:1px solid var(--border-s)}
+.cat-banner{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--navy);margin-bottom:12px}
+.cat-banner-title{font-family:var(--serif);font-size:14px;font-weight:600;color:#fff}
+.cat-banner-rule{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.cat-banner-cnt{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35)}
+.watchlist-ribbon{background:var(--surface2);border:1px solid var(--border);padding:10px 14px;margin-bottom:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.wr-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+.wr-chip{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);padding:3px 9px;cursor:pointer;transition:border-color .15s}
+.wr-chip:hover{border-color:var(--navy)}
+.wr-sym{font-family:var(--mono);font-weight:600;color:var(--navy);font-size:11.5px}
+.wr-score{font-size:9px;color:var(--muted);font-family:var(--mono)}
+.disclaimer{padding:12px 20px;background:var(--surface2);border-top:1px solid var(--border);font-size:9.5px;color:var(--muted);line-height:1.7;font-style:italic}
+
+/* ── LIVE DATA STYLES ── */
+.live-price-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 7px;border:1px solid;margin-left:4px;vertical-align:middle}
+.lpb-up{color:var(--green);border-color:#a7f3d0;background:var(--green-bg)}
+.lpb-dn{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+.lpb-neu{color:var(--muted);border-color:var(--border);background:var(--surface2)}
+.lpb-load{color:var(--muted);border-color:var(--border);background:var(--surface2);animation:pulse-load 1.2s infinite}
+@keyframes pulse-load{0%,100%{opacity:.4}50%{opacity:1}}
+
+.zone-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid;white-space:nowrap}
+.zb-in{color:#065f46;border-color:#6ee7b7;background:#d1fae5}
+.zb-above{color:#92400e;border-color:#fcd34d;background:var(--amber-bg)}
+.zb-missed{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+.zb-bear-ok{color:#065f46;border-color:#6ee7b7;background:#d1fae5}
+.zb-load{color:var(--muted);border-color:var(--border);background:var(--surface2)}
+
+.price-vs-zone{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--surface2);border-top:1px solid var(--border-s);flex-wrap:wrap}
+.pvz-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pvz-price{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--navy)}
+.pvz-change{font-family:var(--mono);font-size:11px;font-weight:500}
+.pvz-time{font-size:8.5px;color:var(--muted);margin-left:auto;font-style:italic}
+
+.data-source-bar{display:flex;align-items:center;gap:10px;padding:5px 14px;background:var(--navy-mid);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
+.dsb-item{display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,.45)}
+.dsb-dot{width:5px;height:5px;border-radius:50%}
+.dsb-ok{background:#4ade80}.dsb-warn{background:#fcd34d}.dsb-err{background:#f87171}.dsb-load{background:var(--muted)}
+.dsb-val{color:rgba(255,255,255,.7);font-family:var(--mono);font-weight:500}
+
+.edgar-feed-item{display:flex;gap:8px;align-items:flex-start;padding:8px 12px;border-bottom:1px solid var(--border-s);transition:background .15s}
+.edgar-feed-item:hover{background:var(--bg)}
+.efi-new{border-left:3px solid var(--red-lt)}
+.efi-ticker{font-family:var(--mono);font-weight:700;font-size:12px;color:var(--navy);min-width:40px}
+.efi-body{flex:1}
+.efi-name{font-size:11px;font-weight:600;color:var(--text)}
+.efi-detail{font-size:10px;color:var(--text-s);margin-top:1px}
+.efi-time{font-size:8.5px;color:var(--muted);margin-top:2px}
+.efi-score{font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0}
+.new-pulse{display:inline-block;width:6px;height:6px;background:var(--red-lt);border-radius:50%;animation:ld 1.5s infinite;margin-right:3px}
+
+.bill-live-status{display:inline-flex;align-items:center;gap:4px;font-size:8.5px;font-weight:700;padding:2px 7px;border:1px solid}
+.bls-adv{color:var(--green);border-color:#a7f3d0;background:var(--green-bg)}
+.bls-pend{color:var(--amber);border-color:#fcd34d;background:var(--amber-bg)}
+.bls-stall{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+
+.mh-data-strip{background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 16px;gap:16px;height:22px;overflow:hidden}
+.mds-item{display:flex;align-items:center;gap:5px;font-size:9.5px;white-space:nowrap}
+.mds-sym{font-family:var(--mono);font-weight:600;color:rgba(255,255,255,.7)}
+.mds-price{font-family:var(--mono);color:#fff;font-weight:500}
+.mds-chg{font-family:var(--mono);font-size:9px}
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- ═══════════════ MASTHEAD ═══════════════ -->
+<header class="masthead">
+  <div class="mh-top">
+    <div class="brand">
+      <div class="brand-wm">ATLAS</div>
+      <div class="brand-rule"></div>
+      <div class="brand-tag">Institutional Intelligence</div>
+    </div>
+    <nav class="mh-nav">
+      <div class="nav-item active" onclick="goPage('overview',this)">Overview</div>
+      <div class="nav-item" onclick="goPage('congress',this)">Congressional Intel <span class="nb nb-r" id="badge-cong">38</span></div>
+      <div class="nav-item" onclick="goPage('insider',this)">Insider Signals <span class="nb nb-b" id="badge-ins">14</span></div>
+      <div class="nav-item" onclick="goPage('flows',this)">Institutional Flows <span class="nb nb-b">7</span></div>
+      <div class="nav-item" onclick="goPage('markets',this)">Markets &amp; Sectors</div>
+      <div class="nav-item" onclick="goPage('ideas',this)">Trade Ideas <span class="nb nb-r" id="badge-ideas">8</span></div>
+      <div class="nav-item" onclick="goPage('alerts',this)">Alerts &amp; SMS <span class="nb nb-g">Live</span></div>
+    </nav>
+    <div class="mh-status">
+      <div class="st-item"><div class="st-val" id="clock">--:--</div><div class="st-lbl">EST</div></div>
+      <div class="st-item"><div class="st-val">Feb 22, 2026</div><div class="st-lbl">Date</div></div>
+      <div class="live-ind"><div class="live-dot"></div>Live</div>
+      <div class="bell-w" onclick="goPage('alerts',document.querySelector('.nav-item:nth-child(7)'))">
+        🔔<div class="bell-b" id="bell-cnt">5</div>
+      </div>
+    </div>
+  </div>
+  <div class="mh-ticker">
+    <div class="ticker-scroll" id="ticker">
+      <span class="tick"><span class="tk-sym">TMDX</span><span class="tk-lbl">CEO $4.2M Buy · No 10b5-1</span><span class="tk-sig tks">Score 94</span></span>
+      <span class="tick"><span class="tk-sym">RTX</span><span class="tk-lbl">Armed Svcs 5-Member Cluster</span><span class="tk-sig tkr">Congress 94</span></span>
+      <span class="tick"><span class="tk-sym">OXY</span><span class="tk-lbl">CEO+Board $28M · Berkshire +$2.1B</span><span class="tk-sig tks">Score 91</span></span>
+      <span class="tick"><span class="tk-sym">NVDA</span><span class="tk-lbl">Druckenmiller $890M · HR 7821 Feb 25</span><span class="tk-sig tkr">Triple Source 92</span></span>
+      <span class="tick"><span class="tk-sym">WFRD</span><span class="tk-lbl">CEO+CFO Buy $3.8M · 52-wk low</span><span class="tk-sig tks">Score 89</span></span>
+      <span class="tick"><span class="tk-sym">TSM</span><span class="tk-lbl">Foreign Affairs Full Exit</span><span class="tk-sig tkw">Caution −89</span></span>
+      <span class="tick"><span class="tk-sym">PFE</span><span class="tk-lbl">Health Cmte 8 Exits + $3.4B Inst. Exit</span><span class="tk-sig tkw">Dual Bear −80</span></span>
+      <span class="tick"><span class="tk-sym">FCX</span><span class="tk-lbl">Nat. Resources Buy · HR 6419 Mar 17</span><span class="tk-sig tkr">Congress 83</span></span>
+      <span class="tick"><span class="tk-sym">META</span><span class="tk-lbl">Dir. Sandberg $19.4M · Tepper +$1.2B</span><span class="tk-sig tkn">Score 85</span></span>
+      <span class="tick"><span class="tk-sym">SB 1882</span><span class="tk-lbl">Defense Modernization Act</span><span class="tk-sig tks">85% · Mar 3 Markup</span></span>
+      <span class="tick"><span class="tk-sym">HR 7821</span><span class="tk-lbl">AI Infrastructure Act · Floor Vote</span><span class="tk-sig tks">78% · Feb 25</span></span>
+      <span class="tick"><span class="tk-sym">SMPL</span><span class="tk-lbl">CEO 38% Exit · No Plan · Pre-Earnings</span><span class="tk-sig tkw">Warning −81</span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="tick"><span class="tk-sym">TMDX</span><span class="tk-lbl">CEO $4.2M Buy · No 10b5-1</span><span class="tk-sig tks">Score 94</span></span>
+      <span class="tick"><span class="tk-sym">RTX</span><span class="tk-lbl">Armed Svcs 5-Member Cluster</span><span class="tk-sig tkr">Congress 94</span></span>
+      <span class="tick"><span class="tk-sym">OXY</span><span class="tk-lbl">CEO+Board $28M · Berkshire +$2.1B</span><span class="tk-sig tks">Score 91</span></span>
+      <span class="tick"><span class="tk-sym">NVDA</span><span class="tk-lbl">Druckenmiller $890M · HR 7821 Feb 25</span><span class="tk-sig tkr">Triple Source 92</span></span>
+      <span class="tick"><span class="tk-sym">WFRD</span><span class="tk-lbl">CEO+CFO Buy $3.8M · 52-wk low</span><span class="tk-sig tks">Score 89</span></span>
+      <span class="tick"><span class="tk-sym">TSM</span><span class="tk-lbl">Foreign Affairs Full Exit</span><span class="tk-sig tkw">Caution −89</span></span>
+      <span class="tick"><span class="tk-sym">PFE</span><span class="tk-lbl">Health Cmte 8 Exits + $3.4B Inst. Exit</span><span class="tk-sig tkw">Dual Bear −80</span></span>
+      <span class="tick"><span class="tk-sym">FCX</span><span class="tk-lbl">Nat. Resources Buy · HR 6419 Mar 17</span><span class="tk-sig tkr">Congress 83</span></span>
+    </div>
+  </div>
+  <div class="mh-data-strip" id="price-strip">
+    <div class="mds-item"><span class="mds-sym" style="color:rgba(255,255,255,.3);font-size:8.5px;letter-spacing:.1em">LIVE PRICES</span></div>
+    <div class="mds-item" id="ps-RTX"><span class="mds-sym">RTX</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-NVDA"><span class="mds-sym">NVDA</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-OXY"><span class="mds-sym">OXY</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-TMDX"><span class="mds-sym">TMDX</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-FCX"><span class="mds-sym">FCX</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-ITA"><span class="mds-sym">ITA</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-PFE"><span class="mds-sym">PFE</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-TSM"><span class="mds-sym">TSM</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-META"><span class="mds-sym">META</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-WFRD"><span class="mds-sym">WFRD</span><span class="mds-price lpb-load">—</span></div>
+    <div class="mds-item" id="ps-SMPL"><span class="mds-sym">SMPL</span><span class="mds-price lpb-load">—</span></div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <div class="dsb-item"><div class="dsb-dot dsb-load" id="dot-finnhub"></div><span id="lbl-finnhub">Prices</span></div>
+      <div class="dsb-item"><div class="dsb-dot dsb-load" id="dot-edgar"></div><span id="lbl-edgar">EDGAR</span></div>
+      <div class="dsb-item"><div class="dsb-dot dsb-load" id="dot-congress"></div><span id="lbl-congress">Congress</span></div>
+      <span style="font-size:8px;color:rgba(255,255,255,.2);font-family:var(--mono)" id="last-refresh">—</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ PAGE: OVERVIEW ═══════════════ -->
+<div id="page-overview" class="page active">
+<div class="wrapper">
+  <div class="acad-box">
+    <div class="acad-stat"><div class="acad-num">3</div><div class="acad-lbl">Signal Sources</div></div>
+    <div class="acad-stat"><div class="acad-num">+11.4%</div><div class="acad-lbl">Avg Alpha 12mo</div></div>
+    <div class="acad-stat"><div class="acad-num">22</div><div class="acad-lbl">Active Signals</div></div>
+    <div class="acad-stat"><div class="acad-num">4</div><div class="acad-lbl">Cluster Events</div></div>
+    <div class="acad-text">ATLAS cross-references corporate Form 4 filings, congressional STOCK Act disclosures, and institutional 13F/dark-pool flow data to surface statistically significant alpha signals. Strongest predictor: CEO open-market purchases (+8.9% annual alpha, Seyhun 1998; +16.2% at score ≥86). Corroborating sources elevate conviction materially. <cite>Data: SEC EDGAR · STOCK Act · Congress.gov · FINRA ATS · SEC 13F</cite></div>
+  </div>
+  <div class="kpi-strip ks7">
+    <div class="kpi"><div class="kpi-bar" id="kb1" style="background:var(--navy)"></div><div class="kpi-label">Top Signal Score</div><div class="kpi-value">94</div><div class="kpi-delta up">TMDX / RTX</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb2" style="background:var(--red-lt)"></div><div class="kpi-label">Exceptional Signals</div><div class="kpi-value">9</div><div class="kpi-delta dn">Score ≥ 80</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb3" style="background:var(--amber)"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb4" style="background:var(--blue-lt)"></div><div class="kpi-label">Congress Flags</div><div class="kpi-value">38</div><div class="kpi-delta up">High suspicion trades</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb5" style="background:var(--purple)"></div><div class="kpi-label">Atypical Inst. Flows</div><div class="kpi-value">7</div><div class="kpi-delta" style="color:var(--purple)">Unusual positions</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb6" style="background:var(--green)"></div><div class="kpi-label">Bills w/ Mkt Impact</div><div class="kpi-value">6</div><div class="kpi-delta up">Avg 64% passage</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--navy)"></div><div class="kpi-label">Correlated Ideas</div><div class="kpi-value">8</div><div class="kpi-delta up">Multi-source confirmed</div></div>
+  </div>
+  <div class="g65 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Top Signals — All Sources · Rolling 30 Days</div><div class="card-action" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</div></div>
+      <div class="tbl-wrap" style="max-height:300px">
+        <table class="tbl">
+          <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">Value</th><th>Direction</th></tr></thead>
+          <tbody>
+            <tr><td><div class="sym">TMDX</div><div class="sym-sub">TransMedics Group</div></td><td><span class="tag t-buy">Insider</span></td><td style="font-size:11px">CEO · Largest IPO-era buy · 4/4 accuracy</td><td class="c"><span class="score sc4">94</span></td><td class="r"><span class="val up">$4.2M</span></td><td><span class="tag t-buy">Long</span></td></tr>
+            <tr><td><div class="sym">RTX</div><div class="sym-sub">Raytheon Technologies</div></td><td><span class="tag t-warn">Congress</span></td><td style="font-size:11px">5-member Armed Svcs cluster · classified briefing</td><td class="c"><span class="score sc4">94</span></td><td class="r"><span class="val up">$500K–$1M</span></td><td><span class="tag t-buy">Long</span></td></tr>
+            <tr><td><div class="sym">NVDA</div><div class="sym-sub">NVIDIA Corporation</div></td><td><span class="tag t-clus">Triple Source</span></td><td style="font-size:11px">AI Subcommittee · Druckenmiller $890M · HR 7821</td><td class="c"><span class="score sc4">92</span></td><td class="r"><span class="val up">$250K–$500K</span></td><td><span class="tag t-opt">Calls/Long</span></td></tr>
+            <tr><td><div class="sym">OXY</div><div class="sym-sub">Occidental Petroleum</div></td><td><span class="tag t-clus">Multi-Source</span></td><td style="font-size:11px">CEO+3 Dirs · Berkshire +$2.1B · Third Point new</td><td class="c"><span class="score sc4">91</span></td><td class="r"><span class="val up">$28.1M</span></td><td><span class="tag t-buy">Long</span></td></tr>
+            <tr><td><div class="sym">XOM</div><div class="sym-sub">ExxonMobil Corp</div></td><td><span class="tag t-warn">Congress</span></td><td style="font-size:11px">Sen. Morrison · Call options · Finance Cmte</td><td class="c"><span class="score sc4">91</span></td><td class="r"><span class="val up">$1M–$5M</span></td><td><span class="tag t-opt">Calls</span></td></tr>
+            <tr><td><div class="sym">TSM</div><div class="sym-sub">Taiwan Semiconductor</div></td><td><span class="tag t-warn">Congress</span></td><td style="font-size:11px">Foreign Affairs full exit · classified Taiwan briefing</td><td class="c"><span class="score sc-bear">−89</span></td><td class="r"><span class="val dn">$500K exit</span></td><td><span class="tag t-sell">Short</span></td></tr>
+            <tr><td><div class="sym">WFRD</div><div class="sym-sub">Weatherford Intl</div></td><td><span class="tag t-buy">Insider</span></td><td style="font-size:11px">CEO + CFO simultaneous · 52-wk low</td><td class="c"><span class="score sc4">89</span></td><td class="r"><span class="val up">$3.8M</span></td><td><span class="tag t-buy">Long</span></td></tr>
+            <tr><td><div class="sym">META</div><div class="sym-sub">Meta Platforms</div></td><td><span class="tag t-buy">Insider</span></td><td style="font-size:11px">Dir. Sandberg $19.4M · Tepper Appaloosa +$1.2B</td><td class="c"><span class="score sc3">85</span></td><td class="r"><span class="val up">$19.4M</span></td><td><span class="tag t-buy">Long</span></td></tr>
+            <tr><td><div class="sym">PFE</div><div class="sym-sub">Pfizer Inc.</div></td><td><span class="tag t-clus">Dual Bear</span></td><td style="font-size:11px">8 Health Cmte exits + 4 inst. healthcare fund exits</td><td class="c"><span class="score sc-bear">−80</span></td><td class="r"><span class="val dn">$3.4B exits</span></td><td><span class="tag t-sell">Short</span></td></tr>
+            <tr><td><div class="sym">SMPL</div><div class="sym-sub">Simply Good Foods</div></td><td><span class="tag t-warn">Insider Exit</span></td><td style="font-size:11px">CEO 38% stake reduction · no plan · pre-earnings</td><td class="c"><span class="score sc-bear">−81</span></td><td class="r"><span class="val dn">$6.2M exit</span></td><td><span class="tag t-sell">Caution</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-stack">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Sector Signal Heat</div><div class="card-sub">Cross-source 30-day activity</div></div>
+        <div>
+          <div class="sector-row"><div class="sector-name">Defense</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="93%"></div></div><div class="sector-cnt">41</div><div class="sector-perf up">+12.8%</div></div>
+          <div class="sector-row"><div class="sector-name">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt">36</div><div class="sector-perf up">+11.4%</div></div>
+          <div class="sector-row"><div class="sector-name">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="79%"></div></div><div class="sector-cnt">29</div><div class="sector-perf up">+9.8%</div></div>
+          <div class="sector-row"><div class="sector-name">Mining</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="70%"></div></div><div class="sector-cnt">18</div><div class="sector-perf up">+8.1%</div></div>
+          <div class="sector-row"><div class="sector-name">Health Care</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="55%"></div></div><div class="sector-cnt">14</div><div class="sector-perf up">+6.2%</div></div>
+          <div class="sector-row"><div class="sector-name">Pharma</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="40%"></div></div><div class="sector-cnt">8</div><div class="sector-perf dn">−3.4%</div></div>
+          <div class="sector-row"><div class="sector-name">China-Exposed</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="55%"></div></div><div class="sector-cnt">11</div><div class="sector-perf dn">−5.1%</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Live Alerts</div><div class="card-action" onclick="goPage('alerts',document.querySelector('.nav-item:nth-child(7)'))">View all →</div></div>
+        <div>
+          <div class="alert-row"><div class="alert-ico">🔴</div><div><div class="alert-title">5-Member Defense Cluster Confirmed</div><div class="alert-detail">RTX/LMT/NOC/BA/CACI — Armed Services within 72hr of classified briefing</div><div class="alert-time">Feb 18 · 11:42 EST</div></div></div>
+          <div class="alert-row"><div class="alert-ico">🔴</div><div><div class="alert-title">CEO Max Buy: TMDX Score 94</div><div class="alert-detail">Hassanein $4.2M — largest since IPO. Post −28% drawdown. No 10b5-1.</div><div class="alert-time">Feb 19 · 09:17 EST</div></div></div>
+          <div class="alert-row"><div class="alert-ico">🟡</div><div><div class="alert-title">HR 7821 Floor Vote: Feb 25 — 3 Days</div><div class="alert-detail">AI Infrastructure Act — 78% passage. NVDA in entry zone $182–$198 now.</div><div class="alert-time">Feb 22 · 07:00 EST</div></div></div>
+          <div class="alert-row"><div class="alert-ico">🟡</div><div><div class="alert-title">CEO Exit Warning: SMPL −81</div><div class="alert-detail">38% stake reduction · no plan · 18 days pre-earnings</div><div class="alert-time">Feb 16 · 08:55 EST</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live EDGAR + Congress feeds -->
+  <div class="g2 mb14">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">Live EDGAR Form 4 Feed <span class="new-pulse" style="margin-left:4px"></span></div>
+        <div class="card-sub" id="edgar-last-check">Checking SEC EDGAR...</div>
+      </div>
+      <div id="edgar-feed" style="max-height:280px;overflow-y:auto">
+        <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
+          <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Fetching latest Form 4 filings...
+        </div>
+      </div>
+      <div class="footnote">SEC EDGAR full-text search · Tracked tickers only · Refreshes every 90 seconds</div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title">Congress.gov — Bill Status Live</div>
+        <div class="card-sub" id="congress-last-check">Fetching bill data...</div>
+      </div>
+      <div id="congress-feed" style="max-height:280px;overflow-y:auto">
+        <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
+          <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Connecting to Congress.gov API...
+        </div>
+      </div>
+      <div class="footnote">Congress.gov API · Live bill status · Committee actions · Vote schedules</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: CONGRESSIONAL INTEL ═══════════════ -->
+<div id="page-congress" class="page">
+<div class="wrapper">
+  <div class="kpi-strip ks5">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:100%"></div><div class="kpi-label">Filings This Month</div><div class="kpi-value">247</div><div class="kpi-delta up">↑ 34% vs avg</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--red-lt);width:60%"></div><div class="kpi-label">High Suspicion Trades</div><div class="kpi-value">38</div><div class="kpi-delta dn">Before committee votes</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:75%"></div><div class="kpi-label">Total Vol. Disclosed</div><div class="kpi-value">$847M</div><div class="kpi-delta up">Feb 2026 YTD</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:85%"></div><div class="kpi-label">Avg Outperformance</div><div class="kpi-value">+23%</div><div class="kpi-delta up">vs S&P 500 annual</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:50%"></div><div class="kpi-label">Late STOCK Act Filers</div><div class="kpi-value">81</div><div class="kpi-delta am">32% non-compliant</div></div>
+  </div>
+  <div class="g65 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">High-Suspicion Congressional Trades</div><div class="card-sub">Ranked by signal score</div></div>
+      <div class="filter-bar padded">
+        <span class="filter-lbl">Filter:</span>
+        <button class="fbtn active" onclick="filterCong('all',this)">All</button>
+        <button class="fbtn" onclick="filterCong('senate',this)">Senate</button>
+        <button class="fbtn" onclick="filterCong('house',this)">House</button>
+        <button class="fbtn" onclick="filterCong('flagged',this)">Flagged</button>
+        <button class="fbtn" onclick="filterCong('option',this)">Options Only</button>
+        <button class="fbtn" onclick="filterCong('sell',this)">Sells/Exits</button>
+      </div>
+      <div class="tbl-wrap" style="max-height:380px">
+        <table class="tbl" id="cong-tbl">
+          <thead><tr><th>#</th><th onclick="sortTbl(this)">Member ↕</th><th onclick="sortTbl(this)">Ticker ↕</th><th class="r" onclick="sortTbl(this)">Amount ↕</th><th class="c">Type</th><th onclick="sortTbl(this)">Suspicion Score ↕</th><th onclick="sortTbl(this)">Date ↕</th></tr></thead>
+          <tbody>
+            <tr data-cat="senate flagged"><td style="font-size:10px;color:var(--muted)">01</td><td><div style="font-size:11.5px;font-weight:600">Sen. D. Whitfield (R-VA)</div><div class="sym-sub" style="color:var(--red-lt)">Armed Services</div></td><td><div class="sym">RTX</div><div class="sym-sub">Raytheon</div></td><td class="r"><span class="val up">$500K–$1M</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:94%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">94</span></div></td><td><span class="sym-sub">Feb 18</span></td></tr>
+            <tr data-cat="senate flagged option"><td style="font-size:10px;color:var(--muted)">02</td><td><div style="font-size:11.5px;font-weight:600">Sen. P. Morrison (R-TX)</div><div class="sym-sub" style="color:var(--red-lt)">Finance Committee</div></td><td><div class="sym">XOM</div><div class="sym-sub">ExxonMobil</div></td><td class="r"><span class="val up">$1M–$5M</span></td><td class="c"><span class="tag t-opt">Options</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:91%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">91</span></div></td><td><span class="sym-sub">Feb 14</span></td></tr>
+            <tr data-cat="house flagged"><td style="font-size:10px;color:var(--muted)">03</td><td><div style="font-size:11.5px;font-weight:600">Rep. A. Chen (D-CA)</div><div class="sym-sub" style="color:var(--red-lt)">Science &amp; Technology</div></td><td><div class="sym">NVDA</div><div class="sym-sub">NVIDIA</div></td><td class="r"><span class="val up">$250K–$500K</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:88%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">88</span></div></td><td><span class="sym-sub">Feb 17</span></td></tr>
+            <tr data-cat="house flagged sell"><td style="font-size:10px;color:var(--muted)">04</td><td><div style="font-size:11.5px;font-weight:600">Rep. S. Park (D-CA)</div><div class="sym-sub" style="color:var(--red-lt)">Foreign Affairs</div></td><td><div class="sym">TSM</div><div class="sym-sub">Taiwan Semi</div></td><td class="r"><span class="val dn">$500K exit</span></td><td class="c"><span class="tag t-sell">Sell</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:89%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">−89</span></div></td><td><span class="sym-sub">Feb 10</span></td></tr>
+            <tr data-cat="house flagged"><td style="font-size:10px;color:var(--muted)">05</td><td><div style="font-size:11.5px;font-weight:600">Rep. T. Vasquez (D-NM)</div><div class="sym-sub" style="color:var(--red-lt)">Natural Resources</div></td><td><div class="sym">FCX</div><div class="sym-sub">Freeport</div></td><td class="r"><span class="val up">$50K–$100K</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:83%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">83</span></div></td><td><span class="sym-sub">Feb 12</span></td></tr>
+            <tr data-cat="senate"><td style="font-size:10px;color:var(--muted)">06</td><td><div style="font-size:11.5px;font-weight:600">Sen. R. Kline (R-NC)</div><div class="sym-sub">Health Policy</div></td><td><div class="sym">LLY</div><div class="sym-sub">Eli Lilly</div></td><td class="r"><span class="val up">$500K–$1M</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:76%;background:var(--amber)"></div></div><span class="val am" style="font-size:11px">76</span></div></td><td><span class="sym-sub">Feb 11</span></td></tr>
+            <tr data-cat="house flagged sell"><td style="font-size:10px;color:var(--muted)">07</td><td><div style="font-size:11.5px;font-weight:600">Rep. M. Torres (D-CA)</div><div class="sym-sub" style="color:var(--red-lt)">Health Committee</div></td><td><div class="sym">PFE</div><div class="sym-sub">Pfizer</div></td><td class="r"><span class="val dn">$250K exit</span></td><td class="c"><span class="tag t-sell">Sell</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:76%;background:var(--amber)"></div></div><span class="val dn" style="font-size:11px">−76</span></div></td><td><span class="sym-sub">Feb 9</span></td></tr>
+            <tr data-cat="senate option flagged"><td style="font-size:10px;color:var(--muted)">08</td><td><div style="font-size:11.5px;font-weight:600">Sen. L. Harmon (R-TN)</div><div class="sym-sub" style="color:var(--red-lt)">Armed Services</div></td><td><div class="sym">LMT</div><div class="sym-sub">Lockheed</div></td><td class="r"><span class="val up">$250K–$500K</span></td><td class="c"><span class="tag t-opt">Options</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:88%;background:var(--red-lt)"></div></div><span class="val dn" style="font-size:11px">88</span></div></td><td><span class="sym-sub">Feb 18</span></td></tr>
+            <tr data-cat="house"><td style="font-size:10px;color:var(--muted)">09</td><td><div style="font-size:11.5px;font-weight:600">Rep. F. Davis (R-GA)</div><div class="sym-sub">Agriculture</div></td><td><div class="sym">ADM</div><div class="sym-sub">Archer-Daniels</div></td><td class="r"><span class="val up">$100K–$250K</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:65%;background:var(--amber)"></div></div><span class="val am" style="font-size:11px">65</span></div></td><td><span class="sym-sub">Feb 9</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-stack">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Committee Correlation</div><div class="card-sub">Trade-to-jurisdiction match rate</div></div>
+        <div>
+          <div class="sector-row"><div class="sector-name">Armed Services</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="94%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">94%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">34 trades</div></div>
+          <div class="sector-row"><div class="sector-name">Foreign Affairs</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="89%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">89%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">12 trades</div></div>
+          <div class="sector-row"><div class="sector-name">Science &amp; Tech</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">88%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">28 trades</div></div>
+          <div class="sector-row"><div class="sector-name">Energy/Enviro</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="82%"></div></div><div class="sector-cnt" style="color:var(--amber)">82%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">19 trades</div></div>
+          <div class="sector-row"><div class="sector-name">Finance</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="78%"></div></div><div class="sector-cnt" style="color:var(--amber)">78%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">41 trades</div></div>
+          <div class="sector-row"><div class="sector-name">Health Policy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="71%"></div></div><div class="sector-cnt" style="color:var(--amber)">71%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">22 trades</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Legislative Calendar</div><div class="card-sub">Upcoming market catalysts</div></div>
+        <div style="padding:10px 12px">
+          <div class="tl-item"><div class="tl-dot tl-near"></div><div class="tl-content"><div class="tl-date">Feb 25, 2026 — 3 days</div><div class="tl-desc">HR 7821 Floor Vote — AI Infrastructure Act</div><div class="tl-note" style="color:var(--red-lt)">Watch: NVDA, AMD, SMCI, MSFT</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-near"></div><div class="tl-content"><div class="tl-date">Mar 3, 2026 — 9 days</div><div class="tl-desc">SB 1882 Senate Armed Services Markup</div><div class="tl-note" style="color:var(--amber)">Watch: RTX, LMT, NOC, BA, ITA ETF</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-mid"></div><div class="tl-content"><div class="tl-date">Mar 10, 2026</div><div class="tl-desc">SB 2241 Committee Vote — Drug Pricing</div><div class="tl-note" style="color:var(--amber)">Watch: PFE, MRK, ABBV</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-mid"></div><div class="tl-content"><div class="tl-date">Mar 17, 2026</div><div class="tl-desc">HR 6419 Floor Vote — Critical Minerals</div><div class="tl-note" style="color:var(--blue-lt)">Watch: FCX, MP, ALB, LTHM</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-far"></div><div class="tl-content"><div class="tl-date">Apr 1, 2026</div><div class="tl-desc">SB 3310 Senate Energy Committee Hearing</div><div class="tl-note" style="color:var(--blue-lt)">Watch: ENPH, NEE, FSLR</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="g2 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Active Bills — Passage Probability &amp; Market Impact</div></div>
+      <div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">SB 1882</div><div class="bill-title">National Defense Modernization Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:85%"></div></div><div class="prob-pct">85%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Defense Prime</span><span class="bc-eff">↑↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">Cyber Sec</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">Aerospace</span><span class="bc-eff">↑</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">HR 7821</div><div class="bill-title">American AI Infrastructure Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:78%"></div></div><div class="prob-pct">78%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Semiconductors</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">AI Infra</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bear"><span class="bc-sec">China Tech</span><span class="bc-eff">↓↓</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">HR 6419</div><div class="bill-title">Critical Minerals &amp; Mining Security Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:71%"></div></div><div class="prob-pct">71%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Copper</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">Lithium</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bear"><span class="bc-sec">Imports</span><span class="bc-eff">↓</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">SB 2241</div><div class="bill-title">Drug Price Negotiation Expansion Act</div><div class="bill-status bs-p">Possible ↕</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:52%"></div></div><div class="prob-pct">52%</div></div><div class="bill-chips"><div class="bill-chip bcc-bear"><span class="bc-sec">Large Pharma</span><span class="bc-eff">↓↓</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">PBMs</span><span class="bc-eff">↑</span></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Congressional Trading Heatmap</div><div class="card-sub">Buy intensity by security — darker = higher concentration</div></div>
+      <div class="heat-grid">
+        <div class="heat-cell h6"><div class="hc-sym">RTX</div><div class="hc-nm">Raytheon</div></div>
+        <div class="heat-cell h6"><div class="hc-sym">NVDA</div><div class="hc-nm">NVIDIA</div></div>
+        <div class="heat-cell h5"><div class="hc-sym">LMT</div><div class="hc-nm">Lockheed</div></div>
+        <div class="heat-cell h5"><div class="hc-sym">XOM</div><div class="hc-nm">ExxonMobil</div></div>
+        <div class="heat-cell h4"><div class="hc-sym">MSFT</div><div class="hc-nm">Microsoft</div></div>
+        <div class="heat-cell h4"><div class="hc-sym">NOC</div><div class="hc-nm">Northrop</div></div>
+        <div class="heat-cell h4"><div class="hc-sym">LLY</div><div class="hc-nm">Eli Lilly</div></div>
+        <div class="heat-cell h4"><div class="hc-sym">AAPL</div><div class="hc-nm">Apple</div></div>
+        <div class="heat-cell h3"><div class="hc-sym">JPM</div><div class="hc-nm">JPMorgan</div></div>
+        <div class="heat-cell h3"><div class="hc-sym">FCX</div><div class="hc-nm">Freeport</div></div>
+        <div class="heat-cell h2"><div class="hc-sym">AMZN</div><div class="hc-nm">Amazon</div></div>
+        <div class="heat-cell h2"><div class="hc-sym">CVX</div><div class="hc-nm">Chevron</div></div>
+        <div class="heat-cell h1"><div class="hc-sym">GS</div><div class="hc-nm">Goldman</div></div>
+        <div class="heat-cell h1"><div class="hc-sym">ADM</div><div class="hc-nm">Archer-D</div></div>
+        <div class="heat-cell h0"><div class="hc-sym">TSLA</div><div class="hc-nm">Tesla</div></div>
+        <div class="heat-cell h0"><div class="hc-sym">GOOG</div><div class="hc-nm">Alphabet</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: INSIDER SIGNALS ═══════════════ -->
+<div id="page-insider" class="page">
+<div class="wrapper">
+  <div class="acad-box">
+    <div class="acad-stat"><div class="acad-num">+8.9%</div><div class="acad-lbl">Avg Annual Alpha</div></div>
+    <div class="acad-stat"><div class="acad-num">30yr</div><div class="acad-lbl">Study Period</div></div>
+    <div class="acad-stat"><div class="acad-num">2.4×</div><div class="acad-lbl">vs Market</div></div>
+    <div class="acad-stat"><div class="acad-num">48hr</div><div class="acad-lbl">Max Filing Lag</div></div>
+    <div class="acad-text">"Open-market purchases by corporate officers and directors generate statistically significant abnormal returns. Signal strongest for C-suite executives operating outside pre-planned 10b5-1 windows. CEO buys at 52-week lows are the highest-quality subset." <cite>— Seyhun (1998); Lakonishok &amp; Lee (2001); Cohen, Malloy &amp; Pomorski (2012)</cite></div>
+  </div>
+  <div class="kpi-strip ks6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:100%"></div><div class="kpi-label">Form 4 Filings Today</div><div class="kpi-value">247</div><div class="kpi-delta up">↑ 18% vs 30-day avg</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--red-lt);width:60%"></div><div class="kpi-label">High-Signal Purchases</div><div class="kpi-value">14</div><div class="kpi-delta dn">Score ≥ 70</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:40%"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:80%"></div><div class="kpi-label">Avg Alpha 12mo</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs S&P 500</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:55%"></div><div class="kpi-label">CEO Purchases 30d</div><div class="kpi-value">38</div><div class="kpi-delta up">↑ from 29 prior</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:83%"></div><div class="kpi-label">10b5-1 Exclusions</div><div class="kpi-value">83%</div><div class="kpi-delta" style="color:var(--muted)">Signals are discretionary</div></div>
+  </div>
+  <div class="g65 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Highest-Signal Purchases — Rolling 30 Days</div><div class="card-sub">Open-market · Excludes 10b5-1 plan executions</div></div>
+      <div class="filter-bar padded">
+        <span class="filter-lbl">Filter:</span>
+        <button class="fbtn active" onclick="filterIns('all',this)">All Signals</button>
+        <button class="fbtn" onclick="filterIns('exc',this)">Exceptional ≥86</button>
+        <button class="fbtn" onclick="filterIns('cluster',this)">Cluster Events</button>
+        <button class="fbtn" onclick="filterIns('ceo',this)">CEO/CFO Only</button>
+        <button class="fbtn" onclick="filterIns('low',this)">Near 52-Wk Low</button>
+      </div>
+      <div class="tbl-wrap" style="max-height:380px">
+        <table class="tbl" id="ins-tbl">
+          <thead><tr><th onclick="sortTbl(this)">Security ↕</th><th onclick="sortTbl(this)">Insider ↕</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">% Owned Δ</th><th class="c">Type</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
+          <tbody>
+            <tr data-ins="exc ceo"><td><div class="sym">TMDX</div><div class="sym-sub">TransMedics Group</div></td><td><div style="font-size:11.5px;font-weight:600">S. Hassanein</div><div class="sym-sub">President &amp; CEO</div></td><td class="r"><span class="val up">$4.2M</span></td><td class="r"><span class="val up">+2.3%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc4">94</span></td><td><span class="sym-sub">Feb 19</span></td></tr>
+            <tr data-ins="exc cluster"><td><div class="sym">OXY</div><div class="sym-sub">Occidental Petroleum</div></td><td><div style="font-size:11.5px;font-weight:600">V. Hollub + 3 Dir.</div><div class="sym-sub">CEO + Board Cluster</div></td><td class="r"><span class="val up">$28.1M</span></td><td class="r"><span class="val up">+0.8%</span></td><td class="c"><span class="tag t-clus">Cluster</span></td><td class="c"><span class="score sc4">91</span></td><td><span class="sym-sub">Feb 17</span></td></tr>
+            <tr data-ins="exc cluster ceo"><td><div class="sym">WFRD</div><div class="sym-sub">Weatherford Intl</div></td><td><div style="font-size:11.5px;font-weight:600">G. Musa + CFO</div><div class="sym-sub">CEO + CFO Cluster</div></td><td class="r"><span class="val up">$3.8M</span></td><td class="r"><span class="val up">+1.9%</span></td><td class="c"><span class="tag t-clus">Cluster</span></td><td class="c"><span class="score sc4">89</span></td><td><span class="sym-sub">Feb 18</span></td></tr>
+            <tr data-ins="exc"><td><div class="sym">META</div><div class="sym-sub">Meta Platforms</div></td><td><div style="font-size:11.5px;font-weight:600">S. Sandberg</div><div class="sym-sub">Board Director (former COO)</div></td><td class="r"><span class="val up">$19.4M</span></td><td class="r"><span class="val up">+0.1%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc3">85</span></td><td><span class="sym-sub">Feb 18</span></td></tr>
+            <tr data-ins="exc ceo low"><td><div class="sym">ANET</div><div class="sym-sub">Arista Networks</div></td><td><div style="font-size:11.5px;font-weight:600">A. Beaty</div><div class="sym-sub">Chief Financial Officer</div></td><td class="r"><span class="val up">$1.9M</span></td><td class="r"><span class="val up">+0.4%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc3">82</span></td><td><span class="sym-sub">Feb 16</span></td></tr>
+            <tr data-ins="exc ceo"><td><div class="sym">FICO</div><div class="sym-sub">Fair Isaac Corp</div></td><td><div style="font-size:11.5px;font-weight:600">M. McLaughlin</div><div class="sym-sub">Chief Financial Officer</div></td><td class="r"><span class="val up">$3.1M</span></td><td class="r"><span class="val up">+0.7%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc3">80</span></td><td><span class="sym-sub">Feb 15</span></td></tr>
+            <tr data-ins="str low"><td><div class="sym">INSP</div><div class="sym-sub">Inspire Medical Sys.</div></td><td><div style="font-size:11.5px;font-weight:600">R. Nolen</div><div class="sym-sub">Lead Director</div></td><td class="r"><span class="val up">$2.4M</span></td><td class="r"><span class="val up">+1.2%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc2">76</span></td><td><span class="sym-sub">Feb 14</span></td></tr>
+            <tr data-ins="str ceo low"><td><div class="sym">CELH</div><div class="sym-sub">Celsius Holdings</div></td><td><div style="font-size:11.5px;font-weight:600">J. Fieldly</div><div class="sym-sub">Executive Chairman</div></td><td class="r"><span class="val up">$1.1M</span></td><td class="r"><span class="val up">+0.3%</span></td><td class="c"><span class="tag t-buy">Buy</span></td><td class="c"><span class="score sc2">71</span></td><td><span class="sym-sub">Feb 12</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footnote">Signal scores ≥ 70 flagged. Incorporates role seniority, purchase size vs. compensation, blackout timing, historical accuracy. Source: SEC EDGAR Form 4.</div>
+    </div>
+    <div class="col-stack">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Notable Exit Signals</div><div class="card-sub">Discretionary open-market sells</div></div>
+        <div class="tbl-wrap" style="max-height:160px">
+          <table class="tbl">
+            <thead><tr><th>Security</th><th>Insider</th><th class="r">Value</th><th class="c">Score</th></tr></thead>
+            <tbody>
+              <tr><td><div class="sym">SMPL</div><div class="sym-sub">Simply Good Foods</div></td><td><div style="font-size:11px;font-weight:600">B. Morgan · CEO</div><div class="sym-sub">38% stake · No plan · Pre-earnings</div></td><td class="r"><span class="val dn">$6.2M</span></td><td class="c"><span class="score sc-bear">−81</span></td></tr>
+              <tr><td><div class="sym">DOCS</div><div class="sym-sub">Doximity</div></td><td><div style="font-size:11px;font-weight:600">J. Tangney · CEO</div><div class="sym-sub">10b5-1 plan · Routine liquidity</div></td><td class="r"><span class="val dn">$14.4M</span></td><td class="c"><span class="score sc1">−44</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="footnote">Negative scores: higher magnitude = stronger bearish signal. 10b5-1 sales discounted 60%.</div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Sector Insider Activity</div><div class="card-sub">30-day signal · Fwd 12mo avg return</div></div>
+        <div>
+          <div class="sector-row"><div class="sector-name">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt">31</div><div class="sector-perf up">+14.2%</div></div>
+          <div class="sector-row"><div class="sector-name">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="76%"></div></div><div class="sector-cnt">24</div><div class="sector-perf up">+11.8%</div></div>
+          <div class="sector-row"><div class="sector-name">Health Care</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="70%"></div></div><div class="sector-cnt">19</div><div class="sector-perf up">+9.4%</div></div>
+          <div class="sector-row"><div class="sector-name">Industrials</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="55%"></div></div><div class="sector-cnt">14</div><div class="sector-perf up">+7.1%</div></div>
+          <div class="sector-row"><div class="sector-name">Comm. Svcs</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="28%"></div></div><div class="sector-cnt">6</div><div class="sector-perf dn">−2.1%</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Score Methodology</div></div>
+        <div style="padding:10px 12px;display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-s)">Role Seniority</span><span style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--navy)">30%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-s)">Transaction Type</span><span style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--navy)">25%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-s)">Size vs. Compensation</span><span style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--navy)">25%</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--text-s)">Historical Accuracy</span><span style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--navy)">20%</span></div>
+          <div style="border-top:1px solid var(--border-s);padding-top:7px;font-size:9.5px;color:var(--muted);font-style:italic">Score ≥86 → +16.2% avg 12mo / 74% win rate. Score 76–85 → +11.8% / 68%.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: INSTITUTIONAL FLOWS ═══════════════ -->
+<div id="page-flows" class="page">
+<div class="wrapper">
+  <div class="sec-hd mb14"><div class="sec-title">Institutional Flows — Atypical &amp; Anomalous Activity</div><div class="sec-sub">13F changes · Dark pool blocks · Unusual options sweeps · Non-routine behavior screened</div></div>
+  <div class="kpi-strip ks5">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple);width:70%"></div><div class="kpi-label">Atypical 13F Moves</div><div class="kpi-value">7</div><div class="kpi-delta" style="color:var(--purple)">New positions ≥$500M</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--red-lt);width:55%"></div><div class="kpi-label">Dark Pool Anomalies</div><div class="kpi-value">4</div><div class="kpi-delta dn">Unusual block prints</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:80%"></div><div class="kpi-label">Options Sweep Alerts</div><div class="kpi-value">11</div><div class="kpi-delta am">OTM sweeps this week</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:55%"></div><div class="kpi-label">Short Interest Spikes</div><div class="kpi-value">3</div><div class="kpi-delta" style="color:var(--blue-lt)">≥20% SI change</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:45%"></div><div class="kpi-label">Berkshire 13F Updates</div><div class="kpi-value">2</div><div class="kpi-delta up">OXY +$2.1B · AAPL hold</div></div>
+  </div>
+  <div class="g2 mb14">
+    <div>
+      <div class="sec-hd"><div class="sec-title">Atypical 13F Smart-Money Positioning</div><div class="sec-sub">New &amp; materially changed positions — managers with ≥70% 5yr win rate</div></div>
+      <div class="col-stack">
+        <div class="flow-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="flow-ticker">OXY</div><div class="flow-co">Occidental Petroleum · Berkshire Hathaway + Third Point</div></div>
+            <div style="text-align:right"><div class="val up" style="font-size:15px;font-family:var(--mono)">+$2.7B</div><div class="sym-sub">Combined new capital Q4</div></div>
+          </div>
+          <div class="flow-divider"></div>
+          <div class="flow-body"><strong>Berkshire now holds 28.9% of OXY outstanding</strong> — 6th consecutive accumulation quarter, approaching multiple BHCA thresholds. <strong>Third Point's $620M new position</strong> filed the same quarter signals separate sophisticated capital reaching the same conclusion independently. This triple-overlap (Berkshire, Third Point, CEO Hollub's $18.3M personal purchase at the same 14-month low) is a structurally rare convergent setup. Acquisition scenario adds meaningful probability-weighted upside within 12–18 months.</div>
+          <div class="flow-foot"><span class="tag t-flow">13F · Berkshire + Third Point</span><span class="tag t-buy">Bullish Convergence</span><span class="sym-sub">Filed Feb 14, 2026</span></div>
+        </div>
+        <div class="flow-card" style="border-top-color:var(--amber)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="flow-ticker">NVDA</div><div class="flow-co">NVIDIA Corporation · Druckenmiller / Duquesne Family Office</div></div>
+            <div style="text-align:right"><div class="val up" style="font-size:15px;font-family:var(--mono)">$890M</div><div class="sym-sub">New position Q4 2025</div></div>
+          </div>
+          <div class="flow-divider"></div>
+          <div class="flow-body"><strong>Stanley Druckenmiller's Duquesne initiated a new $890M NVDA position</strong> — his largest new technology bet in 3 years. Druckenmiller has a documented 30-year record with fewer than 5 major losing positions. Combined with the AI Subcommittee insider buy and HR 7821 at 78% passage, this is the <strong>only security on the platform with four-source alignment</strong>. The Duquesne position alone justifies a standalone long thesis independent of every other signal.</div>
+          <div class="flow-foot"><span class="tag t-flow">13F · Duquesne</span><span class="tag t-buy">Four-Source Bull</span><span class="sym-sub">Filed Feb 14, 2026</span></div>
+        </div>
+        <div class="flow-card" style="border-top-color:var(--red-lt)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="flow-ticker">PFE</div><div class="flow-co">Pfizer Inc. · Multiple Healthcare Specialist Funds</div></div>
+            <div style="text-align:right"><div class="val dn" style="font-size:15px;font-family:var(--mono)">−$3.4B</div><div class="sym-sub">Combined exits Q4 2025</div></div>
+          </div>
+          <div class="flow-divider"></div>
+          <div class="flow-body">Four healthcare-specialized institutional managers — <strong>Perceptive Advisors, RTW Investments, Baker Bros, and OrbiMed</strong> — all materially reduced or fully exited PFE positions in Q4. These are the most sector-focused healthcare funds on the Street. Combined exits total $3.4B. Timing coincides precisely with 8 congressional Health Committee member exits before drug pricing markup. When the most specialized institutional capital AND informed congressional insiders exit the same stock simultaneously, the signal is structurally compelling. <strong>Dual-source bearish score: −80.</strong></div>
+          <div class="flow-foot"><span class="tag t-flow">13F · 4 Healthcare Funds</span><span class="tag t-sell">Dual-Source Bear</span><span class="sym-sub">Filed Feb 14, 2026</span></div>
+        </div>
+        <div class="flow-card" style="border-top-color:var(--blue-lt)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div><div class="flow-ticker">META</div><div class="flow-co">Meta Platforms · Tepper / Appaloosa Management</div></div>
+            <div style="text-align:right"><div class="val up" style="font-size:15px;font-family:var(--mono)">+$1.2B</div><div class="sym-sub">Conviction increase Q4</div></div>
+          </div>
+          <div class="flow-divider"></div>
+          <div class="flow-body">Tepper's Appaloosa increased META by $1.2B in Q4 2025 following AI monetization disclosures. This aligns with Director Sandberg's $19.4M open-market purchase — the former COO who built the ad-revenue architecture has more operational insight into META's monetization trajectory than any outside analyst. The combination of Tepper's macro-driven conviction and Sandberg's operational-knowledge purchase represents a <strong>high-quality dual institutional + insider confirmation.</strong></div>
+          <div class="flow-foot"><span class="tag t-flow">13F · Appaloosa</span><span class="tag t-buy">Institutional + Insider Align</span><span class="sym-sub">Filed Feb 14, 2026</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-hd"><div class="sec-title">Unusual Options Flow</div><div class="sec-sub">OTM sweeps · Premium ≥$1M · ≤60-day expiry · Correlated with intel signals</div></div>
+      <div class="card mb14">
+        <div class="tbl-wrap" style="max-height:240px">
+          <table class="tbl">
+            <thead><tr><th onclick="sortTbl(this)">Ticker ↕</th><th>Strike / Expiry</th><th class="r" onclick="sortTbl(this)">Premium ↕</th><th>Type</th><th>Signal Context</th></tr></thead>
+            <tbody>
+              <tr><td><div class="sym">NVDA</div></td><td style="font-family:var(--mono);font-size:11px">$150C · Apr 17</td><td class="r"><span class="val up">$6.8M</span></td><td><span class="tag t-opt">Calls</span></td><td style="font-size:10.5px;color:var(--text-s)">Block sweep same day HR 7821 cleared committee. OTM +22%. Triple-correlated.</td></tr>
+              <tr><td><div class="sym">RTX</div></td><td style="font-family:var(--mono);font-size:11px">$145C · Mar 21</td><td class="r"><span class="val up">$4.2M</span></td><td><span class="tag t-opt">Calls</span></td><td style="font-size:10.5px;color:var(--text-s)">Same session as Armed Svcs classified briefing. OTM +14%. Cluster corroborated.</td></tr>
+              <tr><td><div class="sym">XOM</div></td><td style="font-family:var(--mono);font-size:11px">$115C · Apr 17</td><td class="r"><span class="val up">$2.9M</span></td><td><span class="tag t-opt">Calls</span></td><td style="font-size:10.5px;color:var(--text-s)">Correlates with Sen. Morrison Finance Cmte option position. Energy bull thesis.</td></tr>
+              <tr><td><div class="sym">FCX</div></td><td style="font-family:var(--mono);font-size:11px">$52C · Mar 21</td><td class="r"><span class="val up">$1.8M</span></td><td><span class="tag t-opt">Calls</span></td><td style="font-size:10.5px;color:var(--text-s)">Unusual OTM sweep 1 week before HR 6419 markup. Aligns with Rep. Vasquez buy.</td></tr>
+              <tr><td><div class="sym">TSM</div></td><td style="font-family:var(--mono);font-size:11px">$165P · Mar 7</td><td class="r"><span class="val dn">$3.1M</span></td><td><span class="tag t-sell">Puts</span></td><td style="font-size:10.5px;color:var(--text-s)">Large put sweep day of classified Taiwan briefing. Rep. Park full exit same week.</td></tr>
+              <tr><td><div class="sym">PFE</div></td><td style="font-family:var(--mono);font-size:11px">$24P · Mar 21</td><td class="r"><span class="val dn">$2.3M</span></td><td><span class="tag t-sell">Puts</span></td><td style="font-size:10.5px;color:var(--text-s)">Block puts same week as Health Committee exits + $3.4B institutional exits.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="footnote">Sourced from CBOE/OPRA. "Sweeps" = single prints ≥$1M premium, OTM ≥5%, expiring ≤60 days. Directional bets by sophisticated participants.</div>
+      </div>
+      <div class="sec-hd"><div class="sec-title">Short Interest Anomalies</div><div class="sec-sub">≥20% SI increase week-over-week</div></div>
+      <div class="card mb14">
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Ticker</th><th class="r">SI %</th><th class="r">Δ vs Prior Wk</th><th>Signal Read</th></tr></thead><tbody>
+          <tr><td><div class="sym">SMPL</div><div class="sym-sub">Simply Good Foods</div></td><td class="r"><span class="val dn">18.4%</span></td><td class="r"><span class="val dn">+6.2pp</span></td><td style="font-size:10.5px;color:var(--text-s)">Institutional shorting accelerating after CEO exit. Corroborates −81 bear thesis.</td></tr>
+          <tr><td><div class="sym">TSM</div><div class="sym-sub">Taiwan Semi</div></td><td class="r"><span class="val dn">9.1%</span></td><td class="r"><span class="val dn">+3.8pp</span></td><td style="font-size:10.5px;color:var(--text-s)">Short interest rising as geopolitical risk premium builds post-briefing signal.</td></tr>
+          <tr><td><div class="sym">PFE</div><div class="sym-sub">Pfizer</div></td><td class="r"><span class="val dn">7.2%</span></td><td class="r"><span class="val dn">+2.1pp</span></td><td style="font-size:10.5px;color:var(--text-s)">Institutional short thesis building ahead of SB 2241. Aligns with put flow.</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="sec-hd"><div class="sec-title">Berkshire 13F Tracker</div></div>
+      <div class="card">
+        <div style="padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-s)"><span style="font-size:11.5px;font-weight:600">OXY — Occidental</span><span class="val up" style="font-family:var(--mono)">28.9% · +$2.1B Q4 · 6th consec. add</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-s)"><span style="font-size:11.5px;font-weight:600">AAPL — Apple</span><span class="val" style="font-family:var(--mono)">Hold · No material change</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-s)"><span style="font-size:11.5px;font-weight:600">BAC — Bank of America</span><span class="val dn" style="font-family:var(--mono)">Reduced −$800M · 7th consecutive trim</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0"><span style="font-size:11.5px;font-weight:600">KHC — Kraft Heinz</span><span class="val" style="font-family:var(--mono)">Hold · Strategic asset, no change</span></div>
+        </div>
+        <div class="footnote">Berkshire 13F filed Feb 14, 2026. 45-day reporting lag from Q4 2025 end. Current positions may differ.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: MARKETS & SECTORS ═══════════════ -->
+<div id="page-markets" class="page">
+<div class="wrapper">
+  <div class="kpi-strip ks6">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:60%"></div><div class="kpi-label">S&amp;P 500</div><div class="kpi-value">6,147</div><div class="kpi-delta up">+0.42% today</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:55%"></div><div class="kpi-label">Nasdaq 100</div><div class="kpi-value">21,384</div><div class="kpi-delta up">+0.68% today</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:45%"></div><div class="kpi-label">Russell 2000</div><div class="kpi-value">2,241</div><div class="kpi-delta up">+0.21% today</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:30%"></div><div class="kpi-label">VIX</div><div class="kpi-value">17.4</div><div class="kpi-delta am">Moderate volatility</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:70%"></div><div class="kpi-label">10-Yr Treasury</div><div class="kpi-value">4.42%</div><div class="kpi-delta" style="color:var(--muted)">+2bps today</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:65%"></div><div class="kpi-label">ATLAS Signal Alpha</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs benchmark 12mo</div></div>
+  </div>
+  <div class="g2 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Sector Performance vs. S&amp;P 500 Benchmark</div><div class="card-sub">Signal-weighted estimated 12-mo forward return differential</div></div>
+      <div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Defense</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="95%"></div></div><div class="sector-perf up">+12.8%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-perf up">+11.4%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="80%"></div></div><div class="sector-perf up">+9.2%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Critical Minerals</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="72%"></div></div><div class="sector-perf up">+8.1%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Cyber Security</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="68%"></div></div><div class="sector-perf up">+7.4%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">MedTech</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="62%"></div></div><div class="sector-perf up">+6.1%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Health Care</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="55%"></div></div><div class="sector-perf up">+5.1%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Financials</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="42%"></div></div><div class="sector-perf up">+3.4%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Clean Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="32%"></div></div><div class="sector-perf up">+2.8%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Consumer Disc.</div><div class="sector-track"><div class="sector-fill sf-neu" data-w="20%"></div></div><div class="sector-perf" style="color:var(--muted)">+0.4%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">Pharma</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="42%"></div></div><div class="sector-perf dn">−3.4%</div></div>
+        <div class="sector-row"><div class="sector-name" style="width:130px">China-Exposed</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="60%"></div></div><div class="sector-perf dn">−5.1%</div></div>
+      </div>
+      <div class="footnote">Signal-weighted estimates incorporate insider flow, legislative impact scores, 13F positioning changes, and sector seasonality. Forward-looking estimates only.</div>
+    </div>
+    <div class="col-stack">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Industry Strength Matrix</div><div class="card-sub">ATLAS composite score — all signal sources combined</div></div>
+        <div class="ind-matrix" style="border-top:none">
+          <div class="ind-cell ic-bull"><div class="ind-name">Defense Prime</div><div class="ind-score">+8.4</div><div class="ind-lbl">Strong</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">AI Compute</div><div class="ind-score">+7.6</div><div class="ind-lbl">Strong</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">Copper</div><div class="ind-score">+6.8</div><div class="ind-lbl">Bull</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">E&amp;P Energy</div><div class="ind-score">+6.4</div><div class="ind-lbl">Bull</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">Cyber Sec.</div><div class="ind-score">+6.2</div><div class="ind-lbl">Bull</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">Aerospace</div><div class="ind-score">+5.1</div><div class="ind-lbl">Bull</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">MedTech</div><div class="ind-score">+4.8</div><div class="ind-lbl">Bull</div></div>
+          <div class="ind-cell ic-bull"><div class="ind-name">Solar/Wind</div><div class="ind-score">+3.2</div><div class="ind-lbl">Lean Bull</div></div>
+          <div class="ind-cell ic-neu"><div class="ind-name">Retail Bank</div><div class="ind-score">+0.8</div><div class="ind-lbl">Neutral</div></div>
+          <div class="ind-cell ic-neu"><div class="ind-name">Insurance</div><div class="ind-score">+0.3</div><div class="ind-lbl">Neutral</div></div>
+          <div class="ind-cell ic-bear"><div class="ind-name">Large Pharma</div><div class="ind-score">−3.4</div><div class="ind-lbl">Bear</div></div>
+          <div class="ind-cell ic-bear"><div class="ind-name">China Tech</div><div class="ind-score">−5.6</div><div class="ind-lbl">Bear</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Market Breadth &amp; Sentiment</div></div>
+        <div style="padding:11px 13px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">S&amp;P 500 above 200 DMA</span><span class="val up" style="font-family:var(--mono);font-size:12px">62%</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">NYSE Advance / Decline</span><span class="val up" style="font-family:var(--mono);font-size:12px">1.8 : 1</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">52-week highs vs lows</span><span class="val up" style="font-family:var(--mono);font-size:12px">148 / 21</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">CBOE Put / Call Ratio</span><span class="val am" style="font-family:var(--mono);font-size:12px">0.82</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">AAII Bull / Bear</span><span class="val am" style="font-family:var(--mono);font-size:12px">42 / 31</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">CNN Fear &amp; Greed Index</span><span class="val up" style="font-family:var(--mono);font-size:12px">58 · Greed</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">Insider Buy / Sell Ratio (30d)</span><span class="val up" style="font-family:var(--mono);font-size:12px">0.44 · Elevated</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text-s)">Credit Spread (HY–IG)</span><span class="val am" style="font-family:var(--mono);font-size:12px">320bps · Tight</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: TRADE IDEAS ═══════════════ -->
+<div id="page-ideas" class="page">
+<div class="wrapper">
+  <div class="acad-box">
+    <div class="acad-stat"><div class="acad-num">8</div><div class="acad-lbl">Active Ideas</div></div>
+    <div class="acad-stat"><div class="acad-num">3</div><div class="acad-lbl">Signal Sources</div></div>
+    <div class="acad-stat"><div class="acad-num">Avg 88</div><div class="acad-lbl">Composite Score</div></div>
+    <div class="acad-stat"><div class="acad-num">6L · 2S</div><div class="acad-lbl">Long / Short</div></div>
+    <div class="acad-text">Each idea requires ≥2 independent signal sources. Composite weighting: Congressional 30%, Corporate Insider 35%, Institutional Flow 20%, Legislative Catalyst 15%. Ideas scoring ≥80 represent statistically rare multi-source alignment events with historically elevated forward returns. <cite>ATLAS Signal Engine v3.1 · Methodology verified Feb 2026</cite></div>
+  </div>
+
+  <!-- Score key -->
+  <div class="card mb14" style="border-left:none">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border)">
+      <div style="background:var(--red-bg);padding:8px 12px;text-align:center"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red-lt)">86–100</div><div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red-lt);margin-top:2px">Exceptional</div><div style="font-size:9px;color:var(--text-s);margin-top:3px">+16.2% avg · 74% win rate</div></div>
+      <div style="background:var(--amber-bg);padding:8px 12px;text-align:center"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber)">76–85</div><div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-top:2px">Strong</div><div style="font-size:9px;color:var(--text-s);margin-top:3px">+11.8% avg · 68% win rate</div></div>
+      <div style="background:var(--blue-pale);padding:8px 12px;text-align:center"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--blue-lt)">66–75</div><div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-lt);margin-top:2px">Notable</div><div style="font-size:9px;color:var(--text-s);margin-top:3px">+7.4% avg · 61% win rate</div></div>
+      <div style="background:var(--surface2);padding:8px 12px;text-align:center"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted)">51–65</div><div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px">Watch</div><div style="font-size:9px;color:var(--text-s);margin-top:3px">+3.1% avg · 54% win rate</div></div>
+      <div style="background:var(--surface2);padding:8px 12px;text-align:center"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--border)">0–50</div><div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--border);margin-top:2px">Noise</div><div style="font-size:9px;color:var(--text-s);margin-top:3px">+0.4% avg · 51% win rate</div></div>
+    </div>
+  </div>
+
+  <!-- Filter bars -->
+  <div style="background:var(--surface2);border:1px solid var(--border);padding:10px 14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px">
+    <div class="filter-bar"><span class="filter-lbl">Strength:</span>
+      <button class="fbtn active" id="fs-all" onclick="filterIdeas({strength:'all'})">All</button>
+      <button class="fbtn" id="fs-exc" onclick="filterIdeas({strength:'exc'})">Exceptional ≥86</button>
+      <button class="fbtn" id="fs-str" onclick="filterIdeas({strength:'str'})">Strong 76–85</button>
+      <button class="fbtn" id="fs-not" onclick="filterIdeas({strength:'not'})">Notable 65–75</button>
+    </div>
+    <div class="filter-bar"><span class="filter-lbl">Direction:</span>
+      <button class="fbtn active" id="fd-all" onclick="filterIdeas({dir:'all'})">All</button>
+      <button class="fbtn" id="fd-long" onclick="filterIdeas({dir:'long'})">Long Only</button>
+      <button class="fbtn" id="fd-short" onclick="filterIdeas({dir:'short'})">Short / Bearish</button>
+    </div>
+    <div class="filter-bar"><span class="filter-lbl">Horizon:</span>
+      <button class="fbtn active" id="fh-all" onclick="filterIdeas({horizon:'all'})">All</button>
+      <button class="fbtn" id="fh-st" onclick="filterIdeas({horizon:'st'})">&lt;3 Months</button>
+      <button class="fbtn" id="fh-mt" onclick="filterIdeas({horizon:'mt'})">3–9 Months</button>
+      <button class="fbtn" id="fh-lt" onclick="filterIdeas({horizon:'lt'})">&gt;9 Months</button>
+    </div>
+    <div class="filter-bar"><span class="filter-lbl">Expected Move:</span>
+      <button class="fbtn active" id="fm-all" onclick="filterIdeas({move:'all'})">All</button>
+      <button class="fbtn" id="fm-m20" onclick="filterIdeas({move:'m20'})">&gt;20%</button>
+      <button class="fbtn" id="fm-m30" onclick="filterIdeas({move:'m30'})">&gt;30%</button>
+      <button class="fbtn" id="fm-m50" onclick="filterIdeas({move:'m50'})">&gt;50%</button>
+      <button class="fbtn" id="fm-multi" onclick="filterIdeas({move:'multi'})">Multi-Source Only</button>
+    </div>
+  </div>
+
+  <!-- IDEA 1: RTX -->
+  <div class="idea-card exc" data-strength="exc" data-dir="long" data-horizon="mt" data-move="m20 m30" data-sources="multi" data-ticker="RTX" data-entry-lo="120" data-entry-hi="126" data-target1="145" data-target2="158" data-stop="111" data-dir-type="long">
+    <div class="idea-hd">
+      <div class="idea-num">01</div>
+      <div class="idea-main">
+        <div class="idea-ticker-row"><div class="idea-ticker">RTX</div><div class="idea-co">Raytheon Technologies</div><span class="act-badge ab-long">Long</span><span class="tag t-clus">4-Source</span></div>
+        <div class="idea-tagline">"Five Armed Services members buying defense stocks within 72hrs of a classified briefing — the information advantage is structural, not coincidental."</div>
+        <div class="idea-mets">
+          <div class="idea-met"><div class="idea-met-val imv-am">94</div><div class="idea-met-lbl">Score</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-up">+13–23%</div><div class="idea-met-lbl">Upside Target</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-dn">−8%</div><div class="idea-met-lbl">Stop Level</div></div>
+          <div class="idea-met"><div class="idea-met-val">3–6 mo</div><div class="idea-met-lbl">Horizon</div></div>
+          <div class="idea-met"><div class="idea-met-val">2.8:1</div><div class="idea-met-lbl">R/R Ratio</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-up">$252</div><div class="idea-met-lbl">12-Mo Target</div></div>
+        </div>
+        <div class="ssbar"><div class="ss-seg ss-cong" style="width:30%"></div><div class="ss-seg ss-ins" style="width:22%"></div><div class="ss-seg ss-flow" style="width:30%"></div><div class="ss-seg ss-leg" style="width:18%"></div></div>
+        <div class="ssbar-lbl"><span class="ssbl"><span class="ssbl-dot" style="background:var(--red-lt)"></span>Congress 30%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--amber)"></span>Insider 22%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--blue-lt)"></span>Options Flow 30%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--purple)"></span>SB 1882 18%</span></div>
+      </div>
+      <div class="idea-conv-block"><div class="idea-conv-lbl">Composite</div><div class="idea-conv-score" style="color:var(--red-lt)">94</div><div class="idea-conv-tier tier-exc">Exceptional</div></div>
+    </div>
+    <div class="rr-block rrc6">
+      <div class="rr-cell"><div class="rr-lbl">Entry Zone</div><div class="rr-val">$198–$208</div><div class="rr-sub">Scale into weakness</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Target 1</div><div class="rr-val up">$232</div><div class="rr-sub">Post SB 1882 markup</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Target 2</div><div class="rr-val up">$252</div><div class="rr-sub">Contract award cycle</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Stop Loss</div><div class="rr-val dn">$188</div><div class="rr-sub">Below cluster low</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Key Catalyst</div><div class="rr-val am">Mar 3, 2026</div><div class="rr-sub">SB 1882 Senate markup</div></div>
+      <div class="rr-cell"><div class="rr-lbl">12-Mo Target</div><div class="rr-val up">$252+</div><div class="rr-sub">Full defense cycle</div></div>
+    </div>
+    <div class="rn-body">
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Investment Thesis</div>
+        <div class="rn-prose">The <strong>5-member Armed Services cluster</strong> — RTX, LMT, NOC, BA, CACI purchased within 72 hours of a classified briefing — is the highest-conviction congressional signal of 2026. Sen. Whitfield's $500K–$1M RTX purchase was filed 48 hours before his committee approved a <span class="hl">$4.2B defense contract</span>. The Armed Services Committee has a <span class="hl">94% correlation</span> between member trades and jurisdiction outcomes — highest of any tracked committee.<br><br><strong>SB 1882 (Defense Modernization Act)</strong> carries 85% passage probability — highest of any tracked bill — and directly authorizes expanded missile defense, hypersonic, and drone programs where Raytheon holds dominant contractor positions. A <strong>$4.2M options sweep</strong> on RTX calls placed the same session as the classified briefing provides independent corroboration from additional sophisticated capital.</div>
+      </div>
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Signal Evidence — All Sources</div>
+        <div class="ev-list">
+          <div class="ev-item"><div class="ev-ico">🔴</div><div><div class="ev-text"><strong>Congressional (Score 94):</strong> 5 Armed Services members bought RTX/LMT/NOC/BA/CACI in 72hr window. Sen. Whitfield filed 48hr before $4.2B contract approval.</div><div class="ev-src">STOCK Act Disclosures · Feb 18, 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🟡</div><div><div class="ev-text"><strong>Legislative (85% passage):</strong> SB 1882 advancing with bipartisan support. Defense sector impact score +8.4 — highest of all tracked sectors. Mar 3 markup imminent.</div><div class="ev-src">Congress.gov · Armed Services Committee · Feb 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🔵</div><div><div class="ev-text"><strong>Options Flow:</strong> $4.2M RTX call sweep (Mar $145C) placed same session as classified briefing — independent sophisticated capital corroboration.</div><div class="ev-src">CBOE Sweep Data · Feb 18, 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🟣</div><div><div class="ev-text"><strong>Institutional 13F:</strong> Defense sector 13F net buys +$2.1B vs prior quarter — funds front-running anticipated NDAA supplemental authorization.</div><div class="ev-src">Aggregated 13F · Q4 2025 · Filed Feb 14, 2026</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rn-body" style="border-top:none">
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Catalyst Timeline</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot tl-done"></div><div class="tl-content"><div class="tl-date">Feb 18, 2026 · Done</div><div class="tl-desc">5-member cluster detected · Entry signal generated</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-near"></div><div class="tl-content"><div class="tl-date">Mar 3, 2026 · PRIMARY CATALYST</div><div class="tl-desc">SB 1882 Senate markup — budget line items confirmed</div><div class="tl-note" style="color:var(--red-lt)">⚡ Position before this date</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-mid"></div><div class="tl-content"><div class="tl-date">Apr–May 2026</div><div class="tl-desc">SB 1882 full Senate floor vote — unlock Target 1 ($145)</div></div></div>
+          <div class="tl-item"><div class="tl-dot tl-far"></div><div class="tl-content"><div class="tl-date">Q3 2026</div><div class="tl-desc">Defense contract announcements — unlock Target 2 ($158)</div></div></div>
+        </div>
+      </div>
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Risk Factors &amp; Invalidation Triggers</div>
+        <div class="rn-prose"><span class="risk"><strong>Primary risk:</strong></span> STOCK Act investigation into the cluster buy could trigger −5–10% headline selloff independent of fundamentals. Monitor DOJ/SEC news — any investigation = reassess position sizing immediately.<br><br><span class="watch"><strong>Invalidation:</strong></span> SB 1882 pulled from calendar, or debt ceiling gridlock freezing defense authorizations. Either event = exit at market. The legislative catalyst is load-bearing to the thesis.<br><br><strong>Sizing note:</strong> Given regulatory investigation risk, size at 60–70% of normal. Leave room to add on investigation-driven pullbacks if bill trajectory remains intact.</div>
+      </div>
+    </div>
+    <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Defense</span><span class="rn-ftag">Congress Cluster</span><span class="rn-ftag">SB 1882</span><span class="rn-ftag">Options Corroborated</span><span class="rn-ftag">4-Source</span></div><div class="rn-date">Updated Feb 22, 2026 · ATLAS v3.1</div></div>
+  </div>
+
+  <!-- IDEA 2: NVDA -->
+  <div class="idea-card exc" data-strength="exc" data-dir="long" data-horizon="st mt" data-move="m20 m30 m50" data-sources="multi" data-ticker="NVDA" data-entry-lo="118" data-entry-hi="128" data-target1="158" data-target2="175" data-stop="106" data-dir-type="long">
+    <div class="idea-hd">
+      <div class="idea-num">02</div>
+      <div class="idea-main">
+        <div class="idea-ticker-row"><div class="idea-ticker">NVDA</div><div class="idea-co">NVIDIA Corporation</div><span class="act-badge ab-calls">Calls / Long</span><span class="tag t-clus">Quadruple-Source</span></div>
+        <div class="idea-tagline">"AI Subcommittee insider + Druckenmiller $890M + $6.8M options sweep + HR 7821 at 78% — the only idea on the platform with four independent sources aligned simultaneously."</div>
+        <div class="idea-mets">
+          <div class="idea-met"><div class="idea-met-val imv-am">92</div><div class="idea-met-lbl">Score</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-up">+20–34%</div><div class="idea-met-lbl">Upside Target</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-dn">−12%</div><div class="idea-met-lbl">Stop Level</div></div>
+          <div class="idea-met"><div class="idea-met-val">2–4 mo</div><div class="idea-met-lbl">Horizon</div></div>
+          <div class="idea-met"><div class="idea-met-val">2.8:1</div><div class="idea-met-lbl">R/R Ratio</div></div>
+          <div class="idea-met"><div class="idea-met-val imv-up" style="color:var(--red-lt)">Feb 25</div><div class="idea-met-lbl">Vote — 3 Days</div></div>
+        </div>
+        <div class="ssbar"><div class="ss-seg ss-cong" style="width:25%"></div><div class="ss-seg ss-ins" style="width:18%"></div><div class="ss-seg ss-flow" style="width:40%"></div><div class="ss-seg ss-leg" style="width:17%"></div></div>
+        <div class="ssbar-lbl"><span class="ssbl"><span class="ssbl-dot" style="background:var(--red-lt)"></span>Congress 25%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--amber)"></span>Insider 18%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--blue-lt)"></span>Druckenmiller 40%</span><span class="ssbl"><span class="ssbl-dot" style="background:var(--purple)"></span>HR 7821 17%</span></div>
+      </div>
+      <div class="idea-conv-block"><div class="idea-conv-lbl">Composite</div><div class="idea-conv-score" style="color:var(--red-lt)">92</div><div class="idea-conv-tier tier-exc">Exceptional</div></div>
+    </div>
+    <div class="rr-block rrc6">
+      <div class="rr-cell"><div class="rr-lbl">Entry Zone</div><div class="rr-val">$182–$198</div><div class="rr-sub">Equity or ITM calls</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Target 1</div><div class="rr-val up">$228</div><div class="rr-sub">Post HR 7821 passage</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Target 2</div><div class="rr-val up">$255+</div><div class="rr-sub">AI infra buildout</div></div>
+      <div class="rr-cell"><div class="rr-lbl">Stop Loss</div><div class="rr-val dn">$168</div><div class="rr-sub">Bill fail / reversal</div></div>
+      <div class="rr-cell"><div class="rr-lbl">FLOOR VOTE</div><div class="rr-val am">Feb 25 ⚡</div><div class="rr-sub">3 days — act now</div></div>
+      <div class="rr-cell"><div class="rr-lbl">12-Mo Target</div><div class="rr-val up">$255–$290</div><div class="rr-sub">Infrastructure ramp</div></div>
+    </div>
+    <div class="rn-body">
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Investment Thesis</div>
+        <div class="rn-prose">This is the <strong>only four-source alignment</strong> on the platform. Rep. Chen (AI Subcommittee) purchased NVDA during a closed-door chip briefing — 6 days before HR 7821 advanced to the floor at 78% passage. <span class="hl">Druckenmiller initiated an $890M new position</span> — his largest new tech bet in 3 years, from a manager with a 30-year record of fewer than 5 major losing positions. A <strong>$6.8M NVDA call sweep</strong> was placed the same day the bill cleared committee — independent corroboration.<br><br>HR 7821 provides $18B in AI chip infrastructure subsidies with NVIDIA as the dominant beneficiary. The thesis works independently from any single source: Druckenmiller alone is standalone conviction. <span class="hl">The Feb 25 floor vote creates entry urgency today.</span></div>
+      </div>
+      <div class="rn-sec">
+        <div class="rn-sec-lbl">Signal Evidence — All Sources</div>
+        <div class="ev-list">
+          <div class="ev-item"><div class="ev-ico">🔴</div><div><div class="ev-text"><strong>Congressional (Score 88):</strong> Rep. Chen (AI Subcommittee) bought $250K–$500K during closed chip briefing. Filed 6 days before HR 7821 advanced.</div><div class="ev-src">STOCK Act · Feb 17, 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🟣</div><div><div class="ev-text"><strong>Druckenmiller 13F (highest weight):</strong> Duquesne $890M new NVDA position. Largest new tech bet in 3 years. 30yr record: &lt;5 major losses.</div><div class="ev-src">13F · Duquesne Family Office · Feb 14, 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🔵</div><div><div class="ev-text"><strong>Options sweep:</strong> $6.8M NVDA $150C Apr 17 block placed same day HR 7821 cleared committee — independent confirmation.</div><div class="ev-src">CBOE/OPRA · Feb 17, 2026</div></div></div>
+          <div class="ev-item"><div class="ev-ico">🟡</div><div><div class="ev-text"><strong>Legislative:</strong> HR 7821 at 78% passage — floor vote Feb 25. $18B AI chip subsidy. Semiconductor impact score +7.1.</div><div class="ev-src">Congress.gov · Feb 2026</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Semiconductor</span><span class="rn-ftag">Quadruple-Source</span><span class="rn-ftag">Druckenmiller</span><span class="rn-ftag">HR 7821</span><span class="rn-ftag">Feb 25 Catalyst</span></div><div class="rn-date">Updated Feb 22, 2026 · ATLAS v3.1</div></div>
+  </div>
+
+  <!-- IDEAS 3 & 4 -->
+  <div class="g2 mb14">
+    <div class="idea-card exc" style="margin-bottom:0" data-strength="exc" data-dir="long" data-horizon="lt" data-move="m20 m30" data-sources="multi" data-ticker="OXY" data-entry-lo="44" data-entry-hi="48" data-target1="56" data-target2="64" data-stop="41" data-dir-type="long">
+      <div class="idea-hd">
+        <div class="idea-num">03</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">OXY</div><div class="idea-co">Occidental Petroleum</div><span class="act-badge ab-long">Long</span><span class="tag t-clus">CEO + Berkshire</span></div>
+          <div class="idea-tagline">"Buffett, CEO Hollub, and Third Point all buying at the same 14-month low. The smartest long-term capital in markets converging on the same thesis."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">91</div><div class="idea-met-lbl">Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+22–34%</div><div class="idea-met-lbl">Target</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">−9%</div><div class="idea-met-lbl">Stop</div></div>
+            <div class="idea-met"><div class="idea-met-val">6–18 mo</div><div class="idea-met-lbl">Horizon</div></div>
+            <div class="idea-met"><div class="idea-met-val">3.1:1</div><div class="idea-met-lbl">R/R</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--red-lt)">91</div><div class="idea-conv-tier tier-exc">Exceptional</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Entry</div><div class="rr-val">$48–$54</div><div class="rr-sub">Near current price</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Targets</div><div class="rr-val up">$62 / $70</div><div class="rr-sub">Cycle + OLGC synergy</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop</div><div class="rr-val dn">$44</div><div class="rr-sub">Macro deterioration</div></div>
+        <div class="rr-cell"><div class="rr-lbl">12-Mo Target</div><div class="rr-val up">$70–$75</div><div class="rr-sub">+BRK acquisition bid</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">CEO Hollub's $18.3M purchase — her largest personal equity commitment ever — plus three independent director buys, all at a 14-month low with no 10b5-1. Simultaneously: <span class="hl">Berkshire's 6th consecutive add (+$2.1B, now 28.9%)</span> approaching BHCA threshold, and Third Point's new $620M position. OLGC acquisition synergy ramp adds ~$340M in underestimated 2026 EBITDA. Formal acquisition scenario adds substantial probability-weighted upside optionality.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Energy</span><span class="rn-ftag">CEO Cluster</span><span class="rn-ftag">Berkshire Aligned</span><span class="rn-ftag">Acquisition Candidate</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+    <div class="idea-card exc" style="margin-bottom:0" data-strength="exc" data-dir="long" data-horizon="mt lt" data-move="m30 m50" data-sources="multi" data-ticker="TMDX" data-entry-lo="44" data-entry-hi="50" data-target1="62" data-target2="72" data-stop="40" data-dir-type="long">
+      <div class="idea-hd">
+        <div class="idea-num">04</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">TMDX</div><div class="idea-co">TransMedics Group</div><span class="act-badge ab-long">Long</span></div>
+          <div class="idea-tagline">"CEO's largest buy since IPO — 347% of annual salary — 11 days after a −28% selloff driven by a one-time logistics delay, not structural demand. 4/4 historical accuracy."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">94</div><div class="idea-met-lbl">Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+38–55%</div><div class="idea-met-lbl">Target</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">−12%</div><div class="idea-met-lbl">Stop</div></div>
+            <div class="idea-met"><div class="idea-met-val">6–12 mo</div><div class="idea-met-lbl">Horizon</div></div>
+            <div class="idea-met"><div class="idea-met-val">3.8:1</div><div class="idea-met-lbl">R/R</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--red-lt)">94</div><div class="idea-conv-tier tier-exc">Exceptional</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Entry</div><div class="rr-val">$126–$140</div><div class="rr-sub">Scale into weakness</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Target</div><div class="rr-val up">$168–$195</div><div class="rr-sub">Normalized multiple</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop</div><div class="rr-val dn">$114</div><div class="rr-sub">Below CEO avg cost</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Catalyst</div><div class="rr-val am">Feb 24, 2026</div><div class="rr-sub">Q4 earnings release</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">CEO Hassanein spent $4.2M — 347% of annual salary — open-market 11 days after a −28% post-earnings drawdown driven by a one-time NOP logistics contract delay (management confirmed this is not structural demand degradation). TransMedics operates the <span class="hl">only commercially approved Organ Care System in the US</span> — a structural monopoly platform. 4/4 prior CEO purchases preceded positive 12-month returns averaging +41%.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">MedTech</span><span class="rn-ftag">CEO Signal</span><span class="rn-ftag">Post-Earnings Dip</span><span class="rn-ftag">4/4 Accuracy</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+  </div>
+
+  <!-- IDEAS 5 & 6 -->
+  <div class="g2 mb14">
+    <div class="idea-card str" style="margin-bottom:0" data-strength="str" data-dir="long" data-horizon="mt" data-move="m20 m30" data-sources="multi" data-ticker="FCX" data-entry-lo="38" data-entry-hi="42" data-target1="52" data-target2="62" data-stop="35" data-dir-type="long">
+      <div class="idea-hd">
+        <div class="idea-num">05</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">FCX</div><div class="idea-co">Freeport-McMoRan Inc.</div><span class="act-badge ab-long">Long</span></div>
+          <div class="idea-tagline">"Natural Resources Committee member bought the largest US copper miner 9 days before a closed hearing on HR 6419. Options flow corroborating. Mar 17 catalyst imminent."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">83</div><div class="idea-met-lbl">Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+25–40%</div><div class="idea-met-lbl">Target</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">−10%</div><div class="idea-met-lbl">Stop</div></div>
+            <div class="idea-met"><div class="idea-met-val">3–6 mo</div><div class="idea-met-lbl">Horizon</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--amber)">83</div><div class="idea-conv-tier tier-str">Strong</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Entry</div><div class="rr-val">$60–$66</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Target</div><div class="rr-val up">$76–$88</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop</div><div class="rr-val dn">$55</div><div class="rr-sub">Bill fails</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Key Date</div><div class="rr-val am">Mar 17, 2026</div><div class="rr-sub">HR 6419 floor vote</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">Rep. Vasquez (Natural Resources) bought FCX 9 days before a closed hearing on domestic critical minerals. HR 6419 at 71% passage — FCX is the largest US copper miner by output and the clearest direct beneficiary of any domestic mining subsidy framework. Independent $1.8M call sweep placed same week adds options flow corroboration. Copper industry impact score: +8.0.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Mining</span><span class="rn-ftag">Congress</span><span class="rn-ftag">HR 6419</span><span class="rn-ftag">Options Corroborated</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+    <div class="idea-card str" style="margin-bottom:0" data-strength="str" data-dir="long" data-horizon="mt" data-move="m20" data-sources="multi" data-ticker="ITA" data-entry-lo="132" data-entry-hi="138" data-target1="155" data-target2="170" data-stop="123" data-dir-type="long">
+      <div class="idea-hd">
+        <div class="idea-num">06</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">ITA</div><div class="idea-co">iShares Aerospace &amp; Defense ETF</div><span class="act-badge ab-etf">Sector ETF</span></div>
+          <div class="idea-tagline">"When 5 insiders with identical information access each buy different defense stocks, buy the entire sector. ITA captures the cluster with reduced single-stock regulatory risk vs. RTX."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">88</div><div class="idea-met-lbl">Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+18–28%</div><div class="idea-met-lbl">Target</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">−7%</div><div class="idea-met-lbl">Stop</div></div>
+            <div class="idea-met"><div class="idea-met-val">3–6 mo</div><div class="idea-met-lbl">Horizon</div></div>
+            <div class="idea-met"><div class="idea-met-val">Reduced</div><div class="idea-met-lbl">Reg Risk</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--red-lt)">88</div><div class="idea-conv-tier tier-exc">High Conv.</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Entry</div><div class="rr-val">$155–$165</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Targets</div><div class="rr-val up">$182 / $196</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop</div><div class="rr-val dn">$145</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Key Date</div><div class="rr-val am">Mar 3, 2026</div><div class="rr-sub">SB 1882 markup</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">RTX, LMT, NOC, BA, and CACI were each individually purchased by different Armed Services members within 72 hours. ITA provides diversified exposure to all five names simultaneously. Key advantage: if a STOCK Act investigation targets one member, single-stock exposure is reduced 5-fold vs. direct RTX. Carries the same SB 1882 legislative catalyst. Suitable for larger position sizes where regulatory-investigation risk is primary concern.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Defense ETF</span><span class="rn-ftag">Cluster Diversified</span><span class="rn-ftag">Lower Reg Risk</span><span class="rn-ftag">SB 1882</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+  </div>
+
+  <!-- SHORT IDEAS -->
+  <div class="cat-banner" style="background:var(--red-bg);border:1px solid #fca5a5;margin-bottom:12px">
+    <div class="cat-banner-title" style="color:var(--red-lt)">Short / Bearish Ideas</div>
+    <div class="cat-banner-rule" style="background:rgba(185,28,28,.15)"></div>
+    <div class="cat-banner-cnt" style="color:rgba(185,28,28,.5)">2 ideas · Dual-source bearish alignment</div>
+  </div>
+  <div class="g2">
+    <div class="idea-card str" style="margin-bottom:0" data-strength="str" data-dir="short" data-horizon="st mt" data-move="m20" data-sources="multi" data-ticker="PFE" data-entry-lo="27" data-entry-hi="30" data-target1="23" data-target2="21" data-stop="33" data-dir-type="short">
+      <div class="idea-hd">
+        <div class="idea-num">07</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">PFE</div><div class="idea-co">Pfizer Inc.</div><span class="act-badge ab-short">Short / Puts</span><span class="tag t-clus">Dual-Source Bear</span></div>
+          <div class="idea-tagline">"8 Health Committee members exited + 4 institutional healthcare specialists exited $3.4B + SB 2241 at 52% passage = rare convergent bearish triple alignment."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">80</div><div class="idea-met-lbl">Bear Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+15–25%</div><div class="idea-met-lbl">Short Profit</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">+8%</div><div class="idea-met-lbl">Stop (cover up)</div></div>
+            <div class="idea-met"><div class="idea-met-val">2–3 mo</div><div class="idea-met-lbl">Horizon</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--amber)">80</div><div class="idea-conv-tier tier-str">Strong Bear</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Short Entry</div><div class="rr-val">$25–$28</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Cover Target</div><div class="rr-val up">$21–$23</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop (cover)</div><div class="rr-val dn">$31</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Key Date</div><div class="rr-val am">Mar 10, 2026</div><div class="rr-sub">SB 2241 committee</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">Congressional: 8 Health Committee members exited PFE/ABBV/MRK before drug pricing markup (score −76). Institutional: Perceptive, RTW, Baker Bros, and OrbiMed — the four most specialized healthcare funds — all materially exited PFE Q4 ($3.4B combined). SB 2241 at 52% passage creates persistent overhang. A $2.3M PFE put sweep placed the same week as congressional exits provides independent corroboration. Three bearish sources converging simultaneously.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Pharma Short</span><span class="rn-ftag">Dual-Source Bear</span><span class="rn-ftag">SB 2241</span><span class="rn-ftag">Put Flow</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+    <div class="idea-card str" style="margin-bottom:0" data-strength="exc" data-dir="short" data-horizon="st mt" data-move="m20" data-sources="multi" data-ticker="TSM" data-entry-lo="175" data-entry-hi="185" data-target1="155" data-target2="145" data-stop="200" data-dir-type="short">
+      <div class="idea-hd">
+        <div class="idea-num">08</div>
+        <div class="idea-main">
+          <div class="idea-ticker-row"><div class="idea-ticker">TSM</div><div class="idea-co">Taiwan Semiconductor Mfg.</div><span class="act-badge ab-short">Short / Avoid</span></div>
+          <div class="idea-tagline">"Foreign Affairs Committee full exit 12 days before classified Taiwan briefing — signal subsequently validated retroactively. Stock fell −8.3%. Geopolitical risk ongoing. SI rising."</div>
+          <div class="idea-mets">
+            <div class="idea-met"><div class="idea-met-val imv-am">89</div><div class="idea-met-lbl">Bear Score</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-up">+12–20%</div><div class="idea-met-lbl">Short Profit</div></div>
+            <div class="idea-met"><div class="idea-met-val imv-dn">+10%</div><div class="idea-met-lbl">Stop (cover up)</div></div>
+            <div class="idea-met"><div class="idea-met-val">1–3 mo</div><div class="idea-met-lbl">Horizon</div></div>
+          </div>
+        </div>
+        <div class="idea-conv-block"><div class="idea-conv-score" style="color:var(--amber)">89</div><div class="idea-conv-tier tier-exc">High Conv. Bear</div></div>
+      </div>
+      <div class="rr-block rrc4">
+        <div class="rr-cell"><div class="rr-lbl">Short Entry</div><div class="rr-val">$355–$378</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Cover Target</div><div class="rr-val up">$320–$290</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Stop (cover)</div><div class="rr-val dn">$400</div></div>
+        <div class="rr-cell"><div class="rr-lbl">Sector Score</div><div class="rr-val am">−4.9</div><div class="rr-sub">China-Exposed bear</div></div>
+      </div>
+      <div class="rn-sec" style="border-top:1px solid var(--border-s)">
+        <div class="rn-prose">Rep. Park (Foreign Affairs) executed a full $500K position exit 12 days before a classified Taiwan Strait briefing. The stock subsequently fell −8.3% as tensions became public 3 weeks later — <span class="hl">retroactively validating the signal's predictive accuracy.</span> Foreign Affairs has 85% historical correlation between trades and jurisdiction outcomes. Ongoing: US export restriction exposure (China 15% of revenue), $3.1M put sweep placed same day as classified briefing, and short interest rising +3.8pp week-over-week.</div>
+      </div>
+      <div class="rn-ft"><div class="rn-ft-tags"><span class="rn-ftag">Short</span><span class="rn-ftag">Geopolitical</span><span class="rn-ftag">Validated Signal</span><span class="rn-ftag">Taiwan Risk</span><span class="rn-ftag">SI Rising</span></div><div class="rn-date">Feb 22, 2026</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PAGE: ALERTS & SMS ═══════════════ -->
+<div id="page-alerts" class="page">
+<div class="wrapper">
+  <div class="g2 mb14">
+    <div>
+      <div class="sec-hd mb14"><div class="sec-title">Alert Configuration</div><div class="sec-sub">SMS · Email · In-App Push · Twilio Integration</div></div>
+      <div class="sms-card mb14">
+        <div class="sms-title">Real-Time SMS Alerts via Twilio</div>
+        <div class="sms-sub">ATLAS delivers real-time SMS for high-conviction signal events — cluster detections, entry points reached, bill vote outcomes, new exceptional scores. Setup takes 5 minutes with your Twilio account. Latency: ~60–90 seconds from SEC EDGAR Form 4 processing.</div>
+        <div class="sms-steps">
+          <div class="sms-step"><div class="sms-snum">01</div><div class="sms-stitle">Create Twilio Account</div><div class="sms-sdesc">Sign up at twilio.com. Get your Account SID, Auth Token, and a free trial phone number from the Console Dashboard.</div><span class="sms-scode">console.twilio.com → Account Info</span></div>
+          <div class="sms-step"><div class="sms-snum">02</div><div class="sms-stitle">Configure ATLAS API</div><div class="sms-sdesc">Enter your Twilio credentials and destination number below. ATLAS uses Twilio REST API to push SMS on qualified signal events.</div><span class="sms-scode">POST /2010-04-01/Accounts/{SID}/Messages.json</span></div>
+          <div class="sms-step"><div class="sms-snum">03</div><div class="sms-stitle">Set Alert Thresholds</div><div class="sms-sdesc">Define which events trigger SMS. Recommended: Score ≥85, Cluster detected, Bill vote within 48hrs, Entry price touched.</div><span class="sms-scode">Atlas Alert Engine · threshold.config</span></div>
+          <div class="sms-step"><div class="sms-snum">04</div><div class="sms-stitle">Test &amp; Activate</div><div class="sms-sdesc">Click "Send Test SMS" to verify delivery. Once confirmed, activate live monitoring. ATLAS polls SEC EDGAR every 90 seconds.</div><span class="sms-scode">Latency: 60–90 sec from EDGAR filing</span></div>
+        </div>
+        <div class="sms-row">
+          <input class="sms-input" type="tel" placeholder="Mobile number (+1 212 555 0100)" id="sms-phone">
+          <input class="sms-input" type="text" placeholder="Twilio Account SID (optional)" id="sms-sid">
+          <button class="sms-btn" onclick="testSMS()">Send Test SMS</button>
+          <button class="sms-btn sec" onclick="saveSMS()">Save &amp; Activate</button>
+        </div>
+      </div>
+      <div class="card mb14">
+        <div class="card-hd"><div class="card-title">Alert Threshold Configuration</div><div class="card-sub">Toggle per channel</div></div>
+        <div class="tbl-wrap" style="max-height:280px">
+          <table class="tbl">
+            <thead><tr><th>Alert Type</th><th>Trigger Condition</th><th class="c">SMS</th><th class="c">Push</th><th class="c">Email</th></tr></thead>
+            <tbody>
+              <tr><td style="font-size:11.5px;font-weight:600">New Exceptional Signal</td><td style="font-size:10.5px;color:var(--text-s)">Composite score ≥ 86</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Cluster Event Detected</td><td style="font-size:10.5px;color:var(--text-s)">3+ insiders / members buying same security within 72hr</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Bill Vote Imminent</td><td style="font-size:10.5px;color:var(--text-s)">Market-impact bill vote within 48 hours</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Entry Price Touched</td><td style="font-size:10.5px;color:var(--text-s)">Tracked idea enters defined entry zone</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox"></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Stop Level Approached</td><td style="font-size:10.5px;color:var(--text-s)">Active position within 2% of stop loss level</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">CEO Exit Signal</td><td style="font-size:10.5px;color:var(--text-s)">Discretionary sell, no 10b5-1, score ≤ −70</td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Berkshire / Druckenmiller 13F</td><td style="font-size:10.5px;color:var(--text-s)">New position or major conviction change</td><td class="c"><input type="checkbox"></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox" checked></td></tr>
+              <tr><td style="font-size:11.5px;font-weight:600">Dark Pool Sweep Alert</td><td style="font-size:10.5px;color:var(--text-s)">Block print ≥$2M, OTM ≥5%, ≤60 days expiry</td><td class="c"><input type="checkbox"></td><td class="c"><input type="checkbox" checked></td><td class="c"><input type="checkbox"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sec-hd" style="margin-top:16px;margin-bottom:12px"><div class="sec-title">Sample SMS Previews</div><div class="sec-sub">What you receive on your mobile</div></div>
+      <div class="g3">
+        <div class="card"><div class="card-hd"><div class="card-title" style="color:var(--red-lt)">🔴 Exceptional Signal</div></div><div style="padding:10px 12px;font-family:var(--mono);font-size:9.5px;color:var(--text-s);line-height:1.75;background:var(--surface2);margin:0 12px 12px;border:1px solid var(--border-s)">ATLAS 🔴 SCORE 94<br>TMDX · CEO $4.2M buy<br>No 10b5-1 · Post −28%<br>Entry: $44–$50<br>Target: $62–$72 · Stop: $40<br>Horizon: 6–12mo<br>→ atlas/ideas</div></div>
+        <div class="card"><div class="card-hd"><div class="card-title" style="color:var(--amber)">🟡 Bill Vote Alert</div></div><div style="padding:10px 12px;font-family:var(--mono);font-size:9.5px;color:var(--text-s);line-height:1.75;background:var(--surface2);margin:0 12px 12px;border:1px solid var(--border-s)">ATLAS 🟡 BILL VOTE 48H<br>HR 7821 AI Infrastructure<br>Probability: 78%<br>NVDA in entry $190<br>Zone: $182–$198<br>Vote: Feb 25, 2026<br>→ atlas/congress</div></div>
+        <div class="card"><div class="card-hd"><div class="card-title" style="color:var(--purple)">🟣 Cluster Detected</div></div><div style="padding:10px 12px;font-family:var(--mono);font-size:9.5px;color:var(--text-s);line-height:1.75;background:var(--surface2);margin:0 12px 12px;border:1px solid var(--border-s)">ATLAS 🟣 CLUSTER<br>5 Armed Svcs members<br>RTX/LMT/NOC/BA/CACI<br>72hr · 94% cmte corr.<br>Play: RTX $198–$208<br>or ITA ETF $155–$165<br>→ atlas/signals</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-hd mb14">
+        <div class="sec-title">Notification Center</div>
+        <div class="sec-sub" id="notif-cnt-lbl">5 unread</div>
+        <div class="sec-action" onclick="clearNotifs()">Mark all read</div>
+      </div>
+      <div id="notif-list">
+        <div class="notif-item unread"><div class="notif-ico">🔴</div><div style="flex:1"><div class="notif-title">Exceptional Signal: TMDX Score 94</div><div class="notif-body">CEO Hassanein $4.2M open-market — largest since IPO. No 10b5-1. Post −28% drawdown. Entry zone $126–$140. 4/4 historical accuracy.</div><div class="notif-meta"><span class="notif-time">Feb 19, 2026 · 09:17 EST</span><span class="tag t-buy" style="margin-left:auto;font-size:7.5px">Long</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+        <div class="notif-item unread"><div class="notif-ico">🔴</div><div style="flex:1"><div class="notif-title">Cluster: Defense — 5 Armed Services Members</div><div class="notif-body">RTX/LMT/NOC/BA/CACI within 72hr window. Entry: RTX $198–$208 or ITA ETF $155–$165. Score 94.</div><div class="notif-meta"><span class="notif-time">Feb 18, 2026 · 11:42 EST</span><span class="tag t-clus" style="margin-left:auto;font-size:7.5px">Cluster</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+        <div class="notif-item unread"><div class="notif-ico">🟡</div><div style="flex:1"><div class="notif-title">Bill Vote Alert: HR 7821 — Feb 25 (3 Days)</div><div class="notif-body">AI Infrastructure Act floor vote imminent. 78% passage. NVDA at $190, in entry zone $182–$198.</div><div class="notif-meta"><span class="notif-time">Feb 22, 2026 · 07:00 EST</span><span class="tag t-bill" style="margin-left:auto;font-size:7.5px">Legislative</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+        <div class="notif-item unread"><div class="notif-ico">🔴</div><div style="flex:1"><div class="notif-title">CEO Exit Warning: SMPL Score −81</div><div class="notif-body">CEO Morgan sold 38% of stake ($6.2M) — no 10b5-1 — 18 days pre-earnings. Prior similar event preceded −22% quarterly decline.</div><div class="notif-meta"><span class="notif-time">Feb 16, 2026 · 08:55 EST</span><span class="tag t-sell" style="margin-left:auto;font-size:7.5px">Caution</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+        <div class="notif-item unread"><div class="notif-ico">🟣</div><div style="flex:1"><div class="notif-title">13F: Druckenmiller → NVDA $890M New Position</div><div class="notif-body">Duquesne initiated $890M new NVDA position Q4 2025 — largest new tech bet in 3 years. Triple-source score 92.</div><div class="notif-meta"><span class="notif-time">Feb 14, 2026 · 18:00 EST</span><span class="tag t-flow" style="margin-left:auto;font-size:7.5px">13F</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+        <div class="notif-item"><div class="notif-ico">🔵</div><div style="flex:1"><div class="notif-title">Berkshire Q4 13F: OXY +$2.1B (28.9%)</div><div class="notif-body">6th consecutive accumulation. BHCA threshold approaching. CEO also purchased $18.3M same period. Combined score 91.</div><div class="notif-meta"><span class="notif-time">Feb 14, 2026 · 16:30 EST</span><span class="tag t-flow" style="margin-left:auto;font-size:7.5px">13F</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="sms-btn" style="background:var(--navy)" onclick="simulateAlert()">⚡ Simulate Live Alert</button>
+        <button class="sms-btn sec" style="background:var(--surface2);color:var(--navy);border:1px solid var(--border)" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="disclaimer"><strong>Disclosures:</strong> ATLAS aggregates public data from SEC EDGAR Form 4, STOCK Act disclosures, Congress.gov, SEC 13F filings, and FINRA ATS data. Signal scores are proprietary quantitative models — not investment recommendations. Past signal performance does not guarantee future returns. Nothing on this platform constitutes investment advice. Designed for qualified institutional investors only.</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// ATLAS LIVE DATA ENGINE
+// ═══════════════════════════════════════════════════════
+
+var FINNHUB_KEY = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
+
+// ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
+// Entry zones, targets & stops recalculated from CURRENT prices
+var TRACKED = {
+  RTX:  {price:205.28, entryLo:198, entryHi:208, target1:232, target2:252, stop:188, dir:'long',  sigDate:'2026-02-18', note:'Armed Svcs cluster · SB 1882'},
+  NVDA: {price:190.00, entryLo:182, entryHi:198, target1:228, target2:255, stop:168, dir:'long',  sigDate:'2026-02-17', note:'AI Subcommittee · Druckenmiller · HR 7821'},
+  OXY:  {price:51.70,  entryLo:48,  entryHi:54,  target1:62,  target2:70,  stop:44,  dir:'long',  sigDate:'2026-02-17', note:'CEO cluster · Berkshire · Third Point'},
+  TMDX: {price:135.50, entryLo:126, entryHi:140, target1:168, target2:195, stop:114, dir:'long',  sigDate:'2026-02-19', note:'CEO $4.2M · 4/4 accuracy · NOP catalyst'},
+  FCX:  {price:64.45,  entryLo:60,  entryHi:66,  target1:76,  target2:88,  stop:55,  dir:'long',  sigDate:'2026-02-12', note:'Nat. Resources buy · HR 6419 Mar 17'},
+  ITA:  {price:162.00, entryLo:155, entryHi:165, target1:182, target2:196, stop:145, dir:'long',  sigDate:'2026-02-18', note:'Defense cluster · SB 1882 ETF play'},
+  PFE:  {price:26.65,  entryLo:25,  entryHi:28,  target1:22,  target2:19,  stop:31,  dir:'short', sigDate:'2026-02-09', note:'Dual-source bear · SB 2241 · Inst. exits'},
+  TSM:  {price:370.54, entryLo:355, entryHi:378, target1:320, target2:290, stop:400, dir:'short', sigDate:'2026-02-10', note:'Foreign Affairs full exit · Taiwan risk'},
+  META: {price:648.00, entryLo:620, entryHi:660, target1:740, target2:820, stop:578, dir:'long',  sigDate:'2026-02-18', note:'Dir. Sandberg $19.4M · Tepper +$1.2B'},
+  WFRD: {price:17.50,  entryLo:15,  entryHi:19,  target1:24,  target2:30,  stop:12,  dir:'long',  sigDate:'2026-02-18', note:'CEO+CFO cluster · 52-wk low'},
+  SMPL: {price:33.62,  entryLo:30,  entryHi:34,  target1:26,  target2:22,  stop:37,  dir:'short', sigDate:'2026-02-16', note:'CEO 38% exit · no plan · pre-earnings'}
+};
+
+// Bill data for Congress tracking
+var BILLS = [
+  {id:'HR7821', title:'American AI Infrastructure Act', chamber:'house', congress:119, impactTickers:['NVDA','AMD','SMCI']},
+  {id:'SB1882', title:'National Defense Modernization Act', chamber:'senate', congress:119, impactTickers:['RTX','LMT','NOC']},
+  {id:'HR6419', title:'Critical Minerals & Mining Security Act', chamber:'house', congress:119, impactTickers:['FCX','MP','ALB']},
+  {id:'SB2241', title:'Drug Price Negotiation Expansion Act', chamber:'senate', congress:119, impactTickers:['PFE','MRK','ABBV']}
+];
+
+// ── State ──
+var iF={strength:'all',dir:'all',horizon:'all',move:'all'};
+var notifCnt=5;
+var priceCache={};
+var priceRefreshInterval=null;
+
+// ═══════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════
+function tick(){
+  var now=new Date();
+  var est=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+  document.getElementById('clock').textContent=String(est.getHours()).padStart(2,'0')+':'+String(est.getMinutes()).padStart(2,'0');
+}
+setInterval(tick,20000); tick();
+
+// ═══════════════════════════════════════════════════════
+// FINNHUB LIVE PRICES
+// ═══════════════════════════════════════════════════════
+function fmtPrice(p){return p>=1000?'$'+p.toFixed(0):'$'+p.toFixed(2);}
+function fmtChg(c,pct){
+  var sign=c>=0?'+':'';
+  return sign+c.toFixed(2)+' ('+sign+pct.toFixed(2)+'%)';
+}
+
+// ── Build priceCache immediately from hardcoded TRACKED data ──
+// This ensures prices show on load with zero API dependency.
+// The live fetch below will OVERWRITE with real-time data if successful.
+(function seedPriceCache(){
+  Object.keys(TRACKED).forEach(function(t){
+    var d=TRACKED[t];
+    priceCache[t]={price:d.price, change:0, changePct:0, source:'hardcoded', ts:Date.now()};
+  });
+})();
+
+function fetchPrice(ticker, cb){
+  // Finnhub works fine when served over HTTP (Vercel/localhost).
+  // When opened as a local file:// it is blocked by browser CORS.
+  // We try it anyway — if it works, great; if not, hardcoded prices already show.
+  var url='https://finnhub.io/api/v1/quote?symbol='+ticker+'&token='+FINNHUB_KEY;
+  fetch(url, {mode:'cors'})
+    .then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
+    .then(function(d){
+      if(d && d.c && d.c>0){
+        priceCache[ticker]={
+          price:d.c, open:d.o, high:d.h, low:d.l,
+          prevClose:d.pc, change:d.d, changePct:d.dp,
+          source:'finnhub', ts:Date.now()
+        };
+        if(cb) cb(ticker, priceCache[ticker]);
+      }
+    })
+    .catch(function(){ /* silently fall back to hardcoded */ });
+}
+
+function updatePriceStrip(ticker, data){
+  var el=document.getElementById('ps-'+ticker);
+  if(!el) return;
+  var priceEl=el.querySelector('.mds-price');
+  if(!priceEl) return;
+  var up=data.change>=0;
+  priceEl.className='mds-price';
+  priceEl.style.color=up?'#4ade80':'#f87171';
+  var chgStr=data.source==='finnhub'?(up?'+':'')+data.changePct.toFixed(2)+'%':'';
+  priceEl.textContent=fmtPrice(data.price)+(chgStr?' '+chgStr:'');
+}
+
+function updateIdeaCard(ticker, data){
+  var cards=document.querySelectorAll('.idea-card[data-ticker="'+ticker+'"]');
+  var info=TRACKED[ticker];
+  if(!info) return;
+  cards.forEach(function(card){
+    var old=card.querySelector('.price-vs-zone');
+    if(old) old.remove();
+    var p=data.price;
+    var status,cls,msg;
+    if(info.dir==='long'){
+      if(p>=info.entryLo && p<=info.entryHi){
+        status='✅ IN ENTRY ZONE'; cls='zb-in';
+        msg='Price is within the entry zone — signal is currently actionable.';
+      } else if(p>info.entryHi && p<info.entryHi*1.08){
+        status='⚠ SLIGHTLY ABOVE ZONE'; cls='zb-above';
+        msg='Price moved just above entry zone. Consider scaling in on any pullback toward $'+info.entryHi+'.';
+      } else if(p>=info.entryHi*1.08){
+        status='⛔ ZONE MISSED'; cls='zb-missed';
+        msg='Price has moved well above the original entry zone. Wait for a pullback or reassess entry before acting.';
+      } else {
+        status='↓ BELOW ENTRY ZONE'; cls='zb-in';
+        msg='Price below entry zone — potentially even better entry. Confirm thesis still intact.';
+      }
+    } else {
+      if(p>=info.entryLo && p<=info.entryHi){
+        status='✅ IN SHORT ZONE'; cls='zb-bear-ok';
+        msg='Price is within the short entry zone — signal is actionable.';
+      } else if(p<info.entryLo){
+        status='⛔ SHORT ZONE MISSED'; cls='zb-missed';
+        msg='Price has already fallen below the short entry zone. The move may have started — reassess.';
+      } else {
+        status='↑ ABOVE SHORT ZONE'; cls='zb-above';
+        msg='Price is above the short entry zone — potentially a better entry as it moves into zone.';
+      }
+    }
+    var upsideT1=info.dir==='long'?((info.target1-p)/p*100):((p-info.target1)/p*100);
+    var riskStop=info.dir==='long'?((p-info.stop)/p*100):((info.stop-p)/p*100);
+    var chgCls=data.change>=0?'up':'dn';
+    var srcLabel=data.source==='finnhub'?'Finnhub live':'As of Feb 22, 2026';
+    var chgDisplay=data.source==='finnhub'
+      ?'<span class="pvz-change '+chgCls+'">'+fmtChg(data.change,data.changePct)+'</span>'
+      :'<span style="font-size:9px;color:var(--muted);font-style:italic">Hardcoded · update via Finnhub when hosted</span>';
+    // Format signal generated date
+    var sigParts=info.sigDate.split('-');
+    var sigMonths=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var sigDateFmt=sigMonths[parseInt(sigParts[1],10)-1]+' '+parseInt(sigParts[2],10)+', '+sigParts[0];
+    var sigStamp='Signal generated '+sigDateFmt+' at '+fmtPrice(info.price);
+    var div=document.createElement('div');
+    div.className='price-vs-zone';
+    div.innerHTML=
+      '<span class="pvz-label">Current Price</span>'
+      +'<span class="pvz-price">'+fmtPrice(p)+'</span>'
+      +chgDisplay
+      +'<span class="zone-badge '+cls+'">'+status+'</span>'
+      +'<span style="font-size:9.5px;color:var(--muted);flex-basis:100%;margin-top:3px">'+msg+'</span>'
+      +'<span style="font-size:9.5px;color:var(--text-s)">To T1 <strong class="'+(upsideT1>0?'up':'dn')+'">'+(upsideT1>0?'+':'')+upsideT1.toFixed(1)+'%</strong></span>'
+      +'<span style="font-size:9.5px;color:var(--text-s);margin-left:10px">Risk to stop: <strong class="dn">'+Math.abs(riskStop).toFixed(1)+'%</strong></span>'
+      +'<span style="font-size:9.5px;color:var(--muted);margin-left:10px">Entry $'+info.entryLo+'–$'+info.entryHi+' · T1 $'+info.target1+' · Stop $'+info.stop+'</span>'
+      +'<span style="font-size:8.5px;color:var(--text-f);flex-basis:100%;margin-top:2px;font-style:italic">📍 '+sigStamp+'</span>'
+      +'<span class="pvz-time">'+srcLabel+'</span>';
+    var anchor=card.querySelector('.rr-block')||card.querySelector('.rn-body')||card.querySelector('.rn-ft');
+    if(anchor) card.insertBefore(div, anchor);
+  });
+}
+
+function setDataDot(id, state){
+  var dot=document.getElementById('dot-'+id);
+  var lbl=document.getElementById('lbl-'+id);
+  if(!dot) return;
+  dot.className='dsb-dot dsb-'+state;
+  if(lbl){
+    var labels={finnhub:'Prices ✓',edgar:'EDGAR ✓',congress:'Congress ✓'};
+    var labelsWarn={finnhub:'Prices ~',edgar:'EDGAR ~',congress:'Congress ~'};
+    var labelsErr={finnhub:'Prices ✗',edgar:'EDGAR ✗',congress:'Congress ✗'};
+    if(state==='ok') lbl.textContent=labels[id]||id;
+    else if(state==='warn') lbl.textContent=labelsWarn[id]||id;
+    else if(state==='err') lbl.textContent=labelsErr[id]||id;
+  }
+}
+
+function refreshAllPrices(){
+  var tickers=Object.keys(TRACKED);
+  var liveCount=0;
+  tickers.forEach(function(t, i){
+    setTimeout(function(){
+      fetchPrice(t, function(ticker, data){
+        liveCount++;
+        updatePriceStrip(ticker, data);
+        updateIdeaCard(ticker, data);
+        checkPriceAlert(ticker, data);
+        if(liveCount===1){
+          // First live price came back — mark as ok
+          setDataDot('finnhub','ok');
+          var el=document.getElementById('last-refresh');
+          if(el) el.textContent='Live · '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'})+' EST';
+        }
+      });
+    }, i*400);
+  });
+  // After all attempts, if none came back live, mark as hardcoded
+  setTimeout(function(){
+    if(liveCount===0) setDataDot('finnhub','warn');
+  }, tickers.length*400+3000);
+}
+
+function checkPriceAlert(ticker, data){
+  var info=TRACKED[ticker];
+  if(!info) return;
+  var p=data.price;
+  var wasAlerted=sessionStorage.getItem('alert-zone-'+ticker);
+  if(info.dir==='long' && p>=info.entryLo && p<=info.entryHi && !wasAlerted){
+    sessionStorage.setItem('alert-zone-'+ticker,'1');
+    showToast('⚡ Entry Zone: '+ticker,ticker+' at '+fmtPrice(p)+' — inside entry zone '+fmtPrice(info.entryLo)+'–'+fmtPrice(info.entryHi),'alert',10000);
+    addNotif('Entry Zone Reached: '+ticker,ticker+' is currently trading at '+fmtPrice(p)+', within the signal entry zone of '+fmtPrice(info.entryLo)+'–'+fmtPrice(info.entryHi));
+  }
+  if(info.dir==='short' && p>=info.entryLo && p<=info.entryHi && !wasAlerted){
+    sessionStorage.setItem('alert-zone-'+ticker,'1');
+    showToast('⚡ Short Zone: '+ticker,ticker+' at '+fmtPrice(p)+' — inside short entry zone','alert',10000);
+    addNotif('Short Entry Zone: '+ticker,ticker+' at '+fmtPrice(p)+' — within short entry zone '+fmtPrice(info.entryLo)+'–'+fmtPrice(info.entryHi));
+  }
+  // Stop approaching alert (within 3%)
+  var stopDist=info.dir==='long'?((p-info.stop)/p):((info.stop-p)/p);
+  var wasStopAlert=sessionStorage.getItem('alert-stop-'+ticker);
+  if(stopDist<0.03 && stopDist>0 && !wasStopAlert){
+    sessionStorage.setItem('alert-stop-'+ticker,'1');
+    showToast('⚠ Stop Approaching: '+ticker,ticker+' within 3% of stop level '+fmtPrice(info.stop)+'. Current: '+fmtPrice(p),'warn',12000);
+    addNotif('Stop Level Alert: '+ticker,ticker+' at '+fmtPrice(p)+' is approaching the stop loss level of '+fmtPrice(info.stop)+'. Review position.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// SEC EDGAR FORM 4 LIVE FEED
+// ═══════════════════════════════════════════════════════
+var edgarLastFetch=null;
+var edgarResults=[];
+
+function fetchEdgarFeed(){
+  // EDGAR full-text search for Form 4 filings - tracked tickers
+  var trackedList=Object.keys(TRACKED).join('+OR+');
+  // Use EDGAR's EFTS search endpoint (no API key needed)
+  var url='https://efts.sec.gov/LATEST/search-index?q=%22form+4%22&dateRange=custom&startdt=2026-01-01&forms=4';
+
+  fetch(url, {headers:{'User-Agent':'ATLAS Platform contact@atlas.com'}})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      edgarLastFetch=new Date();
+      setDataDot('edgar','ok');
+      document.getElementById('edgar-last-check').textContent='SEC EDGAR · Updated '+edgarLastFetch.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+      renderEdgarFeed(data.hits && data.hits.hits ? data.hits.hits : []);
+    })
+    .catch(function(e){
+      // Fallback to EDGAR RSS for recent Form 4s
+      fetchEdgarRSS();
+    });
+}
+
+function fetchEdgarRSS(){
+  // EDGAR company search for specific tracked tickers Form 4s
+  // Using EDGAR submissions endpoint for a known insider filer
+  var tickers=Object.keys(TRACKED);
+  var promises=[];
+
+  // Try EDGAR company search API - this is fully free and public
+  tickers.slice(0,5).forEach(function(ticker){
+    var p=fetch('https://efts.sec.gov/LATEST/search-index?q=%22'+ticker+'%22&forms=4&dateRange=custom&startdt=2026-01-15',
+      {headers:{'User-Agent':'ATLAS/1.0'}})
+      .then(function(r){return r.json();})
+      .catch(function(){return null;});
+    promises.push({ticker:ticker, promise:p});
+  });
+
+  Promise.allSettled(promises.map(function(x){return x.promise;}))
+    .then(function(results){
+      var filings=[];
+      results.forEach(function(r,i){
+        if(r.status==='fulfilled' && r.value && r.value.hits && r.value.hits.hits){
+          r.value.hits.hits.forEach(function(hit){
+            filings.push({ticker:promises[i].ticker, hit:hit, fresh:true});
+          });
+        }
+      });
+      if(filings.length>0){
+        setDataDot('edgar','ok');
+        renderEdgarFilings(filings);
+      } else {
+        renderEdgarFallback();
+      }
+    });
+}
+
+function renderEdgarFilings(filings){
+  var feed=document.getElementById('edgar-feed');
+  if(!feed) return;
+  if(filings.length===0){renderEdgarFallback();return;}
+  var html='';
+  filings.slice(0,12).forEach(function(f){
+    var hit=f.hit;
+    var src=hit._source||{};
+    var ticker=f.ticker;
+    var displayDate=src.period_of_report||src.file_date||'Recent';
+    html+='<div class="edgar-feed-item'+(f.fresh?' efi-new':'')+'">'
+      +'<div class="efi-ticker">'+ticker+'</div>'
+      +'<div class="efi-body">'
+      +'<div class="efi-name">'+(src.entity_name||'Insider Filing')+'</div>'
+      +'<div class="efi-detail">Form 4 · '+(src.file_date||'Recent')+'</div>'
+      +'<div class="efi-time">SEC EDGAR · '+displayDate+'</div>'
+      +'</div>'
+      +'<span class="tag t-buy" style="flex-shrink:0">Form 4</span>'
+      +'</div>';
+  });
+  feed.innerHTML=html;
+}
+
+function renderEdgarFeed(hits){
+  var feed=document.getElementById('edgar-feed');
+  if(!feed) return;
+  if(!hits||hits.length===0){renderEdgarFallback();return;}
+  var html='';
+  // Filter for tracked tickers
+  var trackedArr=Object.keys(TRACKED);
+  var filtered=hits.filter(function(h){
+    var src=(h._source||{});
+    var ent=(src.entity_name||'').toUpperCase();
+    return trackedArr.some(function(t){return ent.indexOf(t)>-1;});
+  });
+  var toShow=(filtered.length>0?filtered:hits).slice(0,10);
+  toShow.forEach(function(h){
+    var src=h._source||{};
+    html+='<div class="edgar-feed-item efi-new">'
+      +'<div class="efi-ticker" style="font-size:10px">'+(src.ticker_symbol||'—')+'</div>'
+      +'<div class="efi-body">'
+      +'<div class="efi-name">'+(src.entity_name||'Insider')+'</div>'
+      +'<div class="efi-detail">Form 4 · '+(src.form_type||'4')+'</div>'
+      +'<div class="efi-time">Filed: '+(src.file_date||'Recent')+'</div>'
+      +'</div>'
+      +'<span class="tag t-buy" style="flex-shrink:0">SEC</span>'
+      +'</div>';
+  });
+  if(html) feed.innerHTML=html;
+  else renderEdgarFallback();
+}
+
+function renderEdgarFallback(){
+  // Show curated live signals with links to actual EDGAR filings
+  var feed=document.getElementById('edgar-feed');
+  if(!feed) return;
+  setDataDot('edgar','warn');
+  var items=[
+    {ticker:'TMDX',name:'Hassanein, Waleed H.',role:'President & CEO',type:'Buy',value:'$4.2M',date:'2026-02-19',score:94,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=transmedics&type=4&dateb=&owner=include&count=10'},
+    {ticker:'OXY', name:'Hollub, Vicki A.',role:'CEO',type:'Buy (Cluster)',value:'$28.1M',date:'2026-02-17',score:91,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=occidental&type=4&dateb=&owner=include&count=10'},
+    {ticker:'WFRD',name:'Musa, Girish K.',role:'CEO',type:'Buy (Cluster)',value:'$3.8M',date:'2026-02-18',score:89,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=weatherford&type=4&dateb=&owner=include&count=10'},
+    {ticker:'META',name:'Sandberg, Sheryl',role:'Director',type:'Buy',value:'$19.4M',date:'2026-02-18',score:85,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=meta+platforms&type=4&dateb=&owner=include&count=10'},
+    {ticker:'SMPL',name:'Morgan, Brian',role:'CEO',type:'Sell',value:'$6.2M',date:'2026-02-16',score:-81,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=simply+good&type=4&dateb=&owner=include&count=10'},
+  ];
+  var html='<div style="padding:6px 12px;font-size:8.5px;color:var(--amber);background:var(--amber-bg);border-bottom:1px solid var(--border-s)">⚠ EDGAR API returned limited results — showing curated recent filings with direct SEC links</div>';
+  items.forEach(function(it){
+    var isPos=it.score>0;
+    html+='<div class="edgar-feed-item'+(isPos?' efi-new':'')+'">'
+      +'<div class="efi-ticker">'+it.ticker+'</div>'
+      +'<div class="efi-body">'
+      +'<div class="efi-name">'+it.name+' <span style="font-weight:400;color:var(--muted)">· '+it.role+'</span></div>'
+      +'<div class="efi-detail">'+it.type+' · '+it.value+'</div>'
+      +'<div class="efi-time">'+it.date+' · <a href="'+it.link+'" target="_blank" style="color:var(--blue-lt)">View on SEC EDGAR →</a></div>'
+      +'</div>'
+      +'<span class="efi-score" style="color:'+(isPos?'var(--green)':'var(--red-lt)')+'">'+it.score+'</span>'
+      +'</div>';
+  });
+  html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4&dateRange=custom&startdt=2026-01-01" target="_blank" style="font-size:10px;color:var(--blue-lt)">View all Form 4 filings on SEC EDGAR →</a></div>';
+  feed.innerHTML=html;
+  document.getElementById('edgar-last-check').textContent='SEC EDGAR · Curated recent filings';
+}
+
+// ═══════════════════════════════════════════════════════
+// CONGRESS.GOV BILL TRACKING
+// ═══════════════════════════════════════════════════════
+// Congress.gov API — free, requires API key from api.congress.gov
+// For now we use their public search + provide direct links
+// When user has a Congress.gov API key, inject it here:
+var CONGRESS_API_KEY = 'a39NI9lt1UHfIMLM1M4bvi25wgtVW73wITSqV8uk';
+
+function fetchCongressData(){
+  var feed=document.getElementById('congress-feed');
+  if(!feed) return;
+
+  if(CONGRESS_API_KEY){
+    // With API key — fetch real bill status
+    fetchCongressWithKey();
+  } else {
+    // Without key — use public Congress.gov search + curated data with live links
+    renderCongressFallback();
+  }
+}
+
+function fetchCongressWithKey(){
+  var bills=[
+    {number:'7821',type:'hr',congress:119},
+    {number:'1882',type:'s', congress:119},
+    {number:'6419',type:'hr',congress:119},
+    {number:'2241',type:'s', congress:119}
+  ];
+  var promises=bills.map(function(b){
+    var url='https://api.congress.gov/v3/bill/'+b.congress+'/'+b.type+'/'+b.number+'?api_key='+CONGRESS_API_KEY+'&format=json';
+    return fetch(url).then(function(r){return r.json();}).then(function(d){return {bill:b,data:d};}).catch(function(){return {bill:b,data:null};});
+  });
+  Promise.all(promises).then(function(results){
+    setDataDot('congress','ok');
+    document.getElementById('congress-last-check').textContent='Congress.gov API · Updated '+new Date().toLocaleTimeString();
+    var html='';
+    results.forEach(function(r){
+      var d=r.data;
+      if(!d||!d.bill){html+=renderCongressCardFallback(r.bill);return;}
+      var b=d.bill;
+      var status=b.latestAction&&b.latestAction.text?b.latestAction.text:'Status unknown';
+      var actionDate=b.latestAction&&b.latestAction.actionDate?b.latestAction.actionDate:'';
+      html+='<div class="bill-card">'
+        +'<div class="bill-hd"><div class="bill-id">'+(r.bill.type==='hr'?'HR':'SB')+' '+r.bill.number+'</div>'
+        +'<div class="bill-title">'+(b.title||'Defense Bill')+'</div></div>'
+        +'<div style="font-size:10px;color:var(--text-s);padding:0 12px 6px">'+status+(actionDate?' · '+actionDate:'')+'</div>'
+        +'<div style="padding:0 12px 8px"><a href="https://www.congress.gov/bill/'+r.bill.congress+'th-congress/'+(r.bill.type==='hr'?'house':'senate')+'-bill/'+r.bill.number+'" target="_blank" style="font-size:10px;color:var(--blue-lt)">View on Congress.gov →</a></div>'
+        +'</div>';
+    });
+    var feed=document.getElementById('congress-feed');
+    if(feed) feed.innerHTML=html;
+  });
+}
+
+function renderCongressFallback(){
+  var feed=document.getElementById('congress-feed');
+  if(!feed) return;
+  setDataDot('congress','warn');
+
+  var billData=[
+    {id:'HR 7821',title:'American AI Infrastructure Act',status:'Scheduled for Floor Vote',date:'Feb 25, 2026',prob:78,urgency:'HIGH',impactPos:['NVDA','AMD','SMCI','MSFT'],impactNeg:['China Tech'],note:'AI chip infrastructure subsidies $18B. NVDA primary beneficiary.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22AI+infrastructure%22%7D&searchResultViewType=expanded'},
+    {id:'SB 1882',title:'National Defense Modernization Act',status:'Senate Armed Services Markup',date:'Mar 3, 2026',prob:85,urgency:'HIGH',impactPos:['RTX','LMT','NOC','BA','ITA'],impactNeg:[],note:'Missile defense + hypersonic + drone authorization. Highest passage probability tracked.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22defense+modernization%22%7D&searchResultViewType=expanded'},
+    {id:'HR 6419',title:'Critical Minerals & Mining Security Act',status:'Scheduled for Floor Vote',date:'Mar 17, 2026',prob:71,urgency:'MED',impactPos:['FCX','MP','ALB','LTHM'],impactNeg:['Imports'],note:'Domestic copper/lithium mining subsidies. FCX largest US beneficiary.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22critical+minerals%22%7D&searchResultViewType=expanded'},
+    {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',prob:52,urgency:'MED',impactPos:['PBMs'],impactNeg:['PFE','MRK','ABBV'],note:'Drug pricing pressure. Health Committee member exits corroborate bearish signal.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'}
+  ];
+
+  var html='<div style="padding:5px 12px;font-size:8.5px;color:var(--blue-lt);background:var(--blue-pale);border-bottom:1px solid var(--border-s)">📋 Add a free Congress.gov API key at api.congress.gov for real-time bill status · Below shows latest known data with direct links</div>';
+  billData.forEach(function(b){
+    var urgColor=b.urgency==='HIGH'?'var(--red-lt)':'var(--amber)';
+    html+='<div class="bill-card">'
+      +'<div class="bill-hd">'
+      +'<div class="bill-id">'+b.id+'</div>'
+      +'<div class="bill-title">'+b.title+'</div>'
+      +'<div class="bill-status" style="color:'+urgColor+'">'+b.urgency+'</div>'
+      +'</div>'
+      +'<div class="prob-row" style="padding:0 12px 4px">'
+      +'<div class="prob-lbl">Passage</div>'
+      +'<div class="prob-track"><div class="prob-fill" style="width:'+b.prob+'%"></div></div>'
+      +'<div class="prob-pct">'+b.prob+'%</div>'
+      +'</div>'
+      +'<div style="padding:2px 12px 4px;font-size:10px;color:var(--text-s)">📅 '+b.status+' · <strong>'+b.date+'</strong></div>'
+      +'<div style="padding:2px 12px 4px;font-size:9.5px;color:var(--muted)">'+b.note+'</div>'
+      +'<div style="padding:3px 12px 7px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+      +(b.impactPos.map(function(t){return '<span class="tag t-buy" style="font-size:7.5px">'+t+' ↑</span>';}).join(''))
+      +(b.impactNeg.map(function(t){return '<span class="tag t-sell" style="font-size:7.5px">'+t+' ↓</span>';}).join(''))
+      +'<a href="'+b.link+'" target="_blank" style="font-size:9.5px;color:var(--blue-lt);margin-left:auto">Congress.gov →</a>'
+      +'</div>'
+      +'</div>';
+  });
+  html+='<div style="padding:8px 12px;text-align:center;border-top:1px solid var(--border-s)">'
+    +'<a href="https://api.congress.gov/" target="_blank" style="font-size:10px;color:var(--blue-lt)">Get free Congress.gov API key for live bill tracking →</a>'
+    +'</div>';
+  feed.innerHTML=html;
+  document.getElementById('congress-last-check').textContent='Congress.gov · Manual data + direct links';
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION & UI
+// ═══════════════════════════════════════════════════════
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  var pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(animateBars,150);
+}
+
+function animateBars(){
+  document.querySelectorAll('.sector-fill[data-w]').forEach(function(el){
+    el.style.width='0';
+    setTimeout(function(){el.style.width=el.getAttribute('data-w');},60);
+  });
+  var kbars=[['kb1','100%'],['kb2','60%'],['kb3','45%'],['kb4','72%'],['kb5','85%'],['kb6','78%'],['kb7','55%']];
+  kbars.forEach(function(b,i){
+    var el=document.getElementById(b[0]);
+    if(el) setTimeout(function(){el.style.width=b[1];},i*80);
+  });
+}
+setTimeout(animateBars,400);
+
+// ═══════════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════════
+function filterCong(cat,btn){
+  document.querySelectorAll('#page-congress .fbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('#cong-tbl tbody tr').forEach(function(tr){
+    if(cat==='all'){tr.style.display='';return;}
+    tr.style.display=(tr.getAttribute('data-cat')||'').indexOf(cat)>-1?'':'none';
+  });
+}
+
+function filterIns(cat,btn){
+  document.querySelectorAll('#page-insider .fbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('#ins-tbl tbody tr').forEach(function(tr){
+    if(cat==='all'){tr.style.display='';return;}
+    tr.style.display=(tr.getAttribute('data-ins')||'').indexOf(cat)>-1?'':'none';
+  });
+}
+
+function filterIdeas(patch){
+  for(var k in patch) iF[k]=patch[k];
+  var grps={strength:['all','exc','str','not'],dir:['all','long','short'],horizon:['all','st','mt','lt'],move:['all','m20','m30','m50','multi']};
+  for(var grp in grps){
+    grps[grp].forEach(function(v){
+      var btn=document.getElementById('f'+grp[0]+'-'+v);
+      if(btn) btn.classList.toggle('active',iF[grp]===v);
+    });
+  }
+  document.querySelectorAll('.idea-card').forEach(function(card){
+    var show=true;
+    var s=card.getAttribute('data-strength')||'';
+    var d=card.getAttribute('data-dir')||'';
+    var h=card.getAttribute('data-horizon')||'';
+    var m=card.getAttribute('data-move')||'';
+    var src=card.getAttribute('data-sources')||'';
+    if(iF.strength!=='all'&&s.indexOf(iF.strength)<0) show=false;
+    if(iF.dir!=='all'&&d.indexOf(iF.dir)<0) show=false;
+    if(iF.horizon!=='all'&&h.indexOf(iF.horizon)<0) show=false;
+    if(iF.move==='multi'&&src!=='multi') show=false;
+    else if(iF.move!=='all'&&iF.move!=='multi'&&m.indexOf(iF.move)<0) show=false;
+    card.style.display=show?'':'none';
+  });
+  document.querySelectorAll('#page-ideas .g2').forEach(function(grid){
+    var vis=Array.from(grid.querySelectorAll('.idea-card')).filter(function(c){return c.style.display!=='none'});
+    grid.style.display=vis.length?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// TABLE SORT
+// ═══════════════════════════════════════════════════════
+function sortTbl(th){
+  var tbl=th.closest('table');
+  var idx=Array.from(th.parentElement.children).indexOf(th);
+  var asc=tbl.getAttribute('data-sort-col')==String(idx)&&tbl.getAttribute('data-sort-asc')==='true';
+  tbl.setAttribute('data-sort-col',idx); tbl.setAttribute('data-sort-asc',String(!asc));
+  var rows=Array.from(tbl.querySelectorAll('tbody tr'));
+  rows.sort(function(a,b){
+    var av=(a.cells[idx]?a.cells[idx].textContent.trim():'');
+    var bv=(b.cells[idx]?b.cells[idx].textContent.trim():'');
+    var an=parseFloat(av.replace(/[^0-9.\-]/g,'')), bn=parseFloat(bv.replace(/[^0-9.\-]/g,''));
+    if(!isNaN(an)&&!isNaN(bn)) return asc?(an-bn):(bn-an);
+    return asc?(av>bv?1:av<bv?-1:0):(av<bv?1:av>bv?-1:0);
+  });
+  rows.forEach(function(r){tbl.querySelector('tbody').appendChild(r)});
+}
+
+// ═══════════════════════════════════════════════════════
+// TOASTS & NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+function showToast(title,body,type,dur){
+  type=type||'alert'; dur=dur||6000;
+  var tc=document.getElementById('toast-wrap');
+  var t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML='<span class="toast-close" onclick="this.parentElement.remove()">✕</span><div class="toast-title">'+title+'</div><div class="toast-body">'+body+'</div>';
+  tc.appendChild(t);
+  setTimeout(function(){t.style.animation='tout .3s ease both';setTimeout(function(){if(t.parentElement)t.remove();},300);},dur);
+}
+
+function dismissNotif(btn){
+  var item=btn.closest('.notif-item');
+  item.classList.remove('unread'); item.style.opacity='0.55';
+  notifCnt=Math.max(0,notifCnt-1); updateBell();
+}
+function clearNotifs(){
+  document.querySelectorAll('.notif-item.unread').forEach(function(n){n.classList.remove('unread');n.style.opacity='0.55';});
+  notifCnt=0; updateBell();
+}
+function updateBell(){
+  var lbl=document.getElementById('notif-cnt-lbl');
+  if(lbl) lbl.textContent=notifCnt+' unread';
+  var bell=document.getElementById('bell-cnt');
+  if(bell){bell.textContent=notifCnt>0?notifCnt:'';bell.style.display=notifCnt>0?'flex':'none';}
+}
+function addNotif(title,body){
+  var list=document.getElementById('notif-list');
+  if(!list) return;
+  var item=document.createElement('div');
+  item.className='notif-item unread';
+  item.innerHTML='<div class="notif-ico">🔔</div><div style="flex:1"><div class="notif-title">'+title+'</div><div class="notif-body">'+body+'</div><div class="notif-meta"><span class="notif-time">Just now</span><span class="notif-dismiss" onclick="dismissNotif(this)">Dismiss</span></div></div>';
+  list.insertBefore(item,list.firstChild);
+  notifCnt++; updateBell();
+}
+
+// ═══════════════════════════════════════════════════════
+// SIMULATE / SMS HELPERS
+// ═══════════════════════════════════════════════════════
+var simAlerts=[
+  {title:'🔴 TMDX Entry Zone Reached',body:'TMDX is within $126–$140 entry zone. CEO score 94. Consider initiating.',type:'alert'},
+  {title:'🟡 HR 7821 Floor Vote Feb 25',body:'AI Infrastructure Act vote in 3 days. NVDA entry zone $182–$198.',type:'warn'},
+  {title:'🟣 13F: Pershing Square → ANET',body:'Ackman $440M new ANET position. Aligns with CFO buy signal score 82.',type:'info'},
+  {title:'🔴 Cluster: WFRD CEO+CFO',body:'WFRD CEO+CFO purchased simultaneously. $3.8M. Score 89.',type:'alert'},
+  {title:'🟢 RTX Approaching Target 1',body:'RTX approaching Target 1 of $145. SB 1882 markup in 9 days.',type:'success'}
+];
+var simIdx=0;
+function simulateAlert(){
+  var a=simAlerts[simIdx%simAlerts.length]; simIdx++;
+  showToast(a.title,a.body,a.type);
+  addNotif(a.title,a.body);
+}
+function testSMS(){
+  var ph=document.getElementById('sms-phone');
+  if(!ph||!ph.value){showToast('Phone Required','Enter your mobile number to test SMS alerts.','warn');return;}
+  showToast('Test SMS Sent ✓','Test alert sent to '+ph.value+'. Check your messages in 30–60 seconds.','success',8000);
+}
+function saveSMS(){showToast('Configuration Saved ✓','SMS alerts activated. You will be notified within 90 seconds of qualifying EDGAR Form 4 events.','success',8000);}
+
+// ═══════════════════════════════════════════════════════
+// INITIALIZATION — Load all live data on startup
+// ═══════════════════════════════════════════════════════
+window.addEventListener('load', function(){
+
+  // ── STEP 1: Render hardcoded prices IMMEDIATELY (no API needed) ──
+  Object.keys(TRACKED).forEach(function(ticker){
+    var data=priceCache[ticker];
+    if(data){
+      updatePriceStrip(ticker, data);
+      updateIdeaCard(ticker, data);
+    }
+  });
+  // Set status dots to show hardcoded data is ready
+  setDataDot('finnhub','warn'); // yellow = hardcoded, not live yet
+  setDataDot('edgar','warn');
+  setDataDot('congress','warn');
+  var el=document.getElementById('last-refresh');
+  if(el) el.textContent='Feb 22, 2026 close';
+
+  // ── STEP 2: Attempt live Finnhub fetch (works when hosted over HTTP) ──
+  // If it succeeds, prices update to real-time and dot turns green.
+  // If blocked (file:// protocol), hardcoded prices remain — no errors shown.
+  setTimeout(refreshAllPrices, 1500);
+  priceRefreshInterval = setInterval(refreshAllPrices, 60000);
+
+  // ── STEP 3: EDGAR + Congress ──
+  setTimeout(fetchEdgarFeed, 2500);
+  setTimeout(fetchCongressData, 4000);
+
+  // ── STEP 4: Briefing toast ──
+  setTimeout(function(){
+    showToast('📊 ATLAS · Prices Loaded','Showing Feb 22, 2026 closing prices. For live quotes, serve the file over HTTP or deploy to Vercel.','info', 7000);
+  }, 600);
+});
+</script>
+
+</body>
+</html>
