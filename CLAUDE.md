@@ -1,127 +1,226 @@
 # ATLAS Intelligence Platform
 
-## What This Is
-A financial intelligence dashboard aggregating SEC Form 4 insider trades, congressional stock activity, legislative catalysts, and technical setups into a composite signal scoring engine.
+## Core Vision
+ATLAS is a signal convergence platform. The edge is not having congressional trades, insider buys, and institutional flows on one site — it's detecting when all three point at the same ticker or sector at the same time, especially when relevant legislation is in motion. That convergence is where the highest-conviction trades live.
+
+**No hardcoded trade ideas.** Trade ideas are generated dynamically by the scoring engine when signals align. Static/manual entries are demo scaffolding only and must be replaced.
+
+---
+
+## The Three Signal Hubs (Primary Pages)
+
+### Hub 1 — Congressional Trading
+- STOCK Act disclosures: every buy/sell filed by House and Senate members
+- Filter by chamber, committee, party, sector, size
+- Highlight cluster activity (3+ members, same ticker, 30-day window)
+- Link to source disclosure filing
+
+### Hub 2 — Insider Buying
+- SEC EDGAR Form 4: executive and director purchases
+- Score each filing: role seniority, size vs. compensation, proximity to 52-wk low, no 10b5-1 plan
+- Cluster detection: 3+ insiders, same company, 72-hour window = major bonus
+- Link to actual SEC filing
+
+### Hub 3 — Institutional Flows
+- 13F filings: new positions, conviction increases, full exits
+- Track Berkshire, Druckenmiller, Tepper, Ackman, Pershing Square etc.
+- Unusual options flow (sweep volume vs. open interest)
+- Highlight when a known smart-money manager initiates or adds significantly
+
+### Layer 4 — Legislative Catalysts (Overlay, Not Standalone)
+- Bill status, vote dates, passage probability
+- Used as a timing multiplier on signals from the three hubs above
+- A cluster of insider buys in defense + SB 1882 markup scheduled = signal score multiplied
+
+---
+
+## The Convergence Engine (The Real Edge)
+When signals from two or more hubs align on the same ticker or sector within a rolling window:
+
+| Signal Sources Active | Convergence Score Boost |
+|---|---|
+| Congressional + Insider | +20 pts |
+| Congressional + Institutional | +20 pts |
+| Insider + Institutional | +15 pts |
+| All three | +40 pts |
+| Any above + active legislation | +15 additional |
+
+**A ticker with a CEO buying $4M, 3 congress members buying, Druckenmiller initiating, and a floor vote in 10 days = the highest possible conviction signal.**
+
+Trade ideas are surfaced only when convergence score crosses threshold. They are not manually entered.
+
+---
 
 ## Current State
-- **Main file**: `atlas-intelligence.html` — single-file HTML/CSS/JS dashboard
-- **Data**: All static (no live prices, no real-time signals yet)
-- **Status**: UI/UX complete; live data layer is the critical missing piece
+- **Main file**: `atlas-intelligence.html` — single-file HTML/CSS/JS dashboard on Vercel
+- **Live URL**: https://atlas-intelligence-wheat.vercel.app
+- **GitHub**: https://github.com/Hsalazar023/atlas-intelligence (auto-deploys on push)
+- **Data**: Finnhub live prices ✅ | Congress.gov live bills ✅ | EDGAR/institutional = fallback/demo data
+- **Trade ideas**: Currently demo/hardcoded — must be replaced with engine-generated signals
+- **Known bad data**: ITA fallback=$162 (actual ~$243), WFRD fallback=$17.50 (actual ~$104) — prices were wrong from original build
 
-## Tracked Tickers
-RTX, NVDA, OXY, TMDX, FCX, TSM, PFE, META, ITA, WFRD, SMPL
+---
 
 ## Tracked Bills
-SB 1882, HR 7821, HR 6419, SB 2241
+SB 1882 (Defense), HR 7821 (AI Infrastructure), HR 6419 (Critical Minerals), SB 2241 (Drug Pricing)
 
 ---
 
 ## Architecture
 
-### Now (Path A) — Static Site + APIs
-Keep `atlas-intelligence.html` as frontend. Add `fetch()` calls to live APIs. Host free on Vercel.
+### Now — Single HTML file + Finnhub + Congress.gov
+Demo-grade. Proves the concept. Replace trade idea cards with engine-generated ones.
 
-### Later (Path B) — Full Stack
-Next.js frontend → Python data pipeline → Supabase → Clerk auth. Graduate here after live data is proven.
+### Next (Phase 1) — Python data pipeline
+- EDGAR Form 4 poller → SQLite → scoring engine → signals
+- Congressional disclosure scraper (House/Senate disclosure portals)
+- FastAPI server serving `/signals`, `/congress`, `/institutional`, `/bills`
+- HTML frontend calls local API
+
+### Then (Phase 2) — Full stack
+- Next.js App Router (one route per hub + convergence dashboard)
+- Supabase for signal storage, price history, convergence events
+- API routes proxy all external calls (keys never in frontend)
+- Vercel deployment (already set up)
 
 ---
 
 ## Target Stack
 | Layer | Tool | Cost |
 |---|---|---|
-| Frontend | Next.js (after Phase 1) | Free |
+| Frontend | Next.js 14 App Router | Free |
 | Hosting | Vercel | Free |
 | Database | Supabase (Postgres) | Free tier |
 | Auth | Clerk | Free (≤10k users) |
 | Data pipeline | Python + APScheduler | Free |
-| Stock prices | Finnhub → Polygon.io | Free / $29/mo |
-| SEC data | SEC EDGAR API | Free |
-| Congress data | Congress.gov API | Free |
+| Stock prices | Finnhub (now) → Polygon.io (later) | Free / $29/mo |
+| SEC EDGAR | EDGAR API (Form 4) | Free |
+| Congress trades | House/Senate disclosure portals | Free (scraping) |
+| Bill tracking | Congress.gov API ✅ | Free |
 | Charts | TradingView Lightweight Charts | Free |
 | Notifications | Ntfy.sh | Free |
 | Email alerts | Resend.com | Free (3k/mo) |
 
-**Running cost at full build: ~$30–50/month (mostly Polygon.io)**
+**Running cost at full build: ~$30–50/month**
 
 ---
 
 ## Development Phases
 
-### Phase 0 — Fix What's Broken ✅ COMPLETE (except 2 items)
-- [x] Add live Finnhub price validation to trade idea cards — IN ZONE / ABOVE ZONE / MISSED badges
-- [x] Replace static ticker bar prices with live quotes — mh-data-strip below ticker scrollbar
-- [x] Add "Signal generated [date] at $[price]" stamp to every idea card — rendered in `.price-vs-zone`
-- [x] Fix SMPL missing from price strip — `id="ps-SMPL"` element added
-- [x] Wire 60-second price refresh interval — `setInterval(refreshAllPrices, 60000)`
-- [x] Congress.gov API key added — `CONGRESS_API_KEY` line ~1726
-- [ ] **NEXT:** Audit all entry zones, targets, stops against current prices (Finviz/Barchart) + update `TRACKED` fallback prices
+### Phase 0 — Foundation ✅ COMPLETE
+- [x] Finnhub live prices + 60s refresh
+- [x] Zone badges on trade cards (IN ZONE / ABOVE ZONE / MISSED)
+- [x] Signal date + price stamps on cards
+- [x] SMPL added to price strip
+- [x] Congress.gov API key wired in
+- [x] Deployed to Vercel + GitHub repo
+- [x] Price audit — ITA and WFRD fallback prices corrected
 
-### Phase 1 — Live Data Foundation (Claude Code)
-- [x] Wire Finnhub prices throughout; refresh every 60s ← done in Phase 0
-- [ ] Poll SEC EDGAR Form 4 RSS feed every 90s; parse XML; save to `signals.db` (SQLite)
-- [ ] Track bill status via Congress.gov API; write to `bills.json`
-- [ ] FastAPI local server: `GET /prices`, `GET /signals`, `GET /bills` with CORS headers
+### Phase 1 — Real Data Pipelines (Claude Code — do next)
+- [ ] Fix ITA + WFRD demo cards: update to current prices, mark original signal as stale
+- [ ] Replace hardcoded trade ideas with engine-generated signal cards
+- [ ] Congressional disclosure scraper (quiverquant.com API or house.gov/senate.gov portals)
+- [ ] EDGAR Form 4 poller: parse XML, extract role/value/plan, score each filing
+- [ ] Convergence detector: when 2+ hubs fire on same ticker within rolling window
+- [ ] FastAPI local server: `/signals`, `/congress`, `/institutional`, `/bills`
 
-### Phase 2 — Real Website (Claude Code + Vercel)
-- [ ] Convert to Next.js 14 App Router (each tab → page route; CSS → `globals.css`)
-- [ ] API routes in `/api` folder to proxy Finnhub/EDGAR (never expose keys in frontend)
-- [ ] Deploy to Vercel; add env vars in Vercel dashboard
+### Phase 2 — Full Stack Rebuild (Claude Code)
+- [x] Vercel deployment live
+- [x] GitHub repo with auto-deploy
+- [ ] Convert to Next.js 14 App Router
+- [ ] Hub pages: `/congressional`, `/insider`, `/institutional`, `/convergence`
+- [ ] API routes proxy all external calls (move keys to Vercel env vars)
+- [ ] Supabase: `signals`, `congressional_trades`, `form4_filings`, `institutional_positions`, `convergence_events`
 
-### Phase 3 — Database & Signal Engine (Claude Code)
-- [ ] Supabase tables: `signals`, `form4_filings`, `bills`, `price_history`
-- [ ] Scoring engine (see logic below); save to Supabase; alert if score ≥ 85
-- [ ] Entry zone recalculation loop every 60s
+### Phase 3 — Convergence Engine
+- [ ] Scoring engine for each hub independently
+- [ ] Cross-hub convergence detection with boost multipliers
+- [ ] Legislative catalyst overlay (bill status × signal timing)
+- [ ] Dynamic trade idea generation when convergence score ≥ threshold
+- [ ] Signal decay: reduce score for older filings, flag stale ideas
 
 ### Phase 4 — Charts & Visuals
-- [ ] TradingView Lightweight Charts per trade card: entry band, targets, stop, signal date marker, volume
-- [ ] Sector rotation bubble chart (Chart.js): signal strength vs. forward return, bubble size = signal count
-- [ ] Score sparklines: 7-day trend line next to each score
+- [ ] TradingView Lightweight Charts: entry/target/stop overlays per signal
+- [ ] Convergence heatmap: sectors on X, signal sources on Y, color = score intensity
+- [ ] Timeline view: signals plotted chronologically with legislative events as markers
 
 ### Phase 5 — Notifications
-- [ ] Ntfy.sh push: score ≥ 85, ticker enters entry zone, stop approached within 2%, bill vote within 48h
-- [ ] Resend email: score ≥ 90 and cluster events
+- [ ] Ntfy.sh push: convergence event detected, ticker enters zone, bill vote within 48h
+- [ ] Resend email: full convergence (all 3 hubs + legislation) events only
 
-### Phase 6 — Auth & Multi-User (only if sharing/monetizing)
-- [ ] Clerk auth (Google + email); protect all routes
-- [ ] Per-user watchlists in Supabase linked to Clerk user ID
+### Phase 6 — Auth & Monetization
+- [ ] Clerk auth (Google/email)
+- [ ] Per-user watchlists in Supabase
 - [ ] Stripe paywall ($20–50/mo) if monetizing
 
 ---
 
 ## Signal Scoring Logic
+
+### Per-Hub Scores
+
+**Insider (Form 4):**
 | Factor | Points |
 |---|---|
-| CEO purchase | 10 |
-| CFO purchase | 8 |
-| Director purchase | 6 |
-| VP purchase | 4 |
-| Purchase near 52-week low | bonus |
-| No 10b5-1 plan | bonus |
-| Historical insider accuracy | bonus |
-| Cluster: 3+ insiders, same ticker, 72h window | +15 |
+| CEO | 10 |
+| CFO | 8 |
+| Director | 6 |
+| VP | 4 |
+| Near 52-week low | +5 |
+| No 10b5-1 plan | +8 |
+| Historical accuracy of this insider | +0–10 |
+| Cluster: 3+ insiders, same ticker, 72h | +15 |
 
-- Alert threshold: **score ≥ 85**
-- Exceptional threshold: **score ≥ 90**
+**Congressional:**
+| Factor | Points |
+|---|---|
+| Committee with relevant jurisdiction | +10 |
+| Cluster: 3+ members, same ticker, 30d | +15 |
+| Trade size >$250k | +5 |
+| Trade size >$1M | +10 |
+| Same-day as relevant bill activity | +10 |
 
-## Entry Zone Logic
-- Lower bound: `signal_price × 0.97`
-- Upper bound: `signal_price × 1.03`
-- Statuses: `in_zone` | `above_zone` (3–10% above) | `missed` (>10% above) | `triggered`
+**Institutional:**
+| Factor | Points |
+|---|---|
+| Known smart-money manager (Berkshire/Druckenmiller/etc.) | +15 |
+| New position (not add-to) | +10 |
+| >1% portfolio allocation | +8 |
+| Unusual options sweep | +12 |
+
+### Convergence Boosts
+- Congressional + Insider: +20
+- Congressional + Institutional: +20
+- Insider + Institutional: +15
+- All three: +40
+- Any convergence + active legislation: +15
+
+**Generate trade idea when total convergence score ≥ 85. Exceptional ≥ 95.**
 
 ---
 
-## API Keys (never hardcode — use env vars)
-| Key | Source | Env Var |
-|---|---|---|
-| Finnhub | finnhub.io (free) | `FINNHUB_API_KEY` |
-| Congress.gov | api.congress.gov (free) | `CONGRESS_API_KEY` ✅ |
-| Polygon.io | polygon.io ($29/mo) | `POLYGON_API_KEY` |
-| Resend | resend.com (free tier) | `RESEND_API_KEY` |
+## Entry Zone Logic (for generated signals)
+- Lower bound: `signal_generation_price × 0.97`
+- Upper bound: `signal_generation_price × 1.03`
+- Statuses: `in_zone` | `above_zone` (3–10%) | `missed` (>10%) | `triggered` | `stale` (>30 days old)
+
+---
+
+## API Keys
+| Key | Source | Env Var | Status |
+|---|---|---|---|
+| Finnhub | finnhub.io (free) | `FINNHUB_API_KEY` | ✅ in HTML |
+| Congress.gov | api.congress.gov (free) | `CONGRESS_API_KEY` | ✅ in HTML |
+| Polygon.io | polygon.io ($29/mo) | `POLYGON_API_KEY` | ⬜ future |
+| Resend | resend.com (free) | `RESEND_API_KEY` | ⬜ future |
+
+When converting to Next.js: move all keys to Vercel environment variables. Never commit keys to GitHub in that phase.
 
 ---
 
 ## Conventions
-- Use **Claude Code** for multi-file work, package installs, iterative scripting, and anything requiring a test loop
-- Use **chat interface** only for single-file edits and quick one-shot fixes
-- Reference env vars as `process.env.KEY_NAME` (Next.js) or `os.environ["KEY_NAME"]` (Python)
-- Keep Phase 0 and Phase 1 changes inside `atlas-intelligence.html` until Next.js conversion
+- **Claude Code** for: multi-file work, Python pipelines, package installs, iterative test loops
+- **Chat** for: single-file HTML edits, quick fixes, questions
+- No hardcoded trade ideas — all signals must be engine-generated or clearly labeled `[DEMO]`
+- Prices in `TRACKED` are fallback only; Finnhub live prices always override
+- Deploy: `git add . && git commit -m "msg" && git push` — Vercel auto-deploys
