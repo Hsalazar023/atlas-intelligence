@@ -224,3 +224,21 @@ When converting to Next.js: move all keys to Vercel environment variables. Never
 - No hardcoded trade ideas — all signals must be engine-generated or clearly labeled `[DEMO]`
 - Prices in `TRACKED` are fallback only; Finnhub live prices always override
 - Deploy: `git add . && git commit -m "msg" && git push` — Vercel auto-deploys
+
+---
+
+## Working in This Codebase
+
+### atlas-intelligence.html
+- File is ~2000 lines / 68k tokens — always use `offset` + `limit` with the Read tool
+- `TRACKED` object at line ~1362 is the source of truth for signal data; `data-entry-lo`/`data-entry-hi` HTML attributes on `.idea-card` elements are stale and unused — ignore them
+- Key JS functions: `updateIdeaCard()` (zone badges + stamps), `refreshAllPrices()` (Finnhub loop), `fetchPrice()`, `checkPriceAlert()`, `seedPriceCache()`
+- Price strip pattern: `id="ps-TICKER"` inside `#price-strip` — one element per tracked ticker
+- Initialization block: `window.addEventListener('load', ...)` at line ~1975
+
+### Environment Quirks
+- No `sudo` in terminal — `npm install -g` fails; use `npm install -g --prefix ~/.npm-global` instead
+- Vercel CLI binary: `~/.npm-global/bin/vercel`
+- Live Finnhub prices are CORS-blocked when opening HTML via `file://` — must serve over HTTP
+- Local server: `python3 -m http.server 8080` from project dir
+- Git committer name/email not globally configured — shows warning on commits but works fine
