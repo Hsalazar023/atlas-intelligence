@@ -1358,7 +1358,7 @@ button,input,select{font-family:var(--sans);outline:none}
 // ═══════════════════════════════════════════════════════
 
 var FINNHUB_KEY  = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
-var QUIVER_KEY   = ''; // free at quiverquant.com/quiverapi — congressional trades
+var QUIVER_KEY   = '3a0eefe56ae3fc614d3e49b2d5f732ae60df2015'; // QuiverQuant API token
 var FRED_KEY     = '71a0b94ed47b56a81f405947f88d08aa'; // FRED API — 10yr Treasury yield (DGS10)
 
 // ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
@@ -1699,39 +1699,49 @@ function fetchMarketIndices(){
 function renderCongressTrades(data){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody||!data||!data.length) return;
-  var sorted=data.slice().sort(function(a,b){return new Date(b.Date)-new Date(a.Date);}).slice(0,20);
+  // QuiverQuant live endpoint uses TransactionDate; bulk endpoint uses Date
+  var dateKey=data[0].TransactionDate?'TransactionDate':'Date';
+  // QuiverQuant uses 'House' field (values: 'Representatives','Senate'); fallback to Chamber
+  var chamberKey=data[0].House!==undefined?'House':'Chamber';
+  var sorted=data.slice().sort(function(a,b){
+    return new Date(b[dateKey])-new Date(a[dateKey]);
+  }).slice(0,20);
   setDataDot('congress','ok');
   var html='';
   sorted.forEach(function(t,i){
-    var isBuy=t.Transaction&&t.Transaction.toLowerCase().indexOf('purchase')>=0;
-    var isSell=t.Transaction&&(t.Transaction.toLowerCase().indexOf('sale')>=0||t.Transaction.toLowerCase().indexOf('sell')>=0);
+    var tx=(t.Transaction||'').toLowerCase();
+    var isBuy=tx.indexOf('purchase')>=0||tx.indexOf('buy')>=0;
+    var isSell=tx.indexOf('sale')>=0||tx.indexOf('sell')>=0;
     var tagCls=isBuy?'t-buy':isSell?'t-sell':'t-opt';
-    var tagLbl=isBuy?'Buy':isSell?'Sell':'Other';
+    var tagLbl=isBuy?'Buy':isSell?'Sell':(t.Transaction||'Other');
     var party=t.Party||'';
     var member=(t.Representative||'Unknown').replace(/^(Rep\.|Sen\.)\s*/,'');
-    var memberTitle=(t.Chamber==='Senate'?'Sen.':'Rep.')+' '+member;
+    var isSenate=(t[chamberKey]||'').toLowerCase().indexOf('senate')>=0;
+    var memberTitle=(isSenate?'Sen.':'Rep.')+' '+member;
     var ticker=t.Ticker||'—';
+    var dateVal=t[dateKey]||'';
     var score=0;
-    if(isBuy) score+=30; else score-=30;
-    if((t.Range||'').indexOf('$250,001')>=0||(t.Range||'').indexOf('$500,001')>=0) score+=5;
-    if((t.Range||'').indexOf('$1,000,001')>=0) score+=10;
+    if(isBuy) score+=30; else if(isSell) score-=30;
+    var range=t.Range||'';
+    if(range.indexOf('$250,001')>=0||range.indexOf('$500,001')>=0) score+=5;
+    if(range.indexOf('$1,000,001')>=0) score+=10;
     var scoreDisp=score>0?'+'+score:score;
-    html+='<tr data-cat="'+(t.Chamber==='Senate'?'senate':'house')+'">'
+    html+='<tr data-cat="'+(isSenate?'senate':'house')+'">'
       +'<td style="font-size:10px;color:var(--muted)">'+(String(i+1).padStart(2,'0'))+'</td>'
       +'<td><div style="font-size:11.5px;font-weight:600">'+memberTitle+'</div>'
       +'<div class="sym-sub">'+party+(t.State?' · '+t.State:'')+'</div></td>'
       +'<td><div class="sym">'+ticker+'</div></td>'
-      +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+(t.Range||'—')+'</span></td>'
+      +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+range+'</span></td>'
       +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
       +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(score))
         +'%;background:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
       +'<span class="val" style="font-size:11px;color:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
-      +'<td><span class="sym-sub">'+(t.Date?t.Date.slice(5):'—')+'</span></td>'
+      +'<td><span class="sym-sub">'+(dateVal?dateVal.slice(5):'—')+'</span></td>'
       +'</tr>';
   });
   tbody.innerHTML=html;
   var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-  var thisMonth=data.filter(function(t){return new Date(t.Date)>=monthStart;});
+  var thisMonth=data.filter(function(t){return new Date(t[dateKey])>=monthStart;});
   var kpiEl=document.querySelector('#page-congress .kpi-value');
   if(kpiEl) kpiEl.textContent=thisMonth.length;
 }
