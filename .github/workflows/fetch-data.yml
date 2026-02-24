@@ -1,17 +1,29 @@
-name: Fetch Live Data
+name: Refresh ATLAS Data
+
+# Runs twice daily on weekdays — aligns with actual data update cadence:
+#   7 AM ET  (12:00 UTC) — pre-market sweep: overnight EDGAR filings, fresh start of day
+#   7 PM ET  (00:00 UTC) — end-of-day sweep: all same-day filings + FRED daily close data
+#
+# FRED (VIX, 10yr yield) only posts once/day after market close, so the 7 PM run
+# is the high-value one. Congressional + EDGAR filings trickle in all day, so
+# both runs are useful.
+#
+# GitHub Secrets required (Repo → Settings → Secrets → Actions → New repository secret):
+#   QUIVER_KEY   — QuiverQuant API token  (quiverquant.com/quiverapi)
+#   FRED_KEY     — FRED API key           (fred.stlouisfed.org/docs/api/api_key.html)
+#   FINNHUB_KEY  — Finnhub API key        (finnhub.io)
 
 on:
   schedule:
-    # Every 4 hours — balances freshness vs. Vercel deploy frequency
-    - cron: '0 */4 * * *'
-  workflow_dispatch:
-    # Manual trigger from GitHub Actions tab
+    - cron: '0 12 * * 1-5'   # 7 AM ET  Mon–Fri  (12:00 UTC)
+    - cron: '0 0 * * 2-6'    # 7 PM ET  Mon–Fri  (00:00 UTC next day)
+  workflow_dispatch:           # manual trigger from GitHub Actions tab
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to commit data files back to repo
+      contents: write   # needed to commit updated JSON files back to repo
 
     steps:
       - name: Checkout repo
@@ -27,9 +39,9 @@ jobs:
 
       - name: Run data fetcher
         env:
-          # Add QUIVER_KEY as a GitHub Actions secret:
-          # Repo → Settings → Secrets and variables → Actions → New repository secret
-          QUIVER_KEY: ${{ secrets.QUIVER_KEY }}
+          QUIVER_KEY:  ${{ secrets.QUIVER_KEY }}
+          FRED_KEY:    ${{ secrets.FRED_KEY }}
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
         run: python3 scripts/fetch_data.py
 
       - name: Commit updated data files
@@ -37,6 +49,6 @@ jobs:
           git config --global user.name  'ATLAS Data Bot'
           git config --global user.email 'bot@atlasiq.io'
           git add data/
-          # Only commit if something actually changed
-          git diff --staged --quiet || git commit -m "Auto-update live data [$(date -u '+%Y-%m-%d %H:%M')] [skip ci]"
+          # Only commit if something actually changed — skips empty runs
+          git diff --staged --quiet || git commit -m "chore: refresh data $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push
