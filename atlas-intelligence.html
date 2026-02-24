@@ -1563,6 +1563,11 @@ function updateIdeaCard(ticker, data){
     var sigMonths=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var sigDateFmt=sigMonths[parseInt(sigParts[1],10)-1]+' '+parseInt(sigParts[2],10)+', '+sigParts[0];
     var sigStamp='Signal generated '+sigDateFmt+' at '+fmtPrice(info.price);
+    // P2.2 — Staleness: warn if signal is >30 days old
+    var sigAge=(Date.now()-new Date(info.sigDate))/86400000;
+    var staleNote=sigAge>30
+      ?'<span style="font-size:9.5px;color:var(--red-lt);flex-basis:100%;margin-top:4px;font-weight:600">⏰ Signal is '+Math.floor(sigAge)+' days old — verify thesis still intact before acting.</span>'
+      :'';
     var div=document.createElement('div');
     div.className='price-vs-zone';
     div.innerHTML=
@@ -1571,6 +1576,7 @@ function updateIdeaCard(ticker, data){
       +chgDisplay
       +'<span class="zone-badge '+cls+'">'+status+'</span>'
       +'<span style="font-size:9.5px;color:var(--muted);flex-basis:100%;margin-top:3px">'+msg+'</span>'
+      +staleNote
       +'<span style="font-size:9.5px;color:var(--text-s)">To T1 <strong class="'+(upsideT1>0?'up':'dn')+'">'+(upsideT1>0?'+':'')+upsideT1.toFixed(1)+'%</strong></span>'
       +'<span style="font-size:9.5px;color:var(--text-s);margin-left:10px">Risk to stop: <strong class="dn">'+Math.abs(riskStop).toFixed(1)+'%</strong></span>'
       +'<span style="font-size:9.5px;color:var(--muted);margin-left:10px">Entry $'+info.entryLo+'–$'+info.entryHi+' · T1 $'+info.target1+' · Stop $'+info.stop+'</span>'
@@ -1578,6 +1584,27 @@ function updateIdeaCard(ticker, data){
       +'<span class="pvz-time">'+srcLabel+'</span>';
     var anchor=card.querySelector('.rr-block')||card.querySelector('.rn-body')||card.querySelector('.rn-ft');
     if(anchor) card.insertBefore(div, anchor);
+    // P2.1 — Sync rr-block cells from TRACKED (single source of truth)
+    // Only updates entry/target/stop cells; leaves catalyst/date/label cells alone.
+    var rrMap={
+      'Entry Zone':'$'+info.entryLo+'–$'+info.entryHi,
+      'Entry':'$'+info.entryLo+'–$'+info.entryHi,
+      'Short Entry':'$'+info.entryLo+'–$'+info.entryHi,
+      'Target 1':'$'+info.target1,
+      'Target 2':'$'+info.target2,
+      'Targets':'$'+info.target1+' / $'+info.target2,
+      'Cover Target':'$'+info.target1+' / $'+info.target2,
+      'Stop Loss':'$'+info.stop,
+      'Stop':'$'+info.stop,
+      'Stop (cover)':'$'+info.stop
+    };
+    card.querySelectorAll('.rr-cell').forEach(function(cell){
+      var lbl=cell.querySelector('.rr-lbl');
+      var val=cell.querySelector('.rr-val');
+      if(!lbl||!val) return;
+      var t=lbl.textContent.trim();
+      if(rrMap.hasOwnProperty(t)) val.textContent=rrMap[t];
+    });
   });
 }
 
