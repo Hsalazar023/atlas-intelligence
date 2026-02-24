@@ -1,15 +1,15 @@
 name: Refresh ATLAS Data
 
-# Runs twice daily on weekdays, timed around market hours (all times ET):
-#   9:00 AM (14:00 UTC) — pre-market open: overnight EDGAR filings loaded before trading starts
-#   4:15 PM (21:15 UTC) — post-market close: same-day filings captured + FRED close data posted
+# Runs 4x daily on weekdays, timed around market hours (ET = UTC-5 in winter, UTC-4 in summer):
+#   8:15 AM (13:15 UTC) — pre-market:  overnight EDGAR filings, fresh data before open
+#  11:30 AM (16:30 UTC) — mid-morning: morning filings captured, mid-session snapshot
+#   3:00 PM (20:00 UTC) — pre-close:   afternoon filings, last snapshot before close
+#   4:30 PM (21:30 UTC) — post-close:  all same-day filings + FRED VIX/10yr updates after close
 #
-# GitHub cron runs in UTC. DST shifts times by 1hr in summer (EDT = UTC-4):
-#   14:00 UTC → 10:00 AM EDT  (still pre-open, acceptable)
-#   21:15 UTC → 5:15 PM EDT   (still post-close, acceptable)
+# DST note (EDT = UTC-4, clocks spring forward in March):
+#   Runs shift 1hr earlier in summer — still useful market-hour brackets.
 #
-# FRED (VIX, 10yr yield) posts once/day after close — the 4:15 PM run is the key one.
-# Congressional + EDGAR filings trickle in all day — both runs are useful.
+# QuiverQuant free tier is 100 req/day — 4 calls/day leaves 96 to spare.
 #
 # GitHub Secrets required (Repo → Settings → Secrets → Actions → New repository secret):
 #   QUIVER_KEY   — QuiverQuant API token  (quiverquant.com/quiverapi)
@@ -18,8 +18,10 @@ name: Refresh ATLAS Data
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5'    # 9:00 AM ET  Mon–Fri  (14:00 UTC) — pre-market open
-    - cron: '15 21 * * 1-5'   # 4:15 PM ET  Mon–Fri  (21:15 UTC) — post-market close
+    - cron: '15 13 * * 1-5'   #  8:15 AM ET  Mon–Fri  (13:15 UTC) — pre-market
+    - cron: '30 16 * * 1-5'   # 11:30 AM ET  Mon–Fri  (16:30 UTC) — mid-morning
+    - cron: '0 20 * * 1-5'    #  3:00 PM ET  Mon–Fri  (20:00 UTC) — pre-close
+    - cron: '30 21 * * 1-5'   #  4:30 PM ET  Mon–Fri  (21:30 UTC) — post-close
   workflow_dispatch:            # manual trigger from GitHub Actions tab
 
 jobs:
