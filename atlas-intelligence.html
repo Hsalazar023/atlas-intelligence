@@ -1359,7 +1359,7 @@ button,input,select{font-family:var(--sans);outline:none}
 
 var FINNHUB_KEY  = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
 var QUIVER_KEY   = ''; // free at quiverquant.com/quiverapi — congressional trades
-var FRED_KEY     = ''; // free at fred.stlouisfed.org/docs/api/api_key.html — 10yr yield
+var FRED_KEY     = '71a0b94ed47b56a81f405947f88d08aa'; // FRED API — 10yr Treasury yield (DGS10)
 
 // ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
 // Entry zones, targets & stops recalculated from CURRENT prices
@@ -1712,7 +1712,8 @@ function fetchQuiverTrades(){
     return;
   }
 
-  var url='https://api.quiverquant.com/beta/bulk/congresstrading';
+  // /beta/live/congresstrading — most recent transactions, no pagination needed
+  var url='https://api.quiverquant.com/beta/live/congresstrading';
   fetch(url,{headers:{'Authorization':'Token '+QUIVER_KEY,'Accept':'application/json'}})
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(data){
@@ -2168,7 +2169,7 @@ window.addEventListener('load', function(){
 
   // ── STEP 4: Briefing toast ──
   setTimeout(function(){
-    showToast('📊 ATLAS · Live Data Loading','Fetching live prices, EDGAR Form 4 feed, and market indices. Add QUIVER_KEY and FRED_KEY to enable congressional trades and Treasury yield.','info', 8000);
+    showToast('📊 ATLAS · Live Data Loading','Fetching live prices, market indices, EDGAR Form 4 feed, and 10-yr Treasury yield. Add QUIVER_KEY to enable live congressional trades.','info', 8000);
   }, 600);
 });
 </script>
