@@ -882,11 +882,11 @@ button,input,select{font-family:var(--sans);outline:none}
 <div id="page-markets" class="page">
 <div class="wrapper">
   <div class="kpi-strip ks6">
-    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:60%"></div><div class="kpi-label">S&amp;P 500</div><div class="kpi-value">6,147</div><div class="kpi-delta up">+0.42% today</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:55%"></div><div class="kpi-label">Nasdaq 100</div><div class="kpi-value">21,384</div><div class="kpi-delta up">+0.68% today</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:45%"></div><div class="kpi-label">Russell 2000</div><div class="kpi-value">2,241</div><div class="kpi-delta up">+0.21% today</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:30%"></div><div class="kpi-label">VIX</div><div class="kpi-value">17.4</div><div class="kpi-delta am">Moderate volatility</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:70%"></div><div class="kpi-label">10-Yr Treasury</div><div class="kpi-value">4.42%</div><div class="kpi-delta" style="color:var(--muted)">+2bps today</div></div>
+    <div class="kpi"><div class="kpi-bar" id="bar-spy" style="background:var(--green);width:60%"></div><div class="kpi-label">S&amp;P 500 <span style="font-size:8px;opacity:.6">SPY</span></div><div class="kpi-value" id="idx-spy-val">—</div><div class="kpi-delta" id="idx-spy-delta" style="color:var(--muted)">fetching...</div></div>
+    <div class="kpi"><div class="kpi-bar" id="bar-qqq" style="background:var(--green);width:55%"></div><div class="kpi-label">Nasdaq 100 <span style="font-size:8px;opacity:.6">QQQ</span></div><div class="kpi-value" id="idx-qqq-val">—</div><div class="kpi-delta" id="idx-qqq-delta" style="color:var(--muted)">fetching...</div></div>
+    <div class="kpi"><div class="kpi-bar" id="bar-iwm" style="background:var(--green);width:45%"></div><div class="kpi-label">Russell 2000 <span style="font-size:8px;opacity:.6">IWM</span></div><div class="kpi-value" id="idx-iwm-val">—</div><div class="kpi-delta" id="idx-iwm-delta" style="color:var(--muted)">fetching...</div></div>
+    <div class="kpi"><div class="kpi-bar" id="bar-vix" style="background:var(--amber);width:30%"></div><div class="kpi-label">VIX</div><div class="kpi-value" id="idx-vix-val">—</div><div class="kpi-delta" id="idx-vix-delta" style="color:var(--muted)">fetching...</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:70%"></div><div class="kpi-label">10-Yr Treasury</div><div class="kpi-value" id="idx-10yr-val">4.42%</div><div class="kpi-delta" id="idx-10yr-delta" style="color:var(--muted)">add FRED key</div></div>
     <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:65%"></div><div class="kpi-label">ATLAS Signal Alpha</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs benchmark 12mo</div></div>
   </div>
   <div class="g2 mb14">
@@ -1357,7 +1357,9 @@ button,input,select{font-family:var(--sans);outline:none}
 // ATLAS LIVE DATA ENGINE
 // ═══════════════════════════════════════════════════════
 
-var FINNHUB_KEY = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
+var FINNHUB_KEY  = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
+var QUIVER_KEY   = ''; // free at quiverquant.com/quiverapi — congressional trades
+var FRED_KEY     = ''; // free at fred.stlouisfed.org/docs/api/api_key.html — 10yr yield
 
 // ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
 // Entry zones, targets & stops recalculated from CURRENT prices
@@ -1645,130 +1647,219 @@ function checkPriceAlert(ticker, data){
 }
 
 // ═══════════════════════════════════════════════════════
+// MARKET INDICES — live via Finnhub ETF proxies (SPY/QQQ/IWM/^VIX)
+// ═══════════════════════════════════════════════════════
+var INDEX_MAP=[
+  {sym:'SPY',  valId:'idx-spy-val',  deltaId:'idx-spy-delta',  barId:'bar-spy',  isVix:false},
+  {sym:'QQQ',  valId:'idx-qqq-val',  deltaId:'idx-qqq-delta',  barId:'bar-qqq',  isVix:false},
+  {sym:'IWM',  valId:'idx-iwm-val',  deltaId:'idx-iwm-delta',  barId:'bar-iwm',  isVix:false},
+  {sym:'^VIX', valId:'idx-vix-val',  deltaId:'idx-vix-delta',  barId:'bar-vix',  isVix:true }
+];
+
+function fetchMarketIndices(){
+  INDEX_MAP.forEach(function(idx){
+    var url='https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(idx.sym)+'&token='+FINNHUB_KEY;
+    fetch(url)
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d||!d.c||d.c<=0) return;
+        var valEl=document.getElementById(idx.valId);
+        var deltaEl=document.getElementById(idx.deltaId);
+        var barEl=document.getElementById(idx.barId);
+        if(!valEl||!deltaEl) return;
+        var pct=d.dp||0;
+        var up=pct>=0;
+        // Show price
+        valEl.textContent='$'+d.c.toFixed(2);
+        // VIX: show level + volatility label instead of %
+        if(idx.isVix){
+          valEl.textContent=d.c.toFixed(2);
+          var vixLabel=d.c<15?'Low volatility':d.c<20?'Moderate':d.c<25?'Elevated':'Fear zone';
+          var vixCls=d.c<15?'up':d.c<20?'am':'dn';
+          deltaEl.textContent=vixLabel;
+          deltaEl.className='kpi-delta '+vixCls;
+        } else {
+          deltaEl.textContent=(up?'+':'')+pct.toFixed(2)+'% today';
+          deltaEl.className='kpi-delta '+(up?'up':'dn');
+        }
+        if(barEl){
+          barEl.style.background=idx.isVix?(d.c<20?'var(--green)':d.c<25?'var(--amber)':'var(--red-lt)'):(up?'var(--green)':'var(--red-lt)');
+          barEl.style.width=Math.min(95,Math.max(5,50+(pct/3)*45))+'%';
+        }
+      })
+      .catch(function(){/* keep placeholder */});
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// CONGRESSIONAL TRADES — QuiverQuant API (free tier)
+// Register at quiverquant.com/quiverapi then set QUIVER_KEY above
+// ═══════════════════════════════════════════════════════
+function fetchQuiverTrades(){
+  var tbody=document.querySelector('#cong-tbl tbody');
+  if(!tbody) return;
+
+  if(!QUIVER_KEY){
+    // No key — show notice above existing hardcoded rows, keep them
+    var notice=document.getElementById('quiver-notice');
+    if(!notice){
+      notice=document.createElement('tr');
+      notice.id='quiver-notice';
+      notice.innerHTML='<td colspan="7" style="padding:6px 12px;font-size:9px;color:var(--blue-lt);background:var(--blue-pale);text-align:center">'
+        +'📋 <strong>Demo data below.</strong> Add a free QuiverQuant API key (quiverquant.com/quiverapi) to QUIVER_KEY for live congressional trades.</td>';
+      tbody.insertBefore(notice, tbody.firstChild);
+    }
+    return;
+  }
+
+  var url='https://api.quiverquant.com/beta/bulk/congresstrading';
+  fetch(url,{headers:{'Authorization':'Token '+QUIVER_KEY,'Accept':'application/json'}})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(data){
+      if(!data||!data.length){return;}
+      // Sort most recent first, take top 15
+      var sorted=data.slice().sort(function(a,b){return new Date(b.Date)-new Date(a.Date);}).slice(0,15);
+      setDataDot('congress','ok');
+      var html='';
+      sorted.forEach(function(t,i){
+        var isBuy=t.Transaction&&t.Transaction.toLowerCase().indexOf('purchase')>=0;
+        var isSell=t.Transaction&&(t.Transaction.toLowerCase().indexOf('sale')>=0||t.Transaction.toLowerCase().indexOf('sell')>=0);
+        var tagCls=isBuy?'t-buy':isSell?'t-sell':'t-opt';
+        var tagLbl=isBuy?'Buy':isSell?'Sell':'Other';
+        var party=t.Party||'';
+        var member=(t.Representative||'Unknown').replace(/^(Rep\.|Sen\.)\s*/,'');
+        var memberTitle=(t.Chamber==='Senate'?'Sen.':'Rep.')+' '+member;
+        var ticker=t.Ticker||'—';
+        // Simple scoring
+        var score=0;
+        if(isBuy) score+=30; else score-=30;
+        if((t.Range||'').indexOf('$250,001')>=0||(t.Range||'').indexOf('$500,001')>=0) score+=5;
+        if((t.Range||'').indexOf('$1,000,001')>=0) score+=10;
+        var scoreDisp=score>0?'+'+score:score;
+        var scoreCls=score>0?'sc3':'sc-bear';
+        html+='<tr data-cat="'+(t.Chamber==='Senate'?'senate':'house')+'">'
+          +'<td style="font-size:10px;color:var(--muted)">'+(String(i+1).padStart(2,'0'))+'</td>'
+          +'<td><div style="font-size:11.5px;font-weight:600">'+memberTitle+'</div>'
+          +'<div class="sym-sub">'+party+(t.State?' · '+t.State:'')+'</div></td>'
+          +'<td><div class="sym">'+ticker+'</div></td>'
+          +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+(t.Range||'—')+'</span></td>'
+          +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
+          +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(score))+'%;background:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
+          +'<span class="val" style="font-size:11px;color:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
+          +'<td><span class="sym-sub">'+(t.Date?t.Date.slice(5):'—')+'</span></td>'
+          +'</tr>';
+      });
+      tbody.innerHTML=html;
+      // Update KPI — filings this month
+      var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+      var thisMonth=data.filter(function(t){return new Date(t.Date)>=monthStart;});
+      var kpiEl=document.querySelector('#page-congress .kpi-value');
+      if(kpiEl) kpiEl.textContent=thisMonth.length;
+    })
+    .catch(function(e){console.warn('QuiverQuant error',e);/* keep hardcoded rows */});
+}
+
+// ═══════════════════════════════════════════════════════
+// 10-YR TREASURY YIELD — FRED API (free, needs key)
+// Register at fred.stlouisfed.org/docs/api/api_key.html
+// ═══════════════════════════════════════════════════════
+function fetchFredYield(){
+  if(!FRED_KEY) return; // keep static until key is set
+  var url='https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key='+FRED_KEY
+    +'&limit=5&sort_order=desc&file_type=json';
+  fetch(url)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var obs=(data.observations||[]).filter(function(o){return o.value!=='.'&&o.value!='';});
+      if(!obs.length) return;
+      var latest=obs[0];
+      var prev=obs[1]||null;
+      var val=parseFloat(latest.value);
+      var valEl=document.getElementById('idx-10yr-val');
+      var deltaEl=document.getElementById('idx-10yr-delta');
+      if(valEl) valEl.textContent=val.toFixed(2)+'%';
+      if(deltaEl&&prev){
+        var diff=val-parseFloat(prev.value);
+        var bps=Math.round(diff*100);
+        deltaEl.textContent=(bps>=0?'+':'')+bps+'bps · '+latest.date;
+        deltaEl.style.color=bps>5?'var(--red-lt)':bps<-5?'var(--green)':'var(--muted)';
+      } else if(deltaEl){
+        deltaEl.textContent=latest.date;
+        deltaEl.style.color='var(--muted)';
+      }
+    })
+    .catch(function(){/* keep static */});
+}
+
+// ═══════════════════════════════════════════════════════
 // SEC EDGAR FORM 4 LIVE FEED
 // ═══════════════════════════════════════════════════════
 var edgarLastFetch=null;
 var edgarResults=[];
 
 function fetchEdgarFeed(){
-  // EDGAR full-text search for Form 4 filings - tracked tickers
-  var trackedList=Object.keys(TRACKED).join('+OR+');
-  // Use EDGAR's EFTS search endpoint (no API key needed)
-  var url='https://efts.sec.gov/LATEST/search-index?q=%22form+4%22&dateRange=custom&startdt=2026-01-01&forms=4';
-
-  fetch(url, {headers:{'User-Agent':'ATLAS Platform contact@atlas.com'}})
-    .then(function(r){return r.json();})
+  // EDGAR EFTS full-text search — no API key, free, CORS-allowed
+  // Returns recent Form 4 filings from the last 30 days
+  var startdt=new Date(Date.now()-30*24*3600000).toISOString().slice(0,10);
+  var url='https://efts.sec.gov/LATEST/search-index?forms=4&dateRange=custom&startdt='+startdt+'&hits.hits.total.value=true';
+  fetch(url)
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(data){
+      var hits=(data.hits&&data.hits.hits)?data.hits.hits:[];
+      if(hits.length===0){renderEdgarFallback();return;}
       edgarLastFetch=new Date();
       setDataDot('edgar','ok');
-      document.getElementById('edgar-last-check').textContent='SEC EDGAR · Updated '+edgarLastFetch.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-      renderEdgarFeed(data.hits && data.hits.hits ? data.hits.hits : []);
+      document.getElementById('edgar-last-check').textContent='SEC EDGAR Live · '+edgarLastFetch.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+      renderEdgarFeed(hits);
     })
-    .catch(function(e){
-      // Fallback to EDGAR RSS for recent Form 4s
-      fetchEdgarRSS();
-    });
-}
-
-function fetchEdgarRSS(){
-  // EDGAR company search for specific tracked tickers Form 4s
-  // Using EDGAR submissions endpoint for a known insider filer
-  var tickers=Object.keys(TRACKED);
-  var promises=[];
-
-  // Try EDGAR company search API - this is fully free and public
-  tickers.slice(0,5).forEach(function(ticker){
-    var p=fetch('https://efts.sec.gov/LATEST/search-index?q=%22'+ticker+'%22&forms=4&dateRange=custom&startdt=2026-01-15',
-      {headers:{'User-Agent':'ATLAS/1.0'}})
-      .then(function(r){return r.json();})
-      .catch(function(){return null;});
-    promises.push({ticker:ticker, promise:p});
-  });
-
-  Promise.allSettled(promises.map(function(x){return x.promise;}))
-    .then(function(results){
-      var filings=[];
-      results.forEach(function(r,i){
-        if(r.status==='fulfilled' && r.value && r.value.hits && r.value.hits.hits){
-          r.value.hits.hits.forEach(function(hit){
-            filings.push({ticker:promises[i].ticker, hit:hit, fresh:true});
-          });
-        }
-      });
-      if(filings.length>0){
-        setDataDot('edgar','ok');
-        renderEdgarFilings(filings);
-      } else {
-        renderEdgarFallback();
-      }
-    });
-}
-
-function renderEdgarFilings(filings){
-  var feed=document.getElementById('edgar-feed');
-  if(!feed) return;
-  if(filings.length===0){renderEdgarFallback();return;}
-  var html='';
-  filings.slice(0,12).forEach(function(f){
-    var hit=f.hit;
-    var src=hit._source||{};
-    var ticker=f.ticker;
-    var displayDate=src.period_of_report||src.file_date||'Recent';
-    html+='<div class="edgar-feed-item'+(f.fresh?' efi-new':'')+'">'
-      +'<div class="efi-ticker">'+ticker+'</div>'
-      +'<div class="efi-body">'
-      +'<div class="efi-name">'+(src.entity_name||'Insider Filing')+'</div>'
-      +'<div class="efi-detail">Form 4 · '+(src.file_date||'Recent')+'</div>'
-      +'<div class="efi-time">SEC EDGAR · '+displayDate+'</div>'
-      +'</div>'
-      +'<span class="tag t-buy" style="flex-shrink:0">Form 4</span>'
-      +'</div>';
-  });
-  feed.innerHTML=html;
+    .catch(function(){renderEdgarFallback();});
 }
 
 function renderEdgarFeed(hits){
   var feed=document.getElementById('edgar-feed');
   if(!feed) return;
   if(!hits||hits.length===0){renderEdgarFallback();return;}
-  var html='';
-  // Filter for tracked tickers
-  var trackedArr=Object.keys(TRACKED);
-  var filtered=hits.filter(function(h){
-    var src=(h._source||{});
-    var ent=(src.entity_name||'').toUpperCase();
-    return trackedArr.some(function(t){return ent.indexOf(t)>-1;});
-  });
-  var toShow=(filtered.length>0?filtered:hits).slice(0,10);
-  toShow.forEach(function(h){
+  // Build green "live" banner
+  var html='<div style="padding:4px 12px;font-size:8px;font-weight:600;letter-spacing:.05em;color:var(--green);background:var(--green-bg);border-bottom:1px solid var(--border-s)">✅ LIVE · SEC EDGAR Form 4 Feed</div>';
+  hits.slice(0,18).forEach(function(h){
     var src=h._source||{};
-    html+='<div class="edgar-feed-item efi-new">'
-      +'<div class="efi-ticker" style="font-size:10px">'+(src.ticker_symbol||'—')+'</div>'
+    var company=src.entity_name||'Unknown Company';
+    var filed=src.file_date||'';
+    var period=src.period_of_report||'';
+    // Construct a direct search link by company name
+    var searchQ=encodeURIComponent('"'+company+'"');
+    var link='https://efts.sec.gov/LATEST/search-index?q='+searchQ+'&forms=4';
+    // Check if it matches a tracked ticker by company name
+    var trackedArr=Object.keys(TRACKED);
+    var matchedTicker=trackedArr.find(function(t){return company.toUpperCase().indexOf(t)>-1;});
+    html+='<div class="edgar-feed-item'+(matchedTicker?' efi-new':'')+'">'
+      +'<div class="efi-ticker" style="min-width:30px;font-size:'+(matchedTicker?'11px':'9px')+'">'+( matchedTicker||'4')+'</div>'
       +'<div class="efi-body">'
-      +'<div class="efi-name">'+(src.entity_name||'Insider')+'</div>'
-      +'<div class="efi-detail">Form 4 · '+(src.form_type||'4')+'</div>'
-      +'<div class="efi-time">Filed: '+(src.file_date||'Recent')+'</div>'
+      +'<div class="efi-name" style="font-size:10.5px">'+company+'</div>'
+      +'<div class="efi-detail">Form 4'+(period?' · Period '+period:'')+'</div>'
+      +'<div class="efi-time">'+(filed?'Filed '+filed+' · ':'')+
+        '<a href="'+link+'" target="_blank" style="color:var(--blue-lt)">EDGAR →</a></div>'
       +'</div>'
-      +'<span class="tag t-buy" style="flex-shrink:0">SEC</span>'
+      +(matchedTicker?'<span class="tag" style="background:var(--green-bg);color:var(--green);flex-shrink:0;font-size:8px">Tracked</span>':'')
       +'</div>';
   });
-  if(html) feed.innerHTML=html;
-  else renderEdgarFallback();
+  html+='<div style="padding:8px 12px;text-align:center">'
+    +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on EDGAR →</a></div>';
+  feed.innerHTML=html;
 }
 
 function renderEdgarFallback(){
-  // Show curated live signals with links to actual EDGAR filings
+  // Last resort: curated filings with real SEC links
   var feed=document.getElementById('edgar-feed');
   if(!feed) return;
   setDataDot('edgar','warn');
   var items=[
     {ticker:'TMDX',name:'Hassanein, Waleed H.',role:'President & CEO',type:'Buy',value:'$4.2M',date:'2026-02-19',score:94,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=transmedics&type=4&dateb=&owner=include&count=10'},
     {ticker:'OXY', name:'Hollub, Vicki A.',role:'CEO',type:'Buy (Cluster)',value:'$28.1M',date:'2026-02-17',score:91,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=occidental&type=4&dateb=&owner=include&count=10'},
-    {ticker:'WFRD',name:'Musa, Girish K.',role:'CEO',type:'Buy (Cluster)',value:'$3.8M',date:'2026-02-18',score:89,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=weatherford&type=4&dateb=&owner=include&count=10'},
     {ticker:'META',name:'Sandberg, Sheryl',role:'Director',type:'Buy',value:'$19.4M',date:'2026-02-18',score:85,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=meta+platforms&type=4&dateb=&owner=include&count=10'},
     {ticker:'SMPL',name:'Morgan, Brian',role:'CEO',type:'Sell',value:'$6.2M',date:'2026-02-16',score:-81,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=simply+good&type=4&dateb=&owner=include&count=10'},
   ];
-  var html='<div style="padding:6px 12px;font-size:8.5px;color:var(--amber);background:var(--amber-bg);border-bottom:1px solid var(--border-s)">⚠ EDGAR API returned limited results — showing curated recent filings with direct SEC links</div>';
+  var html='<div style="padding:6px 12px;font-size:8.5px;color:var(--amber);background:var(--amber-bg);border-bottom:1px solid var(--border-s)">⚠ EDGAR live feed unavailable — showing last known filings with direct SEC links</div>';
   items.forEach(function(it){
     var isPos=it.score>0;
     html+='<div class="edgar-feed-item'+(isPos?' efi-new':'')+'">'
@@ -1781,9 +1872,9 @@ function renderEdgarFallback(){
       +'<span class="efi-score" style="color:'+(isPos?'var(--green)':'var(--red-lt)')+'">'+it.score+'</span>'
       +'</div>';
   });
-  html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4&dateRange=custom&startdt=2026-01-01" target="_blank" style="font-size:10px;color:var(--blue-lt)">View all Form 4 filings on SEC EDGAR →</a></div>';
+  html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
-  document.getElementById('edgar-last-check').textContent='SEC EDGAR · Curated recent filings';
+  document.getElementById('edgar-last-check').textContent='SEC EDGAR · Last known filings (live feed unavailable)';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2056,21 +2147,28 @@ window.addEventListener('load', function(){
   setDataDot('edgar','warn');
   setDataDot('congress','warn');
   var el=document.getElementById('last-refresh');
-  if(el) el.textContent='Feb 24, 2026 close';
+  if(el){
+    var d=new Date();
+    el.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' close';
+  }
 
   // ── STEP 2: Attempt live Finnhub fetch (works when hosted over HTTP) ──
   // If it succeeds, prices update to real-time and dot turns green.
   // If blocked (file:// protocol), hardcoded prices remain — no errors shown.
   setTimeout(refreshAllPrices, 1500);
+  setTimeout(fetchMarketIndices, 2000);
   priceRefreshInterval = setInterval(refreshAllPrices, 60000);
+  setInterval(fetchMarketIndices, 60000);
 
   // ── STEP 3: EDGAR + Congress ──
   setTimeout(fetchEdgarFeed, 2500);
   setTimeout(fetchCongressData, 4000);
+  setTimeout(fetchQuiverTrades, 5000);
+  setTimeout(fetchFredYield, 3000);
 
   // ── STEP 4: Briefing toast ──
   setTimeout(function(){
-    showToast('📊 ATLAS · Prices Loaded','Showing Feb 24, 2026 closing prices. For live quotes, serve the file over HTTP or deploy to Vercel.','info', 7000);
+    showToast('📊 ATLAS · Live Data Loading','Fetching live prices, EDGAR Form 4 feed, and market indices. Add QUIVER_KEY and FRED_KEY to enable congressional trades and Treasury yield.','info', 8000);
   }, 600);
 });
 </script>
