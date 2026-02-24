@@ -14,6 +14,8 @@ Schedule:
 
 Environment variables:
   QUIVER_KEY   — QuiverQuant API token (register at quiverquant.com/quiverapi)
+  FRED_KEY     — FRED API key (register at fred.stlouisfed.org/docs/api/api_key.html)
+  FINNHUB_KEY  — Finnhub API key (for market_data.json index prices)
 """
 
 import os, json, re, time, datetime, sys
@@ -23,10 +25,12 @@ except ImportError:
     sys.exit("Missing 'requests'. Run: pip3 install requests")
 
 # ── Config ──────────────────────────────────────────────────────────────────
-USER_AGENT  = 'ATLAS Intelligence Platform contact@atlasiq.io'
-SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR    = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
-QUIVER_KEY  = os.environ.get('QUIVER_KEY', '')
+USER_AGENT   = 'ATLAS Intelligence Platform contact@atlasiq.io'
+SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR     = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
+QUIVER_KEY   = os.environ.get('QUIVER_KEY',  '')
+FRED_KEY     = os.environ.get('FRED_KEY',    '71a0b94ed47b56a81f405947f88d08aa')
+FINNHUB_KEY  = os.environ.get('FINNHUB_KEY', 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g')
 
 # SEC rate limit: max 10 req/sec, recommend 1 req/sec for pollers
 SEC_DELAY   = 0.5  # seconds between SEC requests
@@ -181,9 +185,54 @@ def fetch_quiver_insiders(api_key, page_size=100):
     return sorted(data, key=lambda x: x.get('Date', x.get('date', '')), reverse=True)
 
 
+# ── Market Context Data (VIX + 10yr Treasury) ────────────────────────────────
+def fetch_market_data():
+    """
+    Fetch VIX and 10-yr Treasury yield from FRED.
+    Saves to data/market_data.json — frontend reads this file to avoid CORS.
+    """
+    if not FRED_KEY:
+        print('  FRED_KEY not set — skipping market data')
+        return
+
+    base = (
+        'https://api.stlouisfed.org/fred/series/observations'
+        f'?api_key={FRED_KEY}&limit=5&sort_order=desc&file_type=json&series_id='
+    )
+
+    market = {'updated': datetime.datetime.utcnow().isoformat() + 'Z', 'source': 'FRED'}
+
+    for series_id, key, label in [('DGS10', 'treasury_10yr', '10yr Treasury'),
+                                   ('VIXCLS', 'vix', 'VIX')]:
+        try:
+            r = requests.get(base + series_id, timeout=15)
+            r.raise_for_status()
+            data = r.json()
+            obs = [o for o in data.get('observations', []) if o.get('value') not in ('.', '')]
+            if obs:
+                val  = float(obs[0]['value'])
+                prev = float(obs[1]['value']) if len(obs) > 1 else None
+                market[key] = {
+                    'value': val,
+                    'date':  obs[0]['date'],
+                    'change': round(val - prev, 4) if prev is not None else None,
+                }
+                print(f'  {label}: {val}  ({obs[0]["date"]})')
+            else:
+                print(f'  {label}: no valid observations returned')
+        except Exception as e:
+            print(f'  FRED {series_id} error: {e}')
+
+    save_json('market_data.json', market)
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     print(f'\n=== ATLAS Data Fetcher — {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")} UTC ===\n')
+
+    # ── Market context (VIX + 10yr yield from FRED) ────────────────────────
+    print('Fetching market context data (FRED)...')
+    fetch_market_data()
 
     # ── EDGAR Form 4 feed ──────────────────────────────────────────────────
     print('Fetching EDGAR Form 4 filings (last 7 days)...')
