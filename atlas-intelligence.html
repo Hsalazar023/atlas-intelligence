@@ -1390,6 +1390,9 @@ var iF={strength:'all',dir:'all',horizon:'all',move:'all'};
 var notifCnt=5;
 var priceCache={};
 var priceRefreshInterval=null;
+// Live feed caches — populated async; used by scoring engine
+var congData=[];  // congressional trades from QuiverQuant
+var edgarData=[]; // EDGAR Form 4 filings from fetch_data.py
 
 // ═══════════════════════════════════════════════════════
 // CLOCK
@@ -1568,6 +1571,18 @@ function updateIdeaCard(ticker, data){
     var staleNote=sigAge>30
       ?'<span style="font-size:9.5px;color:var(--red-lt);flex-basis:100%;margin-top:4px;font-weight:600">⏰ Signal is '+Math.floor(sigAge)+' days old — verify thesis still intact before acting.</span>'
       :'';
+    // P2.3 — Computed convergence score from live feeds
+    var sc=computeConvergenceScore(ticker);
+    var scoreHtml='';
+    if(sc.total>0){
+      var congPart=sc.congress.count>0?' Congress <strong>+'+sc.congress.score+'</strong> ('+sc.congress.count+' buys)':'';
+      var edgarPart=sc.insider.count>0?' EDGAR <strong>+'+sc.insider.score+'</strong> ('+sc.insider.count+' filings)':'';
+      var boostPart=sc.boost>0?' <span style="color:var(--amber)">+'+sc.boost+' convergence</span>':'';
+      var totalCls=sc.total>=85?'var(--green)':sc.total>=65?'var(--blue-lt)':'var(--muted)';
+      scoreHtml='<span style="font-size:9.5px;flex-basis:100%;margin-top:4px;border-top:1px solid var(--border-s);padding-top:4px">'
+        +'⚡ Live score: <strong style="color:'+totalCls+'">'+sc.total+'</strong>'
+        +congPart+edgarPart+boostPart+'</span>';
+    }
     var div=document.createElement('div');
     div.className='price-vs-zone';
     div.innerHTML=
@@ -1581,6 +1596,7 @@ function updateIdeaCard(ticker, data){
       +'<span style="font-size:9.5px;color:var(--text-s);margin-left:10px">Risk to stop: <strong class="dn">'+Math.abs(riskStop).toFixed(1)+'%</strong></span>'
       +'<span style="font-size:9.5px;color:var(--muted);margin-left:10px">Entry $'+info.entryLo+'–$'+info.entryHi+' · T1 $'+info.target1+' · Stop $'+info.stop+'</span>'
       +'<span style="font-size:8.5px;color:var(--text-f);flex-basis:100%;margin-top:2px;font-style:italic">📍 '+sigStamp+'</span>'
+      +scoreHtml
       +'<span class="pvz-time">'+srcLabel+'</span>';
     var anchor=card.querySelector('.rr-block')||card.querySelector('.rn-body')||card.querySelector('.rn-ft');
     if(anchor) card.insertBefore(div, anchor);
@@ -1726,6 +1742,7 @@ function fetchMarketIndices(){
 function renderCongressTrades(data){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody||!data||!data.length) return;
+  congData=data; // store full feed for scoring engine
   // QuiverQuant live endpoint uses TransactionDate; bulk endpoint uses Date
   var dateKey=data[0].TransactionDate?'TransactionDate':'Date';
   // QuiverQuant uses 'House' field (values: 'Representatives','Senate'); fallback to Chamber
@@ -1771,6 +1788,7 @@ function renderCongressTrades(data){
   var thisMonth=data.filter(function(t){return new Date(t[dateKey])>=monthStart;});
   var kpiEl=document.querySelector('#page-congress .kpi-value');
   if(kpiEl) kpiEl.textContent=thisMonth.length;
+  refreshConvergenceDisplays(); // recompute scores now that congress data is loaded
 }
 
 function fetchQuiverTrades(){
@@ -1891,6 +1909,7 @@ function fetchEdgarFeed(){
     .then(function(data){
       var filings=data.filings||[];
       if(filings.length===0){renderEdgarFallback();return;}
+      edgarData=filings; // store for scoring engine
       edgarLastFetch=new Date(data.updated||Date.now());
       setDataDot('edgar','ok');
       var ago=Math.round((Date.now()-edgarLastFetch)/60000);
@@ -1941,6 +1960,7 @@ function renderEdgarFeed(filings){
     +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" '
     +'style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
+  refreshConvergenceDisplays(); // recompute scores now that EDGAR data is loaded
 }
 
 function renderEdgarFallback(){
@@ -1972,6 +1992,99 @@ function renderEdgarFallback(){
   html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
   document.getElementById('edgar-last-check').textContent='EDGAR · Curated filings · Run fetch_data.py for live feed';
+}
+
+// ═══════════════════════════════════════════════════════
+// CONVERGENCE SCORING ENGINE  (P2.3)
+// See SCORING.md for full factor weights and roadmap.
+// ═══════════════════════════════════════════════════════
+
+// Keywords to match EDGAR company names to tracked tickers
+// (EDGAR search index has no ticker field — must match by name)
+var TICKER_KEYWORDS={
+  RTX: ['raytheon','rtx corp'],
+  NVDA:['nvidia'],
+  OXY: ['occidental'],
+  TMDX:['transmedics'],
+  FCX: ['freeport'],
+  PFE: ['pfizer'],
+  TSM: ['taiwan semiconductor'],
+  META:['meta platforms'],
+  WFRD:['weatherford'],
+  SMPL:['simply good','atkins']
+  // ITA: ETF — no Form 4 filings
+};
+
+// Score congressional buys for a ticker over the last N days
+function scoreCongressTicker(ticker, days){
+  if(!congData.length) return {score:0,count:0,clusterBonus:0};
+  var cutoff=new Date(Date.now()-days*86400000);
+  var buys=congData.filter(function(t){
+    var d=new Date(t.TransactionDate||t.Date||'');
+    var tx=(t.Transaction||'').toLowerCase();
+    var isPurchase=tx.indexOf('purchase')>=0||tx.indexOf('buy')>=0;
+    return t.Ticker===ticker&&isPurchase&&d>=cutoff;
+  });
+  if(!buys.length) return {score:0,count:0,clusterBonus:0};
+  var pts=0;
+  buys.forEach(function(t){
+    var r=t.Range||'';
+    if(r.indexOf('$1,000,001')>=0)       pts+=15;
+    else if(r.indexOf('$500,001')>=0)    pts+=12;
+    else if(r.indexOf('$250,001')>=0)    pts+=10;
+    else if(r.indexOf('$100,001')>=0)    pts+=8;
+    else if(r.indexOf('$50,001')>=0)     pts+=6;
+    else if(r.indexOf('$15,001')>=0)     pts+=5;
+    else                                  pts+=3;
+  });
+  var clusterBonus=buys.length>=3?15:0;
+  return {score:Math.min(pts+clusterBonus,40),count:buys.length,clusterBonus:clusterBonus};
+}
+
+// Score EDGAR Form 4 filings for a ticker over the last N days
+function scoreEdgarTicker(ticker, days){
+  var keywords=TICKER_KEYWORDS[ticker];
+  if(!edgarData.length||!keywords) return {score:0,count:0};
+  var cutoff=new Date(Date.now()-days*86400000);
+  var matches=edgarData.filter(function(f){
+    var co=(f.company||'').toLowerCase();
+    var d=new Date(f.date||'');
+    return keywords.some(function(kw){return co.indexOf(kw)>=0;})&&d>=cutoff;
+  });
+  if(!matches.length) return {score:0,count:0};
+  var clusterBonus=matches.length>=3?15:matches.length>=2?10:0;
+  var base=Math.min(matches.length*6,25);
+  return {score:Math.min(base+clusterBonus,40),count:matches.length};
+}
+
+// Full convergence score for one ticker
+function computeConvergenceScore(ticker){
+  var cong =scoreCongressTicker(ticker,30);
+  var edgar=scoreEdgarTicker(ticker,14);
+  var boost=0;
+  if(cong.score>0&&edgar.score>0) boost+=20; // Congressional + Insider convergence
+  // Legislative catalyst check
+  var activeBill=BILLS.find(function(b){
+    var billDate=null;
+    // Approximate bill dates from fallback data keys
+    var billDateMap={'HR7821':new Date('2026-02-25'),'SB1882':new Date('2026-03-03'),
+                     'SB2241':new Date('2026-03-10'),'HR6419':new Date('2026-03-17')};
+    billDate=billDateMap[b.id]||null;
+    var withinWindow=billDate&&(billDate-Date.now())<60*86400000&&(billDate-Date.now())>-7*86400000;
+    return withinWindow&&b.impactTickers.indexOf(ticker)>=0;
+  });
+  if(activeBill&&(cong.score>0||edgar.score>0)) boost+=15;
+  var total=cong.score+edgar.score+boost;
+  return {total:total,congress:cong,insider:edgar,boost:boost,
+          hasConvergence:cong.score>0&&edgar.score>0};
+}
+
+// Re-render score overlays on all tracked cards (called after data loads)
+function refreshConvergenceDisplays(){
+  Object.keys(TRACKED).forEach(function(ticker){
+    var cached=priceCache[ticker];
+    if(cached) updateIdeaCard(ticker,cached);
+  });
 }
 
 // ═══════════════════════════════════════════════════════
