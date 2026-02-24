@@ -116,6 +116,8 @@ button,input,select{font-family:var(--sans);outline:none}
 .tbl tbody tr:hover{background:var(--bg)}
 .tbl tbody tr:last-child td{border-bottom:none}
 .tbl-wrap{overflow-y:auto}
+.card-fill{display:flex;flex-direction:column}
+.card-fill>.tbl-wrap,.card-fill>#edgar-feed,.card-fill>#congress-feed{flex:1;min-height:0}
 .sym{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--navy);letter-spacing:.04em}
 .sym-sub{font-size:9.5px;color:var(--text-s);margin-top:1px}
 .val{font-family:var(--mono);font-size:12px;font-weight:500}
@@ -526,9 +528,9 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--navy)"></div><div class="kpi-label">Correlated Ideas</div><div class="kpi-value">8</div><div class="kpi-delta up">Multi-source confirmed</div></div>
   </div>
   <div class="g65 mb14">
-    <div class="card">
+    <div class="card card-fill">
       <div class="card-hd"><div class="card-title">Top Signals — All Sources · Rolling 30 Days</div><div class="card-action" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</div></div>
-      <div class="tbl-wrap" style="max-height:300px">
+      <div class="tbl-wrap">
         <table class="tbl">
           <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">Value</th><th>Direction</th></tr></thead>
           <tbody>
@@ -573,24 +575,24 @@ button,input,select{font-family:var(--sans);outline:none}
 
   <!-- Live EDGAR + Congress feeds -->
   <div class="g2 mb14">
-    <div class="card">
+    <div class="card card-fill">
       <div class="card-hd">
         <div class="card-title">Live EDGAR Form 4 Feed <span class="new-pulse" style="margin-left:4px"></span></div>
         <div class="card-sub" id="edgar-last-check">Checking SEC EDGAR...</div>
       </div>
-      <div id="edgar-feed" style="max-height:280px;overflow-y:auto">
+      <div id="edgar-feed" style="overflow-y:auto">
         <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
           <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Fetching latest Form 4 filings...
         </div>
       </div>
       <div class="footnote">SEC EDGAR full-text search · Tracked tickers only · Refreshes every 90 seconds</div>
     </div>
-    <div class="card">
+    <div class="card card-fill">
       <div class="card-hd">
         <div class="card-title">Congress.gov — Bill Status Live</div>
         <div class="card-sub" id="congress-last-check">Fetching bill data...</div>
       </div>
-      <div id="congress-feed" style="max-height:280px;overflow-y:auto">
+      <div id="congress-feed" style="overflow-y:auto">
         <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
           <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Connecting to Congress.gov API...
         </div>
@@ -612,7 +614,7 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:50%"></div><div class="kpi-label">Late STOCK Act Filers</div><div class="kpi-value">81</div><div class="kpi-delta am">32% non-compliant</div></div>
   </div>
   <div class="g65 mb14">
-    <div class="card">
+    <div class="card card-fill">
       <div class="card-hd"><div class="card-title">High-Suspicion Congressional Trades</div><div class="card-sub">Ranked by signal score</div></div>
       <div class="filter-bar padded">
         <span class="filter-lbl">Filter:</span>
@@ -623,7 +625,7 @@ button,input,select{font-family:var(--sans);outline:none}
         <button class="fbtn" onclick="filterCong('option',this)">Options Only</button>
         <button class="fbtn" onclick="filterCong('sell',this)">Sells/Exits</button>
       </div>
-      <div class="tbl-wrap" style="max-height:380px">
+      <div class="tbl-wrap">
         <table class="tbl" id="cong-tbl">
           <thead><tr><th>#</th><th onclick="sortTbl(this)">Member ↕</th><th onclick="sortTbl(this)">Ticker ↕</th><th class="r" onclick="sortTbl(this)">Amount ↕</th><th class="c">Type</th><th onclick="sortTbl(this)">Suspicion Score ↕</th><th onclick="sortTbl(this)">Date ↕</th></tr></thead>
           <tbody>
@@ -718,7 +720,7 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:83%"></div><div class="kpi-label">10b5-1 Exclusions</div><div class="kpi-value">83%</div><div class="kpi-delta" style="color:var(--muted)">Signals are discretionary</div></div>
   </div>
   <div class="g65 mb14">
-    <div class="card">
+    <div class="card card-fill">
       <div class="card-hd"><div class="card-title">Highest-Signal Purchases — Rolling 30 Days</div><div class="card-sub">Open-market · Excludes 10b5-1 plan executions</div></div>
       <div class="filter-bar padded">
         <span class="filter-lbl">Filter:</span>
@@ -728,7 +730,7 @@ button,input,select{font-family:var(--sans);outline:none}
         <button class="fbtn" onclick="filterIns('ceo',this)">CEO/CFO Only</button>
         <button class="fbtn" onclick="filterIns('low',this)">Near 52-Wk Low</button>
       </div>
-      <div class="tbl-wrap" style="max-height:380px">
+      <div class="tbl-wrap">
         <table class="tbl" id="ins-tbl">
           <thead><tr><th onclick="sortTbl(this)">Security ↕</th><th onclick="sortTbl(this)">Insider ↕</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">% Owned Δ</th><th class="c">Type</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
           <tbody>
