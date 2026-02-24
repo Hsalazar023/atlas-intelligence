@@ -1695,86 +1695,106 @@ function fetchMarketIndices(){
 // CONGRESSIONAL TRADES — QuiverQuant API (free tier)
 // Register at quiverquant.com/quiverapi then set QUIVER_KEY above
 // ═══════════════════════════════════════════════════════
+// Shared render function for QuiverQuant congressional trade data
+function renderCongressTrades(data){
+  var tbody=document.querySelector('#cong-tbl tbody');
+  if(!tbody||!data||!data.length) return;
+  var sorted=data.slice().sort(function(a,b){return new Date(b.Date)-new Date(a.Date);}).slice(0,20);
+  setDataDot('congress','ok');
+  var html='';
+  sorted.forEach(function(t,i){
+    var isBuy=t.Transaction&&t.Transaction.toLowerCase().indexOf('purchase')>=0;
+    var isSell=t.Transaction&&(t.Transaction.toLowerCase().indexOf('sale')>=0||t.Transaction.toLowerCase().indexOf('sell')>=0);
+    var tagCls=isBuy?'t-buy':isSell?'t-sell':'t-opt';
+    var tagLbl=isBuy?'Buy':isSell?'Sell':'Other';
+    var party=t.Party||'';
+    var member=(t.Representative||'Unknown').replace(/^(Rep\.|Sen\.)\s*/,'');
+    var memberTitle=(t.Chamber==='Senate'?'Sen.':'Rep.')+' '+member;
+    var ticker=t.Ticker||'—';
+    var score=0;
+    if(isBuy) score+=30; else score-=30;
+    if((t.Range||'').indexOf('$250,001')>=0||(t.Range||'').indexOf('$500,001')>=0) score+=5;
+    if((t.Range||'').indexOf('$1,000,001')>=0) score+=10;
+    var scoreDisp=score>0?'+'+score:score;
+    html+='<tr data-cat="'+(t.Chamber==='Senate'?'senate':'house')+'">'
+      +'<td style="font-size:10px;color:var(--muted)">'+(String(i+1).padStart(2,'0'))+'</td>'
+      +'<td><div style="font-size:11.5px;font-weight:600">'+memberTitle+'</div>'
+      +'<div class="sym-sub">'+party+(t.State?' · '+t.State:'')+'</div></td>'
+      +'<td><div class="sym">'+ticker+'</div></td>'
+      +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+(t.Range||'—')+'</span></td>'
+      +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
+      +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(score))
+        +'%;background:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
+      +'<span class="val" style="font-size:11px;color:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
+      +'<td><span class="sym-sub">'+(t.Date?t.Date.slice(5):'—')+'</span></td>'
+      +'</tr>';
+  });
+  tbody.innerHTML=html;
+  var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+  var thisMonth=data.filter(function(t){return new Date(t.Date)>=monthStart;});
+  var kpiEl=document.querySelector('#page-congress .kpi-value');
+  if(kpiEl) kpiEl.textContent=thisMonth.length;
+}
+
 function fetchQuiverTrades(){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody) return;
 
-  if(!QUIVER_KEY){
-    // No key — show notice above existing hardcoded rows, keep them
-    var notice=document.getElementById('quiver-notice');
-    if(!notice){
-      notice=document.createElement('tr');
-      notice.id='quiver-notice';
-      notice.innerHTML='<td colspan="7" style="padding:6px 12px;font-size:9px;color:var(--blue-lt);background:var(--blue-pale);text-align:center">'
-        +'📋 <strong>Demo data below.</strong> Add a free QuiverQuant API key (quiverquant.com/quiverapi) to QUIVER_KEY for live congressional trades.</td>';
-      tbody.insertBefore(notice, tbody.firstChild);
-    }
-    return;
-  }
+  // Try static file first (populated by scripts/fetch_data.py, no CORS issue)
+  fetch('/data/congress_feed.json')
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(d){
+      if(d.trades&&d.trades.length){
+        renderCongressTrades(d.trades);
+        return;
+      }
+      // File empty — fall through to live API if key available
+      if(QUIVER_KEY) fetchQuiverLive();
+      else showQuiverNotice(tbody);
+    })
+    .catch(function(){
+      if(QUIVER_KEY) fetchQuiverLive(); else showQuiverNotice(tbody);
+    });
+}
 
+function showQuiverNotice(tbody){
+  var notice=document.getElementById('quiver-notice');
+  if(!notice){
+    notice=document.createElement('tr');
+    notice.id='quiver-notice';
+    notice.innerHTML='<td colspan="7" style="padding:6px 12px;font-size:9px;color:var(--blue-lt);background:var(--blue-pale);text-align:center">'
+      +'📋 <strong>Demo data below.</strong> Run scripts/fetch_data.py with QUIVER_KEY set for live congressional trades.</td>';
+    tbody.insertBefore(notice, tbody.firstChild);
+  }
+}
+
+function fetchQuiverLive(){
   // /beta/live/congresstrading — most recent transactions, no pagination needed
   var url='https://api.quiverquant.com/beta/live/congresstrading';
   fetch(url,{headers:{'Authorization':'Token '+QUIVER_KEY,'Accept':'application/json'}})
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(data){
-      if(!data||!data.length){return;}
-      // Sort most recent first, take top 15
-      var sorted=data.slice().sort(function(a,b){return new Date(b.Date)-new Date(a.Date);}).slice(0,15);
-      setDataDot('congress','ok');
-      var html='';
-      sorted.forEach(function(t,i){
-        var isBuy=t.Transaction&&t.Transaction.toLowerCase().indexOf('purchase')>=0;
-        var isSell=t.Transaction&&(t.Transaction.toLowerCase().indexOf('sale')>=0||t.Transaction.toLowerCase().indexOf('sell')>=0);
-        var tagCls=isBuy?'t-buy':isSell?'t-sell':'t-opt';
-        var tagLbl=isBuy?'Buy':isSell?'Sell':'Other';
-        var party=t.Party||'';
-        var member=(t.Representative||'Unknown').replace(/^(Rep\.|Sen\.)\s*/,'');
-        var memberTitle=(t.Chamber==='Senate'?'Sen.':'Rep.')+' '+member;
-        var ticker=t.Ticker||'—';
-        // Simple scoring
-        var score=0;
-        if(isBuy) score+=30; else score-=30;
-        if((t.Range||'').indexOf('$250,001')>=0||(t.Range||'').indexOf('$500,001')>=0) score+=5;
-        if((t.Range||'').indexOf('$1,000,001')>=0) score+=10;
-        var scoreDisp=score>0?'+'+score:score;
-        var scoreCls=score>0?'sc3':'sc-bear';
-        html+='<tr data-cat="'+(t.Chamber==='Senate'?'senate':'house')+'">'
-          +'<td style="font-size:10px;color:var(--muted)">'+(String(i+1).padStart(2,'0'))+'</td>'
-          +'<td><div style="font-size:11.5px;font-weight:600">'+memberTitle+'</div>'
-          +'<div class="sym-sub">'+party+(t.State?' · '+t.State:'')+'</div></td>'
-          +'<td><div class="sym">'+ticker+'</div></td>'
-          +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+(t.Range||'—')+'</span></td>'
-          +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
-          +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(score))+'%;background:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
-          +'<span class="val" style="font-size:11px;color:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
-          +'<td><span class="sym-sub">'+(t.Date?t.Date.slice(5):'—')+'</span></td>'
-          +'</tr>';
-      });
-      tbody.innerHTML=html;
-      // Update KPI — filings this month
-      var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-      var thisMonth=data.filter(function(t){return new Date(t.Date)>=monthStart;});
-      var kpiEl=document.querySelector('#page-congress .kpi-value');
-      if(kpiEl) kpiEl.textContent=thisMonth.length;
+      if(data&&data.length) renderCongressTrades(data);
     })
-    .catch(function(e){console.warn('QuiverQuant error',e);/* keep hardcoded rows */});
+    .catch(function(e){console.warn('QuiverQuant live error',e);});
 }
 
 // ═══════════════════════════════════════════════════════
-// 10-YR TREASURY YIELD — FRED API (free, needs key)
-// Register at fred.stlouisfed.org/docs/api/api_key.html
+// FRED API — 10-yr Treasury yield (DGS10) + VIX (VIXCLS)
+// Finnhub free tier does not support ^VIX — use FRED instead
 // ═══════════════════════════════════════════════════════
 function fetchFredYield(){
-  if(!FRED_KEY) return; // keep static until key is set
-  var url='https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key='+FRED_KEY
-    +'&limit=5&sort_order=desc&file_type=json';
-  fetch(url)
+  if(!FRED_KEY) return;
+  var base='https://api.stlouisfed.org/fred/series/observations?api_key='+FRED_KEY
+    +'&limit=5&sort_order=desc&file_type=json&series_id=';
+
+  // 10-yr Treasury yield
+  fetch(base+'DGS10')
     .then(function(r){return r.json();})
     .then(function(data){
       var obs=(data.observations||[]).filter(function(o){return o.value!=='.'&&o.value!='';});
       if(!obs.length) return;
-      var latest=obs[0];
-      var prev=obs[1]||null;
+      var latest=obs[0]; var prev=obs[1]||null;
       var val=parseFloat(latest.value);
       var valEl=document.getElementById('idx-10yr-val');
       var deltaEl=document.getElementById('idx-10yr-delta');
@@ -1785,72 +1805,109 @@ function fetchFredYield(){
         deltaEl.textContent=(bps>=0?'+':'')+bps+'bps · '+latest.date;
         deltaEl.style.color=bps>5?'var(--red-lt)':bps<-5?'var(--green)':'var(--muted)';
       } else if(deltaEl){
-        deltaEl.textContent=latest.date;
-        deltaEl.style.color='var(--muted)';
+        deltaEl.textContent=latest.date; deltaEl.style.color='var(--muted)';
       }
     })
     .catch(function(){/* keep static */});
+
+  // VIX (CBOE Volatility Index — daily, FRED VIXCLS series)
+  // Used as fallback since Finnhub free tier doesn't support ^VIX
+  fetch(base+'VIXCLS')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var obs=(data.observations||[]).filter(function(o){return o.value!=='.'&&o.value!='';});
+      if(!obs.length) return;
+      var val=parseFloat(obs[0].value);
+      var prev=obs[1]?parseFloat(obs[1].value):null;
+      // Only update VIX if Finnhub didn't already populate it
+      var vixEl=document.getElementById('idx-vix-val');
+      if(!vixEl||vixEl.textContent!=='—') return; // Finnhub already populated
+      vixEl.textContent=val.toFixed(2);
+      var deltaEl=document.getElementById('idx-vix-delta');
+      var barEl=document.getElementById('bar-vix');
+      if(deltaEl){
+        var vixLabel=val<15?'Low volatility':val<20?'Moderate':val<25?'Elevated':'Fear zone';
+        var vixCls=val<15?'up':val<20?'am':'dn';
+        deltaEl.textContent=vixLabel+' · daily';
+        deltaEl.className='kpi-delta '+vixCls;
+      }
+      if(barEl){
+        barEl.style.background=val<20?'var(--green)':val<25?'var(--amber)':'var(--red-lt)';
+        barEl.style.width=Math.min(90,Math.max(10,(val/50)*90))+'%';
+      }
+    })
+    .catch(function(){/* keep placeholder */});
 }
 
 // ═══════════════════════════════════════════════════════
 // SEC EDGAR FORM 4 LIVE FEED
+// Data populated by scripts/fetch_data.py → data/edgar_feed.json
+// GitHub Actions refreshes every 4 hours automatically
 // ═══════════════════════════════════════════════════════
 var edgarLastFetch=null;
-var edgarResults=[];
 
 function fetchEdgarFeed(){
-  // EDGAR EFTS full-text search — no API key, free, CORS-allowed
-  // Returns recent Form 4 filings from the last 30 days
-  var startdt=new Date(Date.now()-30*24*3600000).toISOString().slice(0,10);
-  var url='https://efts.sec.gov/LATEST/search-index?forms=4&dateRange=custom&startdt='+startdt+'&hits.hits.total.value=true';
-  fetch(url)
+  // Primary: read from /data/edgar_feed.json (populated by Python script, no CORS issue)
+  // EDGAR EFTS has no CORS headers — must be fetched server-side
+  fetch('/data/edgar_feed.json')
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(data){
-      var hits=(data.hits&&data.hits.hits)?data.hits.hits:[];
-      if(hits.length===0){renderEdgarFallback();return;}
-      edgarLastFetch=new Date();
+      var filings=data.filings||[];
+      if(filings.length===0){renderEdgarFallback();return;}
+      edgarLastFetch=new Date(data.updated||Date.now());
       setDataDot('edgar','ok');
-      document.getElementById('edgar-last-check').textContent='SEC EDGAR Live · '+edgarLastFetch.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-      renderEdgarFeed(hits);
+      var ago=Math.round((Date.now()-edgarLastFetch)/60000);
+      document.getElementById('edgar-last-check').textContent=
+        'SEC EDGAR · '+filings.length+' filings · Updated '+ago+'m ago';
+      renderEdgarFeed(filings);
     })
     .catch(function(){renderEdgarFallback();});
 }
 
-function renderEdgarFeed(hits){
+function renderEdgarFeed(filings){
   var feed=document.getElementById('edgar-feed');
   if(!feed) return;
-  if(!hits||hits.length===0){renderEdgarFallback();return;}
-  // Build green "live" banner
-  var html='<div style="padding:4px 12px;font-size:8px;font-weight:600;letter-spacing:.05em;color:var(--green);background:var(--green-bg);border-bottom:1px solid var(--border-s)">✅ LIVE · SEC EDGAR Form 4 Feed</div>';
-  hits.slice(0,18).forEach(function(h){
-    var src=h._source||{};
-    var company=src.entity_name||'Unknown Company';
-    var filed=src.file_date||'';
-    var period=src.period_of_report||'';
-    // Construct a direct search link by company name
-    var searchQ=encodeURIComponent('"'+company+'"');
-    var link='https://efts.sec.gov/LATEST/search-index?q='+searchQ+'&forms=4';
-    // Check if it matches a tracked ticker by company name
+  if(!filings||filings.length===0){renderEdgarFallback();return;}
+
+  var html='<div style="padding:4px 12px;font-size:8px;font-weight:600;letter-spacing:.05em;'
+    +'color:var(--green);background:var(--green-bg);border-bottom:1px solid var(--border-s)">'
+    +'✅ LIVE · SEC EDGAR Form 4 · All companies · Refreshed every 4 hours</div>';
+
+  filings.slice(0,20).forEach(function(f){
+    var company=f.company||'Unknown';
+    var insider=f.insider||'Unknown';
+    var filed=f.date||'';
+    var period=f.period||'';
+    var link=f.link||('https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company='
+      +encodeURIComponent(company)+'&type=4&owner=include&count=5');
+
+    // Check if any tracked ticker symbol appears in the company name
     var trackedArr=Object.keys(TRACKED);
     var matchedTicker=trackedArr.find(function(t){return company.toUpperCase().indexOf(t)>-1;});
+
     html+='<div class="edgar-feed-item'+(matchedTicker?' efi-new':'')+'">'
-      +'<div class="efi-ticker" style="min-width:30px;font-size:'+(matchedTicker?'11px':'9px')+'">'+( matchedTicker||'4')+'</div>'
+      +'<div class="efi-ticker" style="min-width:30px;font-size:'+(matchedTicker?'11px':'9px')+'">'+
+        (matchedTicker||'4')+'</div>'
       +'<div class="efi-body">'
-      +'<div class="efi-name" style="font-size:10.5px">'+company+'</div>'
+      +'<div class="efi-name" style="font-size:10.5px">'+insider
+        +' <span style="font-weight:400;color:var(--muted)">· '+company+'</span></div>'
       +'<div class="efi-detail">Form 4'+(period?' · Period '+period:'')+'</div>'
-      +'<div class="efi-time">'+(filed?'Filed '+filed+' · ':'')+
-        '<a href="'+link+'" target="_blank" style="color:var(--blue-lt)">EDGAR →</a></div>'
+      +'<div class="efi-time">'+(filed?filed+' · ':'')+
+        '<a href="'+link+'" target="_blank" style="color:var(--blue-lt)">View filing →</a></div>'
       +'</div>'
-      +(matchedTicker?'<span class="tag" style="background:var(--green-bg);color:var(--green);flex-shrink:0;font-size:8px">Tracked</span>':'')
+      +(matchedTicker?'<span class="tag" style="background:var(--green-bg);color:var(--green);'
+        +'flex-shrink:0;font-size:8px">Tracked</span>':'')
       +'</div>';
   });
+
   html+='<div style="padding:8px 12px;text-align:center">'
-    +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on EDGAR →</a></div>';
+    +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" '
+    +'style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
 }
 
 function renderEdgarFallback(){
-  // Last resort: curated filings with real SEC links
+  // Static curated filings — shown only if edgar_feed.json is missing or empty
   var feed=document.getElementById('edgar-feed');
   if(!feed) return;
   setDataDot('edgar','warn');
@@ -1860,7 +1917,9 @@ function renderEdgarFallback(){
     {ticker:'META',name:'Sandberg, Sheryl',role:'Director',type:'Buy',value:'$19.4M',date:'2026-02-18',score:85,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=meta+platforms&type=4&dateb=&owner=include&count=10'},
     {ticker:'SMPL',name:'Morgan, Brian',role:'CEO',type:'Sell',value:'$6.2M',date:'2026-02-16',score:-81,link:'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=simply+good&type=4&dateb=&owner=include&count=10'},
   ];
-  var html='<div style="padding:6px 12px;font-size:8.5px;color:var(--amber);background:var(--amber-bg);border-bottom:1px solid var(--border-s)">⚠ EDGAR live feed unavailable — showing last known filings with direct SEC links</div>';
+  var html='<div style="padding:6px 12px;font-size:8.5px;color:var(--blue-lt);background:var(--blue-pale);'
+    +'border-bottom:1px solid var(--border-s)">📋 Run scripts/fetch_data.py to populate live feed · '
+    +'Below: last known curated filings</div>';
   items.forEach(function(it){
     var isPos=it.score>0;
     html+='<div class="edgar-feed-item'+(isPos?' efi-new':'')+'">'
@@ -1868,14 +1927,14 @@ function renderEdgarFallback(){
       +'<div class="efi-body">'
       +'<div class="efi-name">'+it.name+' <span style="font-weight:400;color:var(--muted)">· '+it.role+'</span></div>'
       +'<div class="efi-detail">'+it.type+' · '+it.value+'</div>'
-      +'<div class="efi-time">'+it.date+' · <a href="'+it.link+'" target="_blank" style="color:var(--blue-lt)">View on SEC EDGAR →</a></div>'
+      +'<div class="efi-time">'+it.date+' · <a href="'+it.link+'" target="_blank" style="color:var(--blue-lt)">SEC EDGAR →</a></div>'
       +'</div>'
       +'<span class="efi-score" style="color:'+(isPos?'var(--green)':'var(--red-lt)')+'">'+it.score+'</span>'
       +'</div>';
   });
   html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
-  document.getElementById('edgar-last-check').textContent='SEC EDGAR · Last known filings (live feed unavailable)';
+  document.getElementById('edgar-last-check').textContent='EDGAR · Curated filings · Run fetch_data.py for live feed';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1899,6 +1958,27 @@ function fetchCongressData(){
   }
 }
 
+// Fallback bill data for when Congress.gov API returns null (demo bills may not exist in API)
+var BILL_FALLBACK_DATA={
+  'hr7821': {id:'HR 7821',title:'American AI Infrastructure Act',status:'Scheduled for Floor Vote',date:'Feb 25, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22AI+infrastructure%22%7D&searchResultViewType=expanded'},
+  's1882':  {id:'SB 1882',title:'National Defense Modernization Act',status:'Senate Armed Services Markup',date:'Mar 3, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22defense+modernization%22%7D&searchResultViewType=expanded'},
+  'hr6419': {id:'HR 6419',title:'Critical Minerals & Mining Security Act',status:'Scheduled for Floor Vote',date:'Mar 17, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22critical+minerals%22%7D&searchResultViewType=expanded'},
+  's2241':  {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'}
+};
+
+function renderCongressCardFallback(bill){
+  // Renders a bill card using local fallback data when API returns null
+  var key=bill.type+bill.number;
+  var fb=BILL_FALLBACK_DATA[key]||{id:(bill.type==='hr'?'HR':'SB')+' '+bill.number,title:'Bill details unavailable',status:'Unknown',date:'',link:'https://www.congress.gov'};
+  return '<div class="bill-card">'
+    +'<div class="bill-hd"><div class="bill-id">'+fb.id+'</div>'
+    +'<div class="bill-title">'+fb.title+'</div></div>'
+    +'<div style="font-size:10px;color:var(--amber);padding:0 12px 4px">'+fb.status
+      +(fb.date?' · <strong>'+fb.date+'</strong>':'')+'</div>'
+    +'<div style="padding:0 12px 8px"><a href="'+fb.link+'" target="_blank" style="font-size:10px;color:var(--blue-lt)">Search Congress.gov →</a></div>'
+    +'</div>';
+}
+
 function fetchCongressWithKey(){
   var bills=[
     {number:'7821',type:'hr',congress:119},
@@ -1908,27 +1988,42 @@ function fetchCongressWithKey(){
   ];
   var promises=bills.map(function(b){
     var url='https://api.congress.gov/v3/bill/'+b.congress+'/'+b.type+'/'+b.number+'?api_key='+CONGRESS_API_KEY+'&format=json';
-    return fetch(url).then(function(r){return r.json();}).then(function(d){return {bill:b,data:d};}).catch(function(){return {bill:b,data:null};});
+    return fetch(url)
+      .then(function(r){return r.json();})
+      .then(function(d){return {bill:b,data:d};})
+      .catch(function(){return {bill:b,data:null};});
   });
   Promise.all(promises).then(function(results){
     setDataDot('congress','ok');
     document.getElementById('congress-last-check').textContent='Congress.gov API · Updated '+new Date().toLocaleTimeString();
     var html='';
+    var liveCount=0;
     results.forEach(function(r){
       var d=r.data;
-      if(!d||!d.bill){html+=renderCongressCardFallback(r.bill);return;}
+      // d.bill is null when the bill number doesn't exist in the API (demo bills)
+      if(!d||!d.bill){
+        html+=renderCongressCardFallback(r.bill);
+        return;
+      }
+      liveCount++;
       var b=d.bill;
       var status=b.latestAction&&b.latestAction.text?b.latestAction.text:'Status unknown';
       var actionDate=b.latestAction&&b.latestAction.actionDate?b.latestAction.actionDate:'';
       html+='<div class="bill-card">'
         +'<div class="bill-hd"><div class="bill-id">'+(r.bill.type==='hr'?'HR':'SB')+' '+r.bill.number+'</div>'
-        +'<div class="bill-title">'+(b.title||'Defense Bill')+'</div></div>'
+        +'<div class="bill-title">'+(b.title||'Unknown Title')+'</div></div>'
         +'<div style="font-size:10px;color:var(--text-s);padding:0 12px 6px">'+status+(actionDate?' · '+actionDate:'')+'</div>'
         +'<div style="padding:0 12px 8px"><a href="https://www.congress.gov/bill/'+r.bill.congress+'th-congress/'+(r.bill.type==='hr'?'house':'senate')+'-bill/'+r.bill.number+'" target="_blank" style="font-size:10px;color:var(--blue-lt)">View on Congress.gov →</a></div>'
         +'</div>';
     });
     var feed=document.getElementById('congress-feed');
     if(feed) feed.innerHTML=html;
+    // Show note if none of the demo bills were found in the live API
+    if(liveCount===0){
+      document.getElementById('congress-last-check').textContent='Congress.gov API · Demo bills (HR/SB numbers are placeholders)';
+    }
+  }).catch(function(){
+    renderCongressFallback();
   });
 }
 

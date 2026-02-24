@@ -1,0 +1,42 @@
+name: Fetch Live Data
+
+on:
+  schedule:
+    # Every 4 hours — balances freshness vs. Vercel deploy frequency
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+    # Manual trigger from GitHub Actions tab
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit data files back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run data fetcher
+        env:
+          # Add QUIVER_KEY as a GitHub Actions secret:
+          # Repo → Settings → Secrets and variables → Actions → New repository secret
+          QUIVER_KEY: ${{ secrets.QUIVER_KEY }}
+        run: python3 scripts/fetch_data.py
+
+      - name: Commit updated data files
+        run: |
+          git config --global user.name  'ATLAS Data Bot'
+          git config --global user.email 'bot@atlasiq.io'
+          git add data/
+          # Only commit if something actually changed
+          git diff --staged --quiet || git commit -m "Auto-update live data [$(date -u '+%Y-%m-%d %H:%M')] [skip ci]"
+          git push
