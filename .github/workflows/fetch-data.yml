@@ -1,12 +1,15 @@
 name: Refresh ATLAS Data
 
-# Runs twice daily on weekdays — aligns with actual data update cadence:
-#   7 AM ET  (12:00 UTC) — pre-market sweep: overnight EDGAR filings, fresh start of day
-#   7 PM ET  (00:00 UTC) — end-of-day sweep: all same-day filings + FRED daily close data
+# Runs twice daily on weekdays, timed around market hours (all times ET):
+#   9:00 AM (14:00 UTC) — pre-market open: overnight EDGAR filings loaded before trading starts
+#   4:15 PM (21:15 UTC) — post-market close: same-day filings captured + FRED close data posted
 #
-# FRED (VIX, 10yr yield) only posts once/day after market close, so the 7 PM run
-# is the high-value one. Congressional + EDGAR filings trickle in all day, so
-# both runs are useful.
+# GitHub cron runs in UTC. DST shifts times by 1hr in summer (EDT = UTC-4):
+#   14:00 UTC → 10:00 AM EDT  (still pre-open, acceptable)
+#   21:15 UTC → 5:15 PM EDT   (still post-close, acceptable)
+#
+# FRED (VIX, 10yr yield) posts once/day after close — the 4:15 PM run is the key one.
+# Congressional + EDGAR filings trickle in all day — both runs are useful.
 #
 # GitHub Secrets required (Repo → Settings → Secrets → Actions → New repository secret):
 #   QUIVER_KEY   — QuiverQuant API token  (quiverquant.com/quiverapi)
@@ -15,9 +18,9 @@ name: Refresh ATLAS Data
 
 on:
   schedule:
-    - cron: '0 12 * * 1-5'   # 7 AM ET  Mon–Fri  (12:00 UTC)
-    - cron: '0 0 * * 2-6'    # 7 PM ET  Mon–Fri  (00:00 UTC next day)
-  workflow_dispatch:           # manual trigger from GitHub Actions tab
+    - cron: '0 14 * * 1-5'    # 9:00 AM ET  Mon–Fri  (14:00 UTC) — pre-market open
+    - cron: '15 21 * * 1-5'   # 4:15 PM ET  Mon–Fri  (21:15 UTC) — post-market close
+  workflow_dispatch:            # manual trigger from GitHub Actions tab
 
 jobs:
   fetch:
