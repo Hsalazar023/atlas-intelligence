@@ -1,0 +1,45 @@
+name: Weekly Backtest & Weight Optimization
+
+# Runs every Sunday at 02:00 UTC (after weekly data refresh on weekdays)
+# Can also be triggered manually from the Actions tab
+on:
+  schedule:
+    - cron: '0 2 * * 0'  # Sundays 02:00 UTC
+  workflow_dispatch:      # manual trigger
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # needed to commit updated weight/results files
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install finnhub-python pandas numpy
+
+      - name: Collect price history
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+        run: python backtest/collect_prices.py
+
+      - name: Run event study
+        run: python backtest/run_event_study.py
+
+      - name: Optimize weights
+        run: python backtest/optimize_weights.py
+
+      - name: Commit updated results
+        run: |
+          git config --global user.name  'ATLAS Backtest Bot'
+          git config --global user.email 'bot@atlasiq.io'
+          git add data/optimal_weights.json data/backtest_results.json data/backtest_summary.json data/price_history/
+          git diff --staged --quiet || git commit -m "chore: weekly backtest $(date -u '+%Y-%m-%d') [skip ci]"
+          git push
