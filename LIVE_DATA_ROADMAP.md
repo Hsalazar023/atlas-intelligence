@@ -1,81 +1,42 @@
 # ATLAS — Live Data Roadmap
 
-## ⚠️ PRIORITY 1 — Data Accuracy Overhaul (IN PROGRESS — RESUME HERE)
+## ✅ PRIORITY 1 — Data Accuracy Overhaul — COMPLETE
 **Rule: No data rather than incorrect data. Everything that appears live must BE live.**
 
 Full plan at: `/Users/henrysalazar/.claude/plans/squishy-churning-fern.md`
 
-### What's Already Live (don't touch)
-- `#cong-tbl tbody` — replaced by `renderCongressTrades()` from QuiverQuant ✅
-- `#edgar-feed` — replaced by `renderEdgarFeed()` from EDGAR ✅
-- `#congress-feed` — hardcoded bill cards (no pass% API exists, acceptable) ✅
-- Finnhub prices, VIX, 10yr yield ✅
+### Group A — Fix Factually Wrong Text ✅ DONE (Feb 24, 2026)
+Removed all 6 SMPL "pre-earnings" instances. Earnings passed Jan 8, next Apr 8.
 
-### Group A — Fix Factually Wrong Text ❌ NOT DONE
-Remove all "pre-earnings" / "18 days pre-earnings" SMPL text (6 locations):
-- Line ~477: ticker scroll `Pre-Earnings Warning` → `CEO Exit Warning`
-- Line ~546: Top Signals table `· no plan · pre-earnings` → `· no plan`
-- Line ~570: Live Alerts `18 days pre-earnings` → remove clause
-- Line ~757: Insider Exit table `Pre-earnings` → remove
-- Line ~1342: Notification `18 days pre-earnings.` → remove
-- Line ~1379: `TRACKED.SMPL.note` `· pre-earnings` → remove
+### Group B — Congress Table Loading State ✅ DONE
+Replaced 9 hardcoded rows with loading spinner. Live data replaces it on QuiverQuant load.
 
-### Group B — Congress Table Loading State ❌ NOT DONE
-Replace 9 hardcoded `<tr>` rows in `#cong-tbl tbody` (lines 632–641) with a single loading row.
-Live `renderCongressTrades()` replaces it when QuiverQuant data loads (~5s).
+### Group D — Add DEMO Banners ✅ DONE
+Added amber labels to: 13F cards, options flow, short interest, committee correlation,
+sector performance, Berkshire tracker, market breadth.
 
-### Group D — Add DEMO Banners ❌ NOT DONE
-Add clear labels to sections with no live data source:
-- Institutional flows cards (~line 800): `Historical · 13F Q4 2025 · Not yet live`
-- Options flow table (~line 847): `Demo · CBOE/OPRA integration not yet live`
-- Short interest table (~line 860): `Demo · SI data source not yet integrated`
-- Committee correlation (~line 644): `(Historical estimate)` in card-sub
-- Sector performance (~line 895): `Signal-weighted estimate · Not real-time`
-- Berkshire 13F tracker (~line 869): `Q4 2025 13F · Updated quarterly`
-- Market breadth (~line 931): `Demo values · Market data source pending`
+### Group E — Congress Page KPI Cleanup ✅ DONE
+High Suspicion Trades computed live from congData. Total Vol/Avg Outperformance/Late Filers → "--".
 
-### Group E — Congress Page KPI Cleanup ❌ NOT DONE
-In `renderCongressTrades()` at end, compute:
-- High Suspicion Trades → count buys with score ≥ 30
-- Total Vol. Disclosed → `--`
-- Avg Outperformance → `--`
-- Late STOCK Act Filers → `--`
+### Group F — Remove All 8 Trade Idea Cards ✅ DONE
+All 8 removed (none scored ≥ 40 vs live data). Empty state + convergence engine messaging added.
 
-### Group F — Remove All 8 Trade Idea Cards ❌ NOT DONE
-**Live signal check result: ALL 8 cards score < 40 pts. Remove all.**
-Key finding: SMPL has 2 congressional BUYS in live data — directly contradicts the hardcoded bearish card.
-Replace ideas container with "No signals above threshold / Score ≥ 85 required" empty state.
+### Group C1 — renderTopSignals() ✅ DONE
+Overview Top Signals table fills from live convergence scores. `id="top-signals-tbl"` added.
 
-### Group C1 — renderTopSignals() ❌ NOT DONE
-New JS function: computes live convergence scores for TRACKED tickers, fills Overview Top Signals table.
-Add `id="top-signals-tbl"` to `<table>` at ~line 534.
-Also updates `#ideas-max-score` on Trade Ideas page.
-Hook: call from end of `refreshConvergenceDisplays()`.
+### Group C2 — renderLiveAlerts() ✅ DONE
+Live alerts panel replaces 4 hardcoded rows. Shows threshold crossings or monitoring message.
 
-### Group C2 — renderLiveAlerts() ❌ NOT DONE
-New JS function: replaces 4 hardcoded `.alert-row` divs.
-Add `id="live-alerts-panel"` to wrapping div (~line 564). Clear hardcoded rows.
-Checks: bill votes within 7 days + TRACKED scores ≥ 75.
-Shows "Monitoring..." empty state if no alerts.
-Hook: call from end of `refreshConvergenceDisplays()`.
+### Group C3 — updateOverviewKPIs() ✅ DONE
+All 7 Overview KPIs computed live: max score, exceptional count, cluster count, congress buys,
+"--" for no-source KPIs, BILLS.length, multi-source count.
 
-### Group C3 — updateOverviewKPIs() ❌ NOT DONE
-New JS function: replaces 7 hardcoded KPI values (kb1–kb7) with live-computed values.
-kb1=max score, kb2=count≥80, kb3=cluster count, kb4=congress buy count,
-kb5="--", kb6=BILLS.length, kb7=multi-source count.
-Hook: call from end of `refreshConvergenceDisplays()`.
+### Group C4 — renderInsiderTableLive() ✅ DONE
+Insider table populated from EDGAR filings via TICKER_KEYWORDS match. Cluster detection.
+Role/amount show N/A (EDGAR EFTS limitation). Wired to renderEdgarFeed().
 
-### Group C4 — renderInsiderTableLive() ❌ NOT DONE
-New JS function: clears 8 hardcoded `#ins-tbl tbody` rows.
-Uses `edgarData` + `TICKER_KEYWORDS` to find tracked-ticker EDGAR matches.
-Shows real data: insider name, company, date, SEC link, cluster tag, partial score.
-Updates Insider page KPIs (most `--` due to EDGAR EFTS field limits).
-Hook: call from end of `renderEdgarFeed()`.
-
-### Group C5 — Clear Notification Center ❌ NOT DONE
-Remove 6 hardcoded `<div class="notif-item unread">` from `#notif-list` (lines 1339–1344).
-Replace with empty state. Add `renderNotifications()` mirroring `renderLiveAlerts()` logic.
-Hook: call from end of `refreshConvergenceDisplays()`.
+### Group C5 — Clear Notification Center ✅ DONE
+6 hardcoded notifications removed. renderNotifications() generates live alerts in notif center.
 
 ---
 
@@ -100,3 +61,4 @@ Hook: call from end of `refreshConvergenceDisplays()`.
 - [x] GitHub Actions: 4x daily data refresh at market-aligned times
 - [x] CSS fix: scroll sections fill card height (card-fill flex utility)
 - [x] Data accuracy audit: identified all hardcoded sections + live data gaps
+- [x] Data accuracy overhaul: Groups A/B/C1-C5/D/E/F — all hardcoded content replaced or labeled
