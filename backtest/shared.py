@@ -1,6 +1,5 @@
 """Shared constants and helpers for ATLAS backtest scripts."""
 
-import os
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
