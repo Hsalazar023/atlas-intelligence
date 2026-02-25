@@ -2172,13 +2172,18 @@ function renderSignalIdeas(){
   var watchlist=all.filter(function(r){ return r.sc.total>=WATCH_THRESHOLD&&r.sc.total<IDEA_THRESHOLD; });
   var activeEl=document.getElementById('ideas-active-count');
   if(activeEl) activeEl.textContent=ideas.length;
+  var maxScore=all.length?Math.floor(all[0].sc.total):0;
   if(!all.length){
     container.innerHTML='<div style="padding:32px 20px;text-align:center;color:var(--muted)">'
       +'<div style="font-size:22px;margin-bottom:8px">📡</div>'
       +'<div style="font-size:13px;font-weight:600;color:var(--text-s);margin-bottom:6px">No signals above threshold</div>'
       +'<div style="font-size:11px;line-height:1.7">Convergence engine monitoring all feeds.<br>Ideas generated when score ≥ '+IDEA_THRESHOLD+'.</div>'
-      +'<div style="margin-top:12px;font-size:10px;color:var(--text-f)">Highest score: <span id="ideas-max-score-inline">—</span></div>'
+      +'<div style="margin-top:12px;font-size:10px;color:var(--text-f)">Highest score: <span id="ideas-max-score-inline">'+(maxScore||'—')+'</span></div>'
       +'</div>';
+    var msEl=document.getElementById('ideas-max-score');
+    if(msEl) msEl.textContent=maxScore||'—';
+    var msBoxEl=document.getElementById('ideas-max-score-box');
+    if(msBoxEl) msBoxEl.textContent=maxScore||'—';
     return;
   }
   var now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -2198,7 +2203,7 @@ function renderSignalIdeas(){
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
         +'<div><div style="display:flex;align-items:center;gap:6px"><span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'+tag+'</div>'
         +'<div class="sym-sub" style="margin-top:3px">'+signal+'</div></div>'
-        +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+Math.round(sc.total)+'</span>'
+        +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+Math.floor(sc.total)+'</span>'
         +'</div>'
         +'<div style="font-size:10px;color:var(--muted)">Engine-generated · '+now+' · Convergence boost: +'+sc.boost+'pts</div>'
         +'</div>';
@@ -2216,13 +2221,12 @@ function renderSignalIdeas(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
         +'<div><div class="sym" style="font-size:13px;font-weight:600">'+ticker+'</div>'
         +'<div class="sym-sub" style="margin-top:1px">'+signal+'</div></div>'
-        +'<span class="score sc1" style="font-size:13px">'+Math.round(sc.total)+'</span>'
+        +'<span class="score sc1" style="font-size:13px">'+Math.floor(sc.total)+'</span>'
         +'</div>';
     }).join('');
   }
   container.innerHTML=html;
   // Update score displays
-  var maxScore=all.length?Math.round(all[0].sc.total):0;
   var msEl=document.getElementById('ideas-max-score');
   if(msEl) msEl.textContent=maxScore||'—';
   var msBoxEl=document.getElementById('ideas-max-score-box');
