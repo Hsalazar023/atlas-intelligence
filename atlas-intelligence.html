@@ -1746,9 +1746,12 @@ function renderEdgarFeed(filings){
     if(f.buy_value>0) valStr=fmtVal(f.buy_value);
     else if(f.sell_value>0) valStr=fmtVal(f.sell_value);
 
+    // Fallback: first word of company name as mini-label when no ticker
+    var tickerDisplay=ticker||(company?company.split(/[\s,]+/)[0].slice(0,6):'N/A');
+
     html+='<div class="edgar-feed-item'+(isTracked?' efi-new':(dir==='buy'?' efi-new':''))+'">'
       +'<div class="efi-ticker" style="min-width:38px;font-size:'+(ticker?'11px':'9px')+'">'+
-        (ticker||'???')+'</div>'
+        tickerDisplay+'</div>'
       +'<div class="efi-body">'
       +'<div class="efi-name" style="font-size:10.5px">'+insider
         +(title?' <span style="font-weight:400;color:var(--muted)">· '+title+'</span>':'')+'</div>'
@@ -1788,11 +1791,11 @@ function renderInsiderTableLive(){
       +'Loading EDGAR Form 4 filings...</td></tr>';
     return;
   }
-  // ── Group filings by ticker (enriched data has ticker from XML) ──
+  // ── Group filings by ticker (enriched) or company name (fallback) ──
   var byTicker={};
   edgarData.forEach(function(f){
-    var t=f.ticker||'_NONE_';
-    if(!byTicker[t]) byTicker[t]={ticker:t,company:f.company||'',filings:[],buyVal:0,sellVal:0,buyCount:0,sellCount:0,roles:[]};
+    var t=f.ticker||(f.company?('~'+f.company.replace(/[^A-Za-z0-9]/g,'').slice(0,20)):'_NONE_');
+    if(!byTicker[t]) byTicker[t]={ticker:f.ticker||'',company:f.company||'',filings:[],buyVal:0,sellVal:0,buyCount:0,sellCount:0,roles:[]};
     var grp=byTicker[t];
     grp.filings.push(f);
     grp.buyVal+=(f.buy_value||0);
@@ -1823,8 +1826,9 @@ function renderInsiderTableLive(){
     if(shown>=25) return;
     var cnt=grp.filings.length;
     var t=grp.ticker;
-    if(t==='_NONE_') return; // skip filings without ticker
     var co=grp.company;
+    // Show ticker if available, otherwise company abbreviation
+    var displayTicker=t||(co?co.split(/[\s,]+/).slice(0,2).join(' '):'Unknown');
     var isBuy=grp.buyCount>0;
     var isSell=grp.sellCount>0;
     var isCluster=cnt>=3;
@@ -1882,7 +1886,7 @@ function renderInsiderTableLive(){
     var scCls=score>=30?'sc3':score>=15?'sc2':'sc1';
 
     html+='<tr data-ins="'+dataIns+'">'
-      +'<td><div class="sym">'+t+'</div><div class="sym-sub">'+co+'</div></td>'
+      +'<td><div class="sym">'+displayTicker+'</div><div class="sym-sub">'+co+'</div></td>'
       +'<td style="max-width:280px"><div style="font-size:10.5px;line-height:1.4">'
       +nameStr
       +'</div>'
