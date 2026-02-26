@@ -703,24 +703,23 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="acad-stat"><div class="acad-num">48hr</div><div class="acad-lbl">Max Filing Lag</div></div>
     <div class="acad-text">"Open-market purchases by corporate officers and directors generate statistically significant abnormal returns. Signal strongest for C-suite executives operating outside pre-planned 10b5-1 windows. CEO buys at 52-week lows are the highest-quality subset." <cite>— Seyhun (1998); Lakonishok &amp; Lee (2001); Cohen, Malloy &amp; Pomorski (2012)</cite></div>
   </div>
-  <div class="kpi-strip ks6">
-    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:100%"></div><div class="kpi-label">Form 4 Filings Today</div><div class="kpi-value">247</div><div class="kpi-delta up">↑ 18% vs 30-day avg</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--red-lt);width:60%"></div><div class="kpi-label">High-Signal Purchases</div><div class="kpi-value">14</div><div class="kpi-delta dn">Score ≥ 70</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:40%"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:80%"></div><div class="kpi-label">Avg Alpha 12mo</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs S&P 500</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:55%"></div><div class="kpi-label">CEO Purchases 30d</div><div class="kpi-value">38</div><div class="kpi-delta up">↑ from 29 prior</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:83%"></div><div class="kpi-label">10b5-1 Exclusions</div><div class="kpi-value">83%</div><div class="kpi-delta" style="color:var(--muted)">Signals are discretionary</div></div>
+  <div class="kpi-strip ks6" id="insider-kpi-strip">
+    <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:100%"></div><div class="kpi-label">Form 4 Filings Today</div><div class="kpi-value" id="ins-kpi-today">--</div><div class="kpi-delta" id="ins-kpi-today-d" style="color:var(--muted)">Loading…</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:80%"></div><div class="kpi-label">Total Filings (7d)</div><div class="kpi-value" id="ins-kpi-total">--</div><div class="kpi-delta" id="ins-kpi-total-d" style="color:var(--muted)">SEC EDGAR EFTS</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:40%"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value" id="ins-kpi-clusters">--</div><div class="kpi-delta am" id="ins-kpi-clusters-d">3+ insiders same co.</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:60%"></div><div class="kpi-label">Tracked Ticker Hits</div><div class="kpi-value" id="ins-kpi-tracked">--</div><div class="kpi-delta" id="ins-kpi-tracked-d" style="color:var(--muted)">Matched via keywords</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple);width:70%"></div><div class="kpi-label">Unique Companies</div><div class="kpi-value" id="ins-kpi-cos">--</div><div class="kpi-delta" id="ins-kpi-cos-d" style="color:var(--muted)">Distinct issuers</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:55%"></div><div class="kpi-label">Unique Insiders</div><div class="kpi-value" id="ins-kpi-insiders">--</div><div class="kpi-delta" id="ins-kpi-insiders-d" style="color:var(--muted)">Named filers</div></div>
   </div>
   <div class="g65 mb14">
     <div class="card card-fill">
-      <div class="card-hd"><div class="card-title">Highest-Signal Purchases — Rolling 30 Days</div><div class="card-sub">Open-market · Excludes 10b5-1 plan executions</div></div>
+      <div class="card-hd"><div class="card-title">SEC Form 4 Filings — Rolling 7 Days</div><div class="card-sub">Live EDGAR EFTS feed · Cluster filings sorted first · Tracked tickers highlighted</div></div>
       <div class="filter-bar padded">
         <span class="filter-lbl">Filter:</span>
-        <button class="fbtn active" onclick="filterIns('all',this)">All Signals</button>
-        <button class="fbtn" onclick="filterIns('exc',this)">Exceptional ≥86</button>
-        <button class="fbtn" onclick="filterIns('cluster',this)">Cluster Events</button>
-        <button class="fbtn" onclick="filterIns('ceo',this)">CEO/CFO Only</button>
-        <button class="fbtn" onclick="filterIns('low',this)">Near 52-Wk Low</button>
+        <button class="fbtn active" onclick="filterIns('all',this)">All Filings</button>
+        <button class="fbtn" onclick="filterIns('cluster',this)">Cluster (3+)</button>
+        <button class="fbtn" onclick="filterIns('multi',this)">Multi-Filing (2+)</button>
+        <button class="fbtn" onclick="filterIns('tracked',this)">Tracked Tickers</button>
       </div>
       <div class="tbl-wrap">
         <table class="tbl" id="ins-tbl">
@@ -737,7 +736,7 @@ button,input,select{font-family:var(--sans);outline:none}
     </div>
     <div class="col-stack">
       <div class="card">
-        <div class="card-hd"><div class="card-title">Notable Exit Signals</div><div class="card-sub">Discretionary open-market sells</div></div>
+        <div class="card-hd"><div class="card-title">Notable Exit Signals <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">Discretionary open-market sells · Requires Form 4 XML parsing for live data</div></div>
         <div class="tbl-wrap" style="max-height:160px">
           <table class="tbl">
             <thead><tr><th>Security</th><th>Insider</th><th class="r">Value</th><th class="c">Score</th></tr></thead>
@@ -750,7 +749,7 @@ button,input,select{font-family:var(--sans);outline:none}
         <div class="footnote">Negative scores: higher magnitude = stronger bearish signal. 10b5-1 sales discounted 60%.</div>
       </div>
       <div class="card">
-        <div class="card-hd"><div class="card-title">Sector Insider Activity</div><div class="card-sub">30-day signal · Fwd 12mo avg return</div></div>
+        <div class="card-hd"><div class="card-title">Sector Insider Activity <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">30-day signal · Fwd 12mo avg return · Requires sector mapping for live data</div></div>
         <div>
           <div class="sector-row"><div class="sector-name">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt">31</div><div class="sector-perf up">+14.2%</div></div>
           <div class="sector-row"><div class="sector-name">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="76%"></div></div><div class="sector-cnt">24</div><div class="sector-perf up">+11.8%</div></div>
@@ -1783,11 +1782,22 @@ function renderInsiderTableLive(){
     else unmatched.push({ticker:'',filing:f,tracked:false});
   });
 
-  // Count filings per ticker for cluster detection (tracked only)
+  // Count filings per company for cluster detection (ALL filings)
   var countByTicker={};
   matched.forEach(function(m){countByTicker[m.ticker]=(countByTicker[m.ticker]||0)+1;});
+  var countByCo={};
+  edgarData.forEach(function(f){
+    var co=f.company||'';
+    countByCo[co]=(countByCo[co]||0)+1;
+  });
 
-  // Build rows: tracked matches first, then recent unmatched filings
+  // Sort: tracked first, then clusters (3+), then clusters (2), then recent
+  unmatched.sort(function(a,b){
+    var aCnt=countByCo[a.filing.company||'']||0;
+    var bCnt=countByCo[b.filing.company||'']||0;
+    return bCnt-aCnt; // highest cluster count first
+  });
+
   var rows=matched.slice(0,12);
   var remaining=20-rows.length;
   if(remaining>0) rows=rows.concat(unmatched.slice(0,remaining));
@@ -1795,15 +1805,16 @@ function renderInsiderTableLive(){
   var html='';
   rows.forEach(function(m){
     var f=m.filing;
+    var co=f.company||'';
     if(m.tracked){
       var isCluster=countByTicker[m.ticker]>=2;
       var score=6+(isCluster?(countByTicker[m.ticker]>=3?15:10):0);
       var tagCls=isCluster?'t-clus':'t-buy';
-      var tagLbl=isCluster?'Cluster ('+countByTicker[m.ticker]+')':'Filing';
-      html+='<tr data-ins="'+(isCluster?'exc cluster':'str')+'">'
-        +'<td><div class="sym">'+m.ticker+'</div><div class="sym-sub">'+(f.company||'')+'</div></td>'
+      var tagLbl=isCluster?'Cluster ('+countByTicker[m.ticker]+')':'Tracked';
+      html+='<tr data-ins="'+(isCluster?'exc cluster':'str tracked')+'">'
+        +'<td><div class="sym">'+m.ticker+'</div><div class="sym-sub">'+co+'</div></td>'
         +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
-        +'<div class="sym-sub">Role N/A · <a href="'+(f.link||'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&owner=include&count=5')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
+        +'<div class="sym-sub"><a href="'+(f.link||'#')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
         +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
         +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
         +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
@@ -1811,29 +1822,55 @@ function renderInsiderTableLive(){
         +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
         +'</tr>';
     } else {
-      html+='<tr data-ins="str">'
-        +'<td><div class="sym" style="color:var(--muted)">\u2014</div><div class="sym-sub">'+(f.company||'')+'</div></td>'
+      var coCnt=countByCo[co]||1;
+      var isCoCluster=coCnt>=3;
+      var isCoMulti=coCnt>=2;
+      var uScore=isCoCluster?15:isCoMulti?10:6;
+      var uTagCls=isCoCluster?'t-clus':isCoMulti?'t-opt':'t-neut';
+      var uTagLbl=isCoCluster?'Cluster ('+coCnt+')':isCoMulti?'Multi ('+coCnt+')':'Form 4';
+      var uDataIns=isCoCluster?'str cluster':isCoMulti?'str multi':'str';
+      html+='<tr data-ins="'+uDataIns+'">'
+        +'<td><div class="sym" style="font-size:10px;color:var('+(isCoMulti?'--amber':'--muted')+')">'
+        +(isCoMulti?coCnt+'x':'\u2014')+'</div><div class="sym-sub">'+co+'</div></td>'
         +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
         +'<div class="sym-sub"><a href="'+(f.link||'#')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
         +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
         +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
-        +'<td class="c"><span class="tag t-neut">Form 4</span></td>'
-        +'<td class="c"><span class="score" style="color:var(--muted)">\u2014</span></td>'
+        +'<td class="c"><span class="tag '+uTagCls+'">'+uTagLbl+'</span></td>'
+        +'<td class="c"><span class="score '+(isCoMulti?'sc1':'')+'" style="'+(isCoMulti?'':'color:var(--muted)')+'">'+uScore+'</span></td>'
         +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
         +'</tr>';
     }
   });
   tbody.innerHTML=html;
-  // Update Insider page KPIs with available data
-  var insKpis=document.querySelectorAll('#page-insider .kpi-value');
-  if(insKpis[0]) insKpis[0].textContent=edgarData.filter(function(f){
-    return f.date===new Date().toISOString().slice(0,10);
-  }).length||'--';
-  if(insKpis[1]) insKpis[1].textContent=matched.length||edgarData.length;
-  if(insKpis[2]) insKpis[2].textContent=Object.keys(countByTicker).filter(function(k){return countByTicker[k]>=2;}).length||'--';
-  if(insKpis[3]) insKpis[3].textContent='--'; // Avg Alpha — no live data
-  if(insKpis[4]) insKpis[4].textContent='--'; // CEO purchases — no role data
-  if(insKpis[5]) insKpis[5].textContent='--'; // 10b5-1 — no data
+  // Update Insider page KPIs with live EDGAR data
+  var today=new Date().toISOString().slice(0,10);
+  var todayCount=edgarData.filter(function(f){return f.date===today;}).length;
+
+  // Cluster detection: group ALL filings by company
+  var coCount={};
+  edgarData.forEach(function(f){
+    var co=f.company||'';
+    coCount[co]=(coCount[co]||0)+1;
+  });
+  var clusterCount=Object.keys(coCount).filter(function(k){return coCount[k]>=3;}).length;
+
+  // Unique companies and insiders
+  var uniqueCos=Object.keys(coCount).length;
+  var uniqueInsiders={};
+  edgarData.forEach(function(f){uniqueInsiders[f.insider||'']=true;});
+
+  var el=document.getElementById.bind(document);
+  if(el('ins-kpi-today')) el('ins-kpi-today').textContent=todayCount||'--';
+  if(el('ins-kpi-today-d')) el('ins-kpi-today-d').textContent=today;
+  if(el('ins-kpi-total')) el('ins-kpi-total').textContent=edgarData.length;
+  if(el('ins-kpi-total-d')) el('ins-kpi-total-d').textContent='SEC EDGAR EFTS';
+  if(el('ins-kpi-clusters')) el('ins-kpi-clusters').textContent=clusterCount||'--';
+  if(el('ins-kpi-clusters-d')) el('ins-kpi-clusters-d').textContent='3+ filings same co.';
+  if(el('ins-kpi-tracked')) el('ins-kpi-tracked').textContent=matched.length||'0';
+  if(el('ins-kpi-tracked-d')) el('ins-kpi-tracked-d').textContent=matched.length?'Matched via keywords':'No tracked hits';
+  if(el('ins-kpi-cos')) el('ins-kpi-cos').textContent=uniqueCos;
+  if(el('ins-kpi-insiders')) el('ins-kpi-insiders').textContent=Object.keys(uniqueInsiders).length;
 }
 
 function renderEdgarFallback(){
