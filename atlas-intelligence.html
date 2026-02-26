@@ -132,6 +132,7 @@ button,input,select{font-family:var(--sans);outline:none}
 .t-bill{color:var(--purple);border-color:#c4b5fd;background:var(--purple-bg)}
 .t-flow{color:var(--teal);border-color:#99f6e4;background:var(--teal-bg)}
 .t-warn{color:var(--red-lt);border-color:#fca5a5;background:var(--red-bg)}
+.t-neut{color:var(--muted);border-color:var(--border-s);background:var(--bg)}
 
 /* ── SCORE PILLS ── */
 .score{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:20px;font-family:var(--mono);font-size:10.5px;font-weight:700}
@@ -1748,7 +1749,7 @@ function renderEdgarFeed(filings){
   });
 
   html+='<div style="padding:8px 12px;text-align:center">'
-    +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" '
+    +'<a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&dateb=&owner=include&count=40&search_text=&action=getcompany" target="_blank" '
     +'style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
   renderInsiderTableLive(); // populate insider table with EDGAR data
@@ -1769,6 +1770,7 @@ function renderInsiderTableLive(){
   }
   // Match filings to tracked tickers using TICKER_KEYWORDS
   var matched=[];
+  var unmatched=[];
   edgarData.forEach(function(f){
     var co=(f.company||'').toLowerCase();
     var matchTicker=null;
@@ -1777,34 +1779,49 @@ function renderInsiderTableLive(){
       var keywords=TICKER_KEYWORDS[t];
       if(keywords.some(function(kw){return co.indexOf(kw)>=0;})) matchTicker=t;
     });
-    if(matchTicker) matched.push({ticker:matchTicker,filing:f});
+    if(matchTicker) matched.push({ticker:matchTicker,filing:f,tracked:true});
+    else unmatched.push({ticker:'',filing:f,tracked:false});
   });
-  if(!matched.length){
-    tbody.innerHTML='<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">'
-      +'No Form 4 filings for tracked tickers in last 7 days · '
-      +'<a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="color:var(--blue-lt)">View all on SEC EDGAR</a></td></tr>';
-    return;
-  }
-  // Count filings per ticker for cluster detection
+
+  // Count filings per ticker for cluster detection (tracked only)
   var countByTicker={};
   matched.forEach(function(m){countByTicker[m.ticker]=(countByTicker[m.ticker]||0)+1;});
+
+  // Build rows: tracked matches first, then recent unmatched filings
+  var rows=matched.slice(0,12);
+  var remaining=20-rows.length;
+  if(remaining>0) rows=rows.concat(unmatched.slice(0,remaining));
+
   var html='';
-  matched.slice(0,12).forEach(function(m){
+  rows.forEach(function(m){
     var f=m.filing;
-    var isCluster=countByTicker[m.ticker]>=2;
-    var score=6+(isCluster?(countByTicker[m.ticker]>=3?15:10):0);
-    var tagCls=isCluster?'t-clus':'t-buy';
-    var tagLbl=isCluster?'Cluster ('+countByTicker[m.ticker]+')':'Filing';
-    html+='<tr data-ins="'+(isCluster?'exc cluster':'str')+'">'
-      +'<td><div class="sym">'+m.ticker+'</div><div class="sym-sub">'+(f.company||'')+'</div></td>'
-      +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
-      +'<div class="sym-sub">Role N/A · <a href="'+(f.link||'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&owner=include&count=5')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
-      +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
-      +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
-      +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
-      +'<td class="c"><span class="score sc1">'+score+'</span></td>'
-      +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
-      +'</tr>';
+    if(m.tracked){
+      var isCluster=countByTicker[m.ticker]>=2;
+      var score=6+(isCluster?(countByTicker[m.ticker]>=3?15:10):0);
+      var tagCls=isCluster?'t-clus':'t-buy';
+      var tagLbl=isCluster?'Cluster ('+countByTicker[m.ticker]+')':'Filing';
+      html+='<tr data-ins="'+(isCluster?'exc cluster':'str')+'">'
+        +'<td><div class="sym">'+m.ticker+'</div><div class="sym-sub">'+(f.company||'')+'</div></td>'
+        +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
+        +'<div class="sym-sub">Role N/A · <a href="'+(f.link||'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&owner=include&count=5')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
+        +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
+        +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
+        +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
+        +'<td class="c"><span class="score sc1">'+score+'</span></td>'
+        +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
+        +'</tr>';
+    } else {
+      html+='<tr data-ins="str">'
+        +'<td><div class="sym" style="color:var(--muted)">\u2014</div><div class="sym-sub">'+(f.company||'')+'</div></td>'
+        +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
+        +'<div class="sym-sub"><a href="'+(f.link||'#')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
+        +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
+        +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
+        +'<td class="c"><span class="tag t-neut">Form 4</span></td>'
+        +'<td class="c"><span class="score" style="color:var(--muted)">\u2014</span></td>'
+        +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
+        +'</tr>';
+    }
   });
   tbody.innerHTML=html;
   // Update Insider page KPIs with available data
@@ -1812,7 +1829,7 @@ function renderInsiderTableLive(){
   if(insKpis[0]) insKpis[0].textContent=edgarData.filter(function(f){
     return f.date===new Date().toISOString().slice(0,10);
   }).length||'--';
-  if(insKpis[1]) insKpis[1].textContent=matched.length;
+  if(insKpis[1]) insKpis[1].textContent=matched.length||edgarData.length;
   if(insKpis[2]) insKpis[2].textContent=Object.keys(countByTicker).filter(function(k){return countByTicker[k]>=2;}).length||'--';
   if(insKpis[3]) insKpis[3].textContent='--'; // Avg Alpha — no live data
   if(insKpis[4]) insKpis[4].textContent='--'; // CEO purchases — no role data
@@ -1845,7 +1862,7 @@ function renderEdgarFallback(){
       +'<span class="efi-score" style="color:'+(isPos?'var(--green)':'var(--red-lt)')+'">'+it.score+'</span>'
       +'</div>';
   });
-  html+='<div style="padding:8px 12px;text-align:center"><a href="https://efts.sec.gov/LATEST/search-index?forms=4" target="_blank" style="font-size:10px;color:var(--blue-lt)">All Form 4 filings on SEC EDGAR →</a></div>';
+  html+='<div style="padding:8px 12px;text-align:center"><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&dateb=&owner=include&count=40&search_text=&action=getcompany" target="_blank" style="font-size:10px;color:var(--blue-lt)">All Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
   document.getElementById('edgar-last-check').textContent='EDGAR · Curated filings · Run fetch_data.py for live feed';
 }
