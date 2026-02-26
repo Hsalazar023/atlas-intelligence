@@ -23,11 +23,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install finnhub-python pandas numpy
+        run: pip install yfinance pandas numpy
 
       - name: Collect price history
-        env:
-          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
         run: python backtest/collect_prices.py
 
       - name: Run event study

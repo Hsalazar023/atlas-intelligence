@@ -51,7 +51,7 @@ DEFAULT_WEIGHTS = {
 
 BENCHMARK = "SPY"
 LOOKBACK_DAYS = 365
-RATE_LIMIT_SLEEP = 1.1  # seconds between Finnhub calls (free tier: 60/min)
+RATE_LIMIT_SLEEP = 0.5  # seconds between yfinance calls (rate-limit courtesy)
 
 
 def load_json(path: Path) -> dict:

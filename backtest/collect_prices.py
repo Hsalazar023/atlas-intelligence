@@ -1,8 +1,8 @@
 """
-collect_prices.py — fetch and cache Finnhub daily OHLC for all signal tickers.
+collect_prices.py — fetch and cache daily OHLC via yfinance for all signal tickers.
 
 Usage:
-    FINNHUB_KEY=xxx python backtest/collect_prices.py
+    python backtest/collect_prices.py
 
 Output:
     data/price_history/{TICKER}.json  — one file per ticker, date → OHLC dict
@@ -10,33 +10,29 @@ Output:
 
 Design:
     - Reads congress_feed.json and edgar_feed.json to find all tickers
-    - Fetches 365 days of OHLC from Finnhub /stock/candle
+    - Fetches up to 365 days of OHLC from Yahoo Finance (yfinance)
     - Incremental: only fetches dates missing from cache
-    - Rate-limited: 1 call/sec (Finnhub free tier: 60/min)
-    - Skips tickers with no data (ETFs Finnhub doesn't cover, delisted, etc.)
+    - No API key required
+    - Skips tickers with no data (delisted, etc.)
 """
 
-import os
 import sys
-import time
 import logging
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-import requests
+import yfinance as yf
 
 # Allow running as a script from project root
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from backtest.shared import (
-    CONGRESS_FEED, EDGAR_FEED, PRICE_HISTORY_DIR, DATA_DIR,
-    TICKER_KEYWORDS, LOOKBACK_DAYS, RATE_LIMIT_SLEEP, BENCHMARK,
-    load_json, save_json, match_edgar_ticker, date_to_ts, ts_to_date
+    CONGRESS_FEED, EDGAR_FEED, PRICE_HISTORY_DIR,
+    TICKER_KEYWORDS, LOOKBACK_DAYS, BENCHMARK,
+    load_json, save_json, match_edgar_ticker,
 )
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger(__name__)
-
-FINNHUB_KEY = os.environ.get('FINNHUB_KEY', '')
 
 
 def extract_tickers(trades: list, source: str = "congress") -> list:
@@ -54,36 +50,28 @@ def extract_tickers(trades: list, source: str = "congress") -> list:
     return sorted(tickers)
 
 
-def fetch_candles(ticker: str, from_ts: int, to_ts: int) -> dict:
+def fetch_candles(ticker: str, start_date: str, end_date: str) -> dict:
     """
-    Fetch daily OHLCV from Finnhub for a date range.
+    Fetch daily OHLCV from Yahoo Finance for a date range.
+    start_date/end_date are YYYY-MM-DD strings.
     Returns dict of {date_str: {o, h, l, c, v}} or empty dict on failure.
     """
-    if not FINNHUB_KEY:
-        raise EnvironmentError("FINNHUB_KEY not set")
-    url = "https://finnhub.io/api/v1/stock/candle"
-    params = {
-        "symbol": ticker,
-        "resolution": "D",
-        "from": from_ts,
-        "to": to_ts,
-        "token": FINNHUB_KEY,
-    }
     try:
-        resp = requests.get(url, params=params, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        if data.get('s') != 'ok' or not data.get('t'):
+        df = yf.download(ticker, start=start_date, end=end_date, progress=False, auto_adjust=True)
+        if df is None or df.empty:
             return {}
+        # yfinance >=1.2 returns MultiIndex columns (Price, Ticker) even for single ticker
+        if df.columns.nlevels > 1:
+            df = df.droplevel('Ticker', axis=1)
         result = {}
-        for i, ts in enumerate(data['t']):
-            date_str = ts_to_date(ts)
+        for idx, row in df.iterrows():
+            date_str = idx.strftime('%Y-%m-%d')
             result[date_str] = {
-                'o': data['o'][i],
-                'h': data['h'][i],
-                'l': data['l'][i],
-                'c': data['c'][i],
-                'v': data['v'][i],
+                'o': round(float(row['Open']), 4),
+                'h': round(float(row['High']), 4),
+                'l': round(float(row['Low']), 4),
+                'c': round(float(row['Close']), 4),
+                'v': int(row['Volume']),
             }
         return result
     except Exception as e:
@@ -120,21 +108,22 @@ def collect_ticker(ticker: str, lookback_days: int = LOOKBACK_DAYS) -> bool:
     existing = load_cached_candles(ticker)
 
     now = datetime.now(tz=timezone.utc)
-    to_ts = int(now.timestamp())
-    from_ts = int((now - timedelta(days=lookback_days)).timestamp())
+    end_date = (now + timedelta(days=1)).strftime('%Y-%m-%d')  # yfinance end is exclusive
 
     # Find the most recent cached date — only fetch from there forward
     if existing:
         latest_date = max(existing.keys())
-        latest_ts = date_to_ts(latest_date)
-        if latest_ts >= int((now - timedelta(days=2)).timestamp()):
+        latest_dt = datetime.strptime(latest_date, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+        if latest_dt >= (now - timedelta(days=2)):
             log.info(f"{ticker}: cache up to date ({latest_date}), skipping")
             return True
-        from_ts = latest_ts  # re-fetch from last known date
+        start_date = latest_date  # re-fetch from last known date
+    else:
+        start_date = (now - timedelta(days=lookback_days)).strftime('%Y-%m-%d')
 
-    new_candles = fetch_candles(ticker, from_ts, to_ts)
+    new_candles = fetch_candles(ticker, start_date, end_date)
     if not new_candles:
-        log.warning(f"{ticker}: no data returned from Finnhub")
+        log.warning(f"{ticker}: no data returned from yfinance")
         return False
 
     merged = merge_candles(existing, new_candles)
@@ -144,10 +133,6 @@ def collect_ticker(ticker: str, lookback_days: int = LOOKBACK_DAYS) -> bool:
 
 
 def main():
-    if not FINNHUB_KEY:
-        log.error("FINNHUB_KEY environment variable not set. Exiting.")
-        sys.exit(1)
-
     # Load feeds
     congress_data = load_json(CONGRESS_FEED).get('trades', [])
     edgar_data = load_json(EDGAR_FEED).get('filings', [])
@@ -159,7 +144,7 @@ def main():
 
     log.info(f"Collecting price history for {len(all_tickers)} tickers: {all_tickers}")
 
-    success, failed, skipped = 0, [], 0
+    success, failed = 0, []
     for i, ticker in enumerate(all_tickers):
         log.info(f"[{i+1}/{len(all_tickers)}] {ticker}")
         ok = collect_ticker(ticker)
@@ -167,11 +152,10 @@ def main():
             success += 1
         else:
             failed.append(ticker)
-        time.sleep(RATE_LIMIT_SLEEP)
 
     log.info(f"\nDone. {success} succeeded, {len(failed)} failed: {failed}")
     if failed:
-        log.warning(f"Failed tickers (no data / not on Finnhub): {failed}")
+        log.warning(f"Failed tickers (no data on Yahoo Finance): {failed}")
 
 
 if __name__ == '__main__':

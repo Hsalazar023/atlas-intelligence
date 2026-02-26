@@ -116,13 +116,19 @@ Demo-grade. Proves the concept. Replace trade idea cards with engine-generated o
 - [x] Deployed to Vercel + GitHub repo
 - [x] Price audit — ITA and WFRD fallback prices corrected
 
-### Phase 1 — Real Data Pipelines (Claude Code — do next)
-- [ ] Fix ITA + WFRD demo cards: update to current prices, mark original signal as stale
-- [ ] Replace hardcoded trade ideas with engine-generated signal cards
-- [ ] Congressional disclosure scraper (quiverquant.com API or house.gov/senate.gov portals)
-- [ ] EDGAR Form 4 poller: parse XML, extract role/value/plan, score each filing
-- [ ] Convergence detector: when 2+ hubs fire on same ticker within rolling window
-- [ ] FastAPI local server: `/signals`, `/congress`, `/institutional`, `/bills`
+### Phase 1 — Real Data Pipelines ✅ MOSTLY COMPLETE
+- [x] Congressional disclosure data via QuiverQuant API (data/congress_feed.json)
+- [x] EDGAR Form 4 feed via EFTS (data/edgar_feed.json)
+- [x] FRED market data (VIX + 10yr yield)
+- [x] Replace hardcoded trade ideas with engine-generated signal cards
+- [x] Convergence detector: 2+ hubs fire on same ticker = score boost
+- [x] Open universe expansion: scores ALL tickers from feeds, not just TRACKED 11
+- [x] Signal decay: 21-day half-life on congressional scores
+- [x] Backtest engine: collect_prices, event study, weight optimizer (backtest/)
+- [x] GitHub Actions: 4x daily data refresh + weekly backtest
+- [ ] **BLOCKER:** Historical price data (Finnhub free tier blocks /stock/candle)
+- [ ] EDGAR Form 4 XML parsing: extract role (CEO/CFO), amounts, 10b5-1 plan
+- [ ] Replace remaining hardcoded sections (see LIVE_DATA_ROADMAP.md)
 
 ### Phase 2 — Full Stack Rebuild (Claude Code)
 - [x] Vercel deployment live
@@ -132,12 +138,13 @@ Demo-grade. Proves the concept. Replace trade idea cards with engine-generated o
 - [ ] API routes proxy all external calls (move keys to Vercel env vars)
 - [ ] Supabase: `signals`, `congressional_trades`, `form4_filings`, `institutional_positions`, `convergence_events`
 
-### Phase 3 — Convergence Engine
-- [ ] Scoring engine for each hub independently
-- [ ] Cross-hub convergence detection with boost multipliers
-- [ ] Legislative catalyst overlay (bill status × signal timing)
-- [ ] Dynamic trade idea generation when convergence score ≥ threshold
-- [ ] Signal decay: reduce score for older filings, flag stale ideas
+### Phase 3 — Convergence Engine ✅ COMPLETE
+- [x] Scoring engine for each hub independently (scoreCongressTicker, scoreEdgarTicker)
+- [x] Cross-hub convergence detection with boost multipliers (computeConvergenceScore)
+- [x] Legislative catalyst overlay (BILLS array + impactTickers)
+- [x] Dynamic trade idea generation when convergence score ≥ threshold
+- [x] Signal decay: exponential half-life decay on scores
+- [x] Self-improving weights via backtest engine (optimize_weights.py)
 
 ### Phase 4 — Charts & Visuals
 - [ ] TradingView Lightweight Charts: entry/target/stop overlays per signal
@@ -195,7 +202,13 @@ Demo-grade. Proves the concept. Replace trade idea cards with engine-generated o
 - All three: +40
 - Any convergence + active legislation: +15
 
-**Generate trade idea when total convergence score ≥ 85. Exceptional ≥ 95.**
+**Thresholds (dynamic — tuned by backtest engine via data/optimal_weights.json):**
+- Watchlist / Monitoring tier: score 40–64
+- Trade idea generated: score ≥ 65 (default, adjustable)
+- Exceptional: ≥ 95
+
+**Signal decay:** Congressional scores use exponential decay with a 21-day half-life (configurable).
+Older trades contribute fewer points; a 42-day-old trade is worth 25% of a fresh one.
 
 ---
 
@@ -230,11 +243,29 @@ When converting to Next.js: move all keys to Vercel environment variables. Never
 ## Working in This Codebase
 
 ### atlas-intelligence.html
-- File is ~2000 lines / 68k tokens — always use `offset` + `limit` with the Read tool
-- `TRACKED` object at line ~1362 is the source of truth for signal data; `data-entry-lo`/`data-entry-hi` HTML attributes on `.idea-card` elements are stale and unused — ignore them
-- Key JS functions: `updateIdeaCard()` (zone badges + stamps), `refreshAllPrices()` (Finnhub loop), `fetchPrice()`, `checkPriceAlert()`, `seedPriceCache()`
-- Price strip pattern: `id="ps-TICKER"` inside `#price-strip` — one element per tracked ticker
-- Initialization block: `window.addEventListener('load', ...)` at line ~1975
+- File is ~2600 lines — always use `offset` + `limit` with the Read tool
+- `TRACKED` object at line ~1086 is the source of truth for signal data
+- `SCORE_WEIGHTS` / `SCORE_THRESHOLD` globals at line ~1104 — loaded from data/optimal_weights.json
+- `TICKER_KEYWORDS` at line ~1860 — maps EDGAR company names to tickers
+- Key JS functions:
+  - `buildTickerUniverse()` — all tickers from TRACKED + congData
+  - `computeConvergenceScore(ticker)` — returns {total, congress, insider, boost, hasConvergence}
+  - `renderSignalIdeas()` — two-tier: Trade Ideas (≥65) + Monitoring (40–64)
+  - `renderTopSignals()` — dynamic top signals table
+  - `renderCongressTrades(data)` — QuiverQuant congressional data
+  - `renderInsiderTableLive()` — EDGAR filings via TICKER_KEYWORDS
+  - `loadOptimalWeights()` — fetches dynamic scoring weights
+  - `updateIdeaCard()` (zone badges), `refreshAllPrices()` (Finnhub loop)
+- Price strip pattern: `id="ps-TICKER"` inside `#price-strip`
+- Initialization: `window.addEventListener('load', ...)` at line ~2600
+
+### backtest/ directory
+- `shared.py` — path constants, TICKER_KEYWORDS, DEFAULT_WEIGHTS, helpers
+- `collect_prices.py` — Finnhub OHLC cache with incremental updates
+- `run_event_study.py` — CAR computation at 5d/30d/90d + member track records
+- `optimize_weights.py` — grid search over 1024 weight combinations
+- `tests/` — 23 unit tests (pytest)
+- Output files: `data/optimal_weights.json`, `data/backtest_results.json`, `data/backtest_summary.json`
 
 ### Environment Quirks
 - No `sudo` in terminal — `npm install -g` fails; use `npm install -g --prefix ~/.npm-global` instead
