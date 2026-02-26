@@ -707,23 +707,23 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:100%"></div><div class="kpi-label">Form 4 Filings Today</div><div class="kpi-value" id="ins-kpi-today">--</div><div class="kpi-delta" id="ins-kpi-today-d" style="color:var(--muted)">Loading…</div></div>
     <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:80%"></div><div class="kpi-label">Total Filings (7d)</div><div class="kpi-value" id="ins-kpi-total">--</div><div class="kpi-delta" id="ins-kpi-total-d" style="color:var(--muted)">SEC EDGAR EFTS</div></div>
     <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:40%"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value" id="ins-kpi-clusters">--</div><div class="kpi-delta am" id="ins-kpi-clusters-d">3+ insiders same co.</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:60%"></div><div class="kpi-label">Tracked Ticker Hits</div><div class="kpi-value" id="ins-kpi-tracked">--</div><div class="kpi-delta" id="ins-kpi-tracked-d" style="color:var(--muted)">Matched via keywords</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--purple);width:70%"></div><div class="kpi-label">Unique Companies</div><div class="kpi-value" id="ins-kpi-cos">--</div><div class="kpi-delta" id="ins-kpi-cos-d" style="color:var(--muted)">Distinct issuers</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:55%"></div><div class="kpi-label">Unique Insiders</div><div class="kpi-value" id="ins-kpi-insiders">--</div><div class="kpi-delta" id="ins-kpi-insiders-d" style="color:var(--muted)">Named filers</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--green);width:60%"></div><div class="kpi-label">Open-Market Purchases</div><div class="kpi-value" id="ins-kpi-tracked">--</div><div class="kpi-delta" id="ins-kpi-tracked-d" style="color:var(--muted)">Discretionary buys</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--purple);width:70%"></div><div class="kpi-label">CEO / C-Suite Buys</div><div class="kpi-value" id="ins-kpi-cos">--</div><div class="kpi-delta" id="ins-kpi-cos-d" style="color:var(--muted)">Highest-signal role</div></div>
+    <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:55%"></div><div class="kpi-label">10b5-1 Plan Filings</div><div class="kpi-value" id="ins-kpi-insiders">--</div><div class="kpi-delta" id="ins-kpi-insiders-d" style="color:var(--muted)">Pre-planned (discounted)</div></div>
   </div>
   <div class="g65 mb14">
     <div class="card card-fill">
       <div class="card-hd"><div class="card-title">SEC Form 4 Filings — Rolling 7 Days</div><div class="card-sub">Live EDGAR EFTS feed · Cluster filings sorted first · Tracked tickers highlighted</div></div>
       <div class="filter-bar padded">
         <span class="filter-lbl">Filter:</span>
-        <button class="fbtn active" onclick="filterIns('all',this)">All Filings</button>
-        <button class="fbtn" onclick="filterIns('cluster',this)">Cluster (3+)</button>
-        <button class="fbtn" onclick="filterIns('multi',this)">Multi-Filing (2+)</button>
-        <button class="fbtn" onclick="filterIns('tracked',this)">Tracked Tickers</button>
+        <button class="fbtn active" onclick="filterIns('all',this)">All Signals</button>
+        <button class="fbtn" onclick="filterIns('buy',this)">Purchases</button>
+        <button class="fbtn" onclick="filterIns('cluster',this)">Clusters</button>
+        <button class="fbtn" onclick="filterIns('sell',this)">Sales</button>
       </div>
       <div class="tbl-wrap">
         <table class="tbl" id="ins-tbl">
-          <thead><tr><th onclick="sortTbl(this)">Security ↕</th><th onclick="sortTbl(this)">Insider ↕</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">% Owned Δ</th><th class="c">Type</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
+          <thead><tr><th onclick="sortTbl(this)">Security ↕</th><th>Insiders &amp; Roles</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">Filings</th><th class="c">Signal</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
           <tbody id="ins-tbl-body">
             <tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
               <span class="new-pulse" style="display:inline-block;margin-right:6px"></span>
@@ -1725,24 +1725,39 @@ function renderEdgarFeed(filings){
     var insider=f.insider||'Unknown';
     var filed=f.date||'';
     var period=f.period||'';
+    var ticker=f.ticker||'';
+    var dir=f.direction||'';
+    var title=f.title||'';
     var link=f.link||('https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company='
       +encodeURIComponent(company)+'&type=4&owner=include&count=5');
 
-    // Check if any tracked ticker symbol appears in the company name
-    var trackedArr=Object.keys(TRACKED);
-    var matchedTicker=trackedArr.find(function(t){return company.toUpperCase().indexOf(t)>-1;});
+    // Check if tracked
+    var isTracked=ticker&&TRACKED[ticker];
 
-    html+='<div class="edgar-feed-item'+(matchedTicker?' efi-new':'')+'">'
-      +'<div class="efi-ticker" style="min-width:30px;font-size:'+(matchedTicker?'11px':'9px')+'">'+
-        (matchedTicker||'4')+'</div>'
+    // Direction label
+    var dirLbl='';
+    if(dir==='buy') dirLbl='<span style="color:var(--green);font-weight:600">BUY</span>';
+    else if(dir==='sell') dirLbl='<span style="color:var(--red-lt);font-weight:600">SELL</span>';
+    else if(dir==='exercise') dirLbl='<span style="color:var(--muted)">Exercise</span>';
+    else dirLbl='<span style="color:var(--muted)">Grant/Other</span>';
+
+    // Value
+    var valStr='';
+    if(f.buy_value>0) valStr=fmtVal(f.buy_value);
+    else if(f.sell_value>0) valStr=fmtVal(f.sell_value);
+
+    html+='<div class="edgar-feed-item'+(isTracked?' efi-new':(dir==='buy'?' efi-new':''))+'">'
+      +'<div class="efi-ticker" style="min-width:38px;font-size:'+(ticker?'11px':'9px')+'">'+
+        (ticker||'???')+'</div>'
       +'<div class="efi-body">'
       +'<div class="efi-name" style="font-size:10.5px">'+insider
-        +' <span style="font-weight:400;color:var(--muted)">· '+company+'</span></div>'
-      +'<div class="efi-detail">Form 4'+(period?' · Period '+period:'')+'</div>'
+        +(title?' <span style="font-weight:400;color:var(--muted)">· '+title+'</span>':'')+'</div>'
+      +'<div class="efi-detail">'+dirLbl+(valStr?' · '+valStr:'')
+        +' <span style="color:var(--muted)">· '+company+'</span></div>'
       +'<div class="efi-time">'+(filed?filed+' · ':'')+
         '<a href="'+link+'" target="_blank" style="color:var(--blue-lt)">View filing →</a></div>'
       +'</div>'
-      +(matchedTicker?'<span class="tag" style="background:var(--green-bg);color:var(--green);'
+      +(isTracked?'<span class="tag" style="background:var(--green-bg);color:var(--green);'
         +'flex-shrink:0;font-size:8px">Tracked</span>':'')
       +'</div>';
   });
@@ -1759,6 +1774,12 @@ function renderEdgarFeed(filings){
 // GROUP C4 — renderInsiderTableLive()
 // Populates Insider page table from live EDGAR filings
 // ═══════════════════════════════════════════════════════
+function fmtVal(n){
+  if(!n||n<=0) return '';
+  if(n>=1e6) return '$'+Math.round(n/1e5)/10+'M';
+  if(n>=1e3) return '$'+Math.round(n/1e2)/10+'K';
+  return '$'+Math.round(n);
+}
 function renderInsiderTableLive(){
   var tbody=document.querySelector('#ins-tbl tbody');
   if(!tbody) return;
@@ -1767,110 +1788,152 @@ function renderInsiderTableLive(){
       +'Loading EDGAR Form 4 filings...</td></tr>';
     return;
   }
-  // Match filings to tracked tickers using TICKER_KEYWORDS
-  var matched=[];
-  var unmatched=[];
+  // ── Group filings by ticker (enriched data has ticker from XML) ──
+  var byTicker={};
   edgarData.forEach(function(f){
-    var co=(f.company||'').toLowerCase();
-    var matchTicker=null;
-    Object.keys(TICKER_KEYWORDS).forEach(function(t){
-      if(matchTicker) return;
-      var keywords=TICKER_KEYWORDS[t];
-      if(keywords.some(function(kw){return co.indexOf(kw)>=0;})) matchTicker=t;
-    });
-    if(matchTicker) matched.push({ticker:matchTicker,filing:f,tracked:true});
-    else unmatched.push({ticker:'',filing:f,tracked:false});
+    var t=f.ticker||'_NONE_';
+    if(!byTicker[t]) byTicker[t]={ticker:t,company:f.company||'',filings:[],buyVal:0,sellVal:0,buyCount:0,sellCount:0,roles:[]};
+    var grp=byTicker[t];
+    grp.filings.push(f);
+    grp.buyVal+=(f.buy_value||0);
+    grp.sellVal+=(f.sell_value||0);
+    if(f.direction==='buy') grp.buyCount++;
+    if(f.direction==='sell') grp.sellCount++;
+    if(f.title && grp.roles.indexOf(f.title)<0) grp.roles.push(f.title);
   });
 
-  // Count filings per company for cluster detection (ALL filings)
-  var countByTicker={};
-  matched.forEach(function(m){countByTicker[m.ticker]=(countByTicker[m.ticker]||0)+1;});
-  var countByCo={};
-  edgarData.forEach(function(f){
-    var co=f.company||'';
-    countByCo[co]=(countByCo[co]||0)+1;
+  // Convert to sorted array: purchases first, then by filing count
+  var groups=Object.keys(byTicker).map(function(k){return byTicker[k];});
+  groups.sort(function(a,b){
+    // Purchases with value first
+    if(a.buyVal>0&&b.buyVal===0) return -1;
+    if(b.buyVal>0&&a.buyVal===0) return 1;
+    if(a.buyVal>0&&b.buyVal>0) return b.buyVal-a.buyVal;
+    // Then sells by value
+    if(a.sellVal>0&&b.sellVal===0) return -1;
+    if(b.sellVal>0&&a.sellVal===0) return 1;
+    if(a.sellVal>0&&b.sellVal>0) return b.sellVal-a.sellVal;
+    // Then by cluster size
+    return b.filings.length-a.filings.length;
   });
-
-  // Sort: tracked first, then clusters (3+), then clusters (2), then recent
-  unmatched.sort(function(a,b){
-    var aCnt=countByCo[a.filing.company||'']||0;
-    var bCnt=countByCo[b.filing.company||'']||0;
-    return bCnt-aCnt; // highest cluster count first
-  });
-
-  var rows=matched.slice(0,12);
-  var remaining=20-rows.length;
-  if(remaining>0) rows=rows.concat(unmatched.slice(0,remaining));
 
   var html='';
-  rows.forEach(function(m){
-    var f=m.filing;
-    var co=f.company||'';
-    if(m.tracked){
-      var isCluster=countByTicker[m.ticker]>=2;
-      var score=6+(isCluster?(countByTicker[m.ticker]>=3?15:10):0);
-      var tagCls=isCluster?'t-clus':'t-buy';
-      var tagLbl=isCluster?'Cluster ('+countByTicker[m.ticker]+')':'Tracked';
-      html+='<tr data-ins="'+(isCluster?'exc cluster':'str tracked')+'">'
-        +'<td><div class="sym">'+m.ticker+'</div><div class="sym-sub">'+co+'</div></td>'
-        +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
-        +'<div class="sym-sub"><a href="'+(f.link||'#')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
-        +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
-        +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
-        +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
-        +'<td class="c"><span class="score sc1">'+score+'</span></td>'
-        +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
-        +'</tr>';
-    } else {
-      var coCnt=countByCo[co]||1;
-      var isCoCluster=coCnt>=3;
-      var isCoMulti=coCnt>=2;
-      var uScore=isCoCluster?15:isCoMulti?10:6;
-      var uTagCls=isCoCluster?'t-clus':isCoMulti?'t-opt':'t-neut';
-      var uTagLbl=isCoCluster?'Cluster ('+coCnt+')':isCoMulti?'Multi ('+coCnt+')':'Form 4';
-      var uDataIns=isCoCluster?'str cluster':isCoMulti?'str multi':'str';
-      html+='<tr data-ins="'+uDataIns+'">'
-        +'<td><div class="sym" style="font-size:10px;color:var('+(isCoMulti?'--amber':'--muted')+')">'
-        +(isCoMulti?coCnt+'x':'\u2014')+'</div><div class="sym-sub">'+co+'</div></td>'
-        +'<td><div style="font-size:11.5px;font-weight:600">'+(f.insider||'Unknown')+'</div>'
-        +'<div class="sym-sub"><a href="'+(f.link||'#')+'" target="_blank" style="color:var(--blue-lt)">SEC filing \u2192</a></div></td>'
-        +'<td class="r"><span class="val" style="color:var(--muted)">N/A</span></td>'
-        +'<td class="r"><span class="val" style="color:var(--muted)">\u2014</span></td>'
-        +'<td class="c"><span class="tag '+uTagCls+'">'+uTagLbl+'</span></td>'
-        +'<td class="c"><span class="score '+(isCoMulti?'sc1':'')+'" style="'+(isCoMulti?'':'color:var(--muted)')+'">'+uScore+'</span></td>'
-        +'<td><span class="sym-sub">'+(f.date||'\u2014')+'</span></td>'
-        +'</tr>';
-    }
+  var shown=0;
+  groups.forEach(function(grp){
+    if(shown>=25) return;
+    var cnt=grp.filings.length;
+    var t=grp.ticker;
+    if(t==='_NONE_') return; // skip filings without ticker
+    var co=grp.company;
+    var isBuy=grp.buyCount>0;
+    var isSell=grp.sellCount>0;
+    var isCluster=cnt>=3;
+    var isMulti=cnt>=2;
+
+    // Score: base + role bonus + size bonus + cluster bonus
+    var score=6;
+    var roleNotes=[];
+    grp.filings.forEach(function(f){
+      var title=(f.title||'').toUpperCase();
+      if(title.indexOf('CEO')>=0||title.indexOf('CHIEF EXECUTIVE')>=0){score+=4;roleNotes.push('CEO');}
+      else if(title.indexOf('CFO')>=0||title.indexOf('CHIEF FINANCIAL')>=0){score+=3;roleNotes.push('CFO');}
+      else if(title.indexOf('PRESIDENT')>=0){score+=2;roleNotes.push('President');}
+      else if(title.indexOf('DIRECTOR')>=0||title.indexOf('CHAIR')>=0){roleNotes.push('Director');}
+      if(f.buy_value>1000000) score+=5;
+      else if(f.buy_value>250000) score+=3;
+      else if(f.buy_value>50000) score+=1;
+    });
+    if(isCluster) score+=cnt>=5?15:cnt>=3?10:0;
+    if(isMulti&&isBuy) score+=5; // multi-insider buying = strong signal
+    score=Math.min(score,99);
+
+    // Determine signal type
+    var tagCls,tagLbl,dataIns;
+    if(isCluster&&isBuy){tagCls='t-clus';tagLbl='Buy Cluster ('+cnt+')';dataIns='exc cluster buy';}
+    else if(isCluster){tagCls='t-clus';tagLbl='Cluster ('+cnt+')';dataIns='str cluster';}
+    else if(isBuy){tagCls='t-buy';tagLbl='Purchase';dataIns='str buy';}
+    else if(isSell){tagCls='t-sell';tagLbl='Sale';dataIns='str sell';}
+    else{tagCls='t-neut';tagLbl=cnt>1?'Multi ('+cnt+')':'Filing';dataIns='str';}
+
+    // Build insiders list (truncate if too many)
+    var names=[];
+    grp.filings.slice(0,4).forEach(function(f){
+      var name=f.insider||'Unknown';
+      var title=f.title?(' · '+f.title):'';
+      names.push(name+title);
+    });
+    var nameStr=names.join('; ');
+    if(cnt>4) nameStr+='; +'+(cnt-4)+' more';
+
+    // Value display
+    var valHtml='';
+    if(grp.buyVal>0) valHtml='<span class="val up">'+fmtVal(grp.buyVal)+'</span>';
+    if(grp.sellVal>0) valHtml+=(valHtml?' / ':'')+'<span class="val dn">'+fmtVal(grp.sellVal)+'</span>';
+    if(!valHtml) valHtml='<span style="color:var(--muted)">\u2014</span>';
+
+    // Date range
+    var dates=grp.filings.map(function(f){return f.date||'';}).filter(Boolean).sort();
+    var dateStr=dates.length?dates[dates.length-1]:'';
+
+    // 10b5-1 flag
+    var has10b5=grp.filings.some(function(f){return f.is_10b5_1;});
+
+    // Score class
+    var scCls=score>=30?'sc3':score>=15?'sc2':'sc1';
+
+    html+='<tr data-ins="'+dataIns+'">'
+      +'<td><div class="sym">'+t+'</div><div class="sym-sub">'+co+'</div></td>'
+      +'<td style="max-width:280px"><div style="font-size:10.5px;line-height:1.4">'
+      +nameStr
+      +'</div>'
+      +(has10b5?'<span style="font-size:8px;color:var(--muted)">[10b5-1 plan]</span>':'')
+      +'</td>'
+      +'<td class="r">'+valHtml+'</td>'
+      +'<td class="r"><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">'+cnt+'</span></td>'
+      +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
+      +'<td class="c"><span class="score '+scCls+'">'+score+'</span></td>'
+      +'<td><span class="sym-sub">'+dateStr+'</span></td>'
+      +'</tr>';
+    shown++;
   });
   tbody.innerHTML=html;
-  // Update Insider page KPIs with live EDGAR data
+
+  // ── Update Insider page KPIs ──
   var today=new Date().toISOString().slice(0,10);
   var todayCount=edgarData.filter(function(f){return f.date===today;}).length;
+  var purchaseCount=edgarData.filter(function(f){return f.direction==='buy';}).length;
+  var sellCount=edgarData.filter(function(f){return f.direction==='sell';}).length;
+  var ceoCount=edgarData.filter(function(f){
+    var t=(f.title||'').toUpperCase();
+    return (t.indexOf('CEO')>=0||t.indexOf('CHIEF EXECUTIVE')>=0)&&f.direction==='buy';
+  }).length;
+  var plan10b5=edgarData.filter(function(f){return f.is_10b5_1;}).length;
 
-  // Cluster detection: group ALL filings by company
-  var coCount={};
+  // Cluster count (3+ filings same ticker with purchases)
+  var buyByTicker={};
   edgarData.forEach(function(f){
-    var co=f.company||'';
-    coCount[co]=(coCount[co]||0)+1;
+    if(f.direction==='buy'&&f.ticker) buyByTicker[f.ticker]=(buyByTicker[f.ticker]||0)+1;
   });
-  var clusterCount=Object.keys(coCount).filter(function(k){return coCount[k]>=3;}).length;
-
-  // Unique companies and insiders
-  var uniqueCos=Object.keys(coCount).length;
-  var uniqueInsiders={};
-  edgarData.forEach(function(f){uniqueInsiders[f.insider||'']=true;});
+  var buyClusters=Object.keys(buyByTicker).filter(function(k){return buyByTicker[k]>=2;}).length;
 
   var el=document.getElementById.bind(document);
   if(el('ins-kpi-today')) el('ins-kpi-today').textContent=todayCount||'--';
   if(el('ins-kpi-today-d')) el('ins-kpi-today-d').textContent=today;
   if(el('ins-kpi-total')) el('ins-kpi-total').textContent=edgarData.length;
-  if(el('ins-kpi-total-d')) el('ins-kpi-total-d').textContent='SEC EDGAR EFTS';
-  if(el('ins-kpi-clusters')) el('ins-kpi-clusters').textContent=clusterCount||'--';
-  if(el('ins-kpi-clusters-d')) el('ins-kpi-clusters-d').textContent='3+ filings same co.';
-  if(el('ins-kpi-tracked')) el('ins-kpi-tracked').textContent=matched.length||'0';
-  if(el('ins-kpi-tracked-d')) el('ins-kpi-tracked-d').textContent=matched.length?'Matched via keywords':'No tracked hits';
-  if(el('ins-kpi-cos')) el('ins-kpi-cos').textContent=uniqueCos;
-  if(el('ins-kpi-insiders')) el('ins-kpi-insiders').textContent=Object.keys(uniqueInsiders).length;
+  if(el('ins-kpi-total-d')){
+    var parts=[];
+    if(purchaseCount) parts.push(purchaseCount+' buys');
+    if(sellCount) parts.push(sellCount+' sells');
+    el('ins-kpi-total-d').textContent=parts.length?parts.join(' · '):'SEC EDGAR';
+  }
+  if(el('ins-kpi-clusters')) el('ins-kpi-clusters').textContent=buyClusters||'--';
+  if(el('ins-kpi-clusters-d')) el('ins-kpi-clusters-d').textContent='2+ purchases same co.';
+  if(el('ins-kpi-tracked')) el('ins-kpi-tracked').textContent=purchaseCount||'0';
+  if(el('ins-kpi-tracked-d')) el('ins-kpi-tracked-d').textContent='Open-market buys';
+  if(el('ins-kpi-cos')) el('ins-kpi-cos').textContent=ceoCount||'--';
+  if(el('ins-kpi-cos-d')) el('ins-kpi-cos-d').textContent='CEO/C-suite buys';
+  if(el('ins-kpi-insiders')) el('ins-kpi-insiders').textContent=plan10b5;
+  if(el('ins-kpi-insiders-d')) el('ins-kpi-insiders-d').textContent='Pre-planned (discounted)';
 }
 
 function renderEdgarFallback(){
@@ -1925,6 +1988,34 @@ var TICKER_KEYWORDS={
   // ITA: ETF — no Form 4 filings
 };
 
+// SEC company→ticker map (loaded from data/sec_tickers.json, 10,000+ entries)
+// Falls back to TICKER_KEYWORDS above if unavailable
+var SEC_TICKER_MAP={};
+
+function matchEdgarTicker(companyName){
+  var co=(companyName||'').toLowerCase().trim().replace(/\s*\/[a-z]{2,3}\/?\s*$/i,'').trim();
+  // Stage 1: SEC map exact match (10,000+ entries)
+  if(SEC_TICKER_MAP[co]) return SEC_TICKER_MAP[co];
+  // Also try with the original (unsanitized) company name
+  var coOrig=(companyName||'').toLowerCase().trim();
+  if(SEC_TICKER_MAP[coOrig]) return SEC_TICKER_MAP[coOrig];
+  // Stage 2: TICKER_KEYWORDS fallback (10 hardcoded entries)
+  var found=null;
+  Object.keys(TICKER_KEYWORDS).forEach(function(t){
+    if(found) return;
+    if(TICKER_KEYWORDS[t].some(function(kw){return co.indexOf(kw)>=0;})) found=t;
+  });
+  if(found) return found;
+  // Stage 3: SEC map substring match (slower, last resort)
+  if(Object.keys(SEC_TICKER_MAP).length>0){
+    var keys=Object.keys(SEC_TICKER_MAP);
+    for(var i=0;i<keys.length;i++){
+      if(keys[i].indexOf(co)>=0||co.indexOf(keys[i])>=0) return SEC_TICKER_MAP[keys[i]];
+    }
+  }
+  return null;
+}
+
 // ═══════════════════════════════════════════════════════
 // BUILD TICKER UNIVERSE
 // Returns all unique tickers from live congressional feed + TRACKED.
@@ -1935,6 +2026,10 @@ function buildTickerUniverse(){
   Object.keys(TRACKED).forEach(function(t){ universe[t]=true; });
   congData.forEach(function(t){
     if(t.Ticker&&t.Ticker.length>=1&&t.Ticker.length<=5) universe[t.Ticker]=true;
+  });
+  // Include tickers from enriched EDGAR data
+  edgarData.forEach(function(f){
+    if(f.ticker&&f.ticker.length>=1&&f.ticker.length<=5) universe[f.ticker]=true;
   });
   return Object.keys(universe);
 }
@@ -1975,22 +2070,36 @@ function scoreCongressTicker(ticker, days){
 // Score EDGAR Form 4 filings for a ticker over the last N days
 function scoreEdgarTicker(ticker, days){
   if(!edgarData.length) return {score:0,count:0};
-  var keywords=TICKER_KEYWORDS[ticker];
-  var tLower=ticker.toLowerCase();
   var cutoff=new Date(Date.now()-days*86400000);
+  // Match by enriched ticker field first, fall back to keyword matching
   var matches=edgarData.filter(function(f){
-    var co=(f.company||'').toLowerCase();
     var d=new Date(f.date||'');
     if(d<cutoff) return false;
-    // Stage 1: TICKER_KEYWORDS map (exact, high-precision match)
-    if(keywords) return keywords.some(function(kw){return co.indexOf(kw)>=0;});
-    // Stage 2: ticker-string fallback (e.g. 'aapl' in 'apple inc')
-    return co.indexOf(tLower)>=0;
+    if(f.ticker) return f.ticker===ticker;
+    return matchEdgarTicker(f.company)===ticker;
   });
   if(!matches.length) return {score:0,count:0};
+  // Enhanced scoring with enriched data
+  var pts=0;
+  matches.forEach(function(f){
+    var base=6;
+    // Role seniority bonus
+    var title=(f.title||'').toUpperCase();
+    if(title.indexOf('CEO')>=0||title.indexOf('CHIEF EXECUTIVE')>=0) base+=4;
+    else if(title.indexOf('CFO')>=0||title.indexOf('CHIEF FINANCIAL')>=0) base+=3;
+    else if(title.indexOf('PRESIDENT')>=0) base+=2;
+    // Purchase size bonus
+    if(f.buy_value>1000000) base+=5;
+    else if(f.buy_value>250000) base+=3;
+    else if(f.buy_value>50000) base+=1;
+    // Buy direction bonus (sells are less informative)
+    if(f.direction==='buy') base+=2;
+    // 10b5-1 discount (pre-planned = less informative)
+    if(f.is_10b5_1) base=Math.round(base*0.4);
+    pts+=base;
+  });
   var clusterBonus=matches.length>=3?15:matches.length>=2?10:0;
-  var base=Math.min(matches.length*6,25);
-  return {score:Math.min(base+clusterBonus,40),count:matches.length};
+  return {score:Math.min(pts+clusterBonus,40),count:matches.length};
 }
 
 // Full convergence score for one ticker
@@ -2639,7 +2748,7 @@ function loadOptimalWeights(){
         var n=w.n_events_total||'—';
         statsEl.textContent='Last backtest: '+gen+' · '+n+' events · Hit rate: '+hr+' · Avg 30d alpha: '+car;
       } else if(statsEl){
-        statsEl.textContent='Backtest engine ready — runs Sundays 02:00 UTC';
+        statsEl.textContent='Learning engine ready — runs daily after market close';
       }
       refreshConvergenceDisplays();
     })
@@ -2653,6 +2762,12 @@ function loadOptimalWeights(){
 // ═══════════════════════════════════════════════════════
 window.addEventListener('load', function(){
   loadOptimalWeights();
+
+  // Load SEC company→ticker map for EDGAR matching (10,000+ entries)
+  fetch('data/sec_tickers.json')
+    .then(function(r){ return r.ok?r.json():{}; })
+    .then(function(d){ SEC_TICKER_MAP=d; })
+    .catch(function(){ /* sec_tickers.json not yet generated — use TICKER_KEYWORDS fallback */ });
 
   // ── STEP 1: Render hardcoded prices IMMEDIATELY (no API needed) ──
   Object.keys(TRACKED).forEach(function(ticker){

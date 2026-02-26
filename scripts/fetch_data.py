@@ -19,6 +19,7 @@ Environment variables:
 """
 
 import os, json, re, time, datetime, sys
+from xml.etree import ElementTree as ET
 try:
     import requests
 except ImportError:
@@ -94,6 +95,7 @@ def fetch_edgar_form4(days=7, max_results=200):
         for h in hits:
             src = h.get('_source', {})
             names = src.get('display_names', [])
+            _id = h.get('_id', '')
 
             # Separate person (insider) from company (issuer)
             company_names = [n for n in names if is_company(n)]
@@ -108,6 +110,7 @@ def fetch_edgar_form4(days=7, max_results=200):
             # Company CIK is typically the last one; insider CIK is first
             company_cik = ciks[-1] if len(ciks) > 1 else (ciks[0] if ciks else '')
             link = ''
+            xml_url = ''
             if company_cik and accession:
                 try:
                     numeric_cik = str(int(company_cik))
@@ -116,6 +119,13 @@ def fetch_edgar_form4(days=7, max_results=200):
                         f'https://www.sec.gov/Archives/edgar/data/'
                         f'{numeric_cik}/{clean_acc}/{accession}-index.htm'
                     )
+                    # Extract XML filename from EFTS _id: "{accession}:{filename}"
+                    xml_filename = _id.split(':', 1)[1] if ':' in _id else ''
+                    if xml_filename:
+                        xml_url = (
+                            f'https://www.sec.gov/Archives/edgar/data/'
+                            f'{numeric_cik}/{clean_acc}/{xml_filename}'
+                        )
                 except ValueError:
                     pass
 
@@ -126,6 +136,7 @@ def fetch_edgar_form4(days=7, max_results=200):
                 'period':    src.get('period_ending', ''),
                 'accession': accession,
                 'link':      link,
+                'xml_url':   xml_url,
             })
 
         from_idx += page_size
@@ -137,6 +148,119 @@ def fetch_edgar_form4(days=7, max_results=200):
 
     # Sort newest first
     filings.sort(key=lambda x: x.get('date', ''), reverse=True)
+    return filings
+
+
+def enrich_form4_xml(filings):
+    """
+    Fetch each Form 4 XML and extract: ticker, role, transaction type,
+    shares, price, total value, 10b5-1 plan flag.
+    SEC rate limit: 10 req/sec — we use 0.12s delay (~8 req/sec).
+    """
+    headers = {'User-Agent': USER_AGENT}
+    enriched = 0
+    errors = 0
+    total = len(filings)
+
+    for i, f in enumerate(filings):
+        xml_url = f.get('xml_url', '')
+        if not xml_url:
+            continue
+
+        try:
+            r = requests.get(xml_url, headers=headers, timeout=10)
+            if r.status_code != 200:
+                errors += 1
+                continue
+
+            root = ET.fromstring(r.content)
+
+            # Ticker
+            f['ticker'] = (root.findtext('.//issuerTradingSymbol') or '').strip().upper()
+
+            # Role / relationship
+            f['title'] = (root.findtext('.//officerTitle') or '').strip()
+            is_officer  = root.findtext('.//isOfficer', '0')
+            is_director = root.findtext('.//isDirector', '0')
+            is_10pct    = root.findtext('.//isTenPercentOwner', '0')
+            roles = []
+            if is_officer in ('1', 'true'):   roles.append('Officer')
+            if is_director in ('1', 'true'):  roles.append('Director')
+            if is_10pct in ('1', 'true'):     roles.append('10% Owner')
+            f['roles'] = roles
+
+            # 10b5-1 plan
+            plan = root.findtext('.//aff10b5One', '')
+            f['is_10b5_1'] = plan in ('1', 'true')
+
+            # Transactions (non-derivative)
+            txns = []
+            total_buy_value = 0
+            total_sell_value = 0
+            total_buy_shares = 0
+            total_sell_shares = 0
+            for txn in root.findall('.//nonDerivativeTransaction'):
+                code = txn.findtext('.//transactionCode', '')
+                shares_str = txn.findtext('.//transactionShares/value', '0')
+                price_str = txn.findtext('.//transactionPricePerShare/value', '0')
+                acq_disp = txn.findtext('.//transactionAcquiredDisposedCode/value', '')
+                try:
+                    shares = float(shares_str)
+                    price = float(price_str) if price_str else 0
+                except ValueError:
+                    shares, price = 0, 0
+                value = shares * price
+                txns.append({
+                    'code': code,  # P=purchase, S=sale, M=exercise, A=grant
+                    'shares': shares,
+                    'price': round(price, 2),
+                    'value': round(value, 2),
+                    'acquired': acq_disp == 'A',
+                })
+                if code == 'P':
+                    total_buy_value += value
+                    total_buy_shares += shares
+                elif code == 'S':
+                    total_sell_value += value
+                    total_sell_shares += shares
+
+            f['transactions'] = txns
+            f['buy_value'] = round(total_buy_value, 2)
+            f['sell_value'] = round(total_sell_value, 2)
+            f['buy_shares'] = int(total_buy_shares)
+            f['sell_shares'] = int(total_sell_shares)
+            # Net direction: P = purchase, S = sale, M = mixed/exercise
+            if total_buy_value > 0 and total_sell_value == 0:
+                f['direction'] = 'buy'
+            elif total_sell_value > 0 and total_buy_value == 0:
+                f['direction'] = 'sell'
+            elif total_buy_value > 0 and total_sell_value > 0:
+                f['direction'] = 'mixed'
+            else:
+                # Check for M (exercise) or A (grant) codes
+                codes = set(t['code'] for t in txns)
+                f['direction'] = 'exercise' if 'M' in codes else 'grant' if 'A' in codes else 'other'
+
+            enriched += 1
+
+        except ET.ParseError:
+            errors += 1
+        except Exception as e:
+            errors += 1
+            if errors <= 3:
+                print(f'  XML parse error [{i+1}/{total}]: {e}')
+
+        # Rate limit: ~8 req/sec
+        time.sleep(0.12)
+
+        # Progress indicator every 50
+        if (i + 1) % 50 == 0:
+            print(f'  Enriched {enriched}/{i+1} filings ({errors} errors)...')
+
+    print(f'  Enrichment complete: {enriched}/{total} enriched, {errors} errors')
+    # Remove xml_url from output (internal only)
+    for f in filings:
+        f.pop('xml_url', None)
     return filings
 
 
@@ -235,16 +359,22 @@ def main():
     fetch_market_data()
 
     # ── EDGAR Form 4 feed ──────────────────────────────────────────────────
-    print('Fetching EDGAR Form 4 filings (last 7 days)...')
+    print('Fetching EDGAR Form 4 filings (last 90 days)...')
     try:
-        filings = fetch_edgar_form4(days=7, max_results=200)
+        filings = fetch_edgar_form4(days=90, max_results=1000)
+        print(f'  {len(filings)} filings from EFTS index')
+
+        # Enrich with Form 4 XML data (ticker, role, amounts, buy/sell)
+        print('  Enriching filings from Form 4 XML (~25s per 200 filings)...')
+        filings = enrich_form4_xml(filings)
+
         save_json('edgar_feed.json', {
             'updated': datetime.datetime.utcnow().isoformat() + 'Z',
             'count': len(filings),
-            'source': 'SEC EDGAR EFTS',
+            'source': 'SEC EDGAR EFTS + Form 4 XML',
             'filings': filings,
         })
-        print(f'  {len(filings)} Form 4 filings saved')
+        print(f'  {len(filings)} enriched Form 4 filings saved')
     except Exception as e:
         print(f'  EDGAR error: {e}')
 
@@ -283,6 +413,27 @@ def main():
         print('\nQUIVER_KEY not set — skipping congressional and insider trade fetch')
         print('  Register at quiverquant.com/quiverapi, then:')
         print('  export QUIVER_KEY=your_token && python3 scripts/fetch_data.py')
+
+    # ── SEC ticker map (for EDGAR→ticker matching) ────────────────────
+    print('\nFetching SEC company→ticker map...')
+    try:
+        sec_url = 'https://www.sec.gov/files/company_tickers.json'
+        r = requests.get(sec_url, headers={'User-Agent': USER_AGENT}, timeout=15)
+        r.raise_for_status()
+        raw = r.json()
+        # Build name→ticker (prefer shortest ticker = common stock)
+        cik_best = {}
+        for entry in raw.values():
+            cik = entry['cik_str']
+            ticker = entry['ticker']
+            title = entry['title'].lower().strip()
+            if cik not in cik_best or len(ticker) < len(cik_best[cik][1]):
+                cik_best[cik] = (title, ticker)
+        sec_map = {name: ticker for name, ticker in cik_best.values()}
+        save_json('sec_tickers.json', sec_map)
+        print(f'  {len(sec_map)} company→ticker mappings saved')
+    except Exception as e:
+        print(f'  SEC ticker map error: {e}')
 
     print('\nDone.\n')
 
