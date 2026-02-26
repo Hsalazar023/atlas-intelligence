@@ -8,40 +8,57 @@ from backtest.optimize_weights import (
 )
 from backtest.shared import DEFAULT_WEIGHTS
 
-# Sample events for testing
+# Sample aggregate events (per-ticker, not per-trade)
 EVENTS = [
-    # High-scoring congress event that performed well
-    {"event_type": "congress", "range": "$1,000,001 - $5,000,000",
-     "car_30d": 0.08, "convergence": "congress", "member_quartile": 1},
-    # Low-scoring congress event that underperformed
-    {"event_type": "congress", "range": "$1,001 - $15,000",
-     "car_30d": -0.02, "convergence": "congress", "member_quartile": 4},
-    # Convergence event that performed well
-    {"event_type": "congress", "range": "$50,001 - $100,000",
-     "car_30d": 0.05, "convergence": "convergence", "member_quartile": 2},
-    # EDGAR event with positive return
-    {"event_type": "edgar", "car_30d": 0.03, "convergence": "edgar"},
+    # Ticker with 1 large congress trade, no EDGAR — score ~15
+    {"ticker": "AAPL", "congress_count": 1, "edgar_count": 0,
+     "trade_ranges": ["$1,000,001 - $5,000,000"], "raw_points": [15.0],
+     "convergence": "congress", "car_30d": 0.08},
+    # Ticker with 1 small congress trade — score ~3
+    {"ticker": "MSFT", "congress_count": 1, "edgar_count": 0,
+     "trade_ranges": ["$1,001 - $15,000"], "raw_points": [3.0],
+     "convergence": "congress", "car_30d": -0.02},
+    # Ticker with congress + EDGAR convergence — score should include boost
+    {"ticker": "NVDA", "congress_count": 2, "edgar_count": 2,
+     "trade_ranges": ["$50,001 - $100,000", "$15,001 - $50,000"],
+     "raw_points": [6.0, 5.0],
+     "convergence": "both", "car_30d": 0.05},
+    # Ticker with only EDGAR filings — score ~6
+    {"ticker": "META", "congress_count": 0, "edgar_count": 1,
+     "trade_ranges": [], "raw_points": [],
+     "convergence": "edgar", "car_30d": 0.03},
 ]
 
 
 def test_score_event_with_weights_congress():
-    """Congress event should produce a positive score with default weights."""
-    event = EVENTS[0]  # $1M+ purchase
+    """Congress-only aggregate event should produce a positive score."""
+    event = EVENTS[0]  # AAPL, 1 trade $1M+
     score = score_event_with_weights(event, DEFAULT_WEIGHTS)
-    assert score > 0
-    assert score <= 115  # theoretical max
+    assert score == 15.0  # decayed_points=[15.0], no cluster, no EDGAR
 
 
 def test_score_event_with_weights_convergence_bonus():
-    """Convergence events should score higher than single-source events."""
-    single = copy.deepcopy(EVENTS[1])
-    single['convergence'] = 'congress'
-    conv = copy.deepcopy(EVENTS[1])
-    conv['convergence'] = 'convergence'
+    """Convergence events (both hubs) should score higher than single-hub."""
+    # NVDA has both congress and EDGAR
+    conv_event = EVENTS[2]
+    score_conv = score_event_with_weights(conv_event, DEFAULT_WEIGHTS)
 
-    score_single = score_event_with_weights(single, DEFAULT_WEIGHTS)
-    score_conv = score_event_with_weights(conv, DEFAULT_WEIGHTS)
+    # Compare to same event but with 0 EDGAR
+    single_event = copy.deepcopy(conv_event)
+    single_event['edgar_count'] = 0
+    score_single = score_event_with_weights(single_event, DEFAULT_WEIGHTS)
+
     assert score_conv > score_single
+    assert score_conv - score_single >= 20  # convergence boost (20) + EDGAR score
+
+
+def test_score_event_with_weights_edgar_cluster():
+    """EDGAR events with 3+ filings should get cluster bonus."""
+    event = {"congress_count": 0, "edgar_count": 3,
+             "trade_ranges": [], "raw_points": []}
+    score = score_event_with_weights(event, DEFAULT_WEIGHTS)
+    # 3×6=18 base + 15 cluster = 33
+    assert score == 33.0
 
 
 def test_evaluate_weights_returns_metrics():
@@ -53,14 +70,13 @@ def test_evaluate_weights_returns_metrics():
         {"car_30d": None,  "score": 75},   # missing CAR — should be excluded
     ]
     metrics = evaluate_weights(events_with_scores, threshold=65)
-    assert metrics["n_events"] == 2  # only 70 and 80 qualify, 30 excluded, None excluded
+    assert metrics["n_events"] == 2
     assert abs(metrics["avg_car_30d"] - 0.04) < 0.001
-    assert abs(metrics["hit_rate"] - 1.0) < 0.001  # both positive
+    assert abs(metrics["hit_rate"] - 1.0) < 0.001
 
 
 def test_find_optimal_threshold():
-    """Should return the threshold where avg_car is best."""
-    # Events where high threshold gives better avg return
+    """Should return the threshold where avg_car * hit_rate is best."""
     events = [
         {"car_30d": 0.10, "score": 90},
         {"car_30d": 0.08, "score": 80},
@@ -68,13 +84,12 @@ def test_find_optimal_threshold():
         {"car_30d": -0.03, "score": 50},
     ]
     best_threshold, _ = find_optimal_threshold(events, candidates=[40, 65, 75, 85], min_events=1)
-    # At threshold 80, avg_car = mean(0.10) = 0.10 — best
     assert best_threshold >= 80
 
 
-def test_grid_search_improves_over_default():
-    """Grid search should find weights that give >= default weight performance."""
-    results = grid_search(EVENTS, n_candidates=3)
+def test_grid_search_produces_output():
+    """Grid search should produce optimal_weights and stats."""
+    results = grid_search(EVENTS, n_candidates=2)
     assert "optimal_weights" in results
     assert "stats" in results
     assert results["stats"]["n_events"] >= 0

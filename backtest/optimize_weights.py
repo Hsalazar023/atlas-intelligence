@@ -5,7 +5,7 @@ Usage:
     python backtest/optimize_weights.py
 
 Inputs:
-    data/backtest_results.json
+    data/backtest_results.json  (aggregate per-ticker events from run_event_study.py)
 
 Output:
     data/optimal_weights.json  — best weights found
@@ -32,41 +32,44 @@ log = logging.getLogger(__name__)
 
 
 def score_event_with_weights(event: dict, weights: dict) -> float:
-    """Compute convergence score for an event record using provided weights."""
-    etype = event.get('event_type', 'congress')
-    convergence = event.get('convergence', 'none')
-
+    """
+    Re-score an aggregate per-ticker event using provided weights.
+    Uses trade_ranges and edgar_count stored in the event to recompute
+    the score with different weight parameters.
+    """
+    # Congress: re-score from stored trade_ranges using provided weight tiers
     congress_score = 0.0
+    trade_ranges = event.get('trade_ranges', [])
+    tiers = weights.get('congress_tiers', DEFAULT_WEIGHTS['congress_tiers'])
+    for r in trade_ranges:
+        rr = r or ''
+        if '$1,000,001' in rr:   congress_score += tiers.get('xl', 15)
+        elif '$500,001' in rr:   congress_score += tiers.get('significant', 10)
+        elif '$250,001' in rr:   congress_score += tiers.get('significant', 10)
+        elif '$100,001' in rr:   congress_score += tiers.get('major', 8)
+        elif '$50,001' in rr:    congress_score += tiers.get('large', 6)
+        elif '$15,001' in rr:    congress_score += tiers.get('medium', 5)
+        else:                    congress_score += tiers.get('small', 3)
+
+    congress_count = event.get('congress_count', 0)
+    if congress_count >= 3:
+        congress_score += weights.get('congress_cluster_bonus', 15)
+    congress_score = min(congress_score, 40)
+
+    # EDGAR: re-score from filing count
+    edgar_count = event.get('edgar_count', 0)
     edgar_score = 0.0
-
-    if etype == 'congress':
-        tiers = weights.get('congress_tiers', DEFAULT_WEIGHTS['congress_tiers'])
-        range_str = event.get('range', '')
-        r = range_str or ''
-        if '$1,000,001' in r:   base = tiers.get('xl', 15)
-        elif '$500,001' in r:   base = tiers.get('significant', 10)
-        elif '$250,001' in r:   base = tiers.get('significant', 10)
-        elif '$100,001' in r:   base = tiers.get('major', 8)
-        elif '$50,001' in r:    base = tiers.get('large', 6)
-        elif '$15,001' in r:    base = tiers.get('medium', 5)
-        else:                    base = tiers.get('small', 3)
-
-        # Track record bonus
-        quartile = event.get('member_quartile', 4)
-        if quartile == 1:
-            base += weights.get('congress_track_record_q1', 0)
-        elif quartile == 2:
-            base += weights.get('congress_track_record_q2', 0)
-
-        congress_score = min(base, 40)
-
-    elif etype == 'edgar':
-        # For optimizer: treat each EDGAR event as 1 filing
-        edgar_score = min(weights.get('edgar_base_per_filing', 6), 40)
+    if edgar_count > 0:
+        edgar_score = min(edgar_count * weights.get('edgar_base_per_filing', 6), 25)
+        if edgar_count >= 3:
+            edgar_score += weights.get('edgar_cluster_3plus', 15)
+        elif edgar_count >= 2:
+            edgar_score += weights.get('edgar_cluster_2', 10)
+        edgar_score = min(edgar_score, 40)
 
     # Convergence boost
     boost = 0
-    if convergence == 'convergence':
+    if congress_score > 0 and edgar_score > 0:
         boost = weights.get('convergence_boost', 20)
 
     return congress_score + edgar_score + boost
@@ -95,15 +98,9 @@ def find_optimal_threshold(events_with_scores: list, candidates=None, min_events
     """
     Find the threshold that maximizes avg_car_30d * hit_rate for above-threshold events.
     Returns (best_threshold, metrics_dict).
-
-    Args:
-        events_with_scores: list of event dicts with 'score' and 'car_30d' keys.
-        candidates: list of threshold values to test. Defaults to a standard range.
-        min_events: minimum number of events required above a threshold to consider it
-                    valid. Defaults to 5 for production use; pass 1 for small test datasets.
     """
     if candidates is None:
-        candidates = [40, 50, 55, 60, 65, 70, 75, 80, 85, 90]
+        candidates = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 65, 70, 75, 80]
 
     best_score = -999
     best_threshold = 65
@@ -112,7 +109,7 @@ def find_optimal_threshold(events_with_scores: list, candidates=None, min_events
     for threshold in candidates:
         metrics = evaluate_weights(events_with_scores, threshold)
         if metrics['n_events'] < min_events:
-            continue  # not enough data at this threshold
+            continue
         combined = metrics['avg_car_30d'] * metrics['hit_rate']
         if combined > best_score:
             best_score = combined
@@ -125,10 +122,8 @@ def find_optimal_threshold(events_with_scores: list, candidates=None, min_events
 def grid_search(events: list, n_candidates: int = 4) -> dict:
     """
     Grid search over key weight parameters.
-    n_candidates: number of values per parameter to test (use 3-4, full search is 4^N combinations).
     Returns {optimal_weights, stats, threshold}.
     """
-    # Parameter search spaces — fewer candidates = faster run
     search_space = {
         'congress_xl':      [12, 15, 18, 20][:n_candidates],
         'congress_cluster': [10, 15, 18, 20][:n_candidates],
@@ -150,14 +145,13 @@ def grid_search(events: list, n_candidates: int = 4) -> dict:
         candidate = copy.deepcopy(DEFAULT_WEIGHTS)
         params = dict(zip(param_names, combo))
 
-        # Apply this combination
         candidate['congress_tiers']['xl'] = params['congress_xl']
         candidate['congress_cluster_bonus'] = params['congress_cluster']
         candidate['congress_track_record_q1'] = params['congress_q1']
         candidate['convergence_boost'] = params['convergence']
         candidate['decay_half_life_days'] = params['decay_half_life']
 
-        # Score all events
+        # Score all events with this weight combination
         scored_events = []
         for event in events:
             e = dict(event)
@@ -176,9 +170,6 @@ def grid_search(events: list, n_candidates: int = 4) -> dict:
             best_weights['_optimal_threshold'] = threshold
             best_events_scored = scored_events
 
-        if i % 50 == 0:
-            log.info(f"  {i}/{len(combinations)} done, best so far: {round(best_score, 4)}")
-
     # Final evaluation at optimal threshold
     final_threshold = best_weights.get('_optimal_threshold', 65)
     best_weights.pop('_optimal_threshold', None)
@@ -196,7 +187,7 @@ def main():
     try:
         results = load_json(BACKTEST_RESULTS)
     except FileNotFoundError:
-        log.error(f"backtest_results.json not found. Run run_event_study.py first.")
+        log.error("backtest_results.json not found. Run run_event_study.py first.")
         sys.exit(1)
 
     events = results.get('events', [])
@@ -210,10 +201,9 @@ def main():
         })
         return
 
-    log.info(f"Optimizing weights over {len(events)} events...")
+    log.info(f"Optimizing weights over {len(events)} aggregate events...")
     result = grid_search(events, n_candidates=4)
 
-    # Build output
     output = {
         **result["optimal_weights"],
         "generated": datetime.now(tz=timezone.utc).isoformat(),

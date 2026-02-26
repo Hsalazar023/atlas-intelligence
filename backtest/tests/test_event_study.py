@@ -3,9 +3,10 @@ from backtest.run_event_study import (
     get_forward_return,
     compute_car,
     compute_member_track_records,
-    score_congress_event,
-    classify_convergence,
+    score_congress_aggregate,
+    score_edgar_aggregate,
 )
+from backtest.shared import DEFAULT_WEIGHTS
 
 
 # Sample price index: date -> close price
@@ -66,27 +67,68 @@ def test_compute_member_track_records():
     assert records["Bob"]["avg_excess"] == 10.0
 
 
-def test_score_congress_event_basic():
-    """Should assign base points based on Range."""
-    from backtest.shared import DEFAULT_WEIGHTS
-    event = {
-        "Ticker": "AAPL",
-        "Transaction": "Purchase",
-        "TransactionDate": "2026-01-10",
-        "Range": "$50,001 - $100,000",
-        "Representative": "Alice",
-        "ExcessReturn": 5.0,
-    }
-    score = score_congress_event(event, DEFAULT_WEIGHTS, track_records={}, event_date="2026-01-10")
-    assert score > 0
-    assert score <= 40  # capped
+def test_score_congress_aggregate_single_trade():
+    """Single trade should produce base points with decay."""
+    trades = [
+        {"Range": "$50,001 - $100,000", "TransactionDate": "2026-02-25",
+         "Representative": "Alice"},
+    ]
+    result = score_congress_aggregate(trades, DEFAULT_WEIGHTS, track_records={})
+    assert result['count'] == 1
+    assert result['score'] > 0
+    assert result['score'] <= 40
+    assert result['cluster_bonus'] == 0  # only 1 trade, no cluster
 
 
-def test_classify_convergence_both():
-    """Tickers with both congress and edgar activity = convergence."""
-    congress_tickers = {"AAPL", "MSFT"}
-    edgar_tickers = {"AAPL", "GOOGL"}
-    assert classify_convergence("AAPL", congress_tickers, edgar_tickers) == "convergence"
-    assert classify_convergence("MSFT", congress_tickers, edgar_tickers) == "congress"
-    assert classify_convergence("GOOGL", congress_tickers, edgar_tickers) == "edgar"
-    assert classify_convergence("TSLA", congress_tickers, edgar_tickers) == "none"
+def test_score_congress_aggregate_cluster():
+    """3+ trades for same ticker should get cluster bonus."""
+    trades = [
+        {"Range": "$15,001 - $50,000", "TransactionDate": "2026-02-20", "Representative": "A"},
+        {"Range": "$15,001 - $50,000", "TransactionDate": "2026-02-22", "Representative": "B"},
+        {"Range": "$15,001 - $50,000", "TransactionDate": "2026-02-24", "Representative": "C"},
+    ]
+    result = score_congress_aggregate(trades, DEFAULT_WEIGHTS, track_records={})
+    assert result['count'] == 3
+    assert result['cluster_bonus'] == 15
+    assert result['score'] > 0
+    assert len(result['members']) == 3
+
+
+def test_score_congress_aggregate_capped_at_40():
+    """Congress score should be capped at 40."""
+    trades = [
+        {"Range": "$1,000,001 - $5,000,000", "TransactionDate": "2026-02-25", "Representative": "A"},
+        {"Range": "$1,000,001 - $5,000,000", "TransactionDate": "2026-02-25", "Representative": "B"},
+        {"Range": "$1,000,001 - $5,000,000", "TransactionDate": "2026-02-25", "Representative": "C"},
+    ]
+    result = score_congress_aggregate(trades, DEFAULT_WEIGHTS, track_records={})
+    assert result['score'] == 40  # 3×15 + 15 cluster = 60, but capped at 40
+
+
+def test_score_edgar_aggregate_basic():
+    """Single filing should produce base score without cluster bonus."""
+    filings = [{"company": "NVIDIA", "date": "2026-02-20"}]
+    result = score_edgar_aggregate(filings, DEFAULT_WEIGHTS)
+    assert result['count'] == 1
+    assert result['score'] == 6  # 1 × 6pts
+    assert result['cluster_bonus'] == 0
+
+
+def test_score_edgar_aggregate_cluster():
+    """3+ filings should get cluster bonus."""
+    filings = [
+        {"company": "NVIDIA", "date": "2026-02-20"},
+        {"company": "NVIDIA", "date": "2026-02-21"},
+        {"company": "NVIDIA", "date": "2026-02-22"},
+    ]
+    result = score_edgar_aggregate(filings, DEFAULT_WEIGHTS)
+    assert result['count'] == 3
+    assert result['cluster_bonus'] == 15
+    assert result['score'] == min(3 * 6 + 15, 40)  # 18 + 15 = 33
+
+
+def test_score_edgar_aggregate_capped_at_40():
+    """EDGAR score should be capped at 40."""
+    filings = [{"company": f"CO{i}", "date": "2026-02-20"} for i in range(10)]
+    result = score_edgar_aggregate(filings, DEFAULT_WEIGHTS)
+    assert result['score'] == 40  # 10×6=60 base (capped 25) + 15 cluster = 40
