@@ -27,7 +27,7 @@ import yfinance as yf
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from backtest.shared import (
     CONGRESS_FEED, EDGAR_FEED, PRICE_HISTORY_DIR,
-    TICKER_KEYWORDS, LOOKBACK_DAYS, BENCHMARK,
+    LOOKBACK_DAYS, BENCHMARK,
     load_json, save_json, match_edgar_ticker,
 )
 

@@ -1,8 +1,13 @@
 """Shared constants and helpers for ATLAS backtest scripts."""
 
 import json
+import re
+import time
+import logging
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+log = logging.getLogger(__name__)
 
 # Paths — all relative to the Atlas project root
 ROOT = Path(__file__).parent.parent
@@ -13,9 +18,12 @@ EDGAR_FEED = DATA_DIR / "edgar_feed.json"
 BACKTEST_RESULTS = DATA_DIR / "backtest_results.json"
 OPTIMAL_WEIGHTS = DATA_DIR / "optimal_weights.json"
 BACKTEST_SUMMARY = DATA_DIR / "backtest_summary.json"
+SIGNALS_DB = DATA_DIR / "atlas_signals.db"
+SEC_TICKERS_CACHE = DATA_DIR / "sec_tickers.json"
+FMP_CONGRESS_FEED = DATA_DIR / "fmp_congress_feed.json"
 
-# EDGAR company name → ticker mapping (mirrors TICKER_KEYWORDS in atlas-intelligence.html)
-TICKER_KEYWORDS = {
+# Fallback EDGAR company name → ticker mapping (used when SEC download fails)
+_FALLBACK_KEYWORDS = {
     'RTX': ['raytheon', 'rtx corp'],
     'NVDA': ['nvidia'],
     'OXY': ['occidental'],
@@ -53,6 +61,13 @@ BENCHMARK = "SPY"
 LOOKBACK_DAYS = 365
 RATE_LIMIT_SLEEP = 0.5  # seconds between yfinance calls (rate-limit courtesy)
 
+SEC_TICKER_MAP_URL = "https://www.sec.gov/files/company_tickers.json"
+SEC_TICKER_MAP_MAX_AGE = 7 * 86400  # 7 days in seconds
+SEC_USER_AGENT = "ATLAS Intelligence Platform contact@atlasiq.io"
+
+# Lazy-loaded SEC ticker map
+_sec_ticker_map = None
+
 
 def load_json(path: Path) -> dict:
     with open(path) as f:
@@ -65,16 +80,88 @@ def save_json(path: Path, data) -> None:
         json.dump(data, f, indent=2, default=str)
 
 
+def load_sec_ticker_map() -> dict:
+    """Download SEC company_tickers.json and build company_name→ticker map.
+    Caches to data/sec_tickers.json (refreshed if >7 days old).
+    Falls back to keyword matching on network failure."""
+    # Check cache
+    if SEC_TICKERS_CACHE.exists():
+        age = time.time() - SEC_TICKERS_CACHE.stat().st_mtime
+        if age < SEC_TICKER_MAP_MAX_AGE:
+            try:
+                return load_json(SEC_TICKERS_CACHE)
+            except (json.JSONDecodeError, OSError):
+                pass  # corrupt cache, re-download
+
+    # Download from SEC
+    try:
+        import requests
+        r = requests.get(
+            SEC_TICKER_MAP_URL,
+            headers={"User-Agent": SEC_USER_AGENT},
+            timeout=15,
+        )
+        r.raise_for_status()
+        raw = r.json()
+    except Exception as e:
+        log.warning(f"Failed to download SEC ticker map: {e}")
+        if SEC_TICKERS_CACHE.exists():
+            try:
+                return load_json(SEC_TICKERS_CACHE)
+            except (json.JSONDecodeError, OSError):
+                pass
+        return {}  # empty map, will fall back to _FALLBACK_KEYWORDS
+
+    # Build name→ticker map, preferring shortest ticker per CIK (common stock)
+    cik_best = {}
+    for entry in raw.values():
+        cik = entry["cik_str"]
+        ticker = entry["ticker"]
+        title = entry["title"].lower().strip()
+        if cik not in cik_best or len(ticker) < len(cik_best[cik][1]):
+            cik_best[cik] = (title, ticker)
+
+    result = {name: ticker for name, ticker in cik_best.values()}
+    save_json(SEC_TICKERS_CACHE, result)
+    log.info(f"SEC ticker map: {len(result)} companies cached to {SEC_TICKERS_CACHE}")
+    return result
+
+
 def match_edgar_ticker(company_name: str) -> str | None:
-    """Return the ticker symbol for an EDGAR company name, or None if no match."""
-    co = company_name.lower()
-    for ticker, keywords in TICKER_KEYWORDS.items():
+    """Return the ticker symbol for an EDGAR company name, or None if no match.
+    Uses SEC's company_tickers.json (10,000+ entries) with fallback to hardcoded keywords."""
+    global _sec_ticker_map
+    if _sec_ticker_map is None:
+        _sec_ticker_map = load_sec_ticker_map()
+
+    if not company_name or not company_name.strip():
+        return None
+
+    co = company_name.lower().strip()
+    # Clean common state suffixes: /DE/, /NJ, /MD/, /OH/, /NV, /WV
+    co_clean = re.sub(r'\s*/[A-Za-z]{2,3}/?\s*$', '', co).strip()
+
+    if not co_clean:
+        return None
+
+    # Stage 1: SEC map — exact match
+    if _sec_ticker_map:
+        ticker = _sec_ticker_map.get(co_clean) or _sec_ticker_map.get(co)
+        if ticker:
+            return ticker
+        # Stage 2: SEC map — substring match
+        for title, t in _sec_ticker_map.items():
+            if title in co_clean or co_clean in title:
+                return t
+
+    # Stage 3: Fallback to hardcoded keywords (network failure case)
+    for ticker, keywords in _FALLBACK_KEYWORDS.items():
         if any(kw in co for kw in keywords):
             return ticker
-    # Stage 2: check if any ticker symbol appears in company name
-    for ticker in TICKER_KEYWORDS:
+    for ticker in _FALLBACK_KEYWORDS:
         if ticker.lower() in co:
             return ticker
+
     return None
 
 

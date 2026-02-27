@@ -5,23 +5,19 @@
     "large": 6,
     "major": 8,
     "significant": 10,
-    "xl": 12
+    "xl": 15
   },
-  "congress_cluster_bonus": 10,
+  "congress_cluster_bonus": 15,
   "congress_track_record_q1": 0,
   "congress_track_record_q2": 0,
   "edgar_base_per_filing": 6,
   "edgar_cluster_2": 10,
   "edgar_cluster_3plus": 15,
-  "convergence_boost": 15,
-  "decay_half_life_days": 14,
+  "convergence_boost": 20,
+  "decay_half_life_days": 21,
   "edgar_decay_half_life_days": 14,
-  "generated": "2026-02-26T15:57:52.409951+00:00",
-  "n_events_total": 90,
-  "optimal_threshold": 5,
-  "stats": {
-    "avg_car_30d": 0.005143,
-    "hit_rate": 0.625,
-    "n_events": 8
-  }
+  "person_track_record_bonus": 5,
+  "generated": "2026-02-26T21:30:02.705112+00:00",
+  "optimal_threshold": 65,
+  "method": "bootstrap_feature_importance"
 }

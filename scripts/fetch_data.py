@@ -287,6 +287,117 @@ def fetch_quiver_congress(api_key):
     return sorted(data, key=lambda x: x.get('Date', ''), reverse=True)[:150]
 
 
+# ── FMP Congressional Trades ──────────────────────────────────────────────
+FMP_API_KEY = os.environ.get('FMP_API_KEY', '')
+
+def normalize_fmp_congress(raw, chamber):
+    """
+    Normalize a single FMP API response dict into the QuiverQuant-compatible
+    congress_feed.json format.
+
+    FMP fields: transactionDate, disclosureDate, representative, type,
+                amount, symbol, assetDescription, owner, party
+
+    Returns a normalized dict, or None if no valid ticker symbol.
+    """
+    symbol = (raw.get('symbol') or '').strip().upper()
+    # Skip entries with no ticker or tickers >5 chars (likely invalid)
+    if not symbol or len(symbol) > 5:
+        return None
+
+    # Map FMP 'type' to QuiverQuant 'Transaction' format
+    fmp_type = (raw.get('type') or '').strip()
+    if fmp_type.lower().startswith('purchase'):
+        transaction = 'Purchase'
+    elif fmp_type.lower().startswith('sale'):
+        transaction = 'Sale'
+    else:
+        transaction = fmp_type or 'Unknown'
+
+    # Compute disclosure delay (days between transaction and disclosure)
+    txn_date = (raw.get('transactionDate') or '').strip()
+    disc_date = (raw.get('disclosureDate') or '').strip()
+    disclosure_delay = None
+    if txn_date and disc_date:
+        try:
+            td = datetime.datetime.strptime(txn_date, '%Y-%m-%d')
+            dd = datetime.datetime.strptime(disc_date, '%Y-%m-%d')
+            disclosure_delay = (dd - td).days
+        except ValueError:
+            pass
+
+    # Normalize party to single-letter format (matches QuiverQuant: "D" / "R")
+    party_raw = (raw.get('party') or '').strip()
+    PARTY_MAP = {'Democrat': 'D', 'Democratic': 'D', 'Republican': 'R'}
+    party = PARTY_MAP.get(party_raw, party_raw)
+
+    return {
+        'Ticker': symbol,
+        'TransactionDate': txn_date,
+        'Representative': (raw.get('representative') or '').strip(),
+        'Transaction': transaction,
+        'Range': (raw.get('amount') or '').strip(),
+        'Chamber': chamber,
+        'Party': party,
+        'DisclosureDate': disc_date,
+        'DisclosureDelay': disclosure_delay,
+        'Source': 'FMP',
+    }
+
+
+def fetch_fmp_congress(api_key, pages=10):
+    """
+    Fetch congressional trades from FMP (Financial Modeling Prep) API.
+    Pulls from both Senate and House endpoints, normalizes to QuiverQuant format,
+    deduplicates, and returns sorted list (most recent first).
+    """
+    all_trades = []
+    seen = set()  # (ticker, date, representative) for dedup
+
+    endpoints = [
+        ('https://financialmodelingprep.com/api/v4/senate-trading', 'Senate'),
+        ('https://financialmodelingprep.com/api/v4/house-disclosure', 'House'),
+    ]
+
+    for base_url, chamber in endpoints:
+        print(f'  Fetching FMP {chamber} trades ({pages} pages)...')
+        for page in range(pages):
+            url = f'{base_url}?page={page}&apikey={api_key}'
+            try:
+                r = requests.get(url, timeout=20)
+                if not r.ok:
+                    print(f'  FMP {chamber} page {page} error: HTTP {r.status_code}')
+                    break
+                data = r.json()
+                if not isinstance(data, list) or len(data) == 0:
+                    break
+
+                for raw_trade in data:
+                    normalized = normalize_fmp_congress(raw_trade, chamber)
+                    if normalized is None:
+                        continue
+                    # Dedup key: (ticker, date, representative)
+                    dedup_key = (
+                        normalized['Ticker'],
+                        normalized['TransactionDate'],
+                        normalized['Representative'],
+                    )
+                    if dedup_key not in seen:
+                        seen.add(dedup_key)
+                        all_trades.append(normalized)
+
+            except Exception as e:
+                print(f'  FMP {chamber} page {page} error: {e}')
+                break
+
+            time.sleep(0.3)  # Rate limit
+
+    # Sort most recent first
+    all_trades.sort(key=lambda x: x.get('TransactionDate', ''), reverse=True)
+    print(f'  FMP total: {len(all_trades)} unique trades ({len(seen)} deduped)')
+    return all_trades
+
+
 # ── QuiverQuant Insider Trades ─────────────────────────────────────────────
 def fetch_quiver_insiders(api_key, page_size=100):
     """
@@ -378,18 +489,43 @@ def main():
     except Exception as e:
         print(f'  EDGAR error: {e}')
 
-    # ── Congressional trades (QuiverQuant) ─────────────────────────────────
+    # ── Congressional trades (FMP + QuiverQuant) ──────────────────────────
+    congress_trades = []
+    congress_source = []
+
+    # FMP congressional trades (primary source if API key set)
+    if FMP_API_KEY:
+        print('\nFetching congressional trades (FMP)...')
+        try:
+            fmp_trades = fetch_fmp_congress(FMP_API_KEY)
+            if fmp_trades:
+                # Save raw FMP data separately
+                save_json('fmp_congress_feed.json', {
+                    'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'count': len(fmp_trades),
+                    'source': 'FMP',
+                    'trades': fmp_trades,
+                })
+                print(f'  {len(fmp_trades)} FMP congressional trades saved')
+                congress_trades.extend(fmp_trades)
+                congress_source.append('FMP')
+        except Exception as e:
+            print(f'  FMP congress error: {e}')
+    else:
+        print('\nFMP_API_KEY not set — skipping FMP congressional trades')
+
+    # QuiverQuant congressional trades (fallback / supplemental)
     if QUIVER_KEY:
         print('\nFetching congressional trades (QuiverQuant)...')
         try:
-            trades = fetch_quiver_congress(QUIVER_KEY)
-            save_json('congress_feed.json', {
-                'updated': datetime.datetime.utcnow().isoformat() + 'Z',
-                'count': len(trades),
-                'source': 'QuiverQuant',
-                'trades': trades,
-            })
-            print(f'  {len(trades)} congressional trades saved')
+            quiver_trades = fetch_quiver_congress(QUIVER_KEY)
+            if quiver_trades:
+                # Add Source field to QuiverQuant trades for tracking
+                for t in quiver_trades:
+                    t['Source'] = 'QuiverQuant'
+                congress_trades.extend(quiver_trades)
+                congress_source.append('QuiverQuant')
+                print(f'  {len(quiver_trades)} QuiverQuant congressional trades fetched')
         except Exception as e:
             print(f'  QuiverQuant congress error: {e}')
 
@@ -410,9 +546,37 @@ def main():
         except Exception as e:
             print(f'  QuiverQuant insiders error: {e}')
     else:
-        print('\nQUIVER_KEY not set — skipping congressional and insider trade fetch')
+        print('\nQUIVER_KEY not set — skipping QuiverQuant congressional and insider trade fetch')
         print('  Register at quiverquant.com/quiverapi, then:')
         print('  export QUIVER_KEY=your_token && python3 scripts/fetch_data.py')
+
+    # Merge and deduplicate combined congressional trades
+    if congress_trades:
+        # Dedup by (Ticker, TransactionDate, Representative)
+        seen = set()
+        merged = []
+        for t in congress_trades:
+            key = (
+                t.get('Ticker', ''),
+                t.get('TransactionDate', t.get('Date', '')),
+                t.get('Representative', ''),
+            )
+            if key not in seen:
+                seen.add(key)
+                merged.append(t)
+        # Sort most recent first
+        merged.sort(
+            key=lambda x: x.get('TransactionDate', x.get('Date', '')),
+            reverse=True,
+        )
+        source_label = ' + '.join(congress_source)
+        save_json('congress_feed.json', {
+            'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+            'count': len(merged),
+            'source': source_label,
+            'trades': merged,
+        })
+        print(f'  Combined: {len(merged)} unique congressional trades ({source_label})')
 
     # ── SEC ticker map (for EDGAR→ticker matching) ────────────────────
     print('\nFetching SEC company→ticker map...')
