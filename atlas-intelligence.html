@@ -620,7 +620,7 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" style="background:var(--amber);width:50%"></div><div class="kpi-label">Late STOCK Act Filers</div><div class="kpi-value">--</div><div class="kpi-delta" style="color:var(--muted)">No live source</div></div>
   </div>
   <div class="g65 mb14">
-    <div class="card card-fill">
+    <div class="card">
       <div class="card-hd"><div class="card-title">High-Suspicion Congressional Trades</div><div class="card-sub">Ranked by signal score</div></div>
       <div class="filter-bar padded" style="flex-wrap:wrap;gap:4px 0">
         <span class="filter-lbl">Filter:</span>
@@ -737,7 +737,7 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" style="background:var(--slate);width:55%"></div><div class="kpi-label">10b5-1 Plan Filings</div><div class="kpi-value" id="ins-kpi-insiders">--</div><div class="kpi-delta" id="ins-kpi-insiders-d" style="color:var(--muted)">Pre-planned (discounted)</div></div>
   </div>
   <div class="g65 mb14">
-    <div class="card card-fill">
+    <div class="card">
       <div class="card-hd"><div class="card-title">SEC Form 4 Filings</div><div class="card-sub">Live EDGAR EFTS feed · Cluster filings sorted first · Tracked tickers highlighted</div></div>
       <div class="filter-bar padded" style="flex-wrap:wrap;gap:4px 0">
         <span class="filter-lbl">Filter:</span>
@@ -757,11 +757,11 @@ button,input,select{font-family:var(--sans);outline:none}
         <span style="border-left:1px solid var(--border);margin:0 6px;height:16px"></span>
         <span class="filter-lbl">Sort:</span>
         <select id="ins-sort" onchange="renderInsiderTableLive()" style="font-size:10px;padding:2px 6px;background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer">
-          <option value="default">Buys first, by value</option>
-          <option value="score">Score (high→low)</option>
+          <option value="score" selected>Score (high→low)</option>
           <option value="value">Value (high→low)</option>
           <option value="filings">Filings (most→least)</option>
           <option value="date">Newest first</option>
+          <option value="default">Buys first, by value</option>
         </select>
       </div>
       <div class="tbl-wrap" style="max-height:520px;overflow-y:auto">
@@ -1915,6 +1915,7 @@ function renderEdgarFeed(filings){
   feed.innerHTML=html;
   renderInsiderTableLive(); // populate insider table with EDGAR data
   renderExitSignals(); // populate exit signals from EDGAR sales
+  renderInsiderSectorLive(); // populate sector insider activity from EDGAR
   refreshConvergenceDisplays(); // recompute scores now that EDGAR data is loaded
 }
 
@@ -1952,6 +1953,59 @@ function renderExitSignals(){
       +'<td class="c" style="font-size:10px">'+(f.date||'')+'</td></tr>';
   });
   tbody.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// INSIDER SECTOR ACTIVITY — from live EDGAR data
+// ═══════════════════════════════════════════════════════
+function renderInsiderSectorLive(){
+  var container=document.getElementById('insider-sector-container');
+  var hd=document.getElementById('insider-sector-hd');
+  if(!container||!edgarData.length) return;
+  // Skip if brain_stats already populated (brain export takes priority)
+  if(container.getAttribute('data-brain')=='1') return;
+
+  var sectorStats={};
+  edgarData.forEach(function(f){
+    var ticker=f.ticker||'';
+    var sector=SECTOR_MAP[ticker];
+    if(!sector) return;
+    if(!sectorStats[sector]) sectorStats[sector]={buys:0,sells:0,total:0,buyVal:0,sellVal:0};
+    var s=sectorStats[sector];
+    s.total++;
+    if(f.direction==='buy'){s.buys++;s.buyVal+=(f.buy_value||0);}
+    if(f.direction==='sell'){s.sells++;s.sellVal+=(f.sell_value||0);}
+  });
+
+  var sectors=Object.keys(sectorStats).map(function(k){
+    var s=sectorStats[k];
+    var net=s.buys-s.sells;
+    return {sector:k,n:s.total,buys:s.buys,sells:s.sells,net:net,buyVal:s.buyVal};
+  }).filter(function(s){return s.n>=2;})
+    .sort(function(a,b){return b.net-a.net;});
+
+  if(!sectors.length) return;
+
+  var maxNet=Math.max.apply(null,sectors.map(function(s){return Math.abs(s.net);}));
+  var html='';
+  sectors.forEach(function(s){
+    var fillW=maxNet>0?Math.round(Math.abs(s.net)/maxNet*100):0;
+    var fillCls=s.net>=0?'sf-pos':'sf-neg';
+    var netLabel=s.net>0?'+'+s.net:s.net;
+    var netColor=s.net>0?'up':s.net<0?'dn':'';
+    html+='<div class="sector-row">'
+      +'<div class="sector-name">'+s.sector+'</div>'
+      +'<div class="sector-track"><div class="sector-fill '+fillCls+'" data-w="'+fillW+'%"></div></div>'
+      +'<div class="sector-cnt">'+s.n+'</div>'
+      +'<div class="sector-perf '+netColor+'" style="min-width:42px">'+netLabel+' net</div>'
+      +'</div>';
+  });
+  container.innerHTML=html;
+  if(hd){
+    hd.innerHTML='<div class="card-title">Sector Insider Activity</div>'
+      +'<div class="card-sub">Filing count by sector · Net = buys − sells · From live EDGAR feed</div>';
+  }
+  setTimeout(animateBars,60);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3305,6 +3359,7 @@ function loadBrainStats(){
                     '<div class="sector-perf ' + perfCls + '">' + sign + pct.toFixed(1) + '%</div></div>';
           });
           isc.innerHTML = html;
+          isc.setAttribute('data-brain', '1');
           setTimeout(animateBars, 60);
         }
         // Remove DEMO tag
