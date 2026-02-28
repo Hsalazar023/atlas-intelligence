@@ -569,7 +569,7 @@ button,input,select{font-family:var(--sans);outline:none}
         <div class="card-title">Live EDGAR Form 4 Feed <span class="new-pulse" style="margin-left:4px"></span></div>
         <div class="card-sub" id="edgar-last-check">Checking SEC EDGAR...</div>
       </div>
-      <div id="edgar-feed" style="overflow-y:auto">
+      <div id="edgar-feed" style="max-height:360px;overflow-y:auto">
         <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
           <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Fetching latest Form 4 filings...
         </div>
@@ -581,12 +581,29 @@ button,input,select{font-family:var(--sans);outline:none}
         <div class="card-title">Congress.gov — Bill Status Live</div>
         <div class="card-sub" id="congress-last-check">Fetching bill data...</div>
       </div>
-      <div id="congress-feed" style="overflow-y:auto">
+      <div id="congress-feed" style="max-height:360px;overflow-y:auto">
         <div style="padding:20px;text-align:center;color:var(--muted);font-size:11px">
           <div class="new-pulse" style="display:inline-block;margin-right:6px"></div>Connecting to Congress.gov API...
         </div>
       </div>
       <div class="footnote">Congress.gov API · Live bill status · Committee actions · Vote schedules</div>
+    </div>
+  </div>
+  <div class="g2 mb14">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Legislative Calendar</div><div class="card-sub">Upcoming market catalysts</div></div>
+      <div id="overview-leg-calendar" style="padding:10px 12px;max-height:320px;overflow-y:auto">
+        <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading legislative calendar...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Active Bills — Passage Probability</div></div>
+      <div id="overview-active-bills" style="max-height:320px;overflow-y:auto">
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">SB 1882</div><div class="bill-title">National Defense Modernization Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:85%"></div></div><div class="prob-pct">85%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Defense Prime</span><span class="bc-eff">↑↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">Cyber Sec</span><span class="bc-eff">↑↑</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">HR 7821</div><div class="bill-title">American AI Infrastructure Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:78%"></div></div><div class="prob-pct">78%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Semiconductors</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bear"><span class="bc-sec">China Tech</span><span class="bc-eff">↓↓</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">HR 6419</div><div class="bill-title">Critical Minerals &amp; Mining Security Act</div><div class="bill-status bs-l">Likely ↑</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:71%"></div></div><div class="prob-pct">71%</div></div><div class="bill-chips"><div class="bill-chip bcc-bull"><span class="bc-sec">Copper</span><span class="bc-eff">↑↑</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">Lithium</span><span class="bc-eff">↑↑</span></div></div></div>
+        <div class="bill-card"><div class="bill-hd"><div class="bill-id">SB 2241</div><div class="bill-title">Drug Price Negotiation Expansion Act</div><div class="bill-status bs-p">Possible ↕</div></div><div class="prob-row"><div class="prob-lbl">Passage prob.</div><div class="prob-track"><div class="prob-fill" style="width:52%"></div></div><div class="prob-pct">52%</div></div><div class="bill-chips"><div class="bill-chip bcc-bear"><span class="bc-sec">Large Pharma</span><span class="bc-eff">↓↓</span></div><div class="bill-chip bcc-bull"><span class="bc-sec">PBMs</span><span class="bc-eff">↑</span></div></div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2522,6 +2539,9 @@ function renderLegislativeCalendar(){
       +'</div></div>';
   });
   container.innerHTML=html;
+  // Mirror to overview page copy
+  var ov=document.getElementById('overview-leg-calendar');
+  if(ov) ov.innerHTML=html;
   // Re-run countdown formatting on the new elements
   updateCountdowns();
 }
