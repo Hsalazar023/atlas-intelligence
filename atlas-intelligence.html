@@ -519,14 +519,14 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="acad-stat"><div class="acad-num">4</div><div class="acad-lbl">Cluster Events</div></div>
     <div class="acad-text">ATLAS cross-references corporate Form 4 filings, congressional STOCK Act disclosures, and institutional 13F/dark-pool flow data to surface statistically significant alpha signals. Strongest predictor: CEO open-market purchases (+8.9% annual alpha, Seyhun 1998; +16.2% at score ≥86). Corroborating sources elevate conviction materially. <cite>Data: SEC EDGAR · STOCK Act · Congress.gov · FINRA ATS · SEC 13F</cite></div>
   </div>
-  <div class="kpi-strip ks7">
-    <div class="kpi"><div class="kpi-bar" id="kb1" style="background:var(--navy)"></div><div class="kpi-label">Top Signal Score</div><div class="kpi-value">94</div><div class="kpi-delta up">TMDX / RTX</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb2" style="background:var(--red-lt)"></div><div class="kpi-label">Exceptional Signals</div><div class="kpi-value">9</div><div class="kpi-delta dn">Score ≥ 80</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb3" style="background:var(--amber)"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb4" style="background:var(--blue-lt)"></div><div class="kpi-label">Congress Flags</div><div class="kpi-value">38</div><div class="kpi-delta up">High suspicion trades</div></div>
+  <div class="kpi-strip ks7" id="brain-kpi-strip">
+    <div class="kpi"><div class="kpi-bar" id="kb1" style="background:var(--navy)"></div><div class="kpi-label">Top Signal Score</div><div class="kpi-value" id="kpi-top-score">94</div><div class="kpi-delta up" id="kpi-top-tickers">TMDX / RTX</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb2" style="background:var(--red-lt)"></div><div class="kpi-label">Exceptional Signals</div><div class="kpi-value" id="kpi-exceptional">9</div><div class="kpi-delta dn">Score ≥ 80</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb3" style="background:var(--amber)"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value" id="kpi-clusters">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb4" style="background:var(--blue-lt)"></div><div class="kpi-label">Congress Flags</div><div class="kpi-value" id="kpi-congress">38</div><div class="kpi-delta up">High suspicion trades</div></div>
     <div class="kpi"><div class="kpi-bar" id="kb5" style="background:var(--purple)"></div><div class="kpi-label">Atypical Inst. Flows</div><div class="kpi-value">7</div><div class="kpi-delta" style="color:var(--purple)">Unusual positions</div></div>
     <div class="kpi"><div class="kpi-bar" id="kb6" style="background:var(--green)"></div><div class="kpi-label">Bills w/ Mkt Impact</div><div class="kpi-value">6</div><div class="kpi-delta up">Avg 64% passage</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--navy)"></div><div class="kpi-label">Correlated Ideas</div><div class="kpi-value">8</div><div class="kpi-delta up">Multi-source confirmed</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--navy)"></div><div class="kpi-label">Correlated Ideas</div><div class="kpi-value" id="kpi-convergence">8</div><div class="kpi-delta up">Multi-source confirmed</div></div>
   </div>
   <div class="g65 mb14">
     <div class="card card-fill">
@@ -546,14 +546,8 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="col-stack">
       <div class="card">
         <div class="card-hd"><div class="card-title">Sector Signal Heat</div><div class="card-sub">Cross-source 30-day activity</div></div>
-        <div>
-          <div class="sector-row"><div class="sector-name">Defense</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="93%"></div></div><div class="sector-cnt">41</div><div class="sector-perf up">+12.8%</div></div>
-          <div class="sector-row"><div class="sector-name">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt">36</div><div class="sector-perf up">+11.4%</div></div>
-          <div class="sector-row"><div class="sector-name">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="79%"></div></div><div class="sector-cnt">29</div><div class="sector-perf up">+9.8%</div></div>
-          <div class="sector-row"><div class="sector-name">Mining</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="70%"></div></div><div class="sector-cnt">18</div><div class="sector-perf up">+8.1%</div></div>
-          <div class="sector-row"><div class="sector-name">Health Care</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="55%"></div></div><div class="sector-cnt">14</div><div class="sector-perf up">+6.2%</div></div>
-          <div class="sector-row"><div class="sector-name">Pharma</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="40%"></div></div><div class="sector-cnt">8</div><div class="sector-perf dn">−3.4%</div></div>
-          <div class="sector-row"><div class="sector-name">China-Exposed</div><div class="sector-track"><div class="sector-fill sf-neg" data-w="55%"></div></div><div class="sector-cnt">11</div><div class="sector-perf dn">−5.1%</div></div>
+        <div id="sector-heat-container">
+          <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading sector data...</div>
         </div>
       </div>
       <div class="card">
@@ -637,7 +631,7 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="col-stack">
       <div class="card">
         <div class="card-hd"><div class="card-title">Committee Correlation</div><div class="card-sub">Trade-to-jurisdiction match rate · <span style="color:var(--amber);font-weight:600">(Historical estimate)</span></div></div>
-        <div>
+        <div id="committee-corr-container">
           <div class="sector-row"><div class="sector-name">Armed Services</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="94%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">94%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">34 trades</div></div>
           <div class="sector-row"><div class="sector-name">Foreign Affairs</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="89%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">89%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">12 trades</div></div>
           <div class="sector-row"><div class="sector-name">Science &amp; Tech</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt" style="color:var(--red-lt)">88%</div><div class="sector-perf" style="font-size:10px;color:var(--muted)">28 trades</div></div>
@@ -648,12 +642,8 @@ button,input,select{font-family:var(--sans);outline:none}
       </div>
       <div class="card">
         <div class="card-hd"><div class="card-title">Legislative Calendar</div><div class="card-sub">Upcoming market catalysts</div></div>
-        <div style="padding:10px 12px">
-          <div class="tl-item"><div class="tl-dot tl-near"></div><div class="tl-content"><div class="tl-date" data-bill-date="2026-02-25">Feb 25, 2026</div><div class="tl-desc">HR 7821 Floor Vote — AI Infrastructure Act</div><div class="tl-note" style="color:var(--red-lt)">Watch: NVDA, AMD, SMCI, MSFT</div></div></div>
-          <div class="tl-item"><div class="tl-dot tl-near"></div><div class="tl-content"><div class="tl-date" data-bill-date="2026-03-03">Mar 3, 2026</div><div class="tl-desc">SB 1882 Senate Armed Services Markup</div><div class="tl-note" style="color:var(--amber)">Watch: RTX, LMT, NOC, BA, ITA ETF</div></div></div>
-          <div class="tl-item"><div class="tl-dot tl-mid"></div><div class="tl-content"><div class="tl-date" data-bill-date="2026-03-10">Mar 10, 2026</div><div class="tl-desc">SB 2241 Committee Vote — Drug Pricing</div><div class="tl-note" style="color:var(--amber)">Watch: PFE, MRK, ABBV</div></div></div>
-          <div class="tl-item"><div class="tl-dot tl-mid"></div><div class="tl-content"><div class="tl-date" data-bill-date="2026-03-17">Mar 17, 2026</div><div class="tl-desc">HR 6419 Floor Vote — Critical Minerals</div><div class="tl-note" style="color:var(--blue-lt)">Watch: FCX, MP, ALB, LTHM</div></div></div>
-          <div class="tl-item"><div class="tl-dot tl-far"></div><div class="tl-content"><div class="tl-date" data-bill-date="2026-04-01">Apr 1, 2026</div><div class="tl-desc">SB 3310 Senate Energy Committee Hearing</div><div class="tl-note" style="color:var(--blue-lt)">Watch: ENPH, NEE, FSLR</div></div></div>
+        <div id="legislative-calendar" style="padding:10px 12px">
+          <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading legislative calendar...</div>
         </div>
       </div>
     </div>
@@ -670,7 +660,7 @@ button,input,select{font-family:var(--sans);outline:none}
     </div>
     <div class="card">
       <div class="card-hd"><div class="card-title">Congressional Trading Heatmap</div><div class="card-sub">Buy intensity by security — darker = higher concentration</div></div>
-      <div class="heat-grid">
+      <div class="heat-grid" id="congress-heatmap">
         <div class="heat-cell h6"><div class="hc-sym">RTX</div><div class="hc-nm">Raytheon</div></div>
         <div class="heat-cell h6"><div class="hc-sym">NVDA</div><div class="hc-nm">NVIDIA</div></div>
         <div class="heat-cell h5"><div class="hc-sym">LMT</div><div class="hc-nm">Lockheed</div></div>
@@ -736,11 +726,11 @@ button,input,select{font-family:var(--sans);outline:none}
     </div>
     <div class="col-stack">
       <div class="card">
-        <div class="card-hd"><div class="card-title">Notable Exit Signals <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">Discretionary open-market sells · Requires Form 4 XML parsing for live data</div></div>
+        <div class="card-hd" id="exits-card-hd"><div class="card-title">Notable Exit Signals <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">Discretionary open-market sells · Requires Form 4 XML parsing for live data</div></div>
         <div class="tbl-wrap" style="max-height:160px">
           <table class="tbl">
             <thead><tr><th>Security</th><th>Insider</th><th class="r">Value</th><th class="c">Score</th></tr></thead>
-            <tbody>
+            <tbody id="exits-tbody">
               <tr><td><div class="sym">SMPL</div><div class="sym-sub">Simply Good Foods</div></td><td><div style="font-size:11px;font-weight:600">B. Morgan · CEO</div><div class="sym-sub">38% stake · No plan</div></td><td class="r"><span class="val dn">$6.2M</span></td><td class="c"><span class="score sc-bear">−81</span></td></tr>
               <tr><td><div class="sym">DOCS</div><div class="sym-sub">Doximity</div></td><td><div style="font-size:11px;font-weight:600">J. Tangney · CEO</div><div class="sym-sub">10b5-1 plan · Routine liquidity</div></td><td class="r"><span class="val dn">$14.4M</span></td><td class="c"><span class="score sc1">−44</span></td></tr>
             </tbody>
@@ -749,8 +739,8 @@ button,input,select{font-family:var(--sans);outline:none}
         <div class="footnote">Negative scores: higher magnitude = stronger bearish signal. 10b5-1 sales discounted 60%.</div>
       </div>
       <div class="card">
-        <div class="card-hd"><div class="card-title">Sector Insider Activity <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">30-day signal · Fwd 12mo avg return · Requires sector mapping for live data</div></div>
-        <div>
+        <div class="card-hd" id="insider-sector-hd"><div class="card-title">Sector Insider Activity <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">30-day signal · Fwd 12mo avg return · Requires sector mapping for live data</div></div>
+        <div id="insider-sector-container">
           <div class="sector-row"><div class="sector-name">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-cnt">31</div><div class="sector-perf up">+14.2%</div></div>
           <div class="sector-row"><div class="sector-name">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="76%"></div></div><div class="sector-cnt">24</div><div class="sector-perf up">+11.8%</div></div>
           <div class="sector-row"><div class="sector-name">Health Care</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="70%"></div></div><div class="sector-cnt">19</div><div class="sector-perf up">+9.4%</div></div>
@@ -876,12 +866,12 @@ button,input,select{font-family:var(--sans);outline:none}
     <div class="kpi"><div class="kpi-bar" id="bar-iwm" style="background:var(--green);width:45%"></div><div class="kpi-label">Russell 2000 <span style="font-size:8px;opacity:.6">IWM</span></div><div class="kpi-value" id="idx-iwm-val">—</div><div class="kpi-delta" id="idx-iwm-delta" style="color:var(--muted)">fetching...</div></div>
     <div class="kpi"><div class="kpi-bar" id="bar-vix" style="background:var(--amber);width:30%"></div><div class="kpi-label">VIX</div><div class="kpi-value" id="idx-vix-val">—</div><div class="kpi-delta" id="idx-vix-delta" style="color:var(--muted)">fetching...</div></div>
     <div class="kpi"><div class="kpi-bar" style="background:var(--navy);width:70%"></div><div class="kpi-label">10-Yr Treasury</div><div class="kpi-value" id="idx-10yr-val">4.42%</div><div class="kpi-delta" id="idx-10yr-delta" style="color:var(--muted)">add FRED key</div></div>
-    <div class="kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:65%"></div><div class="kpi-label">ATLAS Signal Alpha</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs benchmark 12mo</div></div>
+    <div class="kpi" id="signal-alpha-kpi"><div class="kpi-bar" style="background:var(--blue-lt);width:65%"></div><div class="kpi-label">ATLAS Signal Alpha</div><div class="kpi-value">+11.4%</div><div class="kpi-delta up">vs benchmark 12mo</div></div>
   </div>
   <div class="g2 mb14">
     <div class="card">
       <div class="card-hd"><div class="card-title">Sector Performance vs. S&amp;P 500 Benchmark</div><div class="card-sub">Signal-weighted estimated 12-mo forward return differential · <span style="color:var(--amber);font-weight:600">Signal-weighted estimate · Not real-time</span></div></div>
-      <div>
+      <div id="sector-perf-container">
         <div class="sector-row"><div class="sector-name" style="width:130px">Defense</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="95%"></div></div><div class="sector-perf up">+12.8%</div></div>
         <div class="sector-row"><div class="sector-name" style="width:130px">Energy</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="88%"></div></div><div class="sector-perf up">+11.4%</div></div>
         <div class="sector-row"><div class="sector-name" style="width:130px">Technology</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="80%"></div></div><div class="sector-perf up">+9.2%</div></div>
@@ -1106,11 +1096,54 @@ var SCORE_THRESHOLD = 65;  // default until backtest runs
 
 // Bill data for Congress tracking
 var BILLS = [
-  {id:'HR7821', title:'American AI Infrastructure Act', chamber:'house', congress:119, impactTickers:['NVDA','AMD','SMCI']},
-  {id:'SB1882', title:'National Defense Modernization Act', chamber:'senate', congress:119, impactTickers:['RTX','LMT','NOC']},
-  {id:'HR6419', title:'Critical Minerals & Mining Security Act', chamber:'house', congress:119, impactTickers:['FCX','MP','ALB']},
-  {id:'SB2241', title:'Drug Price Negotiation Expansion Act', chamber:'senate', congress:119, impactTickers:['PFE','MRK','ABBV']}
+  {id:'HR7821', title:'American AI Infrastructure Act', chamber:'house', congress:119, status:'Floor Vote', date:'2026-02-25', impactTickers:['NVDA','AMD','SMCI','MSFT']},
+  {id:'SB1882', title:'National Defense Modernization Act', chamber:'senate', congress:119, status:'Armed Services Markup', date:'2026-03-03', impactTickers:['RTX','LMT','NOC','BA','ITA']},
+  {id:'SB2241', title:'Drug Price Negotiation Expansion Act', chamber:'senate', congress:119, status:'Committee Vote', date:'2026-03-10', impactTickers:['PFE','MRK','ABBV']},
+  {id:'HR6419', title:'Critical Minerals & Mining Security Act', chamber:'house', congress:119, status:'Floor Vote', date:'2026-03-17', impactTickers:['FCX','MP','ALB','LTHM']},
+  {id:'SB3310', title:'Clean Energy Investment Act', chamber:'senate', congress:119, status:'Energy Committee Hearing', date:'2026-04-01', impactTickers:['ENPH','NEE','FSLR']}
 ];
+
+// ═══════════════════════════════════════════════════════
+// TICKER → SECTOR MAP (client-side, extended by data/sector_map.json when available)
+// ═══════════════════════════════════════════════════════
+var SECTOR_MAP = {
+  // Defense & Aerospace
+  RTX:'Defense',LMT:'Defense',NOC:'Defense',BA:'Defense',GD:'Defense',HII:'Defense',
+  LHX:'Defense',ITA:'Defense',KTOS:'Defense',
+  // Technology & AI
+  NVDA:'Technology',AMD:'Technology',SMCI:'Technology',MSFT:'Technology',AAPL:'Technology',
+  GOOGL:'Technology',GOOG:'Technology',META:'Technology',INTC:'Technology',AVGO:'Technology',
+  QCOM:'Technology',TSM:'Technology',MU:'Technology',MRVL:'Technology',ARM:'Technology',
+  // Energy
+  OXY:'Energy',XOM:'Energy',CVX:'Energy',COP:'Energy',EOG:'Energy',DVN:'Energy',
+  FANG:'Energy',HAL:'Energy',SLB:'Energy',WFRD:'Energy',
+  ENPH:'Energy',NEE:'Energy',FSLR:'Energy',
+  // Mining & Materials
+  FCX:'Mining',MP:'Mining',ALB:'Mining',LTHM:'Mining',NEM:'Mining',AA:'Mining',
+  // Health Care
+  UNH:'Health Care',JNJ:'Health Care',ABT:'Health Care',TMO:'Health Care',TMDX:'Health Care',
+  // Pharma
+  PFE:'Pharma',MRK:'Pharma',ABBV:'Pharma',LLY:'Pharma',BMY:'Pharma',AMGN:'Pharma',
+  // Financial
+  JPM:'Financials',GS:'Financials',MS:'Financials',BAC:'Financials',C:'Financials',
+  BLK:'Financials',SCHW:'Financials',
+  // Consumer
+  SMPL:'Consumer',COST:'Consumer',WMT:'Consumer',TGT:'Consumer',
+  // Real Estate
+  O:'Real Estate',AMT:'Real Estate',PLD:'Real Estate'
+};
+
+// Try to load extended sector map from data pipeline
+(function(){
+  fetch('/data/sector_map.json')
+    .then(function(r){if(!r.ok)throw new Error();return r.json();})
+    .then(function(map){
+      Object.keys(map).forEach(function(t){
+        if(!SECTOR_MAP[t]) SECTOR_MAP[t]=map[t];
+      });
+    })
+    .catch(function(){/* no extended map, using built-in */});
+})();
 
 // ── State ──
 var iF={strength:'all',dir:'all',horizon:'all',move:'all'};
@@ -1200,6 +1233,10 @@ function fmtChg(c,pct){
   var sign=c>=0?'+':'';
   return sign+c.toFixed(2)+' ('+sign+pct.toFixed(2)+'%)';
 }
+// Format score as integer (whole number) — all scores display as 0-100 integers
+function fmtScore(s){return Math.round(s);}
+// Format percentage to max 2 decimal places, trimming trailing zeros
+function fmtPct(p){var v=parseFloat(p.toFixed(2));return (v>=0?'+':'')+v+'%';}
 
 // ── Build priceCache immediately from hardcoded TRACKED data ──
 // This ensures prices show on load with zero API dependency.
@@ -1302,12 +1339,12 @@ function updateIdeaCard(ticker, data){
     var sc=computeConvergenceScore(ticker);
     var scoreHtml='';
     if(sc.total>0){
-      var congPart=sc.congress.count>0?' Congress <strong>+'+sc.congress.score+'</strong> ('+sc.congress.count+' buys)':'';
-      var edgarPart=sc.insider.count>0?' EDGAR <strong>+'+sc.insider.score+'</strong> ('+sc.insider.count+' filings)':'';
-      var boostPart=sc.boost>0?' <span style="color:var(--amber)">+'+sc.boost+' convergence</span>':'';
+      var congPart=sc.congress.count>0?' Congress <strong>+'+fmtScore(sc.congress.score)+'</strong> ('+sc.congress.count+' buys)':'';
+      var edgarPart=sc.insider.count>0?' EDGAR <strong>+'+fmtScore(sc.insider.score)+'</strong> ('+sc.insider.count+' filings)':'';
+      var boostPart=sc.boost>0?' <span style="color:var(--amber)">+'+fmtScore(sc.boost)+' convergence</span>':'';
       var totalCls=sc.total>=85?'var(--green)':sc.total>=65?'var(--blue-lt)':'var(--muted)';
       scoreHtml='<span style="font-size:9.5px;flex-basis:100%;margin-top:4px;border-top:1px solid var(--border-s);padding-top:4px">'
-        +'⚡ Live score: <strong style="color:'+totalCls+'">'+sc.total+'</strong>'
+        +'⚡ Live score: <strong style="color:'+totalCls+'">'+fmtScore(sc.total)+'</strong>'
         +congPart+edgarPart+boostPart+'</span>';
     }
     var div=document.createElement('div');
@@ -1895,7 +1932,7 @@ function renderInsiderTableLive(){
       +'<td class="r">'+valHtml+'</td>'
       +'<td class="r"><span style="font-family:var(--mono);font-size:10px;color:var(--muted)">'+cnt+'</span></td>'
       +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
-      +'<td class="c"><span class="score '+scCls+'">'+score+'</span></td>'
+      +'<td class="c"><span class="score '+scCls+'">'+fmtScore(score)+'</span></td>'
       +'<td><span class="sym-sub">'+dateStr+'</span></td>'
       +'</tr>';
     shown++;
@@ -2054,7 +2091,8 @@ function scoreCongressTicker(ticker, days){
   buys.forEach(function(t){
     var r=t.Range||'';
     var rawPts=0;
-    if(r.indexOf('$1,000,001')>=0)       rawPts=15;
+    if(r.indexOf('$5,000,001')>=0)       rawPts=15;
+    else if(r.indexOf('$1,000,001')>=0) rawPts=15;
     else if(r.indexOf('$500,001')>=0)    rawPts=12;
     else if(r.indexOf('$250,001')>=0)    rawPts=10;
     else if(r.indexOf('$100,001')>=0)    rawPts=8;
@@ -2068,7 +2106,7 @@ function scoreCongressTicker(ticker, days){
     pts+=rawPts*decayFactor;
   });
   var clusterBonus=buys.length>=3?15:0;
-  return {score:Math.min(pts+clusterBonus,40),count:buys.length,clusterBonus:clusterBonus};
+  return {score:Math.round(Math.min(pts+clusterBonus,40)),count:buys.length,clusterBonus:clusterBonus};
 }
 
 // Score EDGAR Form 4 filings for a ticker over the last N days
@@ -2103,7 +2141,7 @@ function scoreEdgarTicker(ticker, days){
     pts+=base;
   });
   var clusterBonus=matches.length>=3?15:matches.length>=2?10:0;
-  return {score:Math.min(pts+clusterBonus,40),count:matches.length};
+  return {score:Math.round(Math.min(pts+clusterBonus,40)),count:matches.length};
 }
 
 // Full convergence score for one ticker
@@ -2112,14 +2150,11 @@ function computeConvergenceScore(ticker){
   var edgar=scoreEdgarTicker(ticker,14);
   var boost=0;
   if(cong.score>0&&edgar.score>0) boost+=20; // Congressional + Insider convergence
-  // Legislative catalyst check
+  // Legislative catalyst check — uses date field from BILLS array
   var activeBill=BILLS.find(function(b){
-    var billDate=null;
-    // Approximate bill dates from fallback data keys
-    var billDateMap={'HR7821':new Date('2026-02-25'),'SB1882':new Date('2026-03-03'),
-                     'SB2241':new Date('2026-03-10'),'HR6419':new Date('2026-03-17')};
-    billDate=billDateMap[b.id]||null;
-    var withinWindow=billDate&&(billDate-Date.now())<60*86400000&&(billDate-Date.now())>-7*86400000;
+    if(!b.date) return false;
+    var billDate=new Date(b.date+'T00:00:00');
+    var withinWindow=(billDate-Date.now())<60*86400000&&(billDate-Date.now())>-7*86400000;
     return withinWindow&&b.impactTickers.indexOf(ticker)>=0;
   });
   if(activeBill&&(cong.score>0||edgar.score>0)) boost+=15;
@@ -2166,7 +2201,7 @@ function renderTopSignals(){
       +'<td><div class="sym">'+ticker+'</div></td>'
       +'<td><span class="tag '+tagCls+'">'+sigType+'</span></td>'
       +'<td style="font-size:11px">'+actor+'</td>'
-      +'<td class="c"><span class="score '+totalCls+'">'+sc.total+'</span></td>'
+      +'<td class="c"><span class="score '+totalCls+'">'+fmtScore(sc.total)+'</span></td>'
       +'<td class="r"><span class="val '+(info.dir==='long'?'up':'dn')+'">Live</span></td>'
       +'<td>'+dirTag+'</td>'
       +'</tr>';
@@ -2174,9 +2209,9 @@ function renderTopSignals(){
   tbody.innerHTML=html;
   // Update ideas page max score displays
   var msEl=document.getElementById('ideas-max-score');
-  if(msEl) msEl.textContent=maxScore||'—';
+  if(msEl) msEl.textContent=maxScore?fmtScore(maxScore):'—';
   var msBoxEl=document.getElementById('ideas-max-score-box');
-  if(msBoxEl) msBoxEl.textContent=maxScore||'—';
+  if(msBoxEl) msBoxEl.textContent=maxScore?fmtScore(maxScore):'—';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2196,7 +2231,7 @@ function renderLiveAlerts(){
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
       alerts.push({
         ico:sc.total>=85?'\uD83D\uDD34':'\uD83D\uDFE1',
-        title:ticker+' · Score '+sc.total,
+        title:ticker+' · Score '+fmtScore(sc.total),
         detail:parts.join(' · ')||'Convergence signal',
         time:'Live · '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})
       });
@@ -2247,7 +2282,7 @@ function updateOverviewKPIs(){
   if(kb1){
     var kpi1=kb1.closest('.kpi');
     if(kpi1){
-      var v=kpi1.querySelector('.kpi-value'); if(v) v.textContent=maxScore||'--';
+      var v=kpi1.querySelector('.kpi-value'); if(v) v.textContent=maxScore?fmtScore(maxScore):'--';
       var d=kpi1.querySelector('.kpi-delta'); if(d) d.textContent=maxTicker||'—';
     }
   }
@@ -2348,7 +2383,7 @@ function renderSignalIdeas(){
   var watchlist=all.filter(function(r){ return r.sc.total>=WATCH_THRESHOLD&&r.sc.total<IDEA_THRESHOLD; });
   var activeEl=document.getElementById('ideas-active-count');
   if(activeEl) activeEl.textContent=ideas.length;
-  var maxScore=all.length?Math.floor(all[0].sc.total):0;
+  var maxScore=all.length?fmtScore(all[0].sc.total):0;
   if(!all.length){
     container.innerHTML='<div style="padding:32px 20px;text-align:center;color:var(--muted)">'
       +'<div style="font-size:22px;margin-bottom:8px">📡</div>'
@@ -2379,9 +2414,9 @@ function renderSignalIdeas(){
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
         +'<div><div style="display:flex;align-items:center;gap:6px"><span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'+tag+'</div>'
         +'<div class="sym-sub" style="margin-top:3px">'+signal+'</div></div>'
-        +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+Math.floor(sc.total)+'</span>'
+        +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+fmtScore(sc.total)+'</span>'
         +'</div>'
-        +'<div style="font-size:10px;color:var(--muted)">Engine-generated · '+now+' · Convergence boost: +'+sc.boost+'pts</div>'
+        +'<div style="font-size:10px;color:var(--muted)">Engine-generated · '+now+' · Convergence boost: +'+fmtScore(sc.boost)+'pts</div>'
         +'</div>';
     }).join('');
   }
@@ -2397,7 +2432,7 @@ function renderSignalIdeas(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
         +'<div><div class="sym" style="font-size:13px;font-weight:600">'+ticker+'</div>'
         +'<div class="sym-sub" style="margin-top:1px">'+signal+'</div></div>'
-        +'<span class="score sc1" style="font-size:13px">'+Math.floor(sc.total)+'</span>'
+        +'<span class="score sc1" style="font-size:13px">'+fmtScore(sc.total)+'</span>'
         +'</div>';
     }).join('');
   }
@@ -2430,6 +2465,131 @@ function fetchTopScorerPrices(){
   });
 }
 
+// ═══════════════════════════════════════════════════════
+// LEGISLATIVE CALENDAR — rendered from BILLS array
+// ═══════════════════════════════════════════════════════
+function renderLegislativeCalendar(){
+  var container=document.getElementById('legislative-calendar');
+  if(!container) return;
+  if(!BILLS.length){
+    container.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">No bills tracked</div>';
+    return;
+  }
+  // Sort by date ascending
+  var sorted=BILLS.slice().sort(function(a,b){return new Date(a.date+'T00:00:00')-new Date(b.date+'T00:00:00');});
+  var now=new Date(); now.setHours(0,0,0,0);
+  var html='';
+  sorted.forEach(function(b){
+    var target=new Date(b.date+'T00:00:00');
+    var days=Math.round((target-now)/86400000);
+    // Dot class: proximity indicator
+    var dotClass='tl-far';
+    if(days<=0) dotClass='tl-near';
+    else if(days<=7) dotClass='tl-near';
+    else if(days<=21) dotClass='tl-mid';
+    // Note color by proximity
+    var noteColor='var(--blue-lt)';
+    if(days<=0) noteColor='var(--muted)';
+    else if(days<=7) noteColor='var(--red-lt)';
+    else if(days<=21) noteColor='var(--amber)';
+    // Bill label
+    var chamberLabel=b.chamber==='senate'?'Senate':'House';
+    var desc=b.id+' '+b.status+' — '+b.title;
+    var tickers=b.impactTickers.join(', ');
+    html+='<div class="tl-item">'
+      +'<div class="tl-dot '+dotClass+'"></div>'
+      +'<div class="tl-content">'
+      +'<div class="tl-date" data-bill-date="'+b.date+'">'+b.date+'</div>'
+      +'<div class="tl-desc">'+desc+'</div>'
+      +'<div class="tl-note" style="color:'+noteColor+'">Watch: '+tickers+'</div>'
+      +'</div></div>';
+  });
+  container.innerHTML=html;
+  // Re-run countdown formatting on the new elements
+  updateCountdowns();
+}
+
+// ═══════════════════════════════════════════════════════
+// SECTOR SIGNAL HEAT — computed from live congData + edgarData
+// ═══════════════════════════════════════════════════════
+function renderSectorHeat(){
+  var container=document.getElementById('sector-heat-container');
+  if(!container) return;
+  var cutoff30=new Date(Date.now()-30*86400000);
+  var sectorCounts={};
+
+  // Count congressional buys per sector (30d)
+  congData.forEach(function(t){
+    var d=new Date(t.TransactionDate||t.Date||'');
+    if(d<cutoff30) return;
+    var tx=(t.Transaction||'').toLowerCase();
+    if(tx.indexOf('purchase')<0&&tx.indexOf('buy')<0) return;
+    var ticker=t.Ticker||'';
+    var sector=SECTOR_MAP[ticker];
+    if(!sector) return;
+    if(!sectorCounts[sector]) sectorCounts[sector]={buys:0,sells:0,total:0};
+    sectorCounts[sector].buys++;
+    sectorCounts[sector].total++;
+  });
+
+  // Count congressional sells per sector (30d)
+  congData.forEach(function(t){
+    var d=new Date(t.TransactionDate||t.Date||'');
+    if(d<cutoff30) return;
+    var tx=(t.Transaction||'').toLowerCase();
+    if(tx.indexOf('sale')<0&&tx.indexOf('sell')<0) return;
+    var ticker=t.Ticker||'';
+    var sector=SECTOR_MAP[ticker];
+    if(!sector) return;
+    if(!sectorCounts[sector]) sectorCounts[sector]={buys:0,sells:0,total:0};
+    sectorCounts[sector].sells++;
+    sectorCounts[sector].total++;
+  });
+
+  // Count EDGAR filings per sector (30d)
+  edgarData.forEach(function(f){
+    var d=new Date(f.date||'');
+    if(d<cutoff30) return;
+    var ticker=f.ticker||'';
+    var sector=SECTOR_MAP[ticker];
+    if(!sector) return;
+    if(!sectorCounts[sector]) sectorCounts[sector]={buys:0,sells:0,total:0};
+    if(f.direction==='buy') sectorCounts[sector].buys++;
+    else if(f.direction==='sell') sectorCounts[sector].sells++;
+    sectorCounts[sector].total++;
+  });
+
+  var sectors=Object.keys(sectorCounts);
+  if(!sectors.length){
+    container.innerHTML='<div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Awaiting live feed data — sector heat will populate when congressional + insider signals load</div>';
+    return;
+  }
+
+  // Sort by total activity descending
+  sectors.sort(function(a,b){return sectorCounts[b].total-sectorCounts[a].total;});
+  var maxTotal=sectorCounts[sectors[0]].total;
+
+  var html='';
+  sectors.forEach(function(sector){
+    var s=sectorCounts[sector];
+    var pct=Math.round((s.total/maxTotal)*100);
+    // Net sentiment: buys vs sells
+    var net=s.buys-s.sells;
+    var fillClass=net>=0?'sf-pos':'sf-neg';
+    var perfText=net>0?'+'+s.buys+' buys':net<0?s.sells+' sells':s.total+' mixed';
+    var perfClass=net>0?'up':net<0?'dn':'';
+    html+='<div class="sector-row">'
+      +'<div class="sector-name">'+sector+'</div>'
+      +'<div class="sector-track"><div class="sector-fill '+fillClass+'" data-w="'+pct+'%"></div></div>'
+      +'<div class="sector-cnt">'+s.total+'</div>'
+      +'<div class="sector-perf '+perfClass+'">'+perfText+'</div>'
+      +'</div>';
+  });
+  container.innerHTML=html;
+  // Animate the new bars
+  setTimeout(animateBars,60);
+}
+
 // Re-render score overlays on all tracked cards (called after data loads)
 function refreshConvergenceDisplays(){
   Object.keys(TRACKED).forEach(function(ticker){
@@ -2442,6 +2602,7 @@ function refreshConvergenceDisplays(){
   updateOverviewKPIs();
   renderNotifications();
   renderSignalIdeas();
+  renderSectorHeat();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2470,7 +2631,8 @@ var BILL_FALLBACK_DATA={
   'hr7821': {id:'HR 7821',title:'American AI Infrastructure Act',status:'Scheduled for Floor Vote',date:'Feb 25, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22AI+infrastructure%22%7D&searchResultViewType=expanded'},
   's1882':  {id:'SB 1882',title:'National Defense Modernization Act',status:'Senate Armed Services Markup',date:'Mar 3, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22defense+modernization%22%7D&searchResultViewType=expanded'},
   'hr6419': {id:'HR 6419',title:'Critical Minerals & Mining Security Act',status:'Scheduled for Floor Vote',date:'Mar 17, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22critical+minerals%22%7D&searchResultViewType=expanded'},
-  's2241':  {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'}
+  's2241':  {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'},
+  's3310':  {id:'SB 3310',title:'Clean Energy Investment Act',status:'Senate Energy Committee Hearing',date:'Apr 1, 2026',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22clean+energy+investment%22%7D&searchResultViewType=expanded'}
 };
 
 function renderCongressCardFallback(bill){
@@ -2491,7 +2653,8 @@ function fetchCongressWithKey(){
     {number:'7821',type:'hr',congress:119},
     {number:'1882',type:'s', congress:119},
     {number:'6419',type:'hr',congress:119},
-    {number:'2241',type:'s', congress:119}
+    {number:'2241',type:'s', congress:119},
+    {number:'3310',type:'s', congress:119}
   ];
   var promises=bills.map(function(b){
     var url='https://api.congress.gov/v3/bill/'+b.congress+'/'+b.type+'/'+b.number+'?api_key='+CONGRESS_API_KEY+'&format=json';
@@ -2543,7 +2706,8 @@ function renderCongressFallback(){
     {id:'HR 7821',title:'American AI Infrastructure Act',status:'Scheduled for Floor Vote',date:'Feb 25, 2026',prob:78,urgency:'HIGH',impactPos:['NVDA','AMD','SMCI','MSFT'],impactNeg:['China Tech'],note:'AI chip infrastructure subsidies $18B. NVDA primary beneficiary.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22AI+infrastructure%22%7D&searchResultViewType=expanded'},
     {id:'SB 1882',title:'National Defense Modernization Act',status:'Senate Armed Services Markup',date:'Mar 3, 2026',prob:85,urgency:'HIGH',impactPos:['RTX','LMT','NOC','BA','ITA'],impactNeg:[],note:'Missile defense + hypersonic + drone authorization. Highest passage probability tracked.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22defense+modernization%22%7D&searchResultViewType=expanded'},
     {id:'HR 6419',title:'Critical Minerals & Mining Security Act',status:'Scheduled for Floor Vote',date:'Mar 17, 2026',prob:71,urgency:'MED',impactPos:['FCX','MP','ALB','LTHM'],impactNeg:['Imports'],note:'Domestic copper/lithium mining subsidies. FCX largest US beneficiary.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22critical+minerals%22%7D&searchResultViewType=expanded'},
-    {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',prob:52,urgency:'MED',impactPos:['PBMs'],impactNeg:['PFE','MRK','ABBV'],note:'Drug pricing pressure. Health Committee member exits corroborate bearish signal.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'}
+    {id:'SB 2241',title:'Drug Price Negotiation Expansion Act',status:'Senate Finance Committee',date:'Mar 10, 2026',prob:52,urgency:'MED',impactPos:['PBMs'],impactNeg:['PFE','MRK','ABBV'],note:'Drug pricing pressure. Health Committee member exits corroborate bearish signal.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22drug+price+negotiation%22%7D&searchResultViewType=expanded'},
+    {id:'SB 3310',title:'Clean Energy Investment Act',status:'Senate Energy Committee Hearing',date:'Apr 1, 2026',prob:62,urgency:'MED',impactPos:['ENPH','NEE','FSLR'],impactNeg:[],note:'Solar + wind ITC extensions. Clean energy beneficiaries.',link:'https://www.congress.gov/search?q=%7B%22congress%22%3A%22119%22%2C%22source%22%3A%22legislation%22%2C%22search%22%3A%22clean+energy+investment%22%7D&searchResultViewType=expanded'}
   ];
 
   var html='<div style="padding:5px 12px;font-size:8.5px;color:var(--blue-lt);background:var(--blue-pale);border-bottom:1px solid var(--border-s)">📋 Add a free Congress.gov API key at api.congress.gov for real-time bill status · Below shows latest known data with direct links</div>';
@@ -2746,8 +2910,8 @@ function loadOptimalWeights(){
       if(threshEl) threshEl.textContent='\u2265 '+SCORE_THRESHOLD;
       var statsEl=document.getElementById('backtest-stats-bar');
       if(statsEl&&w.stats&&w.stats.note!=='insufficient_data'){
-        var hr=w.stats.hit_rate?Math.round(w.stats.hit_rate*100)+'%':'—';
-        var car=w.stats.avg_car_30d?(w.stats.avg_car_30d>=0?'+':'')+Math.round(w.stats.avg_car_30d*100)+'%':'—';
+        var hr=w.stats.hit_rate?fmtScore(w.stats.hit_rate*100)+'%':'—';
+        var car=w.stats.avg_car_30d?fmtPct(w.stats.avg_car_30d*100):'—';
         var gen=w.generated?w.generated.slice(0,10):'—';
         var n=w.n_events_total||'—';
         statsEl.textContent='Last backtest: '+gen+' · '+n+' events · Hit rate: '+hr+' · Avg 30d alpha: '+car;
@@ -2762,10 +2926,214 @@ function loadOptimalWeights(){
 }
 
 // ═══════════════════════════════════════════════════════
+// BRAIN DATA LOADERS — reads brain_signals.json + brain_stats.json
+// Generated by: python backtest/learning_engine.py --export
+// ═══════════════════════════════════════════════════════
+function loadBrainSignals(){
+  fetch('data/brain_signals.json')
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(data){
+      if(!data.signals || !data.signals.length) return;
+      // Rebuild TRACKED from brain signals
+      var newTracked = {};
+      data.signals.forEach(function(s){
+        if(!s.ticker || !s.price_at_signal) return;
+        newTracked[s.ticker] = {
+          price: s.price_at_signal,
+          entryLo: s.entry_lo,
+          entryHi: s.entry_hi,
+          target1: s.target1,
+          target2: s.target2,
+          stop: s.stop,
+          dir: s.dir || 'long',
+          sigDate: s.signal_date || '',
+          note: s.note || '',
+          source: s.source || '',
+          totalScore: s.total_score || 0,
+          convergenceTier: s.convergence_tier || 0,
+          hasConvergence: s.has_convergence || false,
+          person: s.person || '',
+          personHitRate: s.person_hit_rate,
+          sector: s.sector || ''
+        };
+      });
+      if(Object.keys(newTracked).length > 0){
+        TRACKED = newTracked;
+      }
+      // Rebuild ticker ribbon with top 10
+      var ribbon = document.getElementById('ticker');
+      if(ribbon){
+        var html = '';
+        var top10 = data.signals.slice(0, 10);
+        top10.forEach(function(s){
+          var cls = s.source === 'congress' ? 'tkr' : 'tks';
+          var label = s.note || s.source;
+          var scoreLabel = s.total_score ? 'Score ' + Math.round(s.total_score) : '';
+          html += '<span class="tick"><span class="tk-sym">' + s.ticker +
+                  '</span><span class="tk-lbl">' + label +
+                  '</span><span class="tk-sig ' + cls + '">' + scoreLabel + '</span></span>';
+        });
+        ribbon.innerHTML = html;
+      }
+      // Rebuild exits table
+      if(data.exits && data.exits.length){
+        var tbody = document.getElementById('exits-tbody');
+        var hd = document.getElementById('exits-card-hd');
+        if(tbody){
+          var rows = '';
+          data.exits.forEach(function(e){
+            rows += '<tr><td><div class="sym">' + e.ticker + '</div></td>' +
+                    '<td><div style="font-size:11px;font-weight:600">' +
+                    (e.insider_name || '') + (e.insider_role ? ' · ' + e.insider_role : '') +
+                    '</div><div class="sym-sub">' + (e.transaction_type || 'sale') + '</div></td>' +
+                    '<td class="r"><span class="val dn">—</span></td>' +
+                    '<td class="c"><span class="score sc-bear">Exit</span></td></tr>';
+          });
+          tbody.innerHTML = rows;
+        }
+        // Remove DEMO tag from exits header
+        if(hd){
+          hd.innerHTML = '<div class="card-title">Notable Exit Signals</div>' +
+                         '<div class="card-sub">Discretionary open-market sells · From Brain export</div>';
+        }
+      }
+      refreshConvergenceDisplays();
+    })
+    .catch(function(){
+      // brain_signals.json not found — keep hardcoded TRACKED
+    });
+}
+
+function loadBrainStats(){
+  fetch('data/brain_stats.json')
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(stats){
+      // Signal Alpha KPI
+      if(stats.alpha){
+        var alphaEl = document.getElementById('signal-alpha-kpi');
+        if(alphaEl){
+          var v = stats.alpha.value || 0;
+          var pct = (v * 100).toFixed(1);
+          var label = (v >= 0 ? '+' : '') + pct + '%';
+          var cls = v >= 0 ? 'up' : 'dn';
+          alphaEl.innerHTML = '<div class="kpi-bar" style="background:var(--blue-lt);width:' +
+            Math.min(Math.abs(v * 100) * 5, 100) + '%"></div>' +
+            '<div class="kpi-label">ATLAS Signal Alpha</div>' +
+            '<div class="kpi-value">' + label + '</div>' +
+            '<div class="kpi-delta ' + cls + '">vs benchmark ' + (stats.alpha.horizon || '30d') +
+            ' · n=' + (stats.alpha.n_signals || 0) + '</div>';
+        }
+      }
+      // KPI strip
+      if(stats.kpis){
+        var k = stats.kpis;
+        var el;
+        el = document.getElementById('kpi-top-score');
+        if(el) el.textContent = k.top_score || '—';
+        el = document.getElementById('kpi-top-tickers');
+        if(el) el.textContent = k.top_score_tickers || '—';
+        el = document.getElementById('kpi-exceptional');
+        if(el) el.textContent = k.exceptional_count || 0;
+        el = document.getElementById('kpi-clusters');
+        if(el) el.textContent = k.cluster_count || 0;
+        el = document.getElementById('kpi-congress');
+        if(el) el.textContent = k.congress_flags || 0;
+        el = document.getElementById('kpi-convergence');
+        if(el) el.textContent = k.convergence_count || 0;
+      }
+      // Sector performance
+      if(stats.sectors && stats.sectors.length){
+        var container = document.getElementById('sector-perf-container');
+        if(container){
+          var html = '';
+          stats.sectors.forEach(function(s){
+            var pct = s.avg_car_30d * 100;
+            var absPct = Math.abs(pct);
+            var fillW = Math.min(absPct * 8, 100);
+            var fillCls = pct >= 0 ? 'sf-pos' : 'sf-neg';
+            var perfCls = pct >= 0 ? 'up' : 'dn';
+            var sign = pct >= 0 ? '+' : '';
+            html += '<div class="sector-row"><div class="sector-name" style="width:130px">' + s.sector +
+                    '</div><div class="sector-track"><div class="sector-fill ' + fillCls + '" data-w="' + fillW + '%"></div></div>' +
+                    '<div class="sector-perf ' + perfCls + '">' + sign + pct.toFixed(1) + '%</div></div>';
+          });
+          container.innerHTML = html;
+          setTimeout(animateBars, 60);
+        }
+      }
+      // Committee correlation
+      if(stats.committees && stats.committees.length){
+        var cc = document.getElementById('committee-corr-container');
+        if(cc){
+          var anyData = stats.committees.some(function(c){ return c.n_trades > 0; });
+          if(anyData){
+            var html = '';
+            stats.committees.forEach(function(c){
+              var pct = Math.round(c.match_rate * 100);
+              var color = pct >= 85 ? 'var(--red-lt)' : 'var(--amber)';
+              html += '<div class="sector-row"><div class="sector-name">' + c.name +
+                      '</div><div class="sector-track"><div class="sector-fill sf-pos" data-w="' + pct + '%"></div></div>' +
+                      '<div class="sector-cnt" style="color:' + color + '">' + pct + '%</div>' +
+                      '<div class="sector-perf" style="font-size:10px;color:var(--muted)">' + c.n_trades + ' trades</div></div>';
+            });
+            cc.innerHTML = html;
+            setTimeout(animateBars, 60);
+          }
+          // else: keep hardcoded placeholder
+        }
+      }
+      // Congressional heatmap
+      if(stats.congress_heatmap && stats.congress_heatmap.length){
+        var hm = document.getElementById('congress-heatmap');
+        if(hm){
+          var html = '';
+          stats.congress_heatmap.forEach(function(c){
+            html += '<div class="heat-cell h' + Math.min(c.heat, 6) + '">' +
+                    '<div class="hc-sym">' + c.ticker + '</div>' +
+                    '<div class="hc-nm">' + (c.name || c.ticker) + '</div></div>';
+          });
+          hm.innerHTML = html;
+        }
+      }
+      // Insider sector activity
+      if(stats.insider_sectors && stats.insider_sectors.length){
+        var isc = document.getElementById('insider-sector-container');
+        var ish = document.getElementById('insider-sector-hd');
+        if(isc){
+          var html = '';
+          stats.insider_sectors.forEach(function(s){
+            var pct = s.avg_car * 100;
+            var fillW = Math.min(Math.abs(pct) * 6, 100);
+            var fillCls = pct >= 0 ? 'sf-pos' : 'sf-neg';
+            var perfCls = pct >= 0 ? 'up' : 'dn';
+            var sign = pct >= 0 ? '+' : '';
+            html += '<div class="sector-row"><div class="sector-name">' + s.sector +
+                    '</div><div class="sector-track"><div class="sector-fill ' + fillCls + '" data-w="' + fillW + '%"></div></div>' +
+                    '<div class="sector-cnt">' + s.n + '</div>' +
+                    '<div class="sector-perf ' + perfCls + '">' + sign + pct.toFixed(1) + '%</div></div>';
+          });
+          isc.innerHTML = html;
+          setTimeout(animateBars, 60);
+        }
+        // Remove DEMO tag
+        if(ish){
+          ish.innerHTML = '<div class="card-title">Sector Insider Activity</div>' +
+                          '<div class="card-sub">30-day CAR by sector · From Brain export</div>';
+        }
+      }
+    })
+    .catch(function(){
+      // brain_stats.json not found — keep hardcoded values
+    });
+}
+
+// ═══════════════════════════════════════════════════════
 // INITIALIZATION — Load all live data on startup
 // ═══════════════════════════════════════════════════════
 window.addEventListener('load', function(){
   loadOptimalWeights();
+  loadBrainSignals();
+  loadBrainStats();
 
   // Load SEC company→ticker map for EDGAR matching (10,000+ entries)
   fetch('data/sec_tickers.json')
@@ -2790,6 +3158,9 @@ window.addEventListener('load', function(){
     var d=new Date();
     el.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' close';
   }
+
+  // ── STEP 1b: Render Legislative Calendar from BILLS array (no API needed) ──
+  renderLegislativeCalendar();
 
   // ── STEP 2: Attempt live Finnhub fetch (works when hosted over HTTP) ──
   // If it succeeds, prices update to real-time and dot turns green.

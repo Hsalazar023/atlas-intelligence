@@ -21,6 +21,8 @@ BACKTEST_SUMMARY = DATA_DIR / "backtest_summary.json"
 SIGNALS_DB = DATA_DIR / "atlas_signals.db"
 SEC_TICKERS_CACHE = DATA_DIR / "sec_tickers.json"
 FMP_CONGRESS_FEED = DATA_DIR / "fmp_congress_feed.json"
+BRAIN_SIGNALS = DATA_DIR / "brain_signals.json"
+BRAIN_STATS = DATA_DIR / "brain_stats.json"
 
 # Fallback EDGAR company name → ticker mapping (used when SEC download fails)
 _FALLBACK_KEYWORDS = {
@@ -166,14 +168,16 @@ def match_edgar_ticker(company_name: str) -> str | None:
 
 
 def range_to_base_points(range_str: str) -> int:
-    """Map a QuiverQuant Range string to base score points (before decay)."""
+    """Map a congressional trade Range string to base score points (before decay).
+    Handles both QuiverQuant and FMP amount formats."""
     r = range_str or ''
-    if '$1,000,001' in r: return 15
-    if '$500,001' in r:   return 12
-    if '$250,001' in r:   return 10
-    if '$100,001' in r:   return 8
-    if '$50,001' in r:    return 6
-    if '$15,001' in r:    return 5
+    if '$5,000,001' in r:   return 15
+    if '$1,000,001' in r:   return 15
+    if '$500,001' in r:     return 12
+    if '$250,001' in r:     return 10
+    if '$100,001' in r:     return 8
+    if '$50,001' in r:      return 6
+    if '$15,001' in r:      return 5
     return 3
 
 
