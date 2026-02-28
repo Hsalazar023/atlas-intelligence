@@ -531,7 +531,7 @@ button,input,select{font-family:var(--sans);outline:none}
   <div class="g65 mb14">
     <div class="card card-fill">
       <div class="card-hd"><div class="card-title">Top Signals — All Sources · Rolling 30 Days</div><div class="card-action" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</div></div>
-      <div class="tbl-wrap">
+      <div class="tbl-wrap" style="max-height:480px;overflow-y:auto">
         <table class="tbl">
           <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">Value</th><th>Direction</th></tr></thead>
           <tbody id="top-signals-tbl">
@@ -743,17 +743,16 @@ button,input,select{font-family:var(--sans);outline:none}
     </div>
     <div class="col-stack">
       <div class="card">
-        <div class="card-hd" id="exits-card-hd"><div class="card-title">Notable Exit Signals <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">Discretionary open-market sells · Requires Form 4 XML parsing for live data</div></div>
-        <div class="tbl-wrap" style="max-height:160px">
+        <div class="card-hd" id="exits-card-hd"><div class="card-title">Notable Exit Signals</div><div class="card-sub">Discretionary open-market sells · From EDGAR feed + Brain export</div></div>
+        <div class="tbl-wrap" style="max-height:200px;overflow-y:auto">
           <table class="tbl">
-            <thead><tr><th>Security</th><th>Insider</th><th class="r">Value</th><th class="c">Score</th></tr></thead>
+            <thead><tr><th>Security</th><th>Insider</th><th class="r">Type</th><th class="c">Date</th></tr></thead>
             <tbody id="exits-tbody">
-              <tr><td><div class="sym">SMPL</div><div class="sym-sub">Simply Good Foods</div></td><td><div style="font-size:11px;font-weight:600">B. Morgan · CEO</div><div class="sym-sub">38% stake · No plan</div></td><td class="r"><span class="val dn">$6.2M</span></td><td class="c"><span class="score sc-bear">−81</span></td></tr>
-              <tr><td><div class="sym">DOCS</div><div class="sym-sub">Doximity</div></td><td><div style="font-size:11px;font-weight:600">J. Tangney · CEO</div><div class="sym-sub">10b5-1 plan · Routine liquidity</div></td><td class="r"><span class="val dn">$14.4M</span></td><td class="c"><span class="score sc1">−44</span></td></tr>
+              <tr><td colspan="4" style="padding:12px;text-align:center;color:var(--muted);font-size:11px">Loading exit signals...</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="footnote">Negative scores: higher magnitude = stronger bearish signal. 10b5-1 sales discounted 60%.</div>
+        <div class="footnote">Insider sales from EDGAR Form 4 feed. Excludes routine 10b5-1 plan transactions when detectable.</div>
       </div>
       <div class="card">
         <div class="card-hd" id="insider-sector-hd"><div class="card-title">Sector Insider Activity <span class="tag t-neut" style="vertical-align:middle;margin-left:4px">DEMO</span></div><div class="card-sub">30-day signal · Fwd 12mo avg return · Requires sector mapping for live data</div></div>
@@ -1841,7 +1840,44 @@ function renderEdgarFeed(filings){
     +'style="font-size:10px;color:var(--blue-lt)">All recent Form 4 filings on SEC EDGAR →</a></div>';
   feed.innerHTML=html;
   renderInsiderTableLive(); // populate insider table with EDGAR data
+  renderExitSignals(); // populate exit signals from EDGAR sales
   refreshConvergenceDisplays(); // recompute scores now that EDGAR data is loaded
+}
+
+// ═══════════════════════════════════════════════════════
+// EXIT SIGNALS — from live EDGAR data
+// ═══════════════════════════════════════════════════════
+function renderExitSignals(){
+  var tbody=document.getElementById('exits-tbody');
+  if(!tbody) return;
+  // Skip if brain_signals already populated exits (brain export takes priority)
+  if(tbody.querySelector('.brain-exit')) return;
+  if(!edgarData||!edgarData.length) return;
+  var sales=edgarData.filter(function(f){
+    var dir=(f.direction||'').toLowerCase();
+    return dir==='sell'||dir==='sale';
+  }).sort(function(a,b){
+    return new Date(b.date||0)-new Date(a.date||0);
+  }).slice(0,8);
+  if(!sales.length){
+    tbody.innerHTML='<tr><td colspan="4" style="padding:12px;text-align:center;color:var(--muted);font-size:11px">No insider sales in current feed</td></tr>';
+    return;
+  }
+  var html='';
+  sales.forEach(function(f){
+    var ticker=f.ticker||(f.company||'').split(/[\s,]+/)[0].slice(0,6)||'N/A';
+    var insider=f.insider||'Unknown';
+    var title=f.title||'';
+    var val='';
+    if(f.sell_value>0) val=fmtVal(f.sell_value);
+    html+='<tr>'
+      +'<td><div class="sym">'+ticker+'</div></td>'
+      +'<td><div style="font-size:11px;font-weight:600">'+insider
+        +(title?' · '+title:'')+'</div></td>'
+      +'<td class="r" style="font-size:10px;color:var(--red-lt)">'+(val||'Sale')+'</td>'
+      +'<td class="c" style="font-size:10px">'+(f.date||'')+'</td></tr>';
+  });
+  tbody.innerHTML=html;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2256,10 +2292,12 @@ function renderLiveAlerts(){
   var panel=document.getElementById('live-alerts-panel');
   if(!panel) return;
   var alerts=[];
+  var seen={};
   // High-score ticker alerts from live scoring (full universe, not just TRACKED)
   buildTickerUniverse().forEach(function(ticker){
     var sc=computeConvergenceScore(ticker);
     if(sc.total>=75){
+      seen[ticker]=true;
       var parts=[];
       if(sc.congress.count>0) parts.push(sc.congress.count+' congressional trade'+(sc.congress.count>1?'s':''));
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
@@ -2267,7 +2305,22 @@ function renderLiveAlerts(){
         ico:sc.total>=85?'\uD83D\uDD34':'\uD83D\uDFE1',
         title:ticker+' · Score '+fmtScore(sc.total),
         detail:parts.join(' · ')||'Convergence signal',
-        time:'Live · '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})
+        time:'Live · '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+        sort:sc.total
+      });
+    }
+  });
+  // Brain signals — high-conviction signals from ML engine
+  Object.keys(TRACKED).forEach(function(ticker){
+    if(seen[ticker]) return;
+    var t=TRACKED[ticker];
+    if(t.totalScore && t.totalScore>=70){
+      alerts.push({
+        ico:t.totalScore>=85?'\uD83D\uDD34':'\uD83D\uDFE1',
+        title:ticker+' · Brain Score '+Math.round(t.totalScore),
+        detail:(t.note||t.source||'Signal')+(t.hasConvergence?' · Convergence':''),
+        time:t.sigDate||'Brain export',
+        sort:t.totalScore
       });
     }
   });
@@ -2279,7 +2332,7 @@ function renderLiveAlerts(){
     var days=Math.ceil((new Date(dateStr)-now)/86400000);
     if(days>=0&&days<=7){
       var desc=el.closest('.tl-content')?el.closest('.tl-content').querySelector('.tl-desc').textContent:'Upcoming vote';
-      alerts.push({ico:'\uD83D\uDFE1',title:desc+' — '+days+' day'+(days!==1?'s':''),detail:'Floor vote / markup imminent',time:desc});
+      alerts.push({ico:'\uD83D\uDFE1',title:desc+' — '+days+' day'+(days!==1?'s':''),detail:'Floor vote / markup imminent',time:desc,sort:60});
     }
   });
   if(!alerts.length){
@@ -2288,8 +2341,8 @@ function renderLiveAlerts(){
       +'Monitoring live signals — no alerts above threshold yet</div>';
     return;
   }
-  alerts.sort(function(a,b){return a.ico<b.ico?1:-1;});
-  panel.innerHTML=alerts.slice(0,4).map(function(a){
+  alerts.sort(function(a,b){return (b.sort||0)-(a.sort||0);});
+  panel.innerHTML=alerts.slice(0,6).map(function(a){
     return '<div class="alert-row"><div class="alert-ico">'+a.ico+'</div><div>'
       +'<div class="alert-title">'+a.title+'</div>'
       +'<div class="alert-detail">'+a.detail+'</div>'
@@ -3012,26 +3065,20 @@ function loadBrainSignals(){
         });
         ribbon.innerHTML = html;
       }
-      // Rebuild exits table
+      // Rebuild exits table from brain export
       if(data.exits && data.exits.length){
         var tbody = document.getElementById('exits-tbody');
-        var hd = document.getElementById('exits-card-hd');
         if(tbody){
           var rows = '';
           data.exits.forEach(function(e){
-            rows += '<tr><td><div class="sym">' + e.ticker + '</div></td>' +
+            rows += '<tr class="brain-exit"><td><div class="sym">' + e.ticker + '</div></td>' +
                     '<td><div style="font-size:11px;font-weight:600">' +
                     (e.insider_name || '') + (e.insider_role ? ' · ' + e.insider_role : '') +
-                    '</div><div class="sym-sub">' + (e.transaction_type || 'sale') + '</div></td>' +
-                    '<td class="r"><span class="val dn">—</span></td>' +
-                    '<td class="c"><span class="score sc-bear">Exit</span></td></tr>';
+                    '</div></td>' +
+                    '<td class="r" style="font-size:10px;color:var(--red-lt)">' + (e.transaction_type || 'Sale') + '</td>' +
+                    '<td class="c" style="font-size:10px">' + (e.signal_date || '') + '</td></tr>';
           });
           tbody.innerHTML = rows;
-        }
-        // Remove DEMO tag from exits header
-        if(hd){
-          hd.innerHTML = '<div class="card-title">Notable Exit Signals</div>' +
-                         '<div class="card-sub">Discretionary open-market sells · From Brain export</div>';
         }
       }
       refreshConvergenceDisplays();
