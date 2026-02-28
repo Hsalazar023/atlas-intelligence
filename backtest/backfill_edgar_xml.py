@@ -245,12 +245,13 @@ def backfill_edgar_signals(conn: sqlite3.Connection, dry_run: bool = False,
                             limit: int = None):
     """Main backfill: fetch Form 4 XMLs, enrich fields, remove non-purchases."""
 
-    # Get ALL edgar signals (not just those missing data — we need to check direction)
+    # Get unprocessed edgar signals (skip already-enriched purchases on resume)
     query = """
         SELECT id, ticker, signal_date, insider_name, insider_role,
                trade_size_points, disclosure_delay, transaction_type
         FROM signals
         WHERE source = 'edgar'
+          AND (transaction_type IS NULL OR transaction_type = '')
         ORDER BY signal_date DESC
     """
     signals = conn.execute(query).fetchall()
