@@ -57,35 +57,27 @@ def save_json(filename, data):
     print(f'  → Saved {path}')
 
 # ── EDGAR Form 4 Feed ─────────────────────────────────────────────────────────
-def fetch_edgar_form4(days=7, max_results=200):
-    """
-    Fetch recent Form 4 filings from EDGAR EFTS full-text search.
-    Returns list of filing dicts. Covers ALL companies — not limited to tracked tickers.
-    """
-    startdt = (datetime.datetime.utcnow() - datetime.timedelta(days=days)).strftime('%Y-%m-%d')
+def _fetch_edgar_window(startdt: str, enddt: str, max_per_window: int, headers: dict) -> list:
+    """Fetch Form 4 filings for a single date window from EFTS."""
     base_url = (
         'https://efts.sec.gov/LATEST/search-index'
         '?forms=4'
         '&dateRange=custom'
         f'&startdt={startdt}'
+        f'&enddt={enddt}'
     )
-    headers = {
-        'User-Agent': USER_AGENT,
-        'Accept': 'application/json',
-    }
-
     filings = []
     from_idx = 0
     page_size = 100
 
-    while len(filings) < max_results:
+    while len(filings) < max_per_window:
         url = base_url + f'&from={from_idx}&hits.hits.total.value=true'
         try:
             r = requests.get(url, headers=headers, timeout=20)
             r.raise_for_status()
             data = r.json()
         except Exception as e:
-            print(f'  EDGAR fetch error at from={from_idx}: {e}')
+            print(f'    EFTS error window {startdt}→{enddt} from={from_idx}: {e}')
             break
 
         hits = data.get('hits', {}).get('hits', [])
@@ -97,17 +89,14 @@ def fetch_edgar_form4(days=7, max_results=200):
             names = src.get('display_names', [])
             _id = h.get('_id', '')
 
-            # Separate person (insider) from company (issuer)
             company_names = [n for n in names if is_company(n)]
             person_names  = [n for n in names if not is_company(n)]
 
             company = clean_name(company_names[-1]) if company_names else clean_name(names[-1]) if names else 'Unknown'
             insider = clean_name(person_names[0])   if person_names  else clean_name(names[0])  if names else 'Unknown'
 
-            # Build direct SEC filing link from accession number + company CIK
             accession = src.get('adsh', '')
             ciks = src.get('ciks', [])
-            # Company CIK is typically the last one; insider CIK is first
             company_cik = ciks[-1] if len(ciks) > 1 else (ciks[0] if ciks else '')
             link = ''
             xml_url = ''
@@ -119,7 +108,6 @@ def fetch_edgar_form4(days=7, max_results=200):
                         f'https://www.sec.gov/Archives/edgar/data/'
                         f'{numeric_cik}/{clean_acc}/{accession}-index.htm'
                     )
-                    # Extract XML filename from EFTS _id: "{accession}:{filename}"
                     xml_filename = _id.split(':', 1)[1] if ':' in _id else ''
                     if xml_filename:
                         xml_url = (
@@ -141,14 +129,51 @@ def fetch_edgar_form4(days=7, max_results=200):
 
         from_idx += page_size
         total_available = data.get('hits', {}).get('total', {}).get('value', 0)
-        if from_idx >= min(total_available, max_results):
+        if from_idx >= min(total_available, max_per_window):
             break
 
         time.sleep(SEC_DELAY)
 
-    # Sort newest first
-    filings.sort(key=lambda x: x.get('date', ''), reverse=True)
     return filings
+
+
+def fetch_edgar_form4(days=7, max_results=200, window_days=7):
+    """
+    Fetch recent Form 4 filings from EDGAR EFTS in weekly windows.
+    This ensures even date coverage instead of only getting the most recent filings.
+    """
+    headers = {
+        'User-Agent': USER_AGENT,
+        'Accept': 'application/json',
+    }
+    now = datetime.datetime.utcnow()
+    filings = []
+    n_windows = max(1, days // window_days)
+    per_window = max(50, max_results // n_windows)
+
+    for i in range(n_windows):
+        w_end = now - datetime.timedelta(days=i * window_days)
+        w_start = now - datetime.timedelta(days=(i + 1) * window_days)
+        startdt = w_start.strftime('%Y-%m-%d')
+        enddt = w_end.strftime('%Y-%m-%d')
+        window_filings = _fetch_edgar_window(startdt, enddt, per_window, headers)
+        filings.extend(window_filings)
+        print(f'    Window {startdt}→{enddt}: {len(window_filings)} filings')
+        if len(filings) >= max_results:
+            break
+
+    # Deduplicate by accession number
+    seen = set()
+    unique = []
+    for f in filings:
+        acc = f.get('accession', '')
+        if acc and acc in seen:
+            continue
+        seen.add(acc)
+        unique.append(f)
+
+    unique.sort(key=lambda x: x.get('date', ''), reverse=True)
+    return unique[:max_results]
 
 
 def enrich_form4_xml(filings):
@@ -478,10 +503,10 @@ def main():
     fetch_market_data()
 
     # ── EDGAR Form 4 feed ──────────────────────────────────────────────────
-    print('Fetching EDGAR Form 4 filings (last 90 days)...')
+    print('Fetching EDGAR Form 4 filings (last 90 days, weekly windows)...')
     try:
-        filings = fetch_edgar_form4(days=90, max_results=1000)
-        print(f'  {len(filings)} filings from EFTS index')
+        filings = fetch_edgar_form4(days=90, max_results=1500, window_days=7)
+        print(f'  {len(filings)} filings from EFTS index (across {90 // 7} windows)')
 
         # Enrich with Form 4 XML data (ticker, role, amounts, buy/sell)
         print('  Enriching filings from Form 4 XML (~25s per 200 filings)...')
