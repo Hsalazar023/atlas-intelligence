@@ -622,7 +622,7 @@ button,input,select{font-family:var(--sans);outline:none}
   <div class="g65 mb14">
     <div class="card card-fill">
       <div class="card-hd"><div class="card-title">High-Suspicion Congressional Trades</div><div class="card-sub">Ranked by signal score</div></div>
-      <div class="filter-bar padded">
+      <div class="filter-bar padded" style="flex-wrap:wrap;gap:4px 0">
         <span class="filter-lbl">Filter:</span>
         <button class="fbtn active" onclick="filterCong('all',this)">All</button>
         <button class="fbtn" onclick="filterCong('senate',this)">Senate</button>
@@ -630,10 +630,28 @@ button,input,select{font-family:var(--sans);outline:none}
         <button class="fbtn" onclick="filterCong('flagged',this)">Flagged</button>
         <button class="fbtn" onclick="filterCong('option',this)">Options Only</button>
         <button class="fbtn" onclick="filterCong('sell',this)">Sells/Exits</button>
+        <span style="border-left:1px solid var(--border);margin:0 6px;height:16px"></span>
+        <span class="filter-lbl">Range:</span>
+        <select id="cong-date-range" onchange="rerenderCongress()" style="font-size:10px;padding:2px 6px;background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer">
+          <option value="30">30 days</option>
+          <option value="60">60 days</option>
+          <option value="90" selected>90 days</option>
+          <option value="180">6 months</option>
+          <option value="365">1 year</option>
+          <option value="0">All time</option>
+        </select>
+        <span style="border-left:1px solid var(--border);margin:0 6px;height:16px"></span>
+        <span class="filter-lbl">Sort:</span>
+        <select id="cong-sort" onchange="rerenderCongress()" style="font-size:10px;padding:2px 6px;background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer">
+          <option value="date">Newest first</option>
+          <option value="score">Score (high→low)</option>
+          <option value="value">Value (high→low)</option>
+          <option value="ticker">Ticker A→Z</option>
+        </select>
       </div>
-      <div class="tbl-wrap">
+      <div class="tbl-wrap" style="max-height:520px;overflow-y:auto">
         <table class="tbl" id="cong-tbl">
-          <thead><tr><th>#</th><th onclick="sortTbl(this)">Member ↕</th><th onclick="sortTbl(this)">Ticker ↕</th><th class="r" onclick="sortTbl(this)">Amount ↕</th><th class="c">Type</th><th onclick="sortTbl(this)">Suspicion Score ↕</th><th onclick="sortTbl(this)">Date ↕</th></tr></thead>
+          <thead style="position:sticky;top:0;z-index:1;background:var(--card-bg)"><tr><th>#</th><th onclick="sortTbl(this)">Member ↕</th><th onclick="sortTbl(this)">Ticker ↕</th><th class="r" onclick="sortTbl(this)">Amount ↕</th><th class="c">Type</th><th onclick="sortTbl(this)">Suspicion Score ↕</th><th onclick="sortTbl(this)">Date ↕</th></tr></thead>
           <tbody>
             <tr id="cong-loading-row">
               <td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
@@ -720,17 +738,35 @@ button,input,select{font-family:var(--sans);outline:none}
   </div>
   <div class="g65 mb14">
     <div class="card card-fill">
-      <div class="card-hd"><div class="card-title">SEC Form 4 Filings — Rolling 7 Days</div><div class="card-sub">Live EDGAR EFTS feed · Cluster filings sorted first · Tracked tickers highlighted</div></div>
-      <div class="filter-bar padded">
+      <div class="card-hd"><div class="card-title">SEC Form 4 Filings</div><div class="card-sub">Live EDGAR EFTS feed · Cluster filings sorted first · Tracked tickers highlighted</div></div>
+      <div class="filter-bar padded" style="flex-wrap:wrap;gap:4px 0">
         <span class="filter-lbl">Filter:</span>
         <button class="fbtn active" onclick="filterIns('all',this)">All Signals</button>
         <button class="fbtn" onclick="filterIns('buy',this)">Purchases</button>
         <button class="fbtn" onclick="filterIns('cluster',this)">Clusters</button>
         <button class="fbtn" onclick="filterIns('sell',this)">Sales</button>
+        <span style="border-left:1px solid var(--border);margin:0 6px;height:16px"></span>
+        <span class="filter-lbl">Range:</span>
+        <select id="ins-date-range" onchange="renderInsiderTableLive()" style="font-size:10px;padding:2px 6px;background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer">
+          <option value="7" selected>7 days</option>
+          <option value="14">14 days</option>
+          <option value="30">30 days</option>
+          <option value="60">60 days</option>
+          <option value="90">90 days</option>
+        </select>
+        <span style="border-left:1px solid var(--border);margin:0 6px;height:16px"></span>
+        <span class="filter-lbl">Sort:</span>
+        <select id="ins-sort" onchange="renderInsiderTableLive()" style="font-size:10px;padding:2px 6px;background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer">
+          <option value="default">Buys first, by value</option>
+          <option value="score">Score (high→low)</option>
+          <option value="value">Value (high→low)</option>
+          <option value="filings">Filings (most→least)</option>
+          <option value="date">Newest first</option>
+        </select>
       </div>
-      <div class="tbl-wrap">
+      <div class="tbl-wrap" style="max-height:520px;overflow-y:auto">
         <table class="tbl" id="ins-tbl">
-          <thead><tr><th onclick="sortTbl(this)">Security ↕</th><th>Insiders &amp; Roles</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">Filings</th><th class="c">Signal</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
+          <thead style="position:sticky;top:0;z-index:1;background:var(--card-bg)"><tr><th onclick="sortTbl(this)">Security ↕</th><th>Insiders &amp; Roles</th><th class="r" onclick="sortTbl(this)">Value ↕</th><th class="r">Filings</th><th class="c">Signal</th><th class="c" onclick="sortTbl(this)">Score ↕</th><th onclick="sortTbl(this)">Filed ↕</th></tr></thead>
           <tbody id="ins-tbl-body">
             <tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
               <span class="new-pulse" style="display:inline-block;margin-right:6px"></span>
@@ -1540,61 +1576,99 @@ function renderCongressTrades(data){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody||!data||!data.length) return;
   congData=data; // store full feed for scoring engine
-  // QuiverQuant live endpoint uses TransactionDate; bulk endpoint uses Date
+  _renderCongressRows();
+  // KPIs
   var dateKey=data[0].TransactionDate?'TransactionDate':'Date';
-  // QuiverQuant uses 'House' field (values: 'Representatives','Senate'); fallback to Chamber
+  var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+  var thisMonth=data.filter(function(t){return new Date(t[dateKey])>=monthStart;});
+  var kpiEl=document.querySelector('#page-congress .kpi-value');
+  if(kpiEl) kpiEl.textContent=thisMonth.length;
+  var suspicionEl=document.getElementById('kb-cong-suspicion');
+  if(suspicionEl){
+    suspicionEl.textContent=data.filter(function(t){
+      var tx=(t.Transaction||'').toLowerCase();
+      return tx.indexOf('purchase')>=0||tx.indexOf('buy')>=0;
+    }).length;
+  }
+  refreshConvergenceDisplays();
+}
+
+function rerenderCongress(){ _renderCongressRows(); }
+
+function _renderCongressRows(){
+  var tbody=document.querySelector('#cong-tbl tbody');
+  if(!tbody||!congData.length) return;
+  var data=congData;
+  var dateKey=data[0].TransactionDate?'TransactionDate':'Date';
   var chamberKey=data[0].House!==undefined?'House':'Chamber';
-  var sorted=data.slice().sort(function(a,b){
-    return new Date(b[dateKey])-new Date(a[dateKey]);
-  }).slice(0,20);
   setDataDot('congress','ok');
-  var html='';
-  sorted.forEach(function(t,i){
+
+  // Date range filter
+  var rangeSel=document.getElementById('cong-date-range');
+  var rangeDays=rangeSel?parseInt(rangeSel.value):90;
+  var cutoff=rangeDays>0?new Date(Date.now()-rangeDays*86400000):new Date(0);
+
+  // Pre-compute scores for sort
+  var enriched=data.map(function(t){
     var tx=(t.Transaction||'').toLowerCase();
     var isBuy=tx.indexOf('purchase')>=0||tx.indexOf('buy')>=0;
     var isSell=tx.indexOf('sale')>=0||tx.indexOf('sell')>=0;
-    var tagCls=isBuy?'t-buy':isSell?'t-sell':'t-opt';
-    var tagLbl=isBuy?'Buy':isSell?'Sell':(t.Transaction||'Other');
+    var score=0;
+    if(isBuy) score+=30; else if(isSell) score-=30;
+    var range=t.Range||'';
+    if(range.indexOf('$250,001')>=0||range.indexOf('$500,001')>=0) score+=5;
+    if(range.indexOf('$1,000,001')>=0||range.indexOf('$5,000,001')>=0) score+=10;
+    var valNum=0;
+    if(range.indexOf('$5,000,001')>=0) valNum=5000001;
+    else if(range.indexOf('$1,000,001')>=0) valNum=1000001;
+    else if(range.indexOf('$500,001')>=0) valNum=500001;
+    else if(range.indexOf('$250,001')>=0) valNum=250001;
+    else if(range.indexOf('$100,001')>=0) valNum=100001;
+    else if(range.indexOf('$50,001')>=0) valNum=50001;
+    else if(range.indexOf('$15,001')>=0) valNum=15001;
+    else valNum=1001;
+    return {t:t,score:score,isBuy:isBuy,isSell:isSell,valNum:valNum,dateVal:t[dateKey]||''};
+  }).filter(function(r){
+    return new Date(r.dateVal)>=cutoff;
+  });
+
+  // Sort
+  var sortSel=document.getElementById('cong-sort');
+  var sortBy=sortSel?sortSel.value:'date';
+  if(sortBy==='score') enriched.sort(function(a,b){return Math.abs(b.score)-Math.abs(a.score);});
+  else if(sortBy==='value') enriched.sort(function(a,b){return b.valNum-a.valNum;});
+  else if(sortBy==='ticker') enriched.sort(function(a,b){return (a.t.Ticker||'').localeCompare(b.t.Ticker||'');});
+  else enriched.sort(function(a,b){return new Date(b.dateVal)-new Date(a.dateVal);});
+
+  var html='';
+  enriched.forEach(function(r,i){
+    var t=r.t;
+    var tagCls=r.isBuy?'t-buy':r.isSell?'t-sell':'t-opt';
+    var tagLbl=r.isBuy?'Buy':r.isSell?'Sell':(t.Transaction||'Other');
     var party=t.Party||'';
     var member=(t.Representative||'Unknown').replace(/^(Rep\.|Sen\.)\s*/,'');
     var isSenate=(t[chamberKey]||'').toLowerCase().indexOf('senate')>=0;
     var memberTitle=(isSenate?'Sen.':'Rep.')+' '+member;
     var ticker=t.Ticker||'—';
-    var dateVal=t[dateKey]||'';
-    var score=0;
-    if(isBuy) score+=30; else if(isSell) score-=30;
-    var range=t.Range||'';
-    if(range.indexOf('$250,001')>=0||range.indexOf('$500,001')>=0) score+=5;
-    if(range.indexOf('$1,000,001')>=0) score+=10;
-    var scoreDisp=score>0?'+'+score:score;
-    html+='<tr data-cat="'+(isSenate?'senate':'house')+'">'
+    var scoreDisp=r.score>0?'+'+r.score:r.score;
+    var cats=(isSenate?'senate':'house');
+    if(r.isSell) cats+=' sell';
+    if(Math.abs(r.score)>=30) cats+=' flagged';
+    if((t.Transaction||'').toLowerCase().indexOf('option')>=0) cats+=' option';
+    html+='<tr data-cat="'+cats+'">'
       +'<td style="font-size:10px;color:var(--muted)">'+(String(i+1).padStart(2,'0'))+'</td>'
       +'<td><div style="font-size:11.5px;font-weight:600">'+memberTitle+'</div>'
       +'<div class="sym-sub">'+party+(t.State?' · '+t.State:'')+'</div></td>'
       +'<td><div class="sym">'+ticker+'</div></td>'
-      +'<td class="r"><span class="val '+(isBuy?'up':'dn')+'">'+range+'</span></td>'
+      +'<td class="r"><span class="val '+(r.isBuy?'up':'dn')+'">'+(t.Range||'')+'</span></td>'
       +'<td class="c"><span class="tag '+tagCls+'">'+tagLbl+'</span></td>'
-      +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(score))
-        +'%;background:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
-      +'<span class="val" style="font-size:11px;color:'+(score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
-      +'<td><span class="sym-sub">'+(dateVal?dateVal.slice(5):'—')+'</span></td>'
+      +'<td><div class="sus-row"><div class="sus-track"><div style="height:100%;width:'+(Math.abs(r.score))
+        +'%;background:'+(r.score>0?'var(--blue-lt)':'var(--red-lt)')+'"></div></div>'
+      +'<span class="val" style="font-size:11px;color:'+(r.score>0?'var(--blue-lt)':'var(--red-lt)')+'">'+scoreDisp+'</span></div></td>'
+      +'<td><span class="sym-sub">'+(r.dateVal?r.dateVal.slice(5):'—')+'</span></td>'
       +'</tr>';
   });
-  tbody.innerHTML=html;
-  var monthStart=new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-  var thisMonth=data.filter(function(t){return new Date(t[dateKey])>=monthStart;});
-  var kpiEl=document.querySelector('#page-congress .kpi-value');
-  if(kpiEl) kpiEl.textContent=thisMonth.length;
-  // High Suspicion Trades: buys with score >= 30
-  var suspicionEl=document.getElementById('kb-cong-suspicion');
-  if(suspicionEl){
-    var suspicionCount=data.filter(function(t){
-      var tx=(t.Transaction||'').toLowerCase();
-      return tx.indexOf('purchase')>=0||tx.indexOf('buy')>=0;
-    }).length;
-    suspicionEl.textContent=suspicionCount;
-  }
-  refreshConvergenceDisplays(); // recompute scores now that congress data is loaded
+  tbody.innerHTML=html||'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No trades in selected range</td></tr>';
 }
 
 function fetchQuiverTrades(){
@@ -1898,11 +1972,20 @@ function renderInsiderTableLive(){
       +'Loading EDGAR Form 4 filings...</td></tr>';
     return;
   }
+
+  // Date range filter
+  var rangeSel=document.getElementById('ins-date-range');
+  var rangeDays=rangeSel?parseInt(rangeSel.value):7;
+  var cutoff=new Date(Date.now()-rangeDays*86400000);
+  var filtered=edgarData.filter(function(f){
+    return new Date(f.date||0)>=cutoff;
+  });
+
   // ── Group filings by ticker (enriched) or company name (fallback) ──
   var byTicker={};
-  edgarData.forEach(function(f){
+  filtered.forEach(function(f){
     var t=f.ticker||(f.company?('~'+f.company.replace(/[^A-Za-z0-9]/g,'').slice(0,20)):'_NONE_');
-    if(!byTicker[t]) byTicker[t]={ticker:f.ticker||'',company:f.company||'',filings:[],buyVal:0,sellVal:0,buyCount:0,sellCount:0,roles:[]};
+    if(!byTicker[t]) byTicker[t]={ticker:f.ticker||'',company:f.company||'',filings:[],buyVal:0,sellVal:0,buyCount:0,sellCount:0,roles:[],latestDate:''};
     var grp=byTicker[t];
     grp.filings.push(f);
     grp.buyVal+=(f.buy_value||0);
@@ -1910,53 +1993,59 @@ function renderInsiderTableLive(){
     if(f.direction==='buy') grp.buyCount++;
     if(f.direction==='sell') grp.sellCount++;
     if(f.title && grp.roles.indexOf(f.title)<0) grp.roles.push(f.title);
+    if((f.date||'')>grp.latestDate) grp.latestDate=f.date||'';
   });
 
-  // Convert to sorted array: purchases first, then by filing count
+  // Convert to array and compute scores first (needed for sort)
   var groups=Object.keys(byTicker).map(function(k){return byTicker[k];});
-  groups.sort(function(a,b){
-    // Purchases with value first
+  groups.forEach(function(grp){
+    var score=6;
+    grp.filings.forEach(function(f){
+      var title=(f.title||'').toUpperCase();
+      if(title.indexOf('CEO')>=0||title.indexOf('CHIEF EXECUTIVE')>=0) score+=4;
+      else if(title.indexOf('CFO')>=0||title.indexOf('CHIEF FINANCIAL')>=0) score+=3;
+      else if(title.indexOf('PRESIDENT')>=0) score+=2;
+      if(f.buy_value>1000000) score+=5;
+      else if(f.buy_value>250000) score+=3;
+      else if(f.buy_value>50000) score+=1;
+    });
+    var cnt=grp.filings.length;
+    if(cnt>=5) score+=15; else if(cnt>=3) score+=10;
+    if(cnt>=2&&grp.buyCount>0) score+=5;
+    grp.score=Math.min(score,99);
+    grp.totalVal=grp.buyVal+grp.sellVal;
+  });
+
+  // Sort
+  var sortSel=document.getElementById('ins-sort');
+  var sortBy=sortSel?sortSel.value:'default';
+  if(sortBy==='score') groups.sort(function(a,b){return b.score-a.score;});
+  else if(sortBy==='value') groups.sort(function(a,b){return b.totalVal-a.totalVal;});
+  else if(sortBy==='filings') groups.sort(function(a,b){return b.filings.length-a.filings.length;});
+  else if(sortBy==='date') groups.sort(function(a,b){return b.latestDate>a.latestDate?1:b.latestDate<a.latestDate?-1:0;});
+  else groups.sort(function(a,b){
     if(a.buyVal>0&&b.buyVal===0) return -1;
     if(b.buyVal>0&&a.buyVal===0) return 1;
     if(a.buyVal>0&&b.buyVal>0) return b.buyVal-a.buyVal;
-    // Then sells by value
     if(a.sellVal>0&&b.sellVal===0) return -1;
     if(b.sellVal>0&&a.sellVal===0) return 1;
     if(a.sellVal>0&&b.sellVal>0) return b.sellVal-a.sellVal;
-    // Then by cluster size
     return b.filings.length-a.filings.length;
   });
 
   var html='';
   var shown=0;
   groups.forEach(function(grp){
-    if(shown>=25) return;
+    if(shown>=40) return;
     var cnt=grp.filings.length;
     var t=grp.ticker;
     var co=grp.company;
-    // Show ticker if available, otherwise company abbreviation
     var displayTicker=t||(co?co.split(/[\s,]+/).slice(0,2).join(' '):'Unknown');
     var isBuy=grp.buyCount>0;
     var isSell=grp.sellCount>0;
     var isCluster=cnt>=3;
     var isMulti=cnt>=2;
-
-    // Score: base + role bonus + size bonus + cluster bonus
-    var score=6;
-    var roleNotes=[];
-    grp.filings.forEach(function(f){
-      var title=(f.title||'').toUpperCase();
-      if(title.indexOf('CEO')>=0||title.indexOf('CHIEF EXECUTIVE')>=0){score+=4;roleNotes.push('CEO');}
-      else if(title.indexOf('CFO')>=0||title.indexOf('CHIEF FINANCIAL')>=0){score+=3;roleNotes.push('CFO');}
-      else if(title.indexOf('PRESIDENT')>=0){score+=2;roleNotes.push('President');}
-      else if(title.indexOf('DIRECTOR')>=0||title.indexOf('CHAIR')>=0){roleNotes.push('Director');}
-      if(f.buy_value>1000000) score+=5;
-      else if(f.buy_value>250000) score+=3;
-      else if(f.buy_value>50000) score+=1;
-    });
-    if(isCluster) score+=cnt>=5?15:cnt>=3?10:0;
-    if(isMulti&&isBuy) score+=5; // multi-insider buying = strong signal
-    score=Math.min(score,99);
+    var score=grp.score;
 
     // Determine signal type
     var tagCls,tagLbl,dataIns;
@@ -2007,7 +2096,7 @@ function renderInsiderTableLive(){
       +'</tr>';
     shown++;
   });
-  tbody.innerHTML=html;
+  tbody.innerHTML=html||'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No filings in selected range</td></tr>';
 
   // ── Update Insider page KPIs ──
   var today=new Date().toISOString().slice(0,10);
