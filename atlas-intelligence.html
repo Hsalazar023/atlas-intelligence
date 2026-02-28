@@ -920,6 +920,23 @@ button,input,select{font-family:var(--sans);outline:none}
       </div>
     </div>
   </div>
+  <div class="card" id="score-tiers-card" style="margin-bottom:14px">
+    <div class="card-hd"><div class="card-title">Score Tier Performance</div><div class="card-sub">30-day CAR by ATLAS score bucket · From Brain export</div></div>
+    <table id="score-tiers-table" style="width:100%;font-size:12px;border-collapse:collapse;font-family:var(--mono)">
+      <thead><tr style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px">
+        <th style="text-align:left;padding:6px 12px">Tier</th>
+        <th style="text-align:right;padding:6px 12px">Count</th>
+        <th style="text-align:right;padding:6px 12px">Hit Rate</th>
+        <th style="text-align:right;padding:6px 12px">Avg Alpha</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-top:1px solid var(--border)"><td style="padding:6px 12px;color:var(--text)">90+</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td></tr>
+        <tr style="border-top:1px solid var(--border)"><td style="padding:6px 12px;color:var(--text)">80-89</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td></tr>
+        <tr style="border-top:1px solid var(--border)"><td style="padding:6px 12px;color:var(--text)">65-79</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td></tr>
+        <tr style="border-top:1px solid var(--border)"><td style="padding:6px 12px;color:var(--text)">&lt;65</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td><td style="text-align:right;padding:6px 12px">—</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 </div>
 
@@ -3059,6 +3076,25 @@ function loadBrainStats(){
           });
           container.innerHTML = html;
           setTimeout(animateBars, 60);
+        }
+      }
+      // Score tiers
+      if(stats.score_tiers && stats.score_tiers.length){
+        var tbody = document.querySelector('#score-tiers-table tbody');
+        if(tbody){
+          var html = '';
+          stats.score_tiers.forEach(function(t){
+            var car = t.avg_car_30d ? (t.avg_car_30d * 100) : 0;
+            var hr = t.hit_rate ? Math.round(t.hit_rate * 100) : 0;
+            var carCls = car >= 0 ? 'up' : 'dn';
+            var carSign = car >= 0 ? '+' : '';
+            html += '<tr style="border-top:1px solid var(--border)">' +
+              '<td style="padding:6px 12px;color:var(--text)">' + t.tier + '</td>' +
+              '<td style="text-align:right;padding:6px 12px;color:var(--muted)">' + t.n + '</td>' +
+              '<td style="text-align:right;padding:6px 12px;color:var(--text)">' + hr + '%</td>' +
+              '<td style="text-align:right;padding:6px 12px" class="' + carCls + '">' + carSign + car.toFixed(1) + '%</td></tr>';
+          });
+          tbody.innerHTML = html;
         }
       }
       // Committee correlation

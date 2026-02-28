@@ -3601,6 +3601,77 @@ new Chart(document.getElementById('carDistChart'), {{
 
 # ── Export Pipeline ──────────────────────────────────────────────────────────
 
+# Ticker → company name map for frontend display
+TICKER_NAMES = {
+    'AAPL': 'Apple', 'ABNB': 'Airbnb', 'AMAT': 'Applied Materials', 'AMD': 'AMD',
+    'AMZN': 'Amazon', 'ANET': 'Arista Networks', 'AVGO': 'Broadcom', 'AXP': 'American Express',
+    'BA': 'Boeing', 'BABA': 'Alibaba', 'BAC': 'Bank of America', 'BIIB': 'Biogen',
+    'BLK': 'BlackRock', 'BMY': 'Bristol-Myers', 'BSX': 'Boston Scientific', 'C': 'Citigroup',
+    'CAT': 'Caterpillar', 'CL': 'Colgate-Palmolive', 'CMCSA': 'Comcast', 'COIN': 'Coinbase',
+    'COP': 'ConocoPhillips', 'COST': 'Costco', 'CRM': 'Salesforce', 'CRWD': 'CrowdStrike',
+    'CSCO': 'Cisco', 'CVS': 'CVS Health', 'CVX': 'Chevron', 'DASH': 'DoorDash',
+    'DE': 'Deere', 'DIS': 'Disney', 'DXCM': 'Dexcom', 'ETN': 'Eaton',
+    'F': 'Ford', 'FCX': 'Freeport-McMoRan', 'FDX': 'FedEx', 'FISV': 'Fiserv',
+    'GD': 'General Dynamics', 'GE': 'GE Aerospace', 'GEV': 'GE Vernova', 'GILD': 'Gilead',
+    'GM': 'General Motors', 'GOOG': 'Google', 'GOOGL': 'Google', 'GS': 'Goldman Sachs',
+    'HAL': 'Halliburton', 'HD': 'Home Depot', 'HON': 'Honeywell', 'HOOD': 'Robinhood',
+    'HSY': 'Hershey', 'IBM': 'IBM', 'INTC': 'Intel', 'ISRG': 'Intuitive Surgical',
+    'JNJ': 'Johnson & Johnson', 'JPM': 'JPMorgan Chase', 'KO': 'Coca-Cola', 'LLY': 'Eli Lilly',
+    'LMT': 'Lockheed Martin', 'LOW': "Lowe's", 'LRCX': 'Lam Research', 'MA': 'Mastercard',
+    'MCD': "McDonald's", 'MELI': 'MercadoLibre', 'META': 'Meta', 'MMM': '3M',
+    'MO': 'Altria', 'MRK': 'Merck', 'MSFT': 'Microsoft', 'MU': 'Micron',
+    'NEE': 'NextEra Energy', 'NET': 'Cloudflare', 'NFLX': 'Netflix', 'NKE': 'Nike',
+    'NOC': 'Northrop Grumman', 'NVDA': 'NVIDIA', 'ORCL': 'Oracle', 'PEP': 'PepsiCo',
+    'PFE': 'Pfizer', 'PG': 'Procter & Gamble', 'PGR': 'Progressive', 'PLTR': 'Palantir',
+    'PM': 'Philip Morris', 'PYPL': 'PayPal', 'QCOM': 'Qualcomm', 'RTX': 'RTX (Raytheon)',
+    'SBUX': 'Starbucks', 'SCHW': 'Schwab', 'SHOP': 'Shopify', 'SNOW': 'Snowflake',
+    'SO': 'Southern Co', 'SPGI': 'S&P Global', 'SYK': 'Stryker', 'T': 'AT&T',
+    'TGT': 'Target', 'TJX': 'TJX Cos', 'TMO': 'Thermo Fisher', 'TMUS': 'T-Mobile',
+    'TSLA': 'Tesla', 'TSM': 'TSMC', 'UNH': 'UnitedHealth', 'UNP': 'Union Pacific',
+    'UPS': 'UPS', 'V': 'Visa', 'VRT': 'Vertiv', 'VZ': 'Verizon',
+    'WFC': 'Wells Fargo', 'WMT': 'Walmart', 'WPM': 'Wheaton Precious', 'XOM': 'ExxonMobil',
+}
+
+
+def _ticker_display(ticker: str) -> str:
+    """Return 'Company (TICK)' if known, else just ticker."""
+    name = TICKER_NAMES.get(ticker)
+    return f"{name} ({ticker})" if name else ticker
+
+
+# Representative → committee mapping (most active congressional traders)
+# Source: house.gov/committees, senate.gov/committees  (manual, updated periodically)
+REP_COMMITTEES: dict[str, str] = {
+    # Armed Services
+    'Tommy Tuberville': 'Armed Services', 'Jim Risch': 'Armed Services',
+    'Mark Kelly': 'Armed Services', 'Tim Kaine': 'Armed Services',
+    'Kevin Hern': 'Armed Services', 'Mike Garcia': 'Armed Services',
+    'Pat Fallon': 'Armed Services',
+    # Finance / Banking
+    'Shelley Moore Capito': 'Finance', 'Dan Sullivan': 'Finance',
+    'John Hickenlooper': 'Finance', 'Markwayne Mullin': 'Finance',
+    'Tim Scott': 'Finance', 'Bill Hagerty': 'Finance',
+    # Foreign Affairs
+    'Virginia Foxx': 'Foreign Affairs', 'Michael McCaul': 'Foreign Affairs',
+    'Gregory Meeks': 'Foreign Affairs',
+    # Energy / Environment
+    'Garret Graves': 'Energy/Enviro', 'Sheldon Whitehouse': 'Energy/Enviro',
+    'Joe Manchin': 'Energy/Enviro', 'John Barrasso': 'Energy/Enviro',
+    # Science & Tech
+    'Ro Khanna': 'Science & Tech', 'Josh Gottheimer': 'Science & Tech',
+    'Suzan DelBene': 'Science & Tech',
+    # Health Policy
+    'Michael Burgess': 'Health Policy', 'Larry Bucshon': 'Health Policy',
+    'Bill Cassidy': 'Health Policy', 'Roger Marshall': 'Health Policy',
+    # Appropriations
+    'David Joyce': 'Appropriations', 'Hal Rogers': 'Appropriations',
+    # Judiciary
+    'Nancy Pelosi': 'Judiciary', 'Dan Goldman': 'Judiciary',
+    # Commerce
+    'Maria Cantwell': 'Commerce', 'Ted Cruz': 'Commerce',
+}
+
+
 def export_brain_data(conn: sqlite3.Connection) -> None:
     """Export brain_signals.json + brain_stats.json for the frontend."""
     log.info("=== Exporting Brain Data ===")
@@ -3643,6 +3714,10 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             note_parts.append(f"Tier {r['convergence_tier']} convergence")
         if (r['same_ticker_signals_7d'] or 0) >= 3:
             note_parts.append("cluster")
+        # Add company name if known and not already obvious
+        company = TICKER_NAMES.get(r['ticker'])
+        if company:
+            note_parts.append(company)
         note = ' · '.join(note_parts) if note_parts else ''
 
         person = r['representative'] or r['insider_name'] or ''
@@ -3769,7 +3844,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
     for r in cur.fetchall():
         congress_heatmap.append({
             'ticker': r[0],
-            'name': r[0],  # ticker as name fallback
+            'name': TICKER_NAMES.get(r[0], r[0]),
             'count': r[1],
             'heat': min(r[1], 6),  # cap heat level at 6
         })
@@ -3825,15 +3900,31 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
                 'n_folds': w.get('stats', {}).get('n_folds'),
             }
 
-    # Committees — placeholder (no committee mapping in DB yet)
-    committees = [
-        {'name': 'Armed Services', 'n_trades': 0, 'match_rate': 0},
-        {'name': 'Foreign Affairs', 'n_trades': 0, 'match_rate': 0},
-        {'name': 'Science & Tech', 'n_trades': 0, 'match_rate': 0},
-        {'name': 'Energy/Enviro', 'n_trades': 0, 'match_rate': 0},
-        {'name': 'Finance', 'n_trades': 0, 'match_rate': 0},
-        {'name': 'Health Policy', 'n_trades': 0, 'match_rate': 0},
-    ]
+    # Committees — derive from REP_COMMITTEES mapping
+    cur.execute("""
+        SELECT representative, COUNT(*) as cnt,
+               AVG(CASE WHEN car_30d > 0 THEN 1.0 ELSE 0.0 END) as hit_rate
+        FROM signals
+        WHERE source = 'congress' AND representative IS NOT NULL
+          AND outcome_30d_filled = 1 AND car_30d IS NOT NULL
+        GROUP BY representative
+    """)
+    committee_agg: dict[str, dict] = {}
+    for rep, cnt, hr in cur.fetchall():
+        comm = REP_COMMITTEES.get(rep)
+        if not comm:
+            continue
+        if comm not in committee_agg:
+            committee_agg[comm] = {'n_trades': 0, 'hit_sum': 0.0, 'hit_n': 0}
+        committee_agg[comm]['n_trades'] += cnt
+        if hr is not None:
+            committee_agg[comm]['hit_sum'] += hr * cnt
+            committee_agg[comm]['hit_n'] += cnt
+    committees = []
+    for name in sorted(committee_agg, key=lambda k: committee_agg[k]['n_trades'], reverse=True):
+        agg = committee_agg[name]
+        match_rate = round(agg['hit_sum'] / agg['hit_n'], 2) if agg['hit_n'] > 0 else 0
+        committees.append({'name': name, 'n_trades': agg['n_trades'], 'match_rate': match_rate})
 
     brain_stats = {
         'generated': now,
