@@ -1,0 +1,36 @@
+# Data & Large Files (token killers — never auto-read)
+data/*.json
+data/*.db
+data/*.db-journal
+data/*.csv
+data/*.html
+data/*.md
+data/price_history/
+backtest/ohlc_cache/
+
+# Dependencies
+node_modules/
+venv/
+
+# OS & build artifacts
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Claude internals
+.claude/
+MEMORY.md
+Skills/
+.firecrawl/
+
+# Archives (only read when explicitly asked)
+docs/archive/
+
+# Deployment config
+.vercel/
+.github/
+
+# Compiled bytecode
+backtest/__pycache__/
+backtest/tests/__pycache__/

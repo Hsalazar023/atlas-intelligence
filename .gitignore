@@ -1,5 +1,33 @@
-.vercel
-.firecrawl/
+# Data & generated outputs (never commit)
+data/*.json
+data/*.db
+data/*.db-journal
+data/*.csv
+data/*.html
+data/*.md
+data/price_history/
+backtest/ohlc_cache/
+
+# Dependencies & environments
+node_modules/
+venv/
+.env
+
+# Deployment & tooling
+.vercel/
+.github/
+
+# OS & editor
 .DS_Store
-__pycache__/
 *.pyc
+__pycache__/
+.pytest_cache/
+
+# Claude internals
+.claude/
+MEMORY.md
+Skills/
+.firecrawl/
+
+# Archives (read-only reference, no need in git history)
+docs/archive/

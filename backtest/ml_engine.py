@@ -9,10 +9,13 @@ import numpy as np
 from dataclasses import dataclass, field
 from scipy.stats import spearmanr
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
 import lightgbm as lgb
 
 log = logging.getLogger(__name__)
+
+# CAR winsorization bounds — clip extreme outliers before ML training
+CAR_ABSOLUTE_MIN = -1.0   # -100%
+CAR_ABSOLUTE_MAX = 3.0    # +300%
 
 FEATURE_COLUMNS = [
     'source', 'trade_size_points', 'same_ticker_signals_7d',
@@ -20,6 +23,12 @@ FEATURE_COLUMNS = [
     'person_trade_count', 'person_hit_rate_30d', 'relative_position_size',
     'insider_role', 'sector', 'price_proximity_52wk', 'market_cap_bucket',
     'cluster_velocity', 'trade_pattern', 'disclosure_delay',
+    'vix_at_signal', 'yield_curve_at_signal', 'credit_spread_at_signal',
+    'days_to_earnings', 'days_to_catalyst',
+    # Alpha features (v3)
+    'momentum_1m', 'momentum_3m', 'momentum_6m',
+    'volume_spike', 'insider_buy_ratio_90d', 'sector_avg_car',
+    'vix_regime_interaction',
 ]
 
 CATEGORICAL_FEATURES = [
@@ -54,8 +63,10 @@ class WalkForwardResult:
 
 
 def prepare_features(conn: sqlite3.Connection):
-    """Extract feature matrix X, target y, signal IDs, and dates from database.
-    Returns (X, y, ids, dates) or (empty_df, empty, empty, empty) if no data.
+    """Extract feature matrix X, target y, signal IDs, dates, and winsorized CARs.
+
+    Returns (X, y, ids, dates, car_winsorized) or 5 empty arrays if no data.
+    CAR winsorization applies percentile clipping (1st/99th) with hard bounds ±300%.
     """
     import pandas as pd
 
@@ -66,25 +77,36 @@ def prepare_features(conn: sqlite3.Connection):
     ).fetchall()
 
     if not rows:
-        return pd.DataFrame(), np.array([]), np.array([]), np.array([])
+        return pd.DataFrame(), np.array([]), np.array([]), np.array([]), np.array([])
 
     data = [dict(r) for r in rows]
     df = pd.DataFrame(data)
     ids = df['id'].values
-    y = (df['car_30d'] > 0).astype(int).values
     dates = df['signal_date'].values
+
+    # Winsorize CARs: percentile clip then hard bounds
+    car_raw = df['car_30d'].copy()
+    p1 = car_raw.quantile(0.01)
+    p99 = car_raw.quantile(0.99)
+    car_clipped = car_raw.clip(lower=max(p1, CAR_ABSOLUTE_MIN),
+                                upper=min(p99, CAR_ABSOLUTE_MAX))
+
+    y = (car_clipped > 0).astype(int).values
 
     X = df[FEATURE_COLUMNS].copy()
 
-    # Encode categoricals
+    # Convert categoricals to numeric codes.
+    # We use pandas category codes (deterministic mapping based on sorted unique values).
+    # LightGBM and RF handle these natively. Encoding is done on full dataset for
+    # consistent mapping — this is safe for tree models (no information leakage since
+    # encoding is just a label mapping, not derived from the target variable).
     for col in CATEGORICAL_FEATURES:
         if col in X.columns:
             X[col] = X[col].fillna('unknown').astype(str)
-            le = LabelEncoder()
-            X[col] = le.fit_transform(X[col])
+            X[col] = X[col].astype('category').cat.codes
 
     X = X.fillna(0).infer_objects(copy=False)
-    return X, y, ids, dates
+    return X, y, ids, dates, car_clipped.values
 
 
 def compute_information_coefficient(predicted, actual) -> float:
@@ -97,22 +119,17 @@ def compute_information_coefficient(predicted, actual) -> float:
 
 def walk_forward_train(conn: sqlite3.Connection,
                        min_train_months: int = 6,
-                       test_months: int = 1) -> WalkForwardResult:
+                       test_months: int = 1,
+                       min_train_samples: int = 200,
+                       min_test_samples: int = 20) -> WalkForwardResult:
     """Walk-forward validation with RF + LightGBM ensemble."""
     import pandas as pd
 
-    X, y, ids, dates = prepare_features(conn)
+    X, y, ids, dates, car_winsorized = prepare_features(conn)
     if len(X) < 50:
         log.warning(f"Insufficient data for ML training ({len(X)} signals)")
         return WalkForwardResult(n_folds=0, oos_ic=0, oos_hit_rate=0,
                                  oos_avg_car=0, feature_importance={})
-
-    # Get actual CARs for IC computation
-    car_values = {}
-    for row_id in ids:
-        r = conn.execute("SELECT car_30d FROM signals WHERE id=?", (int(row_id),)).fetchone()
-        if r:
-            car_values[row_id] = r['car_30d']
 
     # Sort by date
     date_series = pd.to_datetime(dates)
@@ -120,6 +137,7 @@ def walk_forward_train(conn: sqlite3.Connection,
     X = X.iloc[sort_idx].reset_index(drop=True)
     y = y[sort_idx]
     ids = ids[sort_idx]
+    car_winsorized = car_winsorized[sort_idx]
     date_series = date_series[sort_idx]
 
     # Walk-forward folds
@@ -127,6 +145,7 @@ def walk_forward_train(conn: sqlite3.Connection,
     folds = []
     all_oos_preds = []
     all_oos_actual = []
+    all_fold_importances = []
     rf = None
     lgb_model = None
 
@@ -138,13 +157,12 @@ def walk_forward_train(conn: sqlite3.Connection,
         train_mask = date_series < train_end
         test_mask = (date_series >= train_end) & (date_series < test_end)
 
-        if train_mask.sum() < 30 or test_mask.sum() < 5:
+        if train_mask.sum() < min_train_samples or test_mask.sum() < min_test_samples:
             train_end += pd.DateOffset(months=1)
             continue
 
         X_train, y_train = X[train_mask], y[train_mask]
         X_test, y_test = X[test_mask], y[test_mask]
-        test_ids = ids[test_mask]
 
         # Train Random Forest
         rf = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
@@ -160,8 +178,17 @@ def walk_forward_train(conn: sqlite3.Connection,
         # Ensemble: average probabilities
         ensemble_probs = (rf_probs + lgb_probs) / 2
 
-        # Compute metrics
-        test_cars = [car_values.get(tid, 0) for tid in test_ids]
+        # Accumulate per-fold feature importance
+        feat_names = list(X.columns)
+        rf_imp = rf.feature_importances_
+        lgb_imp = lgb_model.feature_importances_ / max(lgb_model.feature_importances_.sum(), 1)
+        fold_imp = {}
+        for i, name in enumerate(feat_names):
+            fold_imp[name] = (rf_imp[i] + lgb_imp[i]) / 2
+        all_fold_importances.append(fold_imp)
+
+        # Compute metrics using winsorized CARs
+        test_cars = car_winsorized[test_mask].tolist()
         ic = compute_information_coefficient(ensemble_probs, test_cars)
         hit_rate = sum(1 for p, a in zip(ensemble_probs > 0.5, y_test) if p == a) / len(y_test)
         avg_car = np.mean(test_cars) if test_cars else 0
@@ -186,20 +213,170 @@ def walk_forward_train(conn: sqlite3.Connection,
     oos_hit = sum(1 for p, c in zip(all_oos_preds, all_oos_actual) if (p > 0.5) == (c > 0)) / max(len(all_oos_preds), 1)
     oos_avg_car = np.mean(all_oos_actual) if all_oos_actual else 0
 
-    # Feature importance (from last fold's models)
+    # Feature importance — averaged across ALL folds (not just last)
     importance = {}
-    if folds and rf is not None and lgb_model is not None:
+    if all_fold_importances:
         feat_names = list(X.columns)
-        rf_imp = rf.feature_importances_
-        lgb_imp = lgb_model.feature_importances_ / max(lgb_model.feature_importances_.sum(), 1)
-        for i, name in enumerate(feat_names):
-            importance[name] = round((rf_imp[i] + lgb_imp[i]) / 2, 4)
+        for name in feat_names:
+            vals = [fi.get(name, 0) for fi in all_fold_importances]
+            importance[name] = round(np.mean(vals), 4)
+
+    # Log features with low importance for potential pruning
+    if importance:
+        low_imp = [f"{name} ({imp:.4f})" for name, imp in importance.items() if imp < 0.005]
+        if low_imp:
+            log.info(f"Low-importance features (<0.5%): {', '.join(low_imp)}")
 
     return WalkForwardResult(
         n_folds=len(folds),
         oos_ic=round(oos_ic, 6),
         oos_hit_rate=round(oos_hit, 4),
         oos_avg_car=round(float(oos_avg_car), 6),
+        feature_importance=dict(sorted(importance.items(), key=lambda x: -x[1])),
+        folds=[{
+            'train_start': f.train_start, 'train_end': f.train_end,
+            'test_start': f.test_start, 'test_end': f.test_end,
+            'n_train': f.n_train, 'n_test': f.n_test,
+            'ic': f.ic, 'hit_rate': f.hit_rate,
+        } for f in folds],
+        model_rf=rf, model_lgb=lgb_model,
+    )
+
+
+@dataclass
+class RegressionResult:
+    n_folds: int
+    oos_ic: float
+    oos_rmse: float
+    oos_avg_car: float
+    feature_importance: dict
+    folds: list = field(default_factory=list)
+    model_rf: object = None
+    model_lgb: object = None
+
+
+def walk_forward_regression(conn: sqlite3.Connection,
+                             min_train_months: int = 6,
+                             test_months: int = 1,
+                             min_train_samples: int = 200,
+                             min_test_samples: int = 20) -> RegressionResult:
+    """Walk-forward regression with RF + LightGBM ensemble.
+
+    Targets continuous winsorized car_30d (not binary). Output is predicted
+    CAR magnitude for signal ranking — richer than direction-only classification.
+    """
+    import pandas as pd
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.metrics import mean_squared_error
+
+    X, y_cls, ids, dates, car_winsorized = prepare_features(conn)
+    if len(X) < 50:
+        log.warning(f"Insufficient data for regression ({len(X)} signals)")
+        return RegressionResult(n_folds=0, oos_ic=0, oos_rmse=0,
+                                 oos_avg_car=0, feature_importance={})
+
+    # Target: continuous winsorized CAR
+    y = car_winsorized
+
+    # Sort by date
+    date_series = pd.to_datetime(dates)
+    sort_idx = date_series.argsort()
+    X = X.iloc[sort_idx].reset_index(drop=True)
+    y = y[sort_idx]
+    ids = ids[sort_idx]
+    date_series = date_series[sort_idx]
+
+    max_date = date_series.max()
+    folds = []
+    all_oos_preds = []
+    all_oos_actual = []
+    all_fold_importances = []
+    rf = None
+    lgb_model = None
+
+    train_end = date_series.min() + pd.DateOffset(months=min_train_months)
+
+    while train_end + pd.DateOffset(months=test_months) <= max_date:
+        test_end = train_end + pd.DateOffset(months=test_months)
+
+        train_mask = date_series < train_end
+        test_mask = (date_series >= train_end) & (date_series < test_end)
+
+        if train_mask.sum() < min_train_samples or test_mask.sum() < min_test_samples:
+            train_end += pd.DateOffset(months=1)
+            continue
+
+        X_train, y_train = X[train_mask], y[train_mask]
+        X_test, y_test = X[test_mask], y[test_mask]
+
+        # Train Random Forest Regressor
+        rf = RandomForestRegressor(n_estimators=100, max_depth=6,
+                                    random_state=42, n_jobs=-1)
+        rf.fit(X_train, y_train)
+        rf_preds = rf.predict(X_test)
+
+        # Train LightGBM Regressor
+        lgb_model = lgb.LGBMRegressor(n_estimators=100, max_depth=6,
+                                       random_state=42, verbose=-1, n_jobs=-1)
+        lgb_model.fit(X_train, y_train)
+        lgb_preds = lgb_model.predict(X_test)
+
+        # Ensemble: average predictions
+        ensemble_preds = (rf_preds + lgb_preds) / 2
+
+        # Accumulate per-fold feature importance
+        feat_names = list(X.columns)
+        rf_imp = rf.feature_importances_
+        lgb_imp = lgb_model.feature_importances_ / max(lgb_model.feature_importances_.sum(), 1)
+        fold_imp = {}
+        for i, name in enumerate(feat_names):
+            fold_imp[name] = (rf_imp[i] + lgb_imp[i]) / 2
+        all_fold_importances.append(fold_imp)
+
+        # Metrics
+        ic = compute_information_coefficient(ensemble_preds, y_test)
+        rmse = float(np.sqrt(mean_squared_error(y_test, ensemble_preds)))
+        hit_rate = sum(1 for p, a in zip(ensemble_preds > 0, y_test > 0) if p == a) / len(y_test)
+        avg_car = float(np.mean(y_test))
+
+        fold = FoldResult(
+            train_start=str(date_series[train_mask].min().date()),
+            train_end=str(train_end.date()),
+            test_start=str(train_end.date()),
+            test_end=str(test_end.date()),
+            n_train=int(train_mask.sum()),
+            n_test=int(test_mask.sum()),
+            ic=ic, hit_rate=round(hit_rate, 4), avg_car=round(avg_car, 6),
+        )
+        folds.append(fold)
+        all_oos_preds.extend(ensemble_preds.tolist())
+        all_oos_actual.extend(y_test.tolist())
+
+        train_end += pd.DateOffset(months=1)
+
+    # Aggregate OOS metrics
+    oos_ic = compute_information_coefficient(all_oos_preds, all_oos_actual)
+    oos_rmse = float(np.sqrt(np.mean((np.array(all_oos_preds) - np.array(all_oos_actual))**2))) if all_oos_actual else 0
+    oos_avg_car = float(np.mean(all_oos_actual)) if all_oos_actual else 0
+
+    # Feature importance — averaged across ALL folds
+    importance = {}
+    if all_fold_importances:
+        feat_names = list(X.columns)
+        for name in feat_names:
+            vals = [fi.get(name, 0) for fi in all_fold_importances]
+            importance[name] = round(np.mean(vals), 4)
+
+        # Log low-importance features
+        low_imp = [f"{name} ({imp:.4f})" for name, imp in importance.items() if imp < 0.005]
+        if low_imp:
+            log.info(f"Regression: low-importance features (<0.5%): {', '.join(low_imp)}")
+
+    return RegressionResult(
+        n_folds=len(folds),
+        oos_ic=round(oos_ic, 6),
+        oos_rmse=round(oos_rmse, 6),
+        oos_avg_car=round(oos_avg_car, 6),
         feature_importance=dict(sorted(importance.items(), key=lambda x: -x[1])),
         folds=[{
             'train_start': f.train_start, 'train_end': f.train_end,

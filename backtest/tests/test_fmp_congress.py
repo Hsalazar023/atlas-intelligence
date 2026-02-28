@@ -62,7 +62,7 @@ class TestNormalizeFmpCongress:
         assert result['Transaction'] == 'Purchase'
         assert result['Range'] == '$1,000,001 - $5,000,000'
         assert result['Chamber'] == 'Senate'
-        assert result['Party'] == 'D'
+        assert result['Party'] == 'Democrat'
         assert result['DisclosureDate'] == '2026-02-15'
         assert result['Source'] == 'FMP'
 
@@ -74,7 +74,7 @@ class TestNormalizeFmpCongress:
         assert result['Ticker'] == 'AAPL'
         assert result['Chamber'] == 'House'
         assert result['Transaction'] == 'Sale'
-        assert result['Party'] == 'R'
+        assert result['Party'] == 'Republican'
 
     def test_returns_none_when_symbol_empty(self):
         """Should return None when symbol is empty string."""
@@ -252,8 +252,8 @@ class TestFetchFmpCongress:
 
         # Verify API URLs contain the right endpoints
         calls = mock_get.call_args_list
-        assert any('senate-trading' in str(c) for c in calls)
-        assert any('house-disclosure' in str(c) for c in calls)
+        assert any('senate-latest' in str(c) for c in calls)
+        assert any('house-latest' in str(c) for c in calls)
 
     @patch('scripts.fetch_data.time.sleep')
     @patch('scripts.fetch_data.requests.get')

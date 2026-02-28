@@ -288,15 +288,16 @@ def fetch_quiver_congress(api_key):
 
 
 # ── FMP Congressional Trades ──────────────────────────────────────────────
-FMP_API_KEY = os.environ.get('FMP_API_KEY', '')
+FMP_API_KEY = os.environ.get('FMP_API_KEY', 'UefVEEvF1XXtpgWcsidPCGxcDJ6N0kXv')
 
 def normalize_fmp_congress(raw, chamber):
     """
-    Normalize a single FMP API response dict into the QuiverQuant-compatible
+    Normalize a single FMP stable API response dict into the QuiverQuant-compatible
     congress_feed.json format.
 
-    FMP fields: transactionDate, disclosureDate, representative, type,
-                amount, symbol, assetDescription, owner, party
+    FMP stable API fields: transactionDate, disclosureDate, firstName, lastName,
+                           office, district, type, amount, symbol, assetDescription,
+                           owner, link
 
     Returns a normalized dict, or None if no valid ticker symbol.
     """
@@ -326,15 +327,22 @@ def normalize_fmp_congress(raw, chamber):
         except ValueError:
             pass
 
-    # Normalize party to single-letter format (matches QuiverQuant: "D" / "R")
-    party_raw = (raw.get('party') or '').strip()
-    PARTY_MAP = {'Democrat': 'D', 'Democratic': 'D', 'Republican': 'R'}
-    party = PARTY_MAP.get(party_raw, party_raw)
+    # Build representative name from firstName + lastName (stable API)
+    # Fall back to 'representative' field (legacy compat) or 'office'
+    first = (raw.get('firstName') or '').strip()
+    last = (raw.get('lastName') or '').strip()
+    if first and last:
+        representative = f'{first} {last}'
+    else:
+        representative = (raw.get('representative') or raw.get('office') or '').strip()
+
+    # Party not available in stable API — leave empty
+    party = (raw.get('party') or '').strip()
 
     return {
         'Ticker': symbol,
         'TransactionDate': txn_date,
-        'Representative': (raw.get('representative') or '').strip(),
+        'Representative': representative,
         'Transaction': transaction,
         'Range': (raw.get('amount') or '').strip(),
         'Chamber': chamber,
@@ -347,7 +355,7 @@ def normalize_fmp_congress(raw, chamber):
 
 def fetch_fmp_congress(api_key, pages=10):
     """
-    Fetch congressional trades from FMP (Financial Modeling Prep) API.
+    Fetch congressional trades from FMP (Financial Modeling Prep) stable API.
     Pulls from both Senate and House endpoints, normalizes to QuiverQuant format,
     deduplicates, and returns sorted list (most recent first).
     """
@@ -355,8 +363,8 @@ def fetch_fmp_congress(api_key, pages=10):
     seen = set()  # (ticker, date, representative) for dedup
 
     endpoints = [
-        ('https://financialmodelingprep.com/api/v4/senate-trading', 'Senate'),
-        ('https://financialmodelingprep.com/api/v4/house-disclosure', 'House'),
+        ('https://financialmodelingprep.com/stable/senate-latest', 'Senate'),
+        ('https://financialmodelingprep.com/stable/house-latest', 'House'),
     ]
 
     for base_url, chamber in endpoints:
@@ -494,10 +502,12 @@ def main():
     congress_source = []
 
     # FMP congressional trades (primary source if API key set)
+    # --bootstrap flag fetches 30 pages per chamber (~6000 trades, back to ~2022)
+    fmp_pages = 30 if '--bootstrap' in sys.argv else 10
     if FMP_API_KEY:
-        print('\nFetching congressional trades (FMP)...')
+        print(f'\nFetching congressional trades (FMP, {fmp_pages} pages/chamber)...')
         try:
-            fmp_trades = fetch_fmp_congress(FMP_API_KEY)
+            fmp_trades = fetch_fmp_congress(FMP_API_KEY, pages=fmp_pages)
             if fmp_trades:
                 # Save raw FMP data separately
                 save_json('fmp_congress_feed.json', {

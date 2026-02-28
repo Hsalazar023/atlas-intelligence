@@ -5,7 +5,9 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 
-from backtest.sector_map import get_sector, build_sector_map
+from backtest.sector_map import (
+    get_sector, build_sector_map, get_market_cap, get_market_cap_bucket,
+)
 
 
 SAMPLE_MAP = {
@@ -19,11 +21,13 @@ SAMPLE_MAP = {
 
 @pytest.fixture(autouse=True)
 def reset_cache():
-    """Reset the module-level sector cache before each test."""
+    """Reset the module-level caches before each test."""
     import backtest.sector_map as sm
     sm._sector_cache = None
+    sm._market_cap_cache = None
     yield
     sm._sector_cache = None
+    sm._market_cap_cache = None
 
 
 class TestGetSector:
@@ -80,23 +84,32 @@ class TestGetSector:
 class TestBuildSectorMap:
     """Tests for build_sector_map() function."""
 
+    @patch('backtest.sector_map.time.sleep')
     @patch('requests.get')
-    def test_returns_dict_from_api(self, mock_get, tmp_path):
+    def test_returns_dict_from_api(self, mock_get, mock_sleep, tmp_path):
         """build_sector_map() returns a dict when API call succeeds."""
         import backtest.sector_map as sm
         sm.SECTOR_MAP_PATH = tmp_path / "sector_map.json"
 
-        # Mock FMP API response
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = [
-            {"symbol": "AAPL", "sector": "Technology"},
-            {"symbol": "LMT", "sector": "Industrials"},
-            {"symbol": "PFE", "sector": "Healthcare"},
-        ]
-        mock_resp.raise_for_status = MagicMock()
-        mock_get.return_value = mock_resp
+        # Mock FMP per-ticker profile API responses (uses 'marketCap' key)
+        def make_resp(symbol, sector, market_cap=None):
+            resp = MagicMock()
+            resp.ok = True
+            profile = {"symbol": symbol, "sector": sector}
+            if market_cap:
+                profile["marketCap"] = market_cap
+            resp.json.return_value = [profile]
+            return resp
 
-        result = build_sector_map(api_key="test_key")
+        tickers = ["AAPL", "LMT", "PFE"]
+        mock_get.side_effect = [
+            make_resp("AAPL", "Technology", 3_000_000_000_000),
+            make_resp("LMT", "Industrials", 120_000_000_000),
+            make_resp("PFE", "Healthcare", 150_000_000_000),
+        ]
+
+        sm.MARKET_CAP_MAP_PATH = tmp_path / "market_cap_map.json"
+        result = build_sector_map(api_key="test_key", tickers=tickers)
 
         assert isinstance(result, dict)
         assert result["AAPL"] == "Technology"
@@ -104,10 +117,17 @@ class TestBuildSectorMap:
         assert result["PFE"] == "Healthcare"
         assert len(result) == 3
 
-        # Verify it was saved to disk
+        # Verify sector map saved to disk
         assert sm.SECTOR_MAP_PATH.exists()
         saved = json.loads(sm.SECTOR_MAP_PATH.read_text())
         assert saved["AAPL"] == "Technology"
+
+        # Verify market cap map saved to disk
+        assert sm.MARKET_CAP_MAP_PATH.exists()
+        cap_saved = json.loads(sm.MARKET_CAP_MAP_PATH.read_text())
+        assert cap_saved["AAPL"] == 3_000_000_000_000
+        assert get_market_cap_bucket("AAPL") == "mega"
+        assert get_market_cap_bucket("LMT") == "large"
 
     def test_falls_back_to_cached_file(self, tmp_path):
         """build_sector_map() loads cached file when API key is None."""
@@ -124,8 +144,9 @@ class TestBuildSectorMap:
         assert result["AAPL"] == "Technology"
         assert len(result) == len(SAMPLE_MAP)
 
+    @patch('backtest.sector_map.time.sleep')
     @patch('requests.get')
-    def test_falls_back_on_api_error(self, mock_get, tmp_path):
+    def test_falls_back_on_api_error(self, mock_get, mock_sleep, tmp_path):
         """build_sector_map() falls back to cache when API request fails."""
         import backtest.sector_map as sm
 
@@ -137,9 +158,11 @@ class TestBuildSectorMap:
         # Make the API call raise an exception
         mock_get.side_effect = Exception("Connection refused")
 
-        result = build_sector_map(api_key="bad_key")
+        # Pass a ticker not in cache to force an API call
+        result = build_sector_map(api_key="bad_key", tickers=["ZZZZZ"])
 
         assert isinstance(result, dict)
+        # Should still have cached entries even though API failed
         assert result["AAPL"] == "Technology"
         assert len(result) == len(SAMPLE_MAP)
 
@@ -152,3 +175,61 @@ class TestBuildSectorMap:
 
         assert isinstance(result, dict)
         assert len(result) == 0
+
+
+class TestMarketCapBucket:
+    """Tests for get_market_cap_bucket() and get_market_cap()."""
+
+    def test_mega_cap(self):
+        """Companies with >$200B market cap are 'mega'."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"AAPL": 3_000_000_000_000}
+        assert get_market_cap_bucket("AAPL") == "mega"
+
+    def test_large_cap(self):
+        """Companies with $10B-$200B market cap are 'large'."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"CAT": 50_000_000_000}
+        assert get_market_cap_bucket("CAT") == "large"
+
+    def test_mid_cap(self):
+        """Companies with $2B-$10B market cap are 'mid'."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"EPAC": 5_000_000_000}
+        assert get_market_cap_bucket("EPAC") == "mid"
+
+    def test_small_cap(self):
+        """Companies with $300M-$2B market cap are 'small'."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"XYZ": 800_000_000}
+        assert get_market_cap_bucket("XYZ") == "small"
+
+    def test_micro_cap(self):
+        """Companies with <$300M market cap are 'micro'."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"TINY": 100_000_000}
+        assert get_market_cap_bucket("TINY") == "micro"
+
+    def test_unknown_ticker(self):
+        """Unknown tickers return None."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {}
+        assert get_market_cap_bucket("ZZZZ") is None
+
+    def test_case_insensitive(self):
+        """get_market_cap_bucket() works with lowercase input."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"AAPL": 3_000_000_000_000}
+        assert get_market_cap_bucket("aapl") == "mega"
+
+    def test_get_market_cap_returns_value(self):
+        """get_market_cap() returns the raw market cap value."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {"NVDA": 2_500_000_000_000}
+        assert get_market_cap("NVDA") == 2_500_000_000_000
+
+    def test_get_market_cap_unknown(self):
+        """get_market_cap() returns None for unknown tickers."""
+        import backtest.sector_map as sm
+        sm._market_cap_cache = {}
+        assert get_market_cap("UNKNOWN") is None

@@ -31,8 +31,10 @@ from backtest.learning_engine import (
     init_db, insert_signal, update_aggregate_features,
     backfill_outcomes, compute_feature_stats, generate_weights_from_stats,
     load_price_index, generate_dashboard, print_summary,
-    update_person_track_records,
+    update_person_track_records, enrich_signal_features, enrich_market_context,
+    generate_analysis_report, generate_diagnostics_html,
 )
+from backtest.sector_map import get_sector, build_sector_map, get_market_cap_bucket
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger(__name__)
@@ -58,16 +60,36 @@ def _parse_efts_hits(hits: list) -> list:
     for h in hits:
         src = h.get('_source', {})
         names = src.get('display_names', [])
+        _id = h.get('_id', '')
         company_names = [n for n in names if is_company(n)]
         person_names = [n for n in names if not is_company(n)]
         company = clean_name(company_names[-1]) if company_names else clean_name(names[-1]) if names else 'Unknown'
         insider = clean_name(person_names[0]) if person_names else clean_name(names[0]) if names else 'Unknown'
+
+        # Build XML URL for Form 4 enrichment
+        accession = src.get('adsh', '')
+        ciks = src.get('ciks', [])
+        company_cik = ciks[-1] if len(ciks) > 1 else (ciks[0] if ciks else '')
+        xml_url = ''
+        if company_cik and accession and ':' in _id:
+            try:
+                numeric_cik = str(int(company_cik))
+                clean_acc = accession.replace('-', '')
+                xml_filename = _id.split(':', 1)[1]
+                xml_url = (
+                    f'https://www.sec.gov/Archives/edgar/data/'
+                    f'{numeric_cik}/{clean_acc}/{xml_filename}'
+                )
+            except (ValueError, IndexError):
+                pass
 
         results.append({
             'company': company,
             'insider': insider,
             'date': src.get('file_date', ''),
             'period': src.get('period_ending', ''),
+            'accession': accession,
+            'xml_url': xml_url,
         })
     return results
 
@@ -174,22 +196,44 @@ def fetch_edgar_historical(days: int = 635, raw_per_month: int = 1500,
 
 
 def fetch_congress_trades() -> list:
-    """Fetch congressional trades. Uses existing feed + QuiverQuant API if available."""
-    trades = []
+    """Fetch congressional trades from all available sources.
 
-    # 1. Load existing congress_feed.json
+    Priority: FMP API (deep history) > existing congress_feed.json > QuiverQuant.
+    Results are merged, deduplicated, and saved back to congress_feed.json.
+    """
+    trades = []
+    sources = []
+
+    # 1. FMP API — primary source (30 pages/chamber = ~3000 trades back to ~2022)
+    fmp_key = os.environ.get('FMP_API_KEY', 'UefVEEvF1XXtpgWcsidPCGxcDJ6N0kXv')
+    if fmp_key:
+        try:
+            sys.path.insert(0, str(Path(__file__).parent.parent))
+            from scripts.fetch_data import fetch_fmp_congress
+            log.info("Fetching congressional trades from FMP (30 pages/chamber)...")
+            fmp_trades = fetch_fmp_congress(fmp_key, pages=30)
+            if fmp_trades:
+                trades.extend(fmp_trades)
+                sources.append('FMP')
+                log.info(f"FMP: {len(fmp_trades)} trades fetched")
+        except Exception as e:
+            log.warning(f"FMP congress fetch error: {e}")
+    else:
+        log.info("FMP_API_KEY not set — skipping FMP fetch")
+
+    # 2. Load existing congress_feed.json (may have QuiverQuant or prior FMP data)
     feed_path = DATA_DIR / "congress_feed.json"
     if feed_path.exists():
         data = load_json(feed_path)
         existing = data.get('trades', [])
         trades.extend(existing)
+        sources.append('congress_feed.json')
         log.info(f"Loaded {len(existing)} trades from congress_feed.json")
 
-    # 2. Try QuiverQuant historical endpoint
+    # 3. Try QuiverQuant historical endpoint (fallback)
     quiver_key = os.environ.get('QUIVER_KEY', '')
     if quiver_key:
         try:
-            # Try historical endpoint (may not be available on free tier)
             url = 'https://api.quiverquant.com/beta/historical/congresstrading'
             headers = {
                 'Authorization': f'Token {quiver_key}',
@@ -201,6 +245,7 @@ def fetch_congress_trades() -> list:
                 if isinstance(historical, list):
                     log.info(f"QuiverQuant historical: {len(historical)} trades")
                     trades.extend(historical)
+                    sources.append('QuiverQuant')
                 else:
                     log.info("QuiverQuant historical returned non-list response")
             else:
@@ -221,56 +266,261 @@ def fetch_congress_trades() -> list:
             seen.add(key)
             unique.append(t)
 
-    log.info(f"Total congressional trades (deduplicated): {len(unique)}")
+    # Save merged data back to congress_feed.json for future use
+    if unique and fmp_key:
+        unique.sort(
+            key=lambda x: x.get('TransactionDate', x.get('Date', '')),
+            reverse=True,
+        )
+        from scripts.fetch_data import save_json as save_data_json
+        save_data_json('congress_feed.json', {
+            'updated': datetime.now(tz=timezone.utc).isoformat(),
+            'count': len(unique),
+            'source': ' + '.join(sources),
+            'trades': unique,
+        })
+
+    log.info(f"Total congressional trades (deduplicated): {len(unique)} "
+             f"from {', '.join(sources)}")
     return unique
 
 
 def collect_price_for_ticker(ticker: str, lookback_days: int = 730) -> bool:
-    """Collect price history for a single ticker using yfinance."""
-    cache_path = PRICE_HISTORY_DIR / f"{ticker}.json"
+    """Collect price history for a single ticker using smart incremental logic.
 
-    # Skip if we already have recent data
-    if cache_path.exists():
-        try:
-            data = load_json(cache_path)
-            if len(data) > 100:  # already have substantial history
-                return True
-        except Exception:
-            pass
+    Checks existing cache and only fetches what's missing:
+    - If no cache exists → full download
+    - If cache is missing older data → fetch backward portion
+    - If cache is stale (latest date >2d old) → fetch forward portion
+    - If cache covers needed lookback and is up-to-date → skip entirely
+    """
+    from backtest.collect_prices import fetch_candles, merge_candles, load_cached_candles
 
+    PRICE_HISTORY_DIR.mkdir(parents=True, exist_ok=True)
     try:
-        import yfinance as yf
-        end = datetime.now()
-        start = end - timedelta(days=lookback_days)
-        df = yf.download(ticker, start=start.strftime('%Y-%m-%d'),
-                        end=end.strftime('%Y-%m-%d'), progress=False, auto_adjust=True)
+        existing = load_cached_candles(ticker)
+    except OSError:
+        existing = {}  # fd exhaustion — treat as uncached
+    now = datetime.now()
+    needed_start = (now - timedelta(days=lookback_days)).strftime('%Y-%m-%d')
+    end_date = (now + timedelta(days=1)).strftime('%Y-%m-%d')
 
-        if df is None or df.empty:
+    if not existing:
+        # No cache — full download
+        new_candles = fetch_candles(ticker, needed_start, end_date)
+        if not new_candles:
             return False
+        save_json(PRICE_HISTORY_DIR / f"{ticker}.json", new_candles)
+        return True
 
-        # yfinance >=1.2 returns MultiIndex columns
-        if df.columns.nlevels > 1:
-            df = df.droplevel('Ticker', axis=1)
+    sorted_dates = sorted(existing.keys())
+    cache_min = sorted_dates[0]
+    cache_max = sorted_dates[-1]
+    cache_max_dt = datetime.strptime(cache_max, '%Y-%m-%d')
 
-        result = {}
-        for idx, row in df.iterrows():
-            date_str = idx.strftime('%Y-%m-%d')
-            result[date_str] = {
-                'o': round(float(row['Open']), 4),
-                'h': round(float(row['High']), 4),
-                'l': round(float(row['Low']), 4),
-                'c': round(float(row['Close']), 4),
-                'v': int(row['Volume']),
-            }
+    needs_backfill = cache_min > needed_start
+    needs_forward = (now - cache_max_dt).days > 2
 
-        if result:
-            PRICE_HISTORY_DIR.mkdir(parents=True, exist_ok=True)
-            save_json(cache_path, result)
-            return True
-    except Exception as e:
-        log.warning(f"Price fetch failed for {ticker}: {e}")
+    if not needs_backfill and not needs_forward:
+        # Cache is complete and up-to-date
+        return True
 
-    return False
+    merged = dict(existing)
+
+    if needs_backfill:
+        # Fetch the gap: needed_start to cache_min
+        backfill = fetch_candles(ticker, needed_start, cache_min)
+        if backfill:
+            merged = merge_candles(merged, backfill)
+            log.debug(f"{ticker}: backfilled {len(backfill)} older days")
+
+    if needs_forward:
+        # Fetch from cache_max to now
+        forward = fetch_candles(ticker, cache_max, end_date)
+        if forward:
+            merged = merge_candles(merged, forward)
+            log.debug(f"{ticker}: fetched {len(forward)} newer days")
+
+    if len(merged) > len(existing):
+        save_json(PRICE_HISTORY_DIR / f"{ticker}.json", merged)
+
+    return len(merged) > 0
+
+
+def _step_timer():
+    """Simple context-manager-like timer. Returns a callable that returns elapsed seconds."""
+    start = time.time()
+    return lambda: round(time.time() - start, 1)
+
+
+def _check_spy_coverage(spy_index: dict, conn) -> None:
+    """Validate SPY price data covers our full signal date range. Logs warnings."""
+    if not spy_index:
+        log.error("⚠ SPY price file is EMPTY — no outcomes can be computed!")
+        return
+
+    spy_dates = sorted(spy_index.keys())
+    spy_min, spy_max = spy_dates[0], spy_dates[-1]
+
+    sig_range = conn.execute(
+        "SELECT MIN(signal_date) as min_d, MAX(signal_date) as max_d FROM signals"
+    ).fetchone()
+    sig_min, sig_max = sig_range['min_d'], sig_range['max_d']
+
+    log.info(f"  SPY price coverage:   {spy_min} to {spy_max} ({len(spy_index)} trading days)")
+    log.info(f"  Signal date range:    {sig_min} to {sig_max}")
+
+    # Check: can we compute 365d outcomes for earliest signals?
+    if spy_min > sig_min:
+        log.warning(f"  ⚠ SPY starts at {spy_min} but signals start at {sig_min} — "
+                    f"early signals will miss base price")
+
+    # Check: can we compute outcomes up to the latest signal + window?
+    from datetime import datetime as _dt
+    spy_max_dt = _dt.strptime(spy_max, '%Y-%m-%d')
+    sig_min_dt = _dt.strptime(sig_min, '%Y-%m-%d')
+    coverage_days = (spy_max_dt - sig_min_dt).days
+    log.info(f"  Effective coverage:   {coverage_days} days from earliest signal")
+    if coverage_days < 365:
+        log.warning(f"  ⚠ Only {coverage_days}d of coverage — 365d outcomes will be incomplete")
+    elif coverage_days < 730:
+        log.info(f"  ℹ 365d outcomes available for signals before ~{(spy_max_dt - _dt.strptime(sig_min, '%Y-%m-%d')).days - 365}d ago")
+
+
+def _print_data_quality_report(conn) -> None:
+    """Print comprehensive data quality report after bootstrap."""
+    total = conn.execute("SELECT COUNT(*) as cnt FROM signals").fetchone()['cnt']
+    if total == 0:
+        log.warning("No signals in database — nothing to report.")
+        return
+
+    print(f"\n{'='*70}")
+    print(f"  DATA QUALITY REPORT")
+    print(f"{'='*70}")
+
+    # ── 1. Outcome fill rates ──
+    print(f"\n── Outcome Fill Rates ──")
+    print(f"  {'Horizon':<12s} {'Filled':>8s} {'With CAR':>10s} {'Fill %':>8s} {'CAR %':>8s} {'Gap':>8s}")
+    print(f"  {'-'*12} {'-'*8} {'-'*10} {'-'*8} {'-'*8} {'-'*8}")
+    for h in ['5d', '30d', '90d', '180d', '365d']:
+        filled = conn.execute(
+            f"SELECT COUNT(*) as cnt FROM signals WHERE outcome_{h}_filled=1"
+        ).fetchone()['cnt']
+        with_car = conn.execute(
+            f"SELECT COUNT(*) as cnt FROM signals WHERE outcome_{h}_filled=1 AND car_{h} IS NOT NULL"
+        ).fetchone()['cnt']
+        fill_pct = filled / total * 100 if total else 0
+        car_pct = with_car / total * 100 if total else 0
+        gap = filled - with_car
+        flag = " ⚠ GAP" if gap > 0 else ""
+        print(f"  {h:<12s} {filled:>8,} {with_car:>10,} {fill_pct:>7.1f}% {car_pct:>7.1f}% {gap:>8,}{flag}")
+
+    # ── 2. Feature fill rates (ML features) ──
+    print(f"\n── ML Feature Fill Rates ──")
+    ml_features = [
+        'trade_size_points', 'same_ticker_signals_7d', 'same_ticker_signals_30d',
+        'has_convergence', 'convergence_tier', 'person_trade_count',
+        'person_hit_rate_30d', 'relative_position_size', 'insider_role',
+        'sector', 'price_proximity_52wk', 'market_cap_bucket',
+        'cluster_velocity', 'trade_pattern', 'disclosure_delay',
+        'vix_at_signal', 'yield_curve_at_signal', 'credit_spread_at_signal',
+        'days_to_earnings', 'days_to_catalyst',
+        'momentum_1m', 'momentum_3m', 'momentum_6m',
+        'volume_spike', 'insider_buy_ratio_90d', 'sector_avg_car',
+        'vix_regime_interaction',
+    ]
+    print(f"  {'Feature':<30s} {'Non-NULL':>10s} {'Fill %':>8s}")
+    print(f"  {'-'*30} {'-'*10} {'-'*8}")
+    for feat in ml_features:
+        non_null = conn.execute(
+            f"SELECT COUNT(*) as cnt FROM signals WHERE {feat} IS NOT NULL"
+        ).fetchone()['cnt']
+        pct = non_null / total * 100 if total else 0
+        flag = " ⚠ LOW" if pct < 30 else ""
+        print(f"  {feat:<30s} {non_null:>10,} {pct:>7.1f}%{flag}")
+
+    # ── 3. CAR sanity checks ──
+    print(f"\n── CAR Sanity Checks ──")
+    for h in ['5d', '30d', '90d', '180d', '365d']:
+        stats = conn.execute(
+            f"SELECT COUNT(*) as n, "
+            f"AVG(car_{h}) as avg, "
+            f"MIN(car_{h}) as mn, "
+            f"MAX(car_{h}) as mx, "
+            f"SUM(CASE WHEN ABS(car_{h}) > 2.0 THEN 1 ELSE 0 END) as extreme "
+            f"FROM signals WHERE car_{h} IS NOT NULL"
+        ).fetchone()
+        n = stats['n']
+        if n == 0:
+            print(f"  {h}: no data")
+            continue
+        avg = stats['avg']
+        mn = stats['mn']
+        mx = stats['mx']
+        extreme = stats['extreme']
+        extreme_pct = extreme / n * 100 if n else 0
+        flags = []
+        if abs(avg) > 0.5:
+            flags.append(f"avg={avg*100:+.1f}% seems high")
+        if abs(mn) > 5.0 or abs(mx) > 5.0:
+            flags.append(f"range [{mn*100:+.0f}%, {mx*100:+.0f}%]")
+        if extreme_pct > 5:
+            flags.append(f"{extreme_pct:.1f}% outliers >200%")
+        flag_str = f"  ⚠ {'; '.join(flags)}" if flags else ""
+        print(f"  {h}: n={n:,}  avg={avg*100:+.2f}%  "
+              f"min={mn*100:+.1f}%  max={mx*100:+.1f}%  "
+              f"|>200%|={extreme}{flag_str}")
+
+    # ── 4. Source breakdown ──
+    print(f"\n── Source Breakdown ──")
+    for source in ['congress', 'edgar']:
+        cnt = conn.execute(
+            "SELECT COUNT(*) as cnt FROM signals WHERE source=?", (source,)
+        ).fetchone()['cnt']
+        with_price = conn.execute(
+            "SELECT COUNT(*) as cnt FROM signals WHERE source=? AND price_at_signal IS NOT NULL", (source,)
+        ).fetchone()['cnt']
+        with_car = conn.execute(
+            "SELECT COUNT(*) as cnt FROM signals WHERE source=? AND car_30d IS NOT NULL", (source,)
+        ).fetchone()['cnt']
+        price_pct = with_price / cnt * 100 if cnt else 0
+        car_pct = with_car / cnt * 100 if cnt else 0
+        print(f"  {source:<10s}: {cnt:>6,} signals  |  "
+              f"price: {with_price:>6,} ({price_pct:.0f}%)  |  "
+              f"car_30d: {with_car:>6,} ({car_pct:.0f}%)")
+
+    # ── 5. Convergence breakdown ──
+    print(f"\n── Convergence Distribution ──")
+    for tier in [0, 1, 2]:
+        cnt = conn.execute(
+            "SELECT COUNT(*) as cnt FROM signals WHERE convergence_tier=?", (tier,)
+        ).fetchone()['cnt']
+        pct = cnt / total * 100 if total else 0
+        print(f"  Tier {tier}: {cnt:>6,} ({pct:.1f}%)")
+
+    # ── 6. Price file coverage check ──
+    print(f"\n── Price File Coverage ──")
+    tickers_row = conn.execute("SELECT DISTINCT ticker FROM signals").fetchall()
+    total_tickers = len(tickers_row)
+    tickers_with_files = 0
+    short_files = 0
+    for r in tickers_row:
+        fpath = PRICE_HISTORY_DIR / f"{r['ticker']}.json"
+        if fpath.exists():
+            tickers_with_files += 1
+            try:
+                data = load_json(fpath)
+                if len(data) < 600:  # less than ~2.4 years
+                    short_files += 1
+            except Exception:
+                pass
+
+    print(f"  Tickers in DB:     {total_tickers:,}")
+    print(f"  With price files:  {tickers_with_files:,} ({tickers_with_files/total_tickers*100:.0f}%)")
+    if short_files:
+        print(f"  Short files (<600 days): {short_files:,}  ⚠ may miss 365d outcomes")
+
+    print(f"\n{'='*70}\n")
 
 
 def bootstrap(conn=None):
@@ -278,35 +528,85 @@ def bootstrap(conn=None):
     log.info("=" * 60)
     log.info("  ATLAS Adaptive Learning Engine — Historical Bootstrap")
     log.info("=" * 60)
+    pipeline_start = time.time()
+    step_times = {}
 
     if conn is None:
         conn = init_db()
 
     # ── 1. Fetch historical EDGAR filings ────────────────────────────────
-    log.info("\n[1/7] Fetching historical EDGAR Form 4 filings (~21 months)...")
+    log.info("\n[1/11] Fetching historical EDGAR Form 4 filings (~21 months)...")
+    elapsed = _step_timer()
     edgar_filings = fetch_edgar_historical(days=635, raw_per_month=1500, keep_per_month=500)
 
+    # ── 1b. Enrich via Form 4 XML — extract role, direction, buy value ────
+    # Without this, we'd ingest grants/sales/exercises as buy signals (noise).
+    log.info(f"\n[1b/11] Enriching {len(edgar_filings)} filings from Form 4 XML "
+             f"(~{len(edgar_filings) * 0.12 / 60:.0f} min at SEC rate limit)...")
+    from backtest.backfill_edgar_xml import parse_form4_xml
+    headers = {'User-Agent': SEC_USER_AGENT, 'Accept': 'application/json'}
+    enriched_count = 0
+    skipped_non_buy = 0
+    xml_errors = 0
+
+    enriched_filings = []
+    for i, f in enumerate(edgar_filings):
+        xml_url = f.get('xml_url', '')
+        if not xml_url:
+            continue
+
+        xml_data = parse_form4_xml(xml_url, headers)
+        time.sleep(SEC_DELAY)
+
+        if not xml_data:
+            xml_errors += 1
+            continue
+
+        # Only keep genuine purchases
+        if xml_data['direction'] != 'buy':
+            skipped_non_buy += 1
+            continue
+
+        f['_xml'] = xml_data
+        enriched_filings.append(f)
+        enriched_count += 1
+
+        if (i + 1) % 200 == 0:
+            log.info(f"  XML enrichment: {i+1}/{len(edgar_filings)} processed, "
+                     f"{enriched_count} buys, {skipped_non_buy} non-buy skipped")
+
+    log.info(f"  XML enrichment complete: {enriched_count} buys / "
+             f"{len(edgar_filings)} total ({skipped_non_buy} non-buy, {xml_errors} errors)")
+
     edgar_inserted = 0
-    for f in edgar_filings:
-        # Ticker was pre-matched during fetch (Phase 2 filtering)
+    for f in enriched_filings:
         ticker = f.get('_matched_ticker') or match_edgar_ticker(f.get('company', ''))
         if not ticker:
             continue
 
+        xml = f.get('_xml', {})
         signal = {
             'ticker': ticker,
             'signal_date': f.get('date', ''),
             'source': 'edgar',
             'insider_name': f.get('insider', ''),
+            'insider_role': xml.get('insider_role', ''),
+            'transaction_type': 'Purchase',
+            'trade_size_points': xml.get('trade_size_points'),
+            'disclosure_delay': xml.get('disclosure_delay'),
             'representative': None,
+            'sector': get_sector(ticker),
+            'market_cap_bucket': get_market_cap_bucket(ticker),
         }
         if insert_signal(conn, signal):
             edgar_inserted += 1
 
-    log.info(f"EDGAR: {len(edgar_filings)} pre-matched filings → {edgar_inserted} inserted")
+    step_times['1_edgar_fetch'] = elapsed()
+    log.info(f"EDGAR: {len(edgar_filings)} raw → {enriched_count} buys → {edgar_inserted} inserted  [{elapsed()}s]")
 
     # ── 2. Fetch congressional trades ────────────────────────────────────
-    log.info("\n[2/7] Fetching congressional trades...")
+    log.info("\n[2/11] Fetching congressional trades...")
+    elapsed = _step_timer()
     congress_trades = fetch_congress_trades()
 
     congress_inserted = 0
@@ -331,19 +631,40 @@ def bootstrap(conn=None):
             'trade_size_range': t.get('Range', ''),
             'trade_size_points': range_to_base_points(t.get('Range', '')),
             'insider_name': None,
+            'disclosure_delay': t.get('DisclosureDelay'),
+            'sector': get_sector(ticker),
         }
         if insert_signal(conn, signal):
             congress_inserted += 1
 
-    log.info(f"Congress: {len(congress_trades)} total → {congress_inserted} purchase signals inserted")
+    step_times['2_congress_fetch'] = elapsed()
+    log.info(f"Congress: {len(congress_trades)} total → {congress_inserted} purchase signals inserted  [{elapsed()}s]")
+
+    # ── 2b. Build sector + market cap maps ────────────────────────────────
+    log.info("\n[2b/11] Building sector + market cap maps...")
+    elapsed = _step_timer()
+    tickers_for_map = [r['ticker'] for r in conn.execute("SELECT DISTINCT ticker FROM signals").fetchall()]
+    fmp_key = os.environ.get('FMP_API_KEY', 'UefVEEvF1XXtpgWcsidPCGxcDJ6N0kXv')
+    if fmp_key:
+        build_sector_map(api_key=fmp_key, tickers=tickers_for_map)
+        log.info("Sector + market cap maps built from FMP")
+    else:
+        from backtest.sector_map import bootstrap_sector_map_yfinance
+        bootstrap_sector_map_yfinance(tickers_for_map)
+        log.info("Sector + market cap maps built from yfinance (fallback)")
+    step_times['2b_sector_cap_map'] = elapsed()
+    log.info(f"  [{elapsed()}s]")
 
     # ── 3. Update aggregate features ─────────────────────────────────────
-    log.info("\n[3/7] Computing aggregate features (clusters, convergence)...")
+    log.info("\n[3/11] Computing aggregate features (clusters, convergence)...")
+    elapsed = _step_timer()
     agg = update_aggregate_features(conn)
-    log.info(f"Updated {agg} ticker-date pairs")
+    step_times['3_aggregate'] = elapsed()
+    log.info(f"Updated {agg} ticker-date pairs  [{elapsed()}s]")
 
     # ── 4. Collect price history ─────────────────────────────────────────
-    log.info("\n[4/7] Collecting price history for all tickers...")
+    log.info("\n[4/11] Collecting price history for all tickers...")
+    elapsed = _step_timer()
     tickers_row = conn.execute("SELECT DISTINCT ticker FROM signals").fetchall()
     tickers = [r['ticker'] for r in tickers_row]
 
@@ -351,29 +672,102 @@ def bootstrap(conn=None):
     if 'SPY' not in tickers:
         tickers.append('SPY')
 
+    # Lookback must cover: oldest signal date + 365d outcome window
+    # Signals start ~2022-11, so need ~1300 days from today to cover full range
+    lookback = 1300
+
+    import gc
+
     success = 0
+    price_failures = []
     for i, ticker in enumerate(tickers):
-        if collect_price_for_ticker(ticker, lookback_days=1000):
-            success += 1
+        try:
+            if collect_price_for_ticker(ticker, lookback_days=lookback):
+                success += 1
+            else:
+                price_failures.append(ticker)
+        except OSError as e:
+            log.warning(f"OS error for {ticker}: {e} — forcing cleanup")
+            price_failures.append(ticker)
+            gc.collect()
+            time.sleep(2)
         if (i + 1) % 50 == 0:
             log.info(f"  ...{i+1}/{len(tickers)} tickers processed ({success} with data)")
+            # Force-close stale yfinance connections to avoid fd exhaustion
+            gc.collect()
         time.sleep(0.3)  # rate-limit courtesy
 
-    log.info(f"Price history: {success}/{len(tickers)} tickers collected")
+    step_times['4_price_collect'] = elapsed()
+    log.info(f"Price history: {success}/{len(tickers)} tickers collected  [{elapsed()}s]")
+    if price_failures:
+        log.info(f"  Failed tickers ({len(price_failures)}): {', '.join(price_failures[:20])}"
+                 f"{'...' if len(price_failures) > 20 else ''}")
+
+    # ── SPY coverage check ──
+    spy_index = load_price_index('SPY')
+    _check_spy_coverage(spy_index, conn)
 
     # ── 5. Backfill outcomes ─────────────────────────────────────────────
-    log.info("\n[5/7] Backfilling outcomes (returns + CARs)...")
-    spy_index = load_price_index('SPY')
+    log.info("\n[5/11] Backfilling outcomes (returns + CARs)...")
+    elapsed = _step_timer()
     filled = backfill_outcomes(conn, spy_index)
-    log.info(f"Backfilled outcomes for {filled} signals")
+    step_times['5_backfill'] = elapsed()
+    log.info(f"Backfilled outcomes for {filled} signals  [{elapsed()}s]")
+
+    # Quick sanity check: filled vs CAR match
+    for h in ['30d', '365d']:
+        f_cnt = conn.execute(f"SELECT COUNT(*) as cnt FROM signals WHERE outcome_{h}_filled=1").fetchone()['cnt']
+        c_cnt = conn.execute(f"SELECT COUNT(*) as cnt FROM signals WHERE outcome_{h}_filled=1 AND car_{h} IS NOT NULL").fetchone()['cnt']
+        if f_cnt != c_cnt:
+            log.warning(f"  ⚠ {h}: {f_cnt} filled but only {c_cnt} have CAR (gap={f_cnt-c_cnt})")
+        else:
+            log.info(f"  ✓ {h}: {f_cnt} filled, {c_cnt} with CAR — no gap")
 
     # ── 6. Person track records ──────────────────────────────────────────
-    log.info("\n[6/7] Computing person track records...")
+    log.info("\n[6/11] Computing person track records...")
+    elapsed = _step_timer()
     person_updated = update_person_track_records(conn)
-    log.info(f"Updated track records for {person_updated} signals")
+    step_times['6_person_records'] = elapsed()
+    log.info(f"Updated track records for {person_updated} signals  [{elapsed()}s]")
 
-    # ── 7. Feature analysis + weight generation ──────────────────────────
-    log.info("\n[7/7] Running feature analysis...")
+    # ── 7. Enrich price-based and research-backed features ────────────────
+    log.info("\n[7/11] Enriching signal features (52wk proximity, trade pattern, insider role, market cap)...")
+    elapsed = _step_timer()
+    enriched = enrich_signal_features(conn)
+    step_times['7_enrich_features'] = elapsed()
+    log.info(f"Enriched {enriched} signal features  [{elapsed()}s]")
+
+    # ── 7b. Backfill sector + market_cap_bucket for NULL signals ──
+    log.info("\n[7b/11] Backfilling sector + market_cap_bucket for NULL signals...")
+    elapsed_7b = _step_timer()
+    null_sector_cnt = 0
+    null_cap_cnt = 0
+    for row in conn.execute("SELECT DISTINCT ticker FROM signals WHERE sector IS NULL").fetchall():
+        sector = get_sector(row['ticker'])
+        if sector:
+            conn.execute("UPDATE signals SET sector=? WHERE ticker=? AND sector IS NULL",
+                         (sector, row['ticker']))
+            null_sector_cnt += conn.execute("SELECT changes()").fetchone()[0]
+    for row in conn.execute("SELECT DISTINCT ticker FROM signals WHERE market_cap_bucket IS NULL").fetchall():
+        bucket = get_market_cap_bucket(row['ticker'])
+        if bucket:
+            conn.execute("UPDATE signals SET market_cap_bucket=? WHERE ticker=? AND market_cap_bucket IS NULL",
+                         (bucket, row['ticker']))
+            null_cap_cnt += conn.execute("SELECT changes()").fetchone()[0]
+    conn.commit()
+    step_times['7b_sector_cap_backfill'] = elapsed_7b()
+    log.info(f"Backfilled {null_sector_cnt} sectors, {null_cap_cnt} market cap buckets  [{elapsed_7b()}s]")
+
+    # ── 8. Enrich market context (VIX, yield curve, credit spread) ────────
+    log.info("\n[8/11] Enriching market context from FRED...")
+    elapsed = _step_timer()
+    market_enriched = enrich_market_context(conn)
+    step_times['8_market_context'] = elapsed()
+    log.info(f"Enriched {market_enriched} signals with market context  [{elapsed()}s]")
+
+    # ── 9. Feature analysis + weight generation ──────────────────────────
+    log.info("\n[9/11] Running feature analysis...")
+    elapsed = _step_timer()
     stats = compute_feature_stats(conn)
     if stats:
         weights = generate_weights_from_stats(conn)
@@ -388,14 +782,84 @@ def bootstrap(conn=None):
         log.info(f"Initial weights saved to {OPTIMAL_WEIGHTS}")
     else:
         log.info("Not enough outcome data yet for feature analysis")
+    step_times['9_feature_analysis'] = elapsed()
+    log.info(f"  [{elapsed()}s]")
 
-    # Generate dashboard
+    # ── 10. ML walk-forward training ──────────────────────────────────────
+    log.info("\n[10/11] Running ML walk-forward training...")
+    elapsed = _step_timer()
+    wf_result = None
+    reg_result = None
+    try:
+        from backtest.ml_engine import walk_forward_train
+        wf_result = walk_forward_train(conn)
+        if wf_result and wf_result.folds:
+            avg_ic = sum(f['ic'] for f in wf_result.folds) / len(wf_result.folds)
+            log.info(f"ML training complete: {len(wf_result.folds)} folds, "
+                     f"avg IC={avg_ic:.4f}, OOS IC={wf_result.oos_ic:.4f}")
+            # Per-fold detail
+            for i, fold in enumerate(wf_result.folds):
+                log.info(f"  Fold {i+1}: {fold['train_start']}→{fold['train_end']} | "
+                         f"test {fold['test_start']}→{fold['test_end']} | "
+                         f"n_train={fold['n_train']} n_test={fold['n_test']} | "
+                         f"IC={fold['ic']:.4f} hit={fold['hit_rate']:.1%}")
+            # Top features
+            if wf_result.feature_importance:
+                top5 = list(wf_result.feature_importance.items())[:5]
+                log.info(f"  Top features: {', '.join(f'{k}={v:.3f}' for k, v in top5)}")
+        else:
+            log.info("ML training: not enough data for walk-forward validation")
+    except Exception as e:
+        log.warning(f"ML training skipped: {e}")
+        import traceback
+        traceback.print_exc()
+    step_times['10_ml_training'] = elapsed()
+    log.info(f"  [{elapsed()}s]")
+
+    # ── 11. ML walk-forward regression ─────────────────────────────────────
+    log.info("\n[11/11] Running ML regression (continuous CAR prediction)...")
+    elapsed = _step_timer()
+    try:
+        from backtest.ml_engine import walk_forward_regression
+        reg_result = walk_forward_regression(conn)
+        if reg_result and reg_result.folds:
+            avg_ic = sum(f['ic'] for f in reg_result.folds) / len(reg_result.folds)
+            log.info(f"Regression complete: {len(reg_result.folds)} folds, "
+                     f"avg IC={avg_ic:.4f}, OOS IC={reg_result.oos_ic:.4f}, "
+                     f"RMSE={reg_result.oos_rmse:.4f}")
+            if reg_result.feature_importance:
+                top5 = list(reg_result.feature_importance.items())[:5]
+                log.info(f"  Top regression features: {', '.join(f'{k}={v:.3f}' for k, v in top5)}")
+        else:
+            log.info("Regression: not enough data for walk-forward validation")
+    except Exception as e:
+        log.warning(f"Regression skipped: {e}")
+        import traceback
+        traceback.print_exc()
+    step_times['11_regression'] = elapsed()
+    log.info(f"  [{elapsed()}s]")
+
+    # ── Generate dashboard + summary ──
     generate_dashboard(conn)
-
-    # Print summary
     print_summary(conn)
 
-    log.info("Bootstrap complete!")
+    # ── Diagnostics ──
+    generate_analysis_report(conn, ml_result=wf_result, reg_result=reg_result)
+    generate_diagnostics_html(conn, ml_result=wf_result, reg_result=reg_result)
+
+    # ── Data quality report ──
+    _print_data_quality_report(conn)
+
+    # ── Pipeline timing summary ──
+    total_time = round(time.time() - pipeline_start, 1)
+    print(f"\n── Pipeline Timing ──")
+    for step, secs in step_times.items():
+        pct = secs / total_time * 100 if total_time else 0
+        bar = '█' * int(pct / 2)
+        print(f"  {step:<25s} {secs:>7.1f}s  {pct:>5.1f}%  {bar}")
+    print(f"  {'TOTAL':<25s} {total_time:>7.1f}s")
+
+    log.info("\nBootstrap complete!")
     return conn
 
 

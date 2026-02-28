@@ -301,9 +301,9 @@ class TestMultiTierConvergence:
         rows = db.execute(
             "SELECT same_ticker_signals_7d, same_ticker_signals_30d FROM signals WHERE ticker='GOOG' ORDER BY signal_date DESC LIMIT 1"
         ).fetchall()
-        # The later signal (June 16) should see the earlier one in its window
-        assert rows[0]['same_ticker_signals_7d'] >= 2
-        assert rows[0]['same_ticker_signals_30d'] >= 2
+        # The later signal (June 16) should see the earlier one (excludes self)
+        assert rows[0]['same_ticker_signals_7d'] >= 1
+        assert rows[0]['same_ticker_signals_30d'] >= 1
 
 
 class TestClusterVelocity:
