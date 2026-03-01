@@ -1,11 +1,11 @@
 # ATLAS — Signal Scoring
+*Single source of truth for all scoring formulas, tiers, and entry logic.*
 
 ---
 
-## Two Scoring Systems
+## Brain ML Score (Primary — `total_score` in DB)
 
-### 1. Brain ML Score (Backend — `total_score` in DB)
-The primary score. Trained on 2,921 signals with known outcomes. Written to DB, exported to frontend.
+Trained on 2,921 signals with known outcomes. Written to DB, exported to frontend.
 
 ```
 base      = clf_probability × 60          (0-60, ML confidence)
@@ -15,24 +15,41 @@ person    = clamp(person_hit_rate × 8, 0, 5)
 total     = clamp(sum, 0, 100)
 ```
 
-| Tier | Score | Count | Action |
-|---|---|---|---|
-| Strong Buy | 80-100 | 27 | Top signals, trade idea cards |
-| Buy | 65-79 | 125 | Trade ideas tier |
-| Neutral | 40-64 | 1,146 | Watchlist / monitoring |
-| Weak | <40 | 1,914 | Hidden from frontend |
+### Score Tiers
 
-### 2. Frontend Heuristic Score (Fallback)
-Computed client-side from live feed data when Brain scores aren't available. Used by `computeConvergenceScore()` — now overridden by Brain `totalScore` when present.
+| Tier | Score | Action |
+|---|---|---|
+| Strong Buy | 80-100 | Top signals, trade idea cards |
+| Buy | 65-79 | Trade ideas tier |
+| Neutral | 40-64 | Watchlist / monitoring |
+| Weak | <40 | Hidden from frontend |
 
-#### Hub 1 — Congressional (0-40 pts)
+---
+
+## Convergence Tiers
+
+| Tier | Condition |
+|---|---|
+| 0 | Single source only |
+| 1 | Same ticker, 2+ sources, 60d window |
+| 2 | 3+ signals, 2+ sources, same sector, 30d |
+
+---
+
+## Frontend Heuristic Score (Fallback)
+
+Computed client-side when Brain scores aren't available. Overridden by Brain `totalScore` when present.
+
+### Hub 1 — Congressional (0-40 pts)
+
 | Factor | Points |
 |---|---|
 | Purchase filed (base) | +3 |
 | Trade size tiers ($15K–$1M+) | +5 to +15 |
 | Cluster: 3+ members, same ticker, 30d | +15 |
 
-#### Hub 2 — Insider (0-40 pts)
+### Hub 2 — Insider (0-40 pts)
+
 | Factor | Points |
 |---|---|
 | Form 4 buy match, 14d window | +6 per filing |
@@ -40,13 +57,17 @@ Computed client-side from live feed data when Brain scores aren't available. Use
 | CEO +10, CFO +8, Director +6 | Role bonus |
 | No 10b5-1 plan | +8 |
 
-#### Convergence Boosts
+### Convergence Boosts
+
 | Condition | Boost |
 |---|---|
 | Congressional + Insider | +20 |
 | Any convergence + active legislation | +15 |
 
-#### Signal Decay
+---
+
+## Signal Decay
+
 ```
 effectivePoints = rawPoints × 0.5^(daysSince / halfLife)
 ```
@@ -63,13 +84,3 @@ Default halfLife: 21d (congress), 14d (insider).
 | Target 1 | `signal_price × 1.20` |
 | Target 2 | `signal_price × 1.35` |
 | Stop | `signal_price × 0.88` |
-
----
-
-## Convergence Tiers (ALE)
-
-| Tier | Condition |
-|---|---|
-| 0 | Single source only |
-| 1 | Same ticker, 2+ sources, 60d window |
-| 2 | 3+ signals, 2+ sources, same sector, 30d |

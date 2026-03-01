@@ -1,15 +1,5 @@
 # ATLAS — Adaptive Learning Engine (ALE)
-*Reference doc. Update when ALE schema or pipeline changes.*
-
----
-
-## Overview
-
-Self-improving scoring brain. Accumulates signals, tracks 5 time horizons of forward returns, discovers predictive features, tracks person-level performance, auto-tunes weights.
-
-- **Database:** `data/atlas_signals.db` (SQLite: `signals`, `feature_stats`, `weight_history`)
-- **Diagnostics:** `data/ale_diagnostics.html` (visual dashboard) + `data/ale_analysis_report.md` (deep-dive)
-- **Weights:** `data/optimal_weights.json` (loaded by frontend)
+*Technical reference. Update when ALE schema or pipeline changes.*
 
 ---
 
@@ -23,20 +13,36 @@ Self-improving scoring brain. Accumulates signals, tracks 5 time horizons of for
 | `--summary` | Console status + person leaderboards |
 | `--diagnostics` | Generate HTML dashboard + markdown analysis report (standalone) |
 | `--export` | Export brain_signals.json + brain_stats.json only |
-| `bootstrap_historical.py` | One-time: populate DB with ~39 months of data |
-| `backfill_edgar_xml.py` | One-time: parse XML for EDGAR signals, delete non-purchases, enrich buys |
+| `--self-check` | IC trend, feature drift, model health (planned) |
+
+**One-time scripts:**
+| Script | Purpose |
+|---|---|
+| `bootstrap_historical.py` | Populate DB with ~39 months of historical data |
+| `backfill_edgar_xml.py` | Parse XML for EDGAR signals, delete non-purchases, enrich buys |
+
+---
+
+## Database
+
+- **File:** `data/atlas_signals.db` (SQLite)
+- **Tables:** `signals`, `feature_stats`, `weight_history`
+- **Diagnostics:** `data/ale_diagnostics.html` + `data/ale_analysis_report.md`
+- **Weights:** `data/optimal_weights.json`
 
 ---
 
 ## ML Engine
 
-- **Models:** RF + LightGBM ensemble (classification + regression), walk-forward validation
-- **28 features** (v4: pruned 2 low-importance, added 3 new)
+- **Models:** RF + LightGBM ensemble (classification + regression)
+- **Validation:** Walk-forward, 6mo min train, 1mo test windows, 200/20 min samples
+- **Full-sample training:** For scoring — same hyperparameters, all data with outcomes
 - **CAR:** BHAR `(1+stock)/(1+spy)-1`, winsorized 1st/99th percentile, hard bounds [-100%, +300%]
 - **Safety:** Weights only auto-update when OOS IC improves >5%
-- **Min samples:** 200 train / 20 test per fold
 
-### Feature List (28) — v4
+---
+
+## Feature List (28) — v4
 
 | Category | Features |
 |---|---|
@@ -49,43 +55,33 @@ Self-improving scoring brain. Accumulates signals, tracks 5 time horizons of for
 | Catalysts | days_to_earnings, days_to_catalyst |
 | Derived (DB) | insider_buy_ratio_90d, sector_avg_car, vix_regime_interaction, sector_momentum, days_since_last_buy |
 
-**v4 changes:** Pruned `source` (0.16% imp) and `trade_pattern` (0.40% imp, 31% fill). Added `person_avg_car_30d` (person return magnitude), `sector_momentum` (sector-level 90d avg momentum), `days_since_last_buy` (repeat buyer signal).
+**v4 changes:** Pruned `source` (0.16% imp) and `trade_pattern` (0.40% imp, 31% fill). Added `person_avg_car_30d`, `sector_momentum`, `days_since_last_buy`.
 
 ---
 
-## Data Quality (Critical)
+## Data Quality
 
 **EDGAR signals must be filtered to purchases only.** EFTS doesn't expose transaction type — Form 4 XML must be parsed to determine direction (P=purchase, S=sale, M=exercise, A=grant).
 
-- **Bootstrap:** Now enriches via XML before insertion, filters to buys only
+- **Bootstrap:** Enriches via XML before insertion, filters to buys only
 - **Backfill:** `backfill_edgar_xml.py` cleans existing DB signals
-- **Daily pipeline:** `fetch_data.py` already enriches via `enrich_form4_xml()`
+- **Daily pipeline:** `fetch_data.py` enriches via `enrich_form4_xml()`
 
 ---
 
 ## Bootstrap Pipeline
 
-1. EDGAR historical (21mo Form 4 filings) + **XML enrichment + buy filtering**
+1. EDGAR historical (21mo Form 4 filings) + XML enrichment + buy filtering
 2. FMP congress (senate + house)
 2b. Sector + market cap map (FMP profile API)
 3. Aggregate features
 4. Price collection (incremental — skip/backfill/forward-fill)
 5. Backfill CARs (BHAR, 5 horizons)
 6. Person track records
-7. Feature enrichment (52wk, trade pattern, momentum, volume, insider ratio, sector CAR, VIX interaction)
+7. Feature enrichment (52wk, momentum, volume, insider ratio, sector CAR, VIX interaction)
 7b. Sector + market_cap_bucket NULL backfill
 8. Market context (FRED: VIX, T10Y2Y, credit OAS)
 9. Feature stats + weight generation
 10. ML classification (walk-forward)
 11. ML regression (walk-forward)
 → Dashboard + diagnostics + data quality report
-
----
-
-## Convergence Tiers
-
-| Tier | Condition |
-|---|---|
-| 0 | No convergence |
-| 1 | Same ticker, 2+ sources, 60d window |
-| 2 | 3+ signals, 2+ sources, same sector, 30d |

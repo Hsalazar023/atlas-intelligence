@@ -6,17 +6,17 @@
 
 | Layer | Tool | Status |
 |---|---|---|
-| Frontend | Single HTML (`atlas-intelligence.html`, ~3400 lines) | ✅ Live |
-| Hosting | Vercel (auto-deploy on push) | ✅ Live |
-| Stock prices | Finnhub `/quote` (60s refresh) | ✅ Live |
-| Congressional data | FMP → `congress_feed.json` | ✅ Live |
-| Insider data | SEC EDGAR Form 4 → `edgar_feed.json` | ✅ Live |
-| Market data | FRED API → VIX, yield curve | ✅ Live |
-| Historical prices | yfinance → `price_history/` | ✅ Live |
-| Brain (ALE + ML) | SQLite → `atlas_signals.db` | ✅ Live |
-| Brain export | `brain_signals.json` + `brain_stats.json` | ✅ Live |
-| Scoring weights | `optimal_weights.json` | ✅ Live |
-| Institutional data | 13F pipeline | ❌ Not built |
+| Frontend | Single HTML (`atlas-intelligence.html`, ~3400 lines) | Live |
+| Hosting | Vercel (auto-deploy on push) | Live |
+| Stock prices | Finnhub `/quote` (60s refresh) | Live |
+| Congressional data | FMP → `congress_feed.json` | Live |
+| Insider data | SEC EDGAR Form 4 → `edgar_feed.json` | Live |
+| Market data | FRED API → VIX, yield curve | Live |
+| Historical prices | yfinance → `price_history/` | Live |
+| Brain (ALE + ML) | SQLite → `atlas_signals.db` | Live |
+| Brain export | `brain_signals.json` + `brain_stats.json` | Live |
+| Scoring weights | `optimal_weights.json` | Live |
+| Institutional data | 13F pipeline | Not built |
 
 ---
 
@@ -29,6 +29,7 @@
 | `backtest/learning_engine.py` | ALE core: ingest, enrich, score, export, diagnostics |
 | `backtest/ml_engine.py` | Walk-forward ML (RF + LightGBM), full-sample training |
 | `backtest/shared.py` | Constants, paths, SEC ticker matching |
+| `backtest/collect_prices.py` | yfinance OHLC cache (used by bootstrap) |
 | `backtest/bootstrap_historical.py` | One-time 39-month historical data load |
 | `backtest/backfill_edgar_xml.py` | One-time EDGAR cleanup (parse XML, delete non-buys) |
 | `backtest/sector_map.py` | GICS sector + market cap lookup |
@@ -58,16 +59,16 @@
 
 | Workflow | Schedule | Purpose |
 |---|---|---|
-| Data refresh | 4x daily | Fetch congress/EDGAR/FRED feeds |
-| Backtest | Mon-Fri 10 PM UTC | ALE daily pipeline |
+| `fetch-data.yml` | 4x daily (weekdays) | Fetch congress/EDGAR/FRED feeds |
+| `backtest.yml` | Mon-Fri 10 PM UTC | Brain pipeline (daily + Monday analysis) |
 
 ---
 
 ## API Keys
 
-| Key | Source | Status |
+| Key | Source | Location |
 |---|---|---|
-| Finnhub | finnhub.io | ✅ in HTML (move to env var) |
-| Congress.gov | api.congress.gov | ✅ in HTML (move to env var) |
-| FMP | financialmodelingprep.com | ✅ Backend only |
-| FRED | fred.stlouisfed.org | ✅ Backend only |
+| Finnhub | finnhub.io | HTML (frontend) |
+| Congress.gov | api.congress.gov | HTML (frontend) |
+| FMP | financialmodelingprep.com | GitHub Secrets (backend) |
+| FRED | fred.stlouisfed.org | GitHub Secrets (backend) |

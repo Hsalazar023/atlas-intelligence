@@ -14,7 +14,7 @@ Signal convergence platform. The edge: congressional trades + insider buying + i
 | Active todos + immediate priorities | `docs/todo.md` |
 | Long-term phases + general backlog | `docs/roadmap.md` |
 | Scoring tables, decay, zone logic | `docs/scoring-logic.md` |
-| Brain framework + integration plan | `docs/brain.md` |
+| Brain architecture + pipeline + exports | `docs/brain.md` |
 | Brain health, IC, data quality, actions | `docs/brain-status.md` (sectioned — read specific sections) |
 | ALE engine, ML pipeline, signal schema | `docs/ale-engine.md` |
 | Stack, file locations, JS function map | `docs/architecture.md` |
