@@ -921,6 +921,31 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
                     feed_filled += cnt
                 log.debug(f"Backfilled insider_role from feed: {len(role_map)} insiders, {feed_filled} signals")
 
+        # 3c. Infer role for corporate/institutional names still missing
+        # These are PE/VC firms, holding companies, etc. — almost always 10% Owners
+        _CORP_PATTERNS = ('Inc.', 'Corp', 'LLC', 'L.P.', 'LP', 'Ltd', 'AG ', 'SE ',
+                          'Holdings', 'Partners', 'Associates', 'Management', 'Ventures',
+                          'Capital', 'Fund', 'Trust', 'Group')
+        still_missing = conn.execute(
+            "SELECT DISTINCT insider_name FROM signals "
+            "WHERE source='edgar' AND insider_name != '' "
+            "AND (insider_role IS NULL OR insider_role = '')"
+        ).fetchall()
+        corp_filled = 0
+        for row in still_missing:
+            name = row['insider_name']
+            if any(p in name for p in _CORP_PATTERNS):
+                cnt = conn.execute(
+                    "UPDATE signals SET insider_role='10% Owner' "
+                    "WHERE source='edgar' AND insider_name=? "
+                    "AND (insider_role IS NULL OR insider_role = '')",
+                    (name,)
+                ).rowcount
+                corp_filled += cnt
+        if corp_filled:
+            log.debug(f"Backfilled insider_role for {corp_filled} corporate/institutional names")
+        role_filled += corp_filled
+
         updated += role_filled
 
     # ── 4. Market cap bucket ──
@@ -4679,19 +4704,16 @@ def run_analyze(conn: sqlite3.Connection) -> None:
         },
     }
     if ml_result and ml_result.n_folds > 0:
-        current_weights = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
-        current_ic = current_weights.get('_oos_ic', 0)
-        # Always save ML metrics so we track IC over time.
-        # Only upgrade method to 'walk_forward_ensemble' if IC improved >5%.
         output['_oos_ic'] = ml_result.oos_ic
         output['_oos_hit_rate'] = ml_result.oos_hit_rate
         output['_n_folds'] = ml_result.n_folds
         output['_feature_importance'] = ml_result.feature_importance
-        if ml_result.oos_ic > current_ic * 1.05 or current_ic == 0:
+        # Use ML method whenever we have a positive IC
+        if ml_result.oos_ic > 0:
             output['method'] = 'walk_forward_ensemble'
-            log.info(f"Weights method upgraded to walk_forward_ensemble (IC {ml_result.oos_ic:.4f})")
+            log.info(f"Weights method: walk_forward_ensemble (IC {ml_result.oos_ic:.4f})")
         else:
-            log.info(f"Method: {output['method']} (IC {ml_result.oos_ic:.4f} vs prior {current_ic:.4f})")
+            log.info(f"Weights method: feature_importance (IC {ml_result.oos_ic:.4f} not positive)")
 
     save_json(OPTIMAL_WEIGHTS, output)
 
