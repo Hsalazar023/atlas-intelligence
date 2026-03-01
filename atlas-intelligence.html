@@ -656,7 +656,7 @@ button,input,select{font-family:var(--sans);outline:none}
             <tr id="cong-loading-row">
               <td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
                 <span class="new-pulse" style="display:inline-block;margin-right:6px"></span>
-                Loading congressional trades from QuiverQuant...
+                Loading congressional trades...
               </td>
             </tr>
           </tbody>
@@ -1137,7 +1137,6 @@ button,input,select{font-family:var(--sans);outline:none}
 // ═══════════════════════════════════════════════════════
 
 var FINNHUB_KEY  = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
-var QUIVER_KEY   = '3a0eefe56ae3fc614d3e49b2d5f732ae60df2015'; // QuiverQuant API token
 var FRED_KEY     = '71a0b94ed47b56a81f405947f88d08aa'; // FRED API — 10yr Treasury yield (DGS10)
 
 // ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
@@ -1220,7 +1219,7 @@ var notifCnt=5;
 var priceCache={};
 var priceRefreshInterval=null;
 // Live feed caches — populated async; used by scoring engine
-var congData=[];  // congressional trades from QuiverQuant
+var congData=[];  // congressional trades from FMP (via fetch_data.py)
 var edgarData=[]; // EDGAR Form 4 filings from fetch_data.py
 
 // ═══════════════════════════════════════════════════════
@@ -1568,10 +1567,9 @@ function fetchMarketIndices(){
 }
 
 // ═══════════════════════════════════════════════════════
-// CONGRESSIONAL TRADES — QuiverQuant API (free tier)
-// Register at quiverquant.com/quiverapi then set QUIVER_KEY above
+// CONGRESSIONAL TRADES — FMP (via static file from fetch_data.py)
 // ═══════════════════════════════════════════════════════
-// Shared render function for QuiverQuant congressional trade data
+// Render function for congressional trade data
 function renderCongressTrades(data){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody||!data||!data.length) return;
@@ -1671,47 +1669,23 @@ function _renderCongressRows(){
   tbody.innerHTML=html||'<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No trades in selected range</td></tr>';
 }
 
-function fetchQuiverTrades(){
+function fetchCongressTrades(){
   var tbody=document.querySelector('#cong-tbl tbody');
   if(!tbody) return;
 
-  // Try static file first (populated by scripts/fetch_data.py, no CORS issue)
+  // Load from static file (populated by scripts/fetch_data.py via FMP API)
   fetch('/data/congress_feed.json')
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(d){
       if(d.trades&&d.trades.length){
         renderCongressTrades(d.trades);
-        return;
+      } else {
+        tbody.innerHTML='<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No congressional trades available. Run scripts/fetch_data.py to fetch data.</td></tr>';
       }
-      // File empty — fall through to live API if key available
-      if(QUIVER_KEY) fetchQuiverLive();
-      else showQuiverNotice(tbody);
     })
     .catch(function(){
-      if(QUIVER_KEY) fetchQuiverLive(); else showQuiverNotice(tbody);
+      tbody.innerHTML='<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">Could not load congressional trades. Run scripts/fetch_data.py to fetch data.</td></tr>';
     });
-}
-
-function showQuiverNotice(tbody){
-  var notice=document.getElementById('quiver-notice');
-  if(!notice){
-    notice=document.createElement('tr');
-    notice.id='quiver-notice';
-    notice.innerHTML='<td colspan="7" style="padding:6px 12px;font-size:9px;color:var(--blue-lt);background:var(--blue-pale);text-align:center">'
-      +'📋 <strong>Demo data below.</strong> Run scripts/fetch_data.py with QUIVER_KEY set for live congressional trades.</td>';
-    tbody.insertBefore(notice, tbody.firstChild);
-  }
-}
-
-function fetchQuiverLive(){
-  // /beta/live/congresstrading — most recent transactions, no pagination needed
-  var url='https://api.quiverquant.com/beta/live/congresstrading';
-  fetch(url,{headers:{'Authorization':'Token '+QUIVER_KEY,'Accept':'application/json'}})
-    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(data){
-      if(data&&data.length) renderCongressTrades(data);
-    })
-    .catch(function(e){console.warn('QuiverQuant live error',e);});
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2372,8 +2346,12 @@ function computeConvergenceScore(ticker){
   });
   if(activeBill&&(cong.score>0||edgar.score>0)) boost+=15;
   var total=cong.score+edgar.score+boost;
+  // Brain ML score override — use total_score from brain_signals.json when available
+  var t=TRACKED[ticker];
+  if(t&&t.totalScore>0) total=t.totalScore;
+  var hasConv=t?!!t.hasConvergence:(cong.score>0&&edgar.score>0);
   return {total:total,congress:cong,insider:edgar,boost:boost,
-          hasConvergence:cong.score>0&&edgar.score>0};
+          hasConvergence:hasConv};
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2401,12 +2379,15 @@ function renderTopSignals(){
   rows.forEach(function(r){
     var ticker=r.ticker; var sc=r.sc; var info=r.info;
     if(Math.abs(sc.total)>Math.abs(maxScore)) maxScore=sc.total;
+    var t=TRACKED[ticker];
     var sigType=(sc.congress.count>0&&sc.insider.count>0)?'Multi-Source'
-      :sc.congress.count>0?'Congress':sc.insider.count>0?'EDGAR Insider':'Signal';
-    var tagCls=sigType==='Multi-Source'?'t-clus':sc.congress.count>0?'t-warn':'t-buy';
+      :sc.congress.count>0?'Congress':sc.insider.count>0?'EDGAR Insider'
+      :(t&&t.source==='congress')?'Congress':(t&&t.source==='edgar')?'EDGAR Insider':'Signal';
+    var tagCls=sigType==='Multi-Source'?'t-clus':sigType==='Congress'?'t-warn':'t-buy';
     var actorParts=[];
     if(sc.congress.count>0) actorParts.push(sc.congress.count+' congressional trade'+(sc.congress.count>1?'s':''));
     if(sc.insider.count>0) actorParts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
+    if(!actorParts.length&&t&&t.note) actorParts.push(t.note);
     var actor=actorParts.join(' · ')||'Live signal';
     var dirTag=info.dir==='long'?'<span class="tag t-buy">Long</span>':'<span class="tag t-sell">Short</span>';
     var totalCls=Math.abs(sc.total)>=85?'sc4':Math.abs(sc.total)>=65?'sc3':'sc1';
@@ -2633,13 +2614,16 @@ function renderSignalIdeas(){
   if(ideas.length){
     html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue-lt);margin-bottom:10px">Trade Ideas — Score ≥ '+IDEA_THRESHOLD+'</div>';
     html+=ideas.map(function(r){
-      var sc=r.sc; var ticker=r.ticker;
+      var sc=r.sc; var ticker=r.ticker; var t=TRACKED[ticker];
       var parts=[];
       if(sc.congress.count>0) parts.push(sc.congress.count+' congressional buy'+(sc.congress.count>1?'s':''));
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
+      // Use Brain note when live feed data is sparse
+      if(!parts.length&&t&&t.note) parts.push(t.note);
       var signal=parts.join(' · ')||'Convergence signal';
       var scoreCls=sc.total>=95?'sc4':sc.total>=IDEA_THRESHOLD?'sc3':'sc1';
-      var tag=sc.hasConvergence?'<span class="tag t-clus">Multi-Source</span>':sc.congress.count>0?'<span class="tag t-warn">Congress</span>':'<span class="tag t-buy">EDGAR</span>';
+      var srcTag=t&&t.source==='congress'?'<span class="tag t-warn">Congress</span>':'<span class="tag t-buy">EDGAR</span>';
+      var tag=sc.hasConvergence?'<span class="tag t-clus">Multi-Source</span>':srcTag;
       return '<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
         +'<div><div style="display:flex;align-items:center;gap:6px"><span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'+tag+'</div>'
@@ -3421,7 +3405,7 @@ window.addEventListener('load', function(){
   setTimeout(fetchEdgarFeed, 2500);
   setTimeout(fetchMarketDataFile, 2800); // VIX + 10yr from static file (Python-generated)
   setTimeout(fetchCongressData, 4000);
-  setTimeout(fetchQuiverTrades, 5000);
+  setTimeout(fetchCongressTrades, 5000);
 
   // ── STEP 4: Briefing toast ──
   setTimeout(function(){
