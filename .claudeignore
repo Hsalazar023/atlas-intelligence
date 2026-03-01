@@ -1,5 +1,7 @@
 # Data & Large Files (token killers — never auto-read)
 data/*.json
+!data/brain_signals.json
+!data/brain_stats.json
 data/*.db
 data/*.db-journal
 data/*.csv

@@ -1,0 +1,303 @@
+{
+  "generated": "2026-03-01T01:10:12.064715+00:00",
+  "alpha": {
+    "value": 0.3113,
+    "label": "+31.1%",
+    "horizon": "30d",
+    "n_signals": 148
+  },
+  "score_tiers": [
+    {
+      "tier": "90+",
+      "n": 2,
+      "hit_rate": 1.0,
+      "avg_car_30d": 0.1648
+    },
+    {
+      "tier": "80-89",
+      "n": 23,
+      "hit_rate": 1.0,
+      "avg_car_30d": 0.5877
+    },
+    {
+      "tier": "65-79",
+      "n": 123,
+      "hit_rate": 1.0,
+      "avg_car_30d": 0.262
+    },
+    {
+      "tier": "<65",
+      "n": 2773,
+      "hit_rate": 0.43,
+      "avg_car_30d": -0.0074
+    }
+  ],
+  "sectors": [
+    {
+      "sector": "Healthcare",
+      "n": 377,
+      "avg_car_30d": 0.0329,
+      "hit_rate": 0.48
+    },
+    {
+      "sector": "Basic Materials",
+      "n": 95,
+      "avg_car_30d": 0.0283,
+      "hit_rate": 0.55
+    },
+    {
+      "sector": "Utilities",
+      "n": 58,
+      "avg_car_30d": 0.0255,
+      "hit_rate": 0.66
+    },
+    {
+      "sector": "Energy",
+      "n": 134,
+      "avg_car_30d": 0.0191,
+      "hit_rate": 0.44
+    },
+    {
+      "sector": "Industrials",
+      "n": 245,
+      "avg_car_30d": 0.016,
+      "hit_rate": 0.51
+    },
+    {
+      "sector": "Financial Services",
+      "n": 870,
+      "avg_car_30d": 0.0104,
+      "hit_rate": 0.45
+    },
+    {
+      "sector": "Consumer Cyclical",
+      "n": 229,
+      "avg_car_30d": -0.0012,
+      "hit_rate": 0.45
+    },
+    {
+      "sector": "Technology",
+      "n": 548,
+      "avg_car_30d": -0.0015,
+      "hit_rate": 0.46
+    },
+    {
+      "sector": "Communication Services",
+      "n": 98,
+      "avg_car_30d": -0.0114,
+      "hit_rate": 0.41
+    },
+    {
+      "sector": "Consumer Defensive",
+      "n": 138,
+      "avg_car_30d": -0.0188,
+      "hit_rate": 0.36
+    },
+    {
+      "sector": "Real Estate",
+      "n": 107,
+      "avg_car_30d": -0.0285,
+      "hit_rate": 0.36
+    }
+  ],
+  "committees": [
+    {
+      "name": "Finance",
+      "n_trades": 265,
+      "match_rate": 0.51
+    },
+    {
+      "name": "Science & Tech",
+      "n_trades": 245,
+      "match_rate": 0.36
+    },
+    {
+      "name": "Armed Services",
+      "n_trades": 123,
+      "match_rate": 0.37
+    },
+    {
+      "name": "Foreign Affairs",
+      "n_trades": 90,
+      "match_rate": 0.42
+    },
+    {
+      "name": "Energy/Enviro",
+      "n_trades": 18,
+      "match_rate": 0.17
+    },
+    {
+      "name": "Judiciary",
+      "n_trades": 10,
+      "match_rate": 0.5
+    }
+  ],
+  "congress_heatmap": [
+    {
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "count": 3,
+      "heat": 3
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 3,
+      "heat": 3
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "MELI",
+      "name": "MercadoLibre",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "META",
+      "name": "Meta",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "PGR",
+      "name": "Progressive",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "SMPL",
+      "name": "SMPL",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "V",
+      "name": "Visa",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AJINF",
+      "name": "AJINF",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AJINY",
+      "name": "AJINY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AMD",
+      "name": "AMD",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "ANET",
+      "name": "Arista Networks",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "ASML",
+      "name": "ASML",
+      "count": 1,
+      "heat": 1
+    }
+  ],
+  "kpis": {
+    "top_score": 82,
+    "top_score_tickers": "HYMC",
+    "exceptional_count": 2,
+    "cluster_count": 2,
+    "congress_flags": 68,
+    "convergence_count": 126
+  },
+  "insider_sectors": [
+    {
+      "sector": "Healthcare",
+      "n": 156,
+      "avg_car": 0.0796
+    },
+    {
+      "sector": "Utilities",
+      "n": 16,
+      "avg_car": 0.0567
+    },
+    {
+      "sector": "Basic Materials",
+      "n": 28,
+      "avg_car": 0.0422
+    },
+    {
+      "sector": "Industrials",
+      "n": 44,
+      "avg_car": 0.0406
+    },
+    {
+      "sector": "Financial Services",
+      "n": 340,
+      "avg_car": 0.0354
+    },
+    {
+      "sector": "Energy",
+      "n": 70,
+      "avg_car": 0.0345
+    },
+    {
+      "sector": "Consumer Cyclical",
+      "n": 53,
+      "avg_car": 0.0226
+    },
+    {
+      "sector": "Technology",
+      "n": 71,
+      "avg_car": 0.0196
+    },
+    {
+      "sector": "Communication Services",
+      "n": 37,
+      "avg_car": 0.0088
+    },
+    {
+      "sector": "Real Estate",
+      "n": 51,
+      "avg_car": -0.0261
+    },
+    {
+      "sector": "Consumer Defensive",
+      "n": 18,
+      "avg_car": -0.0422
+    }
+  ],
+  "ml": {
+    "oos_ic": null,
+    "oos_hit_rate": null,
+    "n_folds": null
+  }
+}
