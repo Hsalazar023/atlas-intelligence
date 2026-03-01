@@ -4061,11 +4061,14 @@ def compute_signal_factors(X_raw, all_ids, export_ids, feature_importance):
     if X_raw.empty or not feature_importance:
         return {}
 
-    # Compute percentile ranks for each feature across full population
-    percentiles = pd.DataFrame(index=X_raw.index, columns=X_raw.columns, dtype=float)
-    for col in X_raw.columns:
-        vals = X_raw[col].values.astype(float)
-        # rank as fraction (0-1)
+    # Skip categorical features — can't compute meaningful percentiles on strings
+    from backtest.ml_engine import CATEGORICAL_FEATURES
+    numeric_cols = [c for c in X_raw.columns if c not in CATEGORICAL_FEATURES]
+
+    # Compute percentile ranks for each numeric feature across full population
+    percentiles = pd.DataFrame(index=X_raw.index, columns=numeric_cols, dtype=float)
+    for col in numeric_cols:
+        vals = pd.to_numeric(X_raw[col], errors='coerce').fillna(0).values
         ranked = pd.Series(vals).rank(pct=True, method='average').values
         percentiles[col] = ranked
 
@@ -4080,7 +4083,7 @@ def compute_signal_factors(X_raw, all_ids, export_ids, feature_importance):
             continue
 
         scored_features = []
-        for feat in X_raw.columns:
+        for feat in numeric_cols:
             imp = feature_importance.get(feat, 0)
             if imp < 0.005:  # skip near-zero importance features
                 continue
