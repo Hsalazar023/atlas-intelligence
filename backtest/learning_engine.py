@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from backtest.shared import (
     DATA_DIR, SIGNALS_DB, CONGRESS_FEED, EDGAR_FEED, PRICE_HISTORY_DIR,
     OPTIMAL_WEIGHTS, BACKTEST_SUMMARY, DEFAULT_WEIGHTS,
-    BRAIN_SIGNALS, BRAIN_STATS,
+    BRAIN_SIGNALS, BRAIN_STATS, BRAIN_HEALTH,
     load_json, save_json, match_edgar_ticker, range_to_base_points,
 )
 from backtest.sector_map import get_sector, get_market_cap, get_market_cap_bucket
@@ -149,6 +149,23 @@ CREATE TABLE IF NOT EXISTS weight_history (
     hit_rate_30d REAL,
     avg_car_30d REAL,
     method TEXT,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS brain_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_date TEXT NOT NULL,
+    run_type TEXT NOT NULL,
+    oos_ic REAL,
+    oos_hit_rate REAL,
+    n_signals INTEGER,
+    n_scored INTEGER,
+    avg_score REAL,
+    max_score REAL,
+    top_ticker TEXT,
+    top_ticker_pct REAL,
+    feature_importance_json TEXT,
+    notes TEXT,
     created_at TEXT DEFAULT (datetime('now'))
 );
 """
@@ -3768,6 +3785,194 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     return len(scores)
 
 
+def log_brain_run(conn: sqlite3.Connection, run_type: str,
+                  oos_ic: float = None, oos_hit_rate: float = None,
+                  notes: str = None) -> None:
+    """Record a Brain run in brain_runs table for health tracking."""
+    import numpy as np
+
+    cur = conn.cursor()
+    row = cur.execute(
+        "SELECT COUNT(*) as n, AVG(total_score) as avg_s, MAX(total_score) as max_s "
+        "FROM signals WHERE total_score IS NOT NULL"
+    ).fetchone()
+    n_signals = cur.execute("SELECT COUNT(*) FROM signals").fetchone()[0]
+    n_scored = row['n'] or 0
+    avg_score = round(row['avg_s'], 2) if row['avg_s'] else None
+    max_score = round(row['max_s'], 2) if row['max_s'] else None
+
+    # Top ticker concentration in top 50
+    top50 = cur.execute(
+        "SELECT ticker, COUNT(*) as c FROM signals "
+        "WHERE total_score IS NOT NULL ORDER BY total_score DESC LIMIT 50"
+    ).fetchall()
+    ticker_counts = {}
+    for r in top50:
+        ticker_counts[r['ticker']] = ticker_counts.get(r['ticker'], 0) + r['c']
+    top_ticker = max(ticker_counts, key=ticker_counts.get) if ticker_counts else None
+    top_ticker_pct = round(ticker_counts.get(top_ticker, 0) / max(len(top50), 1), 3) if top_ticker else None
+
+    # Feature importance from optimal_weights
+    weights = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
+    fi = weights.get('_feature_importance')
+    fi_json = json.dumps(fi) if fi else None
+
+    cur.execute("""
+        INSERT INTO brain_runs (run_date, run_type, oos_ic, oos_hit_rate,
+            n_signals, n_scored, avg_score, max_score, top_ticker, top_ticker_pct,
+            feature_importance_json, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (datetime.now(tz=timezone.utc).strftime('%Y-%m-%d'), run_type,
+          oos_ic, oos_hit_rate, n_signals, n_scored, avg_score, max_score,
+          top_ticker, top_ticker_pct, fi_json, notes))
+    conn.commit()
+    log.info(f"Brain run logged: type={run_type}, IC={oos_ic}, scored={n_scored}")
+
+
+def run_self_check(conn: sqlite3.Connection) -> dict:
+    """Run Brain health diagnostics and export brain_health.json.
+
+    Checks: IC trend, score concentration, data freshness, feature fill rates,
+    source alpha balance, and generates warnings/suggestions.
+    """
+    import numpy as np
+    log.info("=== Brain Self-Check ===")
+    cur = conn.cursor()
+    health = {'generated': datetime.now(tz=timezone.utc).isoformat(), 'status': 'healthy', 'checks': [], 'warnings': [], 'suggestions': []}
+
+    # ── 1. IC Trend ──
+    runs = cur.execute(
+        "SELECT run_date, oos_ic, oos_hit_rate, run_type FROM brain_runs "
+        "WHERE oos_ic IS NOT NULL ORDER BY id DESC LIMIT 10"
+    ).fetchall()
+    ic_history = [{'date': r['run_date'], 'ic': r['oos_ic'], 'hit_rate': r['oos_hit_rate'], 'type': r['run_type']} for r in runs]
+    health['ic_history'] = ic_history
+
+    if len(ic_history) >= 3:
+        last3 = [h['ic'] for h in ic_history[:3]]
+        if all(last3[i] < last3[i+1] for i in range(2)):
+            health['warnings'].append('IC declining for 3 consecutive runs: ' + ' → '.join(f"{x:.4f}" for x in reversed(last3)))
+            health['status'] = 'warning'
+        health['checks'].append(f"IC trend: {' → '.join(f'{x:.4f}' for x in reversed(last3[-3:]))}")
+    elif ic_history:
+        health['checks'].append(f"IC latest: {ic_history[0]['ic']:.4f} (need 3+ runs for trend)")
+    else:
+        health['checks'].append("No IC history yet — run --analyze to populate")
+
+    # ── 2. Score Concentration ──
+    top50 = cur.execute(
+        "SELECT ticker FROM signals WHERE total_score IS NOT NULL "
+        "ORDER BY total_score DESC LIMIT 50"
+    ).fetchall()
+    ticker_counts = {}
+    for r in top50:
+        ticker_counts[r['ticker']] = ticker_counts.get(r['ticker'], 0) + 1
+    if ticker_counts:
+        top_t = max(ticker_counts, key=ticker_counts.get)
+        top_pct = ticker_counts[top_t] / len(top50)
+        health['score_concentration'] = {
+            'top_ticker': top_t, 'count': ticker_counts[top_t],
+            'pct_of_top50': round(top_pct, 3), 'unique_in_top50': len(ticker_counts)
+        }
+        if top_pct > 0.3:
+            health['warnings'].append(f"Score concentration: {top_t} is {top_pct:.0%} of top 50 signals")
+            health['status'] = 'warning'
+        health['checks'].append(f"Top 50 diversity: {len(ticker_counts)} unique tickers, top={top_t} ({ticker_counts[top_t]}/50)")
+
+    # ── 3. Data Freshness ──
+    latest = cur.execute("SELECT MAX(signal_date) as d FROM signals").fetchone()['d']
+    if latest:
+        days_stale = (datetime.now(tz=timezone.utc).date() - datetime.fromisoformat(latest).date()).days
+        health['data_freshness'] = {'latest_signal': latest, 'days_since': days_stale}
+        if days_stale > 3:
+            health['warnings'].append(f"No new signals in {days_stale} days (latest: {latest})")
+            health['status'] = 'warning'
+        health['checks'].append(f"Data freshness: latest signal {latest} ({days_stale}d ago)")
+
+    # ── 4. Feature Fill Rates ──
+    fill_sql = """
+        SELECT
+            ROUND(100.0*SUM(CASE WHEN insider_role IS NOT NULL AND insider_role != '' THEN 1 ELSE 0 END)/COUNT(*),1) as insider_role,
+            ROUND(100.0*SUM(CASE WHEN sector IS NOT NULL AND sector != '' THEN 1 ELSE 0 END)/COUNT(*),1) as sector,
+            ROUND(100.0*SUM(CASE WHEN market_cap_bucket IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as market_cap,
+            ROUND(100.0*SUM(CASE WHEN momentum_1m IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as momentum,
+            ROUND(100.0*SUM(CASE WHEN person_hit_rate_30d IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as person_hr,
+            ROUND(100.0*SUM(CASE WHEN trade_pattern IS NOT NULL AND trade_pattern != '' THEN 1 ELSE 0 END)/COUNT(*),1) as trade_pattern
+        FROM signals
+    """
+    fill = dict(cur.execute(fill_sql).fetchone())
+    health['feature_fill_rates'] = fill
+    low_fills = {k: v for k, v in fill.items() if v < 50}
+    if low_fills:
+        health['suggestions'].append(f"Low fill features ({', '.join(f'{k}={v}%' for k, v in low_fills.items())}) — consider pruning from ML if <1% importance")
+    health['checks'].append(f"Feature fills: {sum(1 for v in fill.values() if v >= 80)}/{len(fill)} above 80%")
+
+    # ── 5. Source Alpha ──
+    source_stats = cur.execute("""
+        SELECT source, COUNT(*) as n, ROUND(AVG(car_30d),4) as avg_car,
+            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
+        FROM signals WHERE car_30d IS NOT NULL GROUP BY source
+    """).fetchall()
+    health['source_alpha'] = [{'source': r['source'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in source_stats]
+    for s in health['source_alpha']:
+        if s['avg_car'] is not None and s['avg_car'] < -0.005:
+            health['suggestions'].append(f"{s['source']} signals have negative avg CAR ({s['avg_car']:.2%}) — consider down-weighting")
+
+    # ── 6. Score Band Validation ──
+    bands = cur.execute("""
+        SELECT
+            CASE WHEN total_score >= 80 THEN '80+'
+                 WHEN total_score >= 65 THEN '65-79'
+                 WHEN total_score >= 40 THEN '40-64'
+                 ELSE '<40' END as band,
+            COUNT(*) as n,
+            ROUND(AVG(car_30d),4) as avg_car,
+            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
+        FROM signals WHERE car_30d IS NOT NULL GROUP BY band ORDER BY band DESC
+    """).fetchall()
+    health['score_bands'] = [{'band': r['band'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in bands]
+    # Check monotonicity: higher bands should have higher CAR
+    band_cars = {r['band']: r['avg_car'] for r in bands if r['avg_car'] is not None}
+    if band_cars.get('80+', 0) < band_cars.get('65-79', 0):
+        health['warnings'].append("Score band inversion: 80+ signals have lower CAR than 65-79 — scoring formula may need recalibration")
+        health['status'] = 'warning'
+    if band_cars.get('80+', 0) < band_cars.get('<40', 0):
+        health['warnings'].append("Critical: 80+ signals underperform <40 — model may be inverting")
+        health['status'] = 'critical'
+    health['checks'].append(f"Score bands: 80+ CAR={band_cars.get('80+','N/A')}, 65-79={band_cars.get('65-79','N/A')}, <40={band_cars.get('<40','N/A')}")
+
+    # ── 7. Feature Importance Drift ──
+    fi_runs = cur.execute(
+        "SELECT feature_importance_json FROM brain_runs "
+        "WHERE feature_importance_json IS NOT NULL ORDER BY id DESC LIMIT 2"
+    ).fetchall()
+    if len(fi_runs) >= 2:
+        fi_new = json.loads(fi_runs[0]['feature_importance_json'])
+        fi_old = json.loads(fi_runs[1]['feature_importance_json'])
+        big_shifts = []
+        for feat in fi_new:
+            old_v = fi_old.get(feat, 0)
+            new_v = fi_new[feat]
+            if old_v > 0 and abs(new_v - old_v) / old_v > 0.5:
+                big_shifts.append(f"{feat}: {old_v:.3f}→{new_v:.3f}")
+        if big_shifts:
+            health['suggestions'].append(f"Feature importance shifts (>50%): {', '.join(big_shifts[:5])}")
+        health['checks'].append(f"Feature drift: {len(big_shifts)} features shifted >50%")
+
+    # ── Summary ──
+    log.info(f"Health status: {health['status'].upper()}")
+    for c in health['checks']:
+        log.info(f"  [CHECK] {c}")
+    for w in health['warnings']:
+        log.info(f"  [WARN]  {w}")
+    for s in health['suggestions']:
+        log.info(f"  [SUGGEST] {s}")
+
+    save_json(BRAIN_HEALTH, health)
+    log.info(f"Brain health saved to {BRAIN_HEALTH}")
+    return health
+
+
 def export_brain_data(conn: sqlite3.Connection) -> None:
     """Export brain_signals.json + brain_stats.json for the frontend."""
     log.info("=== Exporting Brain Data ===")
@@ -4113,6 +4318,9 @@ def run_daily(conn: sqlite3.Connection) -> None:
     # 9. Auto-export brain data for frontend
     export_brain_data(conn)
 
+    # 10. Log brain run
+    log_brain_run(conn, 'daily')
+
 
 def run_analyze(conn: sqlite3.Connection) -> None:
     """Weekly analysis: compute feature stats + ML walk-forward + update weights."""
@@ -4217,6 +4425,12 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     # 8. Auto-export brain data for frontend
     export_brain_data(conn)
 
+    # 9. Log brain run + self-check
+    ic = ml_result.oos_ic if ml_result and ml_result.n_folds > 0 else None
+    hr = ml_result.oos_hit_rate if ml_result and ml_result.n_folds > 0 else None
+    log_brain_run(conn, 'analyze', oos_ic=ic, oos_hit_rate=hr)
+    run_self_check(conn)
+
 
 # ── CLI Entry Point ──────────────────────────────────────────────────────────
 
@@ -4229,6 +4443,7 @@ def main():
     parser.add_argument('--diagnostics', action='store_true', help='Generate diagnostics HTML + analysis report')
     parser.add_argument('--export', action='store_true', help='Export brain_signals.json + brain_stats.json for frontend')
     parser.add_argument('--score', action='store_true', help='Score all signals with ML + export brain data')
+    parser.add_argument('--self-check', action='store_true', dest='self_check', help='Run Brain health diagnostics')
     args = parser.parse_args()
 
     conn = init_db()
@@ -4241,6 +4456,16 @@ def main():
         generate_analysis_report(conn)
         generate_diagnostics_html(conn)
         print(f"Diagnostics saved to:\n  {ALE_DIAGNOSTICS_HTML}\n  {ALE_ANALYSIS_REPORT}")
+    elif args.self_check:
+        health = run_self_check(conn)
+        print(f"\nBrain Health: {health['status'].upper()}")
+        for c in health['checks']:
+            print(f"  [CHECK]   {c}")
+        for w in health['warnings']:
+            print(f"  [WARN]    {w}")
+        for s in health['suggestions']:
+            print(f"  [SUGGEST] {s}")
+        print(f"\nSaved to {BRAIN_HEALTH}")
     elif args.score:
         scored = score_all_signals(conn)
         export_brain_data(conn)

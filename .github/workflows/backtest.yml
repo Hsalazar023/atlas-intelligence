@@ -52,6 +52,6 @@ jobs:
         run: |
           git config --global user.name  'ATLAS Brain Bot'
           git config --global user.email 'bot@atlasiq.io'
-          git add data/brain_signals.json data/brain_stats.json
+          git add data/brain_signals.json data/brain_stats.json data/brain_health.json
           git diff --staged --quiet || git commit -m "chore(brain): update scores $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push
