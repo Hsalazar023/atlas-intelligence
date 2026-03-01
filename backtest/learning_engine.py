@@ -967,8 +967,42 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
         earnings_updated = _enrich_earnings_proximity(conn, [r['ticker'] for r in needs_earnings])
         updated += earnings_updated
 
+    # ── 7. Sector momentum — avg momentum_1m for signals in same sector, trailing 90d ──
+    for col in ['sector_momentum', 'days_since_last_buy']:
+        try:
+            conn.execute(f"ALTER TABLE signals ADD COLUMN {col} REAL")
+        except Exception:
+            pass
+
+    sector_mom = conn.execute("""
+        UPDATE signals SET sector_momentum = (
+            SELECT AVG(s2.momentum_1m) FROM signals s2
+            WHERE s2.sector = signals.sector
+              AND s2.momentum_1m IS NOT NULL
+              AND s2.signal_date BETWEEN date(signals.signal_date, '-90 days') AND signals.signal_date
+              AND s2.id != signals.id
+        ) WHERE sector_momentum IS NULL AND sector IS NOT NULL AND sector != ''
+    """).rowcount
+    updated += sector_mom
+
+    # ── 8. Days since last buy — for repeat buyer detection ──
+    # For each signal, find the most recent prior signal from the same person
+    dslb = conn.execute("""
+        UPDATE signals SET days_since_last_buy = (
+            SELECT MIN(julianday(signals.signal_date) - julianday(s2.signal_date))
+            FROM signals s2
+            WHERE s2.signal_date < signals.signal_date
+              AND s2.id != signals.id
+              AND (
+                (signals.insider_name IS NOT NULL AND signals.insider_name != '' AND s2.insider_name = signals.insider_name)
+                OR (signals.representative IS NOT NULL AND signals.representative != '' AND s2.representative = signals.representative)
+              )
+        ) WHERE days_since_last_buy IS NULL
+    """).rowcount
+    updated += dslb
+
     conn.commit()
-    log.info(f"Enriched {updated} signal features (52wk, trade pattern, role, catalysts, earnings)")
+    log.info(f"Enriched {updated} signal features (52wk, trade pattern, role, catalysts, earnings, sector_mom, days_since_last)")
     return updated
 
 

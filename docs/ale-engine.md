@@ -31,24 +31,25 @@ Self-improving scoring brain. Accumulates signals, tracks 5 time horizons of for
 ## ML Engine
 
 - **Models:** RF + LightGBM ensemble (classification + regression), walk-forward validation
-- **27 features** (see list below)
+- **28 features** (v4: pruned 2 low-importance, added 3 new)
 - **CAR:** BHAR `(1+stock)/(1+spy)-1`, winsorized 1st/99th percentile, hard bounds [-100%, +300%]
 - **Safety:** Weights only auto-update when OOS IC improves >5%
 - **Min samples:** 200 train / 20 test per fold
 
-### Feature List (27)
+### Feature List (28) — v4
 
 | Category | Features |
 |---|---|
-| Source | source |
 | Trade | trade_size_points, disclosure_delay, relative_position_size |
 | Clustering | same_ticker_signals_7d/30d, has_convergence, convergence_tier, cluster_velocity |
-| Person | person_trade_count, person_hit_rate_30d |
-| Classification | insider_role, trade_pattern, sector, market_cap_bucket |
+| Person | person_trade_count, person_hit_rate_30d, person_avg_car_30d |
+| Classification | insider_role, sector, market_cap_bucket |
 | Price-based | price_proximity_52wk, momentum_1m/3m/6m, volume_spike |
 | Market context | vix_at_signal, yield_curve_at_signal, credit_spread_at_signal |
 | Catalysts | days_to_earnings, days_to_catalyst |
-| Derived (DB) | insider_buy_ratio_90d, sector_avg_car, vix_regime_interaction |
+| Derived (DB) | insider_buy_ratio_90d, sector_avg_car, vix_regime_interaction, sector_momentum, days_since_last_buy |
+
+**v4 changes:** Pruned `source` (0.16% imp) and `trade_pattern` (0.40% imp, 31% fill). Added `person_avg_car_30d` (person return magnitude), `sector_momentum` (sector-level 90d avg momentum), `days_since_last_buy` (repeat buyer signal).
 
 ---
 

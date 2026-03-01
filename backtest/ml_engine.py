@@ -18,22 +18,27 @@ CAR_ABSOLUTE_MIN = -1.0   # -100%
 CAR_ABSOLUTE_MAX = 3.0    # +300%
 
 FEATURE_COLUMNS = [
-    'source', 'trade_size_points', 'same_ticker_signals_7d',
+    # Core signal features
+    'trade_size_points', 'same_ticker_signals_7d',
     'same_ticker_signals_30d', 'has_convergence', 'convergence_tier',
     'person_trade_count', 'person_hit_rate_30d', 'relative_position_size',
     'insider_role', 'sector', 'price_proximity_52wk', 'market_cap_bucket',
-    'cluster_velocity', 'trade_pattern', 'disclosure_delay',
+    'cluster_velocity', 'disclosure_delay',
+    # Macro context
     'vix_at_signal', 'yield_curve_at_signal', 'credit_spread_at_signal',
     'days_to_earnings', 'days_to_catalyst',
-    # Alpha features (v3)
+    # Price / momentum features
     'momentum_1m', 'momentum_3m', 'momentum_6m',
     'volume_spike', 'insider_buy_ratio_90d', 'sector_avg_car',
     'vix_regime_interaction',
+    # v4: person magnitude + sector momentum + repeat buyer signal
+    'person_avg_car_30d', 'sector_momentum', 'days_since_last_buy',
 ]
+# Pruned in v4: 'source' (0.16% imp), 'trade_pattern' (0.40% imp, 31% fill)
 
 CATEGORICAL_FEATURES = [
-    'source', 'insider_role', 'sector', 'market_cap_bucket',
-    'cluster_velocity', 'trade_pattern',
+    'insider_role', 'sector', 'market_cap_bucket',
+    'cluster_velocity',
 ]
 
 
