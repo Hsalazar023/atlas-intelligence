@@ -923,9 +923,10 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
 
         # 3c. Infer role for corporate/institutional names still missing
         # These are PE/VC firms, holding companies, etc. — almost always 10% Owners
-        _CORP_PATTERNS = ('Inc.', 'Corp', 'LLC', 'L.P.', 'LP', 'Ltd', 'AG ', 'SE ',
-                          'Holdings', 'Partners', 'Associates', 'Management', 'Ventures',
-                          'Capital', 'Fund', 'Trust', 'Group')
+        _CORP_PATTERNS = ('inc', 'corp', 'llc', 'l.p.', ' lp', 'ltd', ' ag ',
+                          ' se ', 'holdings', 'partners', 'associates',
+                          'management', 'ventures', 'capital', 'fund',
+                          'trust', 'group', ' co.', ' co ')
         still_missing = conn.execute(
             "SELECT DISTINCT insider_name FROM signals "
             "WHERE source='edgar' AND insider_name != '' "
@@ -934,7 +935,7 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
         corp_filled = 0
         for row in still_missing:
             name = row['insider_name']
-            if any(p in name for p in _CORP_PATTERNS):
+            if any(p in name.lower() for p in _CORP_PATTERNS):
                 cnt = conn.execute(
                     "UPDATE signals SET insider_role='10% Owner' "
                     "WHERE source='edgar' AND insider_name=? "
@@ -945,6 +946,16 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
         if corp_filled:
             log.debug(f"Backfilled insider_role for {corp_filled} corporate/institutional names")
         role_filled += corp_filled
+
+        # 3d. Assign 'Other' to any remaining individuals without a role
+        other_filled = conn.execute(
+            "UPDATE signals SET insider_role='Other' "
+            "WHERE source='edgar' AND insider_name != '' "
+            "AND (insider_role IS NULL OR insider_role = '')"
+        ).rowcount
+        if other_filled:
+            log.debug(f"Assigned 'Other' role to {other_filled} remaining signals")
+        role_filled += other_filled
 
         updated += role_filled
 
@@ -3950,19 +3961,25 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
         health['checks'].append(f"Data freshness: latest signal {latest} ({days_stale}d ago)")
 
     # ── 4. Feature Fill Rates (v4 active features only) ──
+    # insider_role and repeat_buyer are EDGAR-only features — measure against EDGAR signals only
     fill_sql = """
         SELECT
-            ROUND(100.0*SUM(CASE WHEN insider_role IS NOT NULL AND insider_role != '' THEN 1 ELSE 0 END)/COUNT(*),1) as insider_role,
             ROUND(100.0*SUM(CASE WHEN sector IS NOT NULL AND sector != '' THEN 1 ELSE 0 END)/COUNT(*),1) as sector,
             ROUND(100.0*SUM(CASE WHEN market_cap_bucket IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as market_cap,
             ROUND(100.0*SUM(CASE WHEN momentum_1m IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as momentum,
             ROUND(100.0*SUM(CASE WHEN person_hit_rate_30d IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as person_hr,
             ROUND(100.0*SUM(CASE WHEN person_avg_car_30d IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as person_car,
-            ROUND(100.0*SUM(CASE WHEN sector_momentum IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as sector_mom,
-            ROUND(100.0*SUM(CASE WHEN days_since_last_buy IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as repeat_buyer
+            ROUND(100.0*SUM(CASE WHEN sector_momentum IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as sector_mom
         FROM signals
     """
+    edgar_fill_sql = """
+        SELECT
+            ROUND(100.0*SUM(CASE WHEN insider_role IS NOT NULL AND insider_role != '' THEN 1 ELSE 0 END)/COUNT(*),1) as insider_role,
+            ROUND(100.0*SUM(CASE WHEN days_since_last_buy IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as repeat_buyer
+        FROM signals WHERE source = 'edgar'
+    """
     fill = dict(cur.execute(fill_sql).fetchone())
+    fill.update(dict(cur.execute(edgar_fill_sql).fetchone()))
     health['feature_fill_rates'] = fill
     low_fills = {k: v for k, v in fill.items() if v < 50}
     if low_fills:
