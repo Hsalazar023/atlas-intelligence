@@ -4243,7 +4243,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             ml_stats = {
                 'oos_ic': w.get('_oos_ic'),
                 'oos_hit_rate': w.get('_oos_hit_rate'),
-                'n_folds': w.get('stats', {}).get('n_folds'),
+                'n_folds': w.get('_n_folds'),
             }
 
     # Committees — derive from REP_COMMITTEES mapping

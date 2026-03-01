@@ -512,21 +512,19 @@ button,input,select{font-family:var(--sans);outline:none}
 <!-- ═══════════════ PAGE: OVERVIEW ═══════════════ -->
 <div id="page-overview" class="page active">
 <div class="wrapper">
-  <div class="acad-box">
-    <div class="acad-stat"><div class="acad-num">3</div><div class="acad-lbl">Signal Sources</div></div>
-    <div class="acad-stat"><div class="acad-num">+11.4%</div><div class="acad-lbl">Avg Alpha 12mo</div></div>
-    <div class="acad-stat"><div class="acad-num">22</div><div class="acad-lbl">Active Signals</div></div>
-    <div class="acad-stat"><div class="acad-num">4</div><div class="acad-lbl">Cluster Events</div></div>
-    <div class="acad-text">ATLAS cross-references corporate Form 4 filings, congressional STOCK Act disclosures, and institutional 13F/dark-pool flow data to surface statistically significant alpha signals. Strongest predictor: CEO open-market purchases (+8.9% annual alpha, Seyhun 1998; +16.2% at score ≥86). Corroborating sources elevate conviction materially. <cite>Data: SEC EDGAR · STOCK Act · Congress.gov · FINRA ATS · SEC 13F</cite></div>
+  <div class="acad-box" id="brain-hero">
+    <div class="acad-stat"><div class="acad-num" id="hero-alpha">—</div><div class="acad-lbl">Signal Alpha (30d)</div></div>
+    <div class="acad-stat"><div class="acad-num" id="hero-ic">—</div><div class="acad-lbl">Model IC</div></div>
+    <div class="acad-stat"><div class="acad-num" id="hero-hit">—</div><div class="acad-lbl">Hit Rate</div></div>
+    <div class="acad-stat"><div class="acad-num" id="hero-signals">—</div><div class="acad-lbl">Scored Signals</div></div>
+    <div class="acad-text">ATLAS Brain — ML ensemble (RF + LightGBM) scores every signal 0–100 using 28 features. Walk-forward validated across 22 out-of-sample folds. Convergence of congress + insider activity on the same ticker elevates conviction. <cite id="hero-freshness">Brain data loading...</cite></div>
   </div>
-  <div class="kpi-strip ks7" id="brain-kpi-strip">
-    <div class="kpi"><div class="kpi-bar" id="kb1" style="background:var(--navy)"></div><div class="kpi-label">Top Signal Score</div><div class="kpi-value" id="kpi-top-score">94</div><div class="kpi-delta up" id="kpi-top-tickers">TMDX / RTX</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb2" style="background:var(--red-lt)"></div><div class="kpi-label">Exceptional Signals</div><div class="kpi-value" id="kpi-exceptional">9</div><div class="kpi-delta dn">Score ≥ 80</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb3" style="background:var(--amber)"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value" id="kpi-clusters">4</div><div class="kpi-delta am">3+ insiders same co.</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb4" style="background:var(--blue-lt)"></div><div class="kpi-label">Congress Flags</div><div class="kpi-value" id="kpi-congress">38</div><div class="kpi-delta up">High suspicion trades</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb5" style="background:var(--purple)"></div><div class="kpi-label">Atypical Inst. Flows</div><div class="kpi-value">7</div><div class="kpi-delta" style="color:var(--purple)">Unusual positions</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb6" style="background:var(--green)"></div><div class="kpi-label">Bills w/ Mkt Impact</div><div class="kpi-value">6</div><div class="kpi-delta up">Avg 64% passage</div></div>
-    <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--navy)"></div><div class="kpi-label">Correlated Ideas</div><div class="kpi-value" id="kpi-convergence">8</div><div class="kpi-delta up">Multi-source confirmed</div></div>
+  <div class="kpi-strip ks5" id="brain-kpi-strip">
+    <div class="kpi"><div class="kpi-bar" id="kb1" style="background:var(--navy)"></div><div class="kpi-label">Top Signal Score</div><div class="kpi-value" id="kpi-top-score">—</div><div class="kpi-delta" id="kpi-top-tickers" style="color:var(--muted)">loading...</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb2" style="background:var(--red-lt)"></div><div class="kpi-label">Exceptional Signals</div><div class="kpi-value" id="kpi-exceptional">—</div><div class="kpi-delta dn">Score ≥ 80</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb3" style="background:var(--amber)"></div><div class="kpi-label">Cluster Events</div><div class="kpi-value" id="kpi-clusters">—</div><div class="kpi-delta am">3+ insiders same co.</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb4" style="background:var(--blue-lt)"></div><div class="kpi-label">Congress Flags</div><div class="kpi-value" id="kpi-congress">—</div><div class="kpi-delta">Buy signals</div></div>
+    <div class="kpi"><div class="kpi-bar" id="kb7" style="background:var(--green)"></div><div class="kpi-label">Convergence Signals</div><div class="kpi-value" id="kpi-convergence">—</div><div class="kpi-delta up">Multi-source confirmed</div></div>
   </div>
   <div class="g65 mb14">
     <div class="card card-fill">
@@ -558,6 +556,28 @@ button,input,select{font-family:var(--sans);outline:none}
             Monitoring live signals — no alerts above threshold yet
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brain Performance Dashboard -->
+  <div class="g3 mb14" id="brain-perf-section">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Score Tier Performance</div><div class="card-sub">30-day CAR by score bucket</div></div>
+      <div id="brain-score-tiers" style="padding:6px 0">
+        <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading brain data...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Source Alpha</div><div class="card-sub">30-day avg abnormal return</div></div>
+      <div id="brain-source-alpha" style="padding:6px 0">
+        <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading brain data...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Brain Health</div><div class="card-sub" id="brain-health-status">Checking...</div></div>
+      <div id="brain-health-panel" style="padding:8px 12px">
+        <div style="text-align:center;color:var(--muted);font-size:10px;padding:12px">Loading brain health...</div>
       </div>
     </div>
   </div>
@@ -2524,13 +2544,7 @@ function updateOverviewKPIs(){
   }).length;
   var kb4=document.getElementById('kb4');
   if(kb4){var kpi4=kb4.closest('.kpi');if(kpi4){var v4=kpi4.querySelector('.kpi-value');if(v4) v4.textContent=flagCount||'--';}}
-  // kb5 — Atypical Inst. Flows (no live 13F data)
-  var kb5=document.getElementById('kb5');
-  if(kb5){var kpi5=kb5.closest('.kpi');if(kpi5){var v5=kpi5.querySelector('.kpi-value');if(v5) v5.textContent='--';}}
-  // kb6 — Bills w/ Market Impact
-  var kb6=document.getElementById('kb6');
-  if(kb6){var kpi6=kb6.closest('.kpi');if(kpi6){var v6=kpi6.querySelector('.kpi-value');if(v6) v6.textContent=BILLS.length;}}
-  // kb7 — Correlated Ideas (congress + insider both active)
+  // kb7 — Convergence signals (congress + insider both active)
   var kb7=document.getElementById('kb7');
   if(kb7){var kpi7=kb7.closest('.kpi');if(kpi7){var v7=kpi7.querySelector('.kpi-value');if(v7) v7.textContent=corrCount||'--';}}
 }
@@ -3233,12 +3247,15 @@ function loadBrainStats(){
   fetch('data/brain_stats.json')
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(stats){
-      // Signal Alpha KPI
+      // Hero bar — alpha, ML metrics
       if(stats.alpha){
+        var v = stats.alpha.value || 0;
+        var pct = (v * 100).toFixed(1);
+        var heroAlpha = document.getElementById('hero-alpha');
+        if(heroAlpha) heroAlpha.textContent = (v >= 0 ? '+' : '') + pct + '%';
+        // Signal Alpha KPI on Markets page
         var alphaEl = document.getElementById('signal-alpha-kpi');
         if(alphaEl){
-          var v = stats.alpha.value || 0;
-          var pct = (v * 100).toFixed(1);
           var label = (v >= 0 ? '+' : '') + pct + '%';
           var cls = v >= 0 ? 'up' : 'dn';
           alphaEl.innerHTML = '<div class="kpi-bar" style="background:var(--blue-lt);width:' +
@@ -3249,6 +3266,22 @@ function loadBrainStats(){
             ' · n=' + (stats.alpha.n_signals || 0) + '</div>';
         }
       }
+      if(stats.ml){
+        var heroIc = document.getElementById('hero-ic');
+        if(heroIc && stats.ml.oos_ic) heroIc.textContent = '+' + (stats.ml.oos_ic * 100).toFixed(1) + '%';
+        var heroHit = document.getElementById('hero-hit');
+        if(heroHit && stats.ml.oos_hit_rate) heroHit.textContent = (stats.ml.oos_hit_rate * 100).toFixed(1) + '%';
+      }
+      // Hero signals count
+      var heroSig = document.getElementById('hero-signals');
+      if(heroSig && stats.score_tiers){
+        var total = 0;
+        stats.score_tiers.forEach(function(t){ total += t.n; });
+        heroSig.textContent = total.toLocaleString();
+      }
+      // Hero freshness
+      var heroFresh = document.getElementById('hero-freshness');
+      if(heroFresh) heroFresh.textContent = 'Last updated: ' + new Date(stats.generated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) + ' · Walk-forward validated · 22 OOS folds';
       // KPI strip
       if(stats.kpis){
         var k = stats.kpis;
@@ -3256,7 +3289,7 @@ function loadBrainStats(){
         el = document.getElementById('kpi-top-score');
         if(el) el.textContent = k.top_score || '—';
         el = document.getElementById('kpi-top-tickers');
-        if(el) el.textContent = k.top_score_tickers || '—';
+        if(el){ el.textContent = k.top_score_tickers || '—'; el.style.color = ''; el.className = 'kpi-delta up'; }
         el = document.getElementById('kpi-exceptional');
         if(el) el.textContent = k.exceptional_count || 0;
         el = document.getElementById('kpi-clusters');
@@ -3265,6 +3298,62 @@ function loadBrainStats(){
         if(el) el.textContent = k.congress_flags || 0;
         el = document.getElementById('kpi-convergence');
         if(el) el.textContent = k.convergence_count || 0;
+      }
+      // Brain Score Tiers card (overview page)
+      if(stats.score_tiers && stats.score_tiers.length){
+        var tiersEl = document.getElementById('brain-score-tiers');
+        if(tiersEl){
+          var html = '';
+          // Sort tiers: 90+, 80-89, 65-79, <65
+          var tierOrder = ['90+','80-89','65-79','<65'];
+          var tierColors = {'90+':'var(--red-lt)','80-89':'var(--amber)','65-79':'var(--blue-lt)','<65':'var(--muted)'};
+          var tierLabels = {'90+':'Exceptional','80-89':'Strong Buy','65-79':'Buy','<65':'Below Threshold'};
+          tierOrder.forEach(function(name){
+            var t = stats.score_tiers.find(function(s){ return s.tier === name; });
+            if(!t) return;
+            var car = t.avg_car_30d ? (t.avg_car_30d * 100) : 0;
+            var hr = t.hit_rate ? Math.round(t.hit_rate * 100) : 0;
+            var carCls = car >= 0 ? 'up' : 'dn';
+            var carSign = car >= 0 ? '+' : '';
+            var barW = Math.min(Math.abs(car) * 3, 100);
+            html += '<div style="display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border-s);gap:6px">'
+              + '<div style="width:4px;height:28px;background:'+tierColors[name]+';border-radius:2px;flex-shrink:0"></div>'
+              + '<div style="flex:1;min-width:0">'
+              + '<div style="display:flex;justify-content:space-between;align-items:baseline">'
+              + '<span style="font-size:11px;font-weight:600;color:var(--text)">'+tierLabels[name]+' <span style="font-weight:400;color:var(--muted);font-size:10px">('+name+')</span></span>'
+              + '<span style="font-family:var(--mono);font-size:10px;color:var(--muted)">n='+t.n+'</span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px;margin-top:3px">'
+              + '<div style="flex:1;height:3px;background:var(--border);border-radius:1px"><div style="height:100%;width:'+barW+'%;background:'+(car>=0?'var(--green)':'var(--red-lt)')+';border-radius:1px"></div></div>'
+              + '<span class="'+carCls+'" style="font-family:var(--mono);font-size:11px;font-weight:600;width:52px;text-align:right">'+carSign+car.toFixed(1)+'%</span>'
+              + '<span style="font-family:var(--mono);font-size:10px;color:var(--muted);width:32px;text-align:right">'+hr+'%</span>'
+              + '</div></div></div>';
+          });
+          tiersEl.innerHTML = html;
+        }
+      }
+      // Brain Source Alpha card (overview page)
+      if(stats.source_alpha){
+        // source_alpha is from brain_health — load it there
+      } else if(stats.sectors && stats.sectors.length){
+        var srcEl = document.getElementById('brain-source-alpha');
+        if(srcEl){
+          var html = '<div style="padding:2px 12px">';
+          var topSectors = stats.sectors.slice(0, 6);
+          topSectors.forEach(function(s){
+            var pct = s.avg_car_30d * 100;
+            var fillW = Math.min(Math.abs(pct) * 6, 100);
+            var fillCls = pct >= 0 ? 'sf-pos' : 'sf-neg';
+            var perfCls = pct >= 0 ? 'up' : 'dn';
+            var sign = pct >= 0 ? '+' : '';
+            html += '<div class="sector-row"><div class="sector-name">'+s.sector
+              +'</div><div class="sector-track"><div class="sector-fill '+fillCls+'" data-w="'+fillW+'%"></div></div>'
+              +'<div class="sector-cnt">'+s.n+'</div>'
+              +'<div class="sector-perf '+perfCls+'">'+sign+pct.toFixed(1)+'%</div></div>';
+          });
+          html += '</div>';
+          srcEl.innerHTML = html;
+          setTimeout(animateBars, 60);
+        }
       }
       // Sector performance
       if(stats.sectors && stats.sectors.length){
@@ -3372,6 +3461,90 @@ function loadBrainStats(){
     });
 }
 
+function loadBrainHealth(){
+  fetch('data/brain_health.json')
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(h){
+      // Status badge
+      var statusEl = document.getElementById('brain-health-status');
+      if(statusEl){
+        var statusColor = h.status === 'healthy' ? 'var(--green)' : h.status === 'warning' ? 'var(--amber)' : 'var(--red-lt)';
+        statusEl.innerHTML = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+statusColor+';margin-right:4px"></span>' +
+          h.status.charAt(0).toUpperCase() + h.status.slice(1);
+      }
+      // Health panel
+      var panel = document.getElementById('brain-health-panel');
+      if(panel){
+        var html = '';
+        // Source alpha from health data
+        if(h.source_alpha && h.source_alpha.length){
+          html += '<div style="margin-bottom:10px">';
+          h.source_alpha.forEach(function(s){
+            var pct = s.avg_car * 100;
+            var cls = pct >= 0 ? 'up' : 'dn';
+            var sign = pct >= 0 ? '+' : '';
+            var label = s.source === 'congress' ? 'Congress' : 'EDGAR Insider';
+            html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border-s)">'
+              + '<div><span style="font-size:11px;font-weight:600">'+label+'</span>'
+              + '<span style="font-size:10px;color:var(--muted);margin-left:6px">'+s.n+' signals</span></div>'
+              + '<div style="display:flex;align-items:center;gap:8px">'
+              + '<span style="font-size:10px;color:var(--muted)">'+s.hit_rate+'% hit</span>'
+              + '<span class="'+cls+'" style="font-family:var(--mono);font-size:11px;font-weight:600">'+sign+pct.toFixed(1)+'%</span>'
+              + '</div></div>';
+          });
+          html += '</div>';
+          // Also populate the Source Alpha card
+          var srcEl = document.getElementById('brain-source-alpha');
+          if(srcEl && !srcEl.getAttribute('data-loaded')){
+            var srcHtml = '';
+            h.source_alpha.forEach(function(s){
+              var pct = s.avg_car * 100;
+              var cls = pct >= 0 ? 'up' : 'dn';
+              var sign = pct >= 0 ? '+' : '';
+              var label = s.source === 'congress' ? 'Congressional Trades' : 'EDGAR Insider Buys';
+              var barW = Math.min(Math.abs(pct) * 8, 100);
+              srcHtml += '<div style="padding:10px 12px;border-bottom:1px solid var(--border-s)">'
+                + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">'
+                + '<span style="font-size:11px;font-weight:600;color:var(--text)">'+label+'</span>'
+                + '<span class="'+cls+'" style="font-family:var(--mono);font-size:13px;font-weight:700">'+sign+pct.toFixed(1)+'%</span></div>'
+                + '<div style="display:flex;align-items:center;gap:8px">'
+                + '<div style="flex:1;height:3px;background:var(--border);border-radius:1px"><div style="height:100%;width:'+barW+'%;background:'+(pct>=0?'var(--green)':'var(--red-lt)')+';border-radius:1px"></div></div>'
+                + '<span style="font-family:var(--mono);font-size:10px;color:var(--muted)">n='+s.n+' · '+s.hit_rate+'% hit</span></div></div>';
+            });
+            srcEl.innerHTML = srcHtml;
+            srcEl.setAttribute('data-loaded','1');
+          }
+        }
+        // Feature fill rates
+        if(h.feature_fill_rates){
+          html += '<div style="font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Feature Coverage</div>';
+          var fills = h.feature_fill_rates;
+          var fillNames = {insider_role:'Insider Role',sector:'Sector',market_cap:'Market Cap',momentum:'Momentum',person_hr:'Person History',person_car:'Person Returns',sector_mom:'Sector Mom.',repeat_buyer:'Repeat Buyer'};
+          Object.keys(fills).forEach(function(k){
+            var v = fills[k];
+            var color = v >= 80 ? 'var(--green)' : v >= 50 ? 'var(--amber)' : 'var(--red-lt)';
+            html += '<div style="display:flex;align-items:center;gap:6px;padding:2px 0">'
+              + '<span style="font-size:10px;color:var(--text-s);width:80px;flex-shrink:0">'+(fillNames[k]||k)+'</span>'
+              + '<div style="flex:1;height:3px;background:var(--border);border-radius:1px"><div style="height:100%;width:'+v+'%;background:'+color+';border-radius:1px"></div></div>'
+              + '<span style="font-family:var(--mono);font-size:9px;color:var(--muted);width:30px;text-align:right">'+v+'%</span></div>';
+          });
+        }
+        // Warnings
+        if(h.warnings && h.warnings.length){
+          html += '<div style="margin-top:8px;padding:6px 8px;background:var(--amber-bg);border:1px solid #fcd34d;border-radius:4px;font-size:10px;color:var(--amber)">';
+          h.warnings.forEach(function(w){ html += '<div>'+w+'</div>'; });
+          html += '</div>';
+        }
+        // Data freshness
+        if(h.data_freshness){
+          html += '<div style="margin-top:6px;font-size:9px;color:var(--text-f)">Latest signal: '+h.data_freshness.latest_signal+' ('+h.data_freshness.days_since+'d ago)</div>';
+        }
+        panel.innerHTML = html;
+      }
+    })
+    .catch(function(){});
+}
+
 // ═══════════════════════════════════════════════════════
 // INITIALIZATION — Load all live data on startup
 // ═══════════════════════════════════════════════════════
@@ -3379,6 +3552,7 @@ window.addEventListener('load', function(){
   loadOptimalWeights();
   loadBrainSignals();
   loadBrainStats();
+  loadBrainHealth();
 
   // Load SEC company→ticker map for EDGAR matching (10,000+ entries)
   fetch('data/sec_tickers.json')
