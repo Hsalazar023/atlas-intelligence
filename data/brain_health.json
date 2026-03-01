@@ -1,18 +1,39 @@
 {
-  "generated": "2026-03-01T03:04:20.598796+00:00",
-  "status": "healthy",
+  "generated": "2026-03-01T20:40:37.192859+00:00",
+  "status": "warning",
   "checks": [
-    "IC latest: 0.0721 (need 3+ runs for trend)",
-    "Top 50 diversity: 23 unique tickers, top=BITB (12/50)",
+    "IC trend: 0.0712 \u2192 0.0712 \u2192 0.0712",
+    "Top 50 diversity: 19 unique tickers, top=BITB (12/50)",
     "Data freshness: latest signal 2026-02-27 (2d ago)",
-    "Feature fills: 3/6 above 80%",
-    "Score bands: 80+ CAR=0.5539, 65-79=0.262, <40=-0.0489"
+    "Feature fills: 4/8 above 80%",
+    "Score bands: 80+ CAR=0.2439, 65-79=0.3178, <40=-0.0487",
+    "Feature drift: 0 features shifted >50%"
   ],
-  "warnings": [],
+  "warnings": [
+    "Score band inversion: 80+ signals have lower CAR than 65-79 \u2014 scoring formula may need recalibration"
+  ],
   "suggestions": [
-    "Low fill features (insider_role=29.7%, trade_pattern=31.3%) \u2014 consider pruning from ML if <1% importance"
+    "Low fill features (insider_role=29.7%) \u2014 consider pruning from ML if <1% importance"
   ],
   "ic_history": [
+    {
+      "date": "2026-03-01",
+      "ic": 0.071202,
+      "hit_rate": 0.5523,
+      "type": "analyze"
+    },
+    {
+      "date": "2026-03-01",
+      "ic": 0.071202,
+      "hit_rate": 0.5523,
+      "type": "analyze"
+    },
+    {
+      "date": "2026-03-01",
+      "ic": 0.071202,
+      "hit_rate": 0.5523,
+      "type": "analyze"
+    },
     {
       "date": "2026-03-01",
       "ic": 0.072064,
@@ -24,7 +45,7 @@
     "top_ticker": "BITB",
     "count": 12,
     "pct_of_top50": 0.24,
-    "unique_in_top50": 23
+    "unique_in_top50": 19
   },
   "data_freshness": {
     "latest_signal": "2026-02-27",
@@ -36,7 +57,9 @@
     "market_cap": 97.6,
     "momentum": 96.2,
     "person_hr": 73.6,
-    "trade_pattern": 31.3
+    "person_car": 73.6,
+    "sector_mom": 97.1,
+    "repeat_buyer": 65.2
   },
   "source_alpha": [
     {
@@ -55,27 +78,27 @@
   "score_bands": [
     {
       "band": "<40",
-      "n": 1752,
-      "avg_car": -0.0489,
+      "n": 1763,
+      "avg_car": -0.0487,
       "hit_rate": 18.0
     },
     {
       "band": "80+",
-      "n": 25,
-      "avg_car": 0.5539,
+      "n": 18,
+      "avg_car": 0.2439,
       "hit_rate": 100.0
     },
     {
       "band": "65-79",
-      "n": 123,
-      "avg_car": 0.262,
+      "n": 127,
+      "avg_car": 0.3178,
       "hit_rate": 100.0
     },
     {
       "band": "40-64",
-      "n": 1021,
-      "avg_car": 0.0639,
-      "hit_rate": 85.9
+      "n": 1013,
+      "avg_car": 0.066,
+      "hit_rate": 86.6
     }
   ]
 }
