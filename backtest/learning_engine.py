@@ -33,6 +33,7 @@ from backtest.shared import (
 from backtest.sector_map import get_sector, get_market_cap, get_market_cap_bucket
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+logging.getLogger('numexpr').setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
 ALE_DASHBOARD = DATA_DIR / "ale_dashboard.json"
@@ -889,7 +890,7 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
             ).rowcount
             role_filled += cnt
         if role_filled:
-            log.info(f"Backfilled insider_role via cross-signal propagation: {role_filled} signals")
+            log.debug(f"Backfilled insider_role via cross-signal propagation: {role_filled} signals")
 
         # 3b. Try to backfill remaining from edgar_feed.json
         from backtest.shared import EDGAR_FEED
@@ -918,7 +919,7 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
                         (normalized, insider)
                     ).rowcount
                     feed_filled += cnt
-                log.info(f"Backfilled insider_role from feed: {len(role_map)} insiders, {feed_filled} signals")
+                log.debug(f"Backfilled insider_role from feed: {len(role_map)} insiders, {feed_filled} signals")
 
         updated += role_filled
 
@@ -1002,7 +1003,7 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
     updated += dslb
 
     conn.commit()
-    log.info(f"Enriched {updated} signal features (52wk, trade pattern, role, catalysts, earnings, sector_mom, days_since_last)")
+    log.info(f"Enriched {updated} features")
     return updated
 
 
@@ -1779,7 +1780,7 @@ def compute_feature_stats(conn: sqlite3.Connection) -> dict:
             )
 
     conn.commit()
-    log.info(f"Feature stats: {len(stats)} feature-value pairs computed from {len(rows)} signals")
+    log.debug(f"Feature stats: {len(stats)} feature-value pairs from {len(rows)} signals")
     return stats
 
 
@@ -1900,7 +1901,7 @@ def generate_weights_from_stats(conn: sqlite3.Connection) -> dict:
     )
     conn.commit()
 
-    log.info(f"Weights updated via feature_importance (n={len(all_30d)}, hit_rate={overall_hit:.1%}, avg_car={overall_avg:.4f})")
+    log.debug(f"Weights updated via feature_importance (n={len(all_30d)}, hit_rate={overall_hit:.1%}, avg_car={overall_avg:.4f})")
     return weights
 
 
@@ -2774,7 +2775,7 @@ def generate_analysis_report(conn: sqlite3.Connection, ml_result=None, reg_resul
     # Write report
     report_text = '\n'.join(lines)
     ALE_ANALYSIS_REPORT.write_text(report_text)
-    log.info(f"Analysis report written to: {ALE_ANALYSIS_REPORT} ({len(lines)} lines)")
+    log.debug(f"Analysis report written to: {ALE_ANALYSIS_REPORT} ({len(lines)} lines)")
     return ALE_ANALYSIS_REPORT
 
 
@@ -3646,7 +3647,7 @@ new Chart(document.getElementById('carDistChart'), {{
 </html>"""
 
     ALE_DIAGNOSTICS_HTML.write_text(html_content)
-    log.info(f"Diagnostics HTML written to: {ALE_DIAGNOSTICS_HTML}")
+    log.debug(f"Diagnostics HTML written to: {ALE_DIAGNOSTICS_HTML}")
     return ALE_DIAGNOSTICS_HTML
 
 
@@ -3798,23 +3799,15 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     )
     conn.commit()
 
-    # Log distribution
+    # Log compact distribution
     import numpy as np
     scores_arr = np.array(scores)
-    log.info(f"Scored {len(scores)} signals")
-    log.info(f"  Distribution: mean={scores_arr.mean():.1f}, median={np.median(scores_arr):.1f}, "
-             f"min={scores_arr.min():.1f}, max={scores_arr.max():.1f}")
-
-    # Score tier counts
-    tiers = {
-        '80-100 (strong buy)': int(np.sum(scores_arr >= 80)),
-        '60-80 (buy)': int(np.sum((scores_arr >= 60) & (scores_arr < 80))),
-        '40-60 (neutral)': int(np.sum((scores_arr >= 40) & (scores_arr < 60))),
-        '20-40 (weak)': int(np.sum((scores_arr >= 20) & (scores_arr < 40))),
-        '0-20 (avoid)': int(np.sum(scores_arr < 20)),
-    }
-    for tier, count in tiers.items():
-        log.info(f"  {tier}: {count}")
+    n80 = int(np.sum(scores_arr >= 80))
+    n60 = int(np.sum((scores_arr >= 60) & (scores_arr < 80)))
+    n40 = int(np.sum((scores_arr >= 40) & (scores_arr < 60)))
+    nlo = int(np.sum(scores_arr < 40))
+    log.info(f"Scored {len(scores)} signals — mean={scores_arr.mean():.1f}, max={scores_arr.max():.1f} "
+             f"| 80+:{n80} 60-79:{n60} 40-59:{n40} <40:{nlo}")
 
     return len(scores)
 
@@ -3860,7 +3853,7 @@ def log_brain_run(conn: sqlite3.Connection, run_type: str,
           oos_ic, oos_hit_rate, n_signals, n_scored, avg_score, max_score,
           top_ticker, top_ticker_pct, fi_json, notes))
     conn.commit()
-    log.info(f"Brain run logged: type={run_type}, IC={oos_ic}, scored={n_scored}")
+    log.debug(f"Brain run logged: type={run_type}, IC={oos_ic}, scored={n_scored}")
 
 
 def run_self_check(conn: sqlite3.Connection) -> dict:
@@ -3923,7 +3916,7 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
             health['status'] = 'warning'
         health['checks'].append(f"Data freshness: latest signal {latest} ({days_stale}d ago)")
 
-    # ── 4. Feature Fill Rates ──
+    # ── 4. Feature Fill Rates (v4 active features only) ──
     fill_sql = """
         SELECT
             ROUND(100.0*SUM(CASE WHEN insider_role IS NOT NULL AND insider_role != '' THEN 1 ELSE 0 END)/COUNT(*),1) as insider_role,
@@ -3931,7 +3924,9 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
             ROUND(100.0*SUM(CASE WHEN market_cap_bucket IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as market_cap,
             ROUND(100.0*SUM(CASE WHEN momentum_1m IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as momentum,
             ROUND(100.0*SUM(CASE WHEN person_hit_rate_30d IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as person_hr,
-            ROUND(100.0*SUM(CASE WHEN trade_pattern IS NOT NULL AND trade_pattern != '' THEN 1 ELSE 0 END)/COUNT(*),1) as trade_pattern
+            ROUND(100.0*SUM(CASE WHEN person_avg_car_30d IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as person_car,
+            ROUND(100.0*SUM(CASE WHEN sector_momentum IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as sector_mom,
+            ROUND(100.0*SUM(CASE WHEN days_since_last_buy IS NOT NULL THEN 1 ELSE 0 END)/COUNT(*),1) as repeat_buyer
         FROM signals
     """
     fill = dict(cur.execute(fill_sql).fetchone())
@@ -4003,7 +3998,7 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
         log.info(f"  [SUGGEST] {s}")
 
     save_json(BRAIN_HEALTH, health)
-    log.info(f"Brain health saved to {BRAIN_HEALTH}")
+    log.info(f"Exported health → brain_health.json")
     return health
 
 
@@ -4136,7 +4131,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         'exits': exits_out,
     }
     save_json(BRAIN_SIGNALS, brain_signals)
-    log.info(f"Exported {len(signals_out)} signals + {len(exits_out)} exits → {BRAIN_SIGNALS}")
+    log.info(f"Exported {len(signals_out)} signals + {len(exits_out)} exits → brain_signals.json")
 
     # ── brain_stats.json ────────────────────────────────────────────────────
 
@@ -4301,7 +4296,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         'ml': ml_stats,
     }
     save_json(BRAIN_STATS, brain_stats)
-    log.info(f"Exported brain stats → {BRAIN_STATS}")
+    log.info(f"Exported brain stats → brain_stats.json")
 
 
 # ── Daily Pipeline ───────────────────────────────────────────────────────────
@@ -4378,17 +4373,13 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     ml_result = None
     try:
         from backtest.ml_engine import walk_forward_train
-        log.info("Running walk-forward ML training...")
         ml_result = walk_forward_train(conn)
-        log.info(f"ML results: {ml_result.n_folds} folds, OOS IC={ml_result.oos_ic}, "
-                 f"OOS hit_rate={ml_result.oos_hit_rate}")
-        if ml_result.folds:
-            for i, fold in enumerate(ml_result.folds):
-                log.info(f"  Fold {i+1}: {fold['test_start']}→{fold['test_end']} | "
-                         f"n_test={fold['n_test']} IC={fold['ic']:.4f} hit={fold['hit_rate']:.1%}")
-            if ml_result.feature_importance:
-                top5 = list(ml_result.feature_importance.items())[:5]
-                log.info(f"  Top features: {', '.join(f'{k}={v:.3f}' for k, v in top5)}")
+        top5_str = ""
+        if ml_result.feature_importance:
+            top5 = list(ml_result.feature_importance.items())[:5]
+            top5_str = f" | top: {', '.join(f'{k}={v:.3f}' for k, v in top5)}"
+        log.info(f"Classification: {ml_result.n_folds} folds, IC={ml_result.oos_ic:.4f}, "
+                 f"hit={ml_result.oos_hit_rate:.1%}{top5_str}")
     except ImportError:
         log.warning("ML dependencies not installed (scikit-learn, lightgbm) — skipping ML training")
     except Exception as e:
@@ -4400,10 +4391,9 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     reg_result = None
     try:
         from backtest.ml_engine import walk_forward_regression
-        log.info("Running walk-forward regression...")
         reg_result = walk_forward_regression(conn)
-        log.info(f"Regression results: {reg_result.n_folds} folds, OOS IC={reg_result.oos_ic}, "
-                 f"OOS RMSE={reg_result.oos_rmse}")
+        log.info(f"Regression:     {reg_result.n_folds} folds, IC={reg_result.oos_ic:.4f}, "
+                 f"RMSE={reg_result.oos_rmse:.4f}")
     except ImportError:
         log.warning("ML dependencies not installed — skipping regression")
     except Exception as e:
@@ -4435,10 +4425,9 @@ def run_analyze(conn: sqlite3.Connection) -> None:
             output['method'] = 'walk_forward_ensemble'
             log.info(f"Weights method upgraded to walk_forward_ensemble (IC {ml_result.oos_ic:.4f})")
         else:
-            log.info(f"Method stays {output['method']} — IC {ml_result.oos_ic:.4f} vs current {current_ic:.4f} (need >5% improvement)")
+            log.info(f"Method: {output['method']} (IC {ml_result.oos_ic:.4f} vs prior {current_ic:.4f})")
 
     save_json(OPTIMAL_WEIGHTS, output)
-    log.info(f"Updated weights saved to {OPTIMAL_WEIGHTS}")
 
     # 5. Update dashboard (pass ml_result for ML metrics)
     generate_dashboard(conn, ml_result=ml_result)
@@ -4449,8 +4438,7 @@ def run_analyze(conn: sqlite3.Connection) -> None:
 
     # 7. Score all signals with full-sample ML models
     try:
-        scored = score_all_signals(conn)
-        log.info(f"Scored {scored} signals with ML models")
+        score_all_signals(conn)
     except Exception as e:
         log.warning(f"Signal scoring failed: {e}")
         import traceback

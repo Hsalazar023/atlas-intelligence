@@ -292,11 +292,11 @@ def walk_forward_train(conn: sqlite3.Connection,
             vals = [fi.get(name, 0) for fi in all_fold_importances]
             importance[name] = round(np.mean(vals), 4)
 
-    # Log features with low importance for potential pruning
+    # Log features with low importance (debug-level; details in report)
     if importance:
         low_imp = [f"{name} ({imp:.4f})" for name, imp in importance.items() if imp < 0.005]
         if low_imp:
-            log.info(f"Low-importance features (<0.5%): {', '.join(low_imp)}")
+            log.debug(f"Low-importance features (<0.5%): {', '.join(low_imp)}")
 
     return WalkForwardResult(
         n_folds=len(folds),
@@ -438,10 +438,10 @@ def walk_forward_regression(conn: sqlite3.Connection,
             vals = [fi.get(name, 0) for fi in all_fold_importances]
             importance[name] = round(np.mean(vals), 4)
 
-        # Log low-importance features
+        # Log low-importance features (debug-level; details in report)
         low_imp = [f"{name} ({imp:.4f})" for name, imp in importance.items() if imp < 0.005]
         if low_imp:
-            log.info(f"Regression: low-importance features (<0.5%): {', '.join(low_imp)}")
+            log.debug(f"Regression: low-importance features (<0.5%): {', '.join(low_imp)}")
 
     return RegressionResult(
         n_folds=len(folds),

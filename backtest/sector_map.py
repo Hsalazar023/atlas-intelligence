@@ -73,7 +73,7 @@ def _load_market_cap_cache() -> dict:
         try:
             with open(MARKET_CAP_MAP_PATH, 'r') as f:
                 _market_cap_cache = json.load(f)
-            log.info(f"Loaded market cap map: {len(_market_cap_cache)} tickers")
+            log.debug(f"Loaded market cap map: {len(_market_cap_cache)} tickers")
         except (json.JSONDecodeError, IOError) as e:
             log.warning(f"Failed to load market cap map: {e}")
             _market_cap_cache = {}
