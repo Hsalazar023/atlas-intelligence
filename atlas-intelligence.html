@@ -533,7 +533,7 @@ button,input,select{font-family:var(--sans);outline:none}
       <div class="card-hd"><div class="card-title">Top Signals — All Sources · Rolling 30 Days</div><div class="card-action" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</div></div>
       <div class="tbl-wrap" style="max-height:480px;overflow-y:auto">
         <table class="tbl">
-          <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">Value</th><th>Direction</th></tr></thead>
+          <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">ML Conf</th><th>Direction</th></tr></thead>
           <tbody id="top-signals-tbl">
             <tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
               <span class="new-pulse" style="display:inline-block;margin-right:6px"></span>
@@ -2391,12 +2391,14 @@ function renderTopSignals(){
     var actor=actorParts.join(' · ')||'Live signal';
     var dirTag=info.dir==='long'?'<span class="tag t-buy">Long</span>':'<span class="tag t-sell">Short</span>';
     var totalCls=Math.abs(sc.total)>=85?'sc4':Math.abs(sc.total)>=65?'sc3':'sc1';
+    var mlConf=t&&t.mlConfidence?Math.round(t.mlConfidence*100)+'%':'—';
+    var confCls=t&&t.mlConfidence>=0.6?'up':t&&t.mlConfidence>=0.5?'':'dn';
     html+='<tr>'
       +'<td><div class="sym">'+ticker+'</div></td>'
       +'<td><span class="tag '+tagCls+'">'+sigType+'</span></td>'
       +'<td style="font-size:11px">'+actor+'</td>'
       +'<td class="c"><span class="score '+totalCls+'">'+fmtScore(sc.total)+'</span></td>'
-      +'<td class="r"><span class="val '+(info.dir==='long'?'up':'dn')+'">Live</span></td>'
+      +'<td class="r"><span class="val '+confCls+'">'+mlConf+'</span></td>'
       +'<td>'+dirTag+'</td>'
       +'</tr>';
   });
@@ -2624,13 +2626,21 @@ function renderSignalIdeas(){
       var scoreCls=sc.total>=95?'sc4':sc.total>=IDEA_THRESHOLD?'sc3':'sc1';
       var srcTag=t&&t.source==='congress'?'<span class="tag t-warn">Congress</span>':'<span class="tag t-buy">EDGAR</span>';
       var tag=sc.hasConvergence?'<span class="tag t-clus">Multi-Source</span>':srcTag;
+      // Build "why this signal" context line from Brain data
+      var ctx=[];
+      if(t&&t.mlConfidence) ctx.push(Math.round(t.mlConfidence*100)+'% ML confidence');
+      if(t&&t.predictedCar!=null) ctx.push((t.predictedCar>=0?'+':'')+t.predictedCar.toFixed(1)+'% predicted');
+      if(t&&t.personHitRate!=null&&t.personTradeCount>=3) ctx.push('Person '+Math.round(t.personHitRate*100)+'% hit ('+t.personTradeCount+' trades)');
+      if(t&&t.insiderRole&&t.insiderRole!=='Other') ctx.push(t.insiderRole);
+      if(sc.hasConvergence) ctx.push('Tier '+(t?t.convergenceTier:'')+' convergence');
+      var ctxLine=ctx.length?ctx.join(' · '):'Engine-generated · '+now;
       return '<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
         +'<div><div style="display:flex;align-items:center;gap:6px"><span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'+tag+'</div>'
         +'<div class="sym-sub" style="margin-top:3px">'+signal+'</div></div>'
         +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+fmtScore(sc.total)+'</span>'
         +'</div>'
-        +'<div style="font-size:10px;color:var(--muted)">Engine-generated · '+now+' · Convergence boost: +'+fmtScore(sc.boost)+'pts</div>'
+        +'<div style="font-size:10px;color:var(--muted)">'+ctxLine+'</div>'
         +'</div>';
     }).join('');
   }
@@ -3167,11 +3177,15 @@ function loadBrainSignals(){
           note: s.note || '',
           source: s.source || '',
           totalScore: s.total_score || 0,
+          mlConfidence: s.ml_confidence,
+          predictedCar: s.predicted_car,
           convergenceTier: s.convergence_tier || 0,
           hasConvergence: s.has_convergence || false,
           person: s.person || '',
           personHitRate: s.person_hit_rate,
-          sector: s.sector || ''
+          personTradeCount: s.person_trade_count || 0,
+          sector: s.sector || '',
+          insiderRole: s.insider_role || ''
         };
       });
       if(Object.keys(newTracked).length > 0){

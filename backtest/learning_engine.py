@@ -3698,6 +3698,13 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
 
     clf_rf, clf_lgb, reg_rf, reg_lgb = models
 
+    # Ensure score breakdown columns exist
+    for col in ['ml_confidence', 'predicted_car']:
+        try:
+            conn.execute(f"ALTER TABLE signals ADD COLUMN {col} REAL")
+        except Exception:
+            pass  # column already exists
+
     # Prepare features for ALL signals
     X, ids, dates, tickers, cars = prepare_features_all(conn)
     if len(X) == 0:
@@ -3730,11 +3737,14 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         total = max(0, min(100, base + magnitude + converge + person))
         total = round(total, 2)
 
-        updates.append((total, sig_id))
+        updates.append((total, round(float(clf_probs[i]), 4), round(float(reg_preds[i]), 6), sig_id))
         scores.append(total)
 
     # Batch update
-    conn.executemany("UPDATE signals SET total_score = ? WHERE id = ?", updates)
+    conn.executemany(
+        "UPDATE signals SET total_score = ?, ml_confidence = ?, predicted_car = ? WHERE id = ?",
+        updates
+    )
     conn.commit()
 
     # Log distribution
@@ -3766,21 +3776,35 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
 
     # ── brain_signals.json ──────────────────────────────────────────────────
 
-    # Top 50 signals from last 90 days by total_score
+    # Top signals from last 90 days by total_score, diversified (max 3 per ticker)
+    MAX_PER_TICKER = 3
+    EXPORT_LIMIT = 50
     cur.execute("""
         SELECT ticker, price_at_signal, signal_date, source, total_score,
                convergence_tier, has_convergence, representative, insider_name,
                insider_role, transaction_type, person_hit_rate_30d,
                person_trade_count, sector, car_30d,
-               same_ticker_signals_7d
+               same_ticker_signals_7d, ml_confidence, predicted_car
         FROM signals
         WHERE signal_date >= date('now', '-90 days')
           AND total_score IS NOT NULL
         ORDER BY total_score DESC
-        LIMIT 50
+        LIMIT 200
     """)
-    rows = cur.fetchall()
+    all_rows = cur.fetchall()
     cols = [d[0] for d in cur.description]
+
+    # Diversify: max N signals per ticker
+    ticker_counts = {}
+    rows = []
+    for row in all_rows:
+        r = dict(zip(cols, row))
+        t = r['ticker']
+        ticker_counts[t] = ticker_counts.get(t, 0) + 1
+        if ticker_counts[t] <= MAX_PER_TICKER:
+            rows.append(row)
+        if len(rows) >= EXPORT_LIMIT:
+            break
 
     signals_out = []
     for row in rows:
@@ -3837,6 +3861,8 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             'person_trade_count': r['person_trade_count'] or 0,
             'insider_role': r['insider_role'],
             'sector': r['sector'],
+            'ml_confidence': round(r['ml_confidence'], 3) if r.get('ml_confidence') is not None else None,
+            'predicted_car': round(r['predicted_car'] * 100, 1) if r.get('predicted_car') is not None else None,
             'entry_lo': entry_lo,
             'entry_hi': entry_hi,
             'target1': target1,
@@ -4157,14 +4183,17 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     if ml_result and ml_result.n_folds > 0:
         current_weights = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
         current_ic = current_weights.get('_oos_ic', 0)
+        # Always save ML metrics so we track IC over time.
+        # Only upgrade method to 'walk_forward_ensemble' if IC improved >5%.
+        output['_oos_ic'] = ml_result.oos_ic
+        output['_oos_hit_rate'] = ml_result.oos_hit_rate
+        output['_n_folds'] = ml_result.n_folds
+        output['_feature_importance'] = ml_result.feature_importance
         if ml_result.oos_ic > current_ic * 1.05 or current_ic == 0:
-            output['_oos_ic'] = ml_result.oos_ic
-            output['_oos_hit_rate'] = ml_result.oos_hit_rate
-            output['_feature_importance'] = ml_result.feature_importance
             output['method'] = 'walk_forward_ensemble'
-            log.info("Weights updated — ML outperformed previous by >5%")
+            log.info(f"Weights method upgraded to walk_forward_ensemble (IC {ml_result.oos_ic:.4f})")
         else:
-            log.info(f"Weights NOT updated — ML IC {ml_result.oos_ic} vs current {current_ic}")
+            log.info(f"Method stays {output['method']} — IC {ml_result.oos_ic:.4f} vs current {current_ic:.4f} (need >5% improvement)")
 
     save_json(OPTIMAL_WEIGHTS, output)
     log.info(f"Updated weights saved to {OPTIMAL_WEIGHTS}")
