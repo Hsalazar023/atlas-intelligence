@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-01T20:40:37.177696+00:00",
+  "generated": "2026-03-01T21:30:51.581831+00:00",
   "signals": [
     {
       "ticker": "THM",
@@ -19,11 +19,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.718,
       "predicted_car": 18.2,
-      "entry_lo": 2.51,
+      "score_breakdown": {
+        "base": 43.0,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.4581,
+          "importance": 0.0812
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 0.4032,
+          "importance": 0.0686
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 3.1215,
+          "importance": 0.0662
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 1.2119,
+          "importance": 0.0658
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 0.1297,
+          "importance": 0.0562
+        }
+      ],
+      "context": {
+        "person": "PAULSON & CO. INC.",
+        "insider_role": "Other",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-30",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 71.8,
+      "predicted_move": 18.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 2.4,
       "entry_hi": 2.71,
-      "target1": 3.13,
-      "target2": 3.52,
-      "stop": 2.3
+      "target1": 3.09,
+      "target2": 3.47,
+      "stop": 2.32
     },
     {
       "ticker": "LRN",
@@ -43,11 +109,77 @@
       "sector": "Consumer Defensive",
       "ml_confidence": 0.667,
       "predicted_car": 12.6,
-      "entry_lo": 64.9,
+      "score_breakdown": {
+        "base": 40.0,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 4.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.5171,
+          "importance": 0.0873
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 2,
+          "percentile_label": "bottom 2%",
+          "raw_value": -0.504,
+          "importance": 0.0662
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 1.9306,
+          "importance": 0.0581
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -251.0,
+          "importance": 0.0538
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week low",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": 0.0605,
+          "importance": 0.0525
+        }
+      ],
+      "context": {
+        "person": "Markwayne Mullin",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2026-01-05",
+        "disclosure_delay": 30,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 66.7,
+      "predicted_move": 12.6,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 62.19,
       "entry_hi": 70.3,
-      "target1": 81.12,
-      "target2": 91.26,
-      "stop": 59.49
+      "target1": 76.1,
+      "target2": 82.9,
+      "stop": 62.5
     },
     {
       "ticker": "HYMC",
@@ -67,11 +199,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.638,
       "predicted_car": 25.2,
-      "entry_lo": 35.86,
+      "score_breakdown": {
+        "base": 38.3,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 3.9145,
+          "importance": 0.0889
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 99,
+          "percentile_label": "top 1%",
+          "raw_value": 0.5713,
+          "importance": 0.0694
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 9.3177,
+          "importance": 0.0688
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 0.1227,
+          "importance": 0.0555
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -252.0,
+          "importance": 0.0542
+        }
+      ],
+      "context": {
+        "person": "Sprott Eric",
+        "insider_role": "10% Owner",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-30",
+        "disclosure_delay": 1,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 63.8,
+      "predicted_move": 25.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 34.36,
       "entry_hi": 38.84,
-      "target1": 44.82,
-      "target2": 50.42,
-      "stop": 32.87
+      "target1": 46.78,
+      "target2": 54.32,
+      "stop": 31.69
     },
     {
       "ticker": "HYMC",
@@ -91,11 +289,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.692,
       "predicted_car": 29.5,
-      "entry_lo": 26.04,
+      "score_breakdown": {
+        "base": 41.5,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 2.6416,
+          "importance": 0.0886
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 1.3268,
+          "importance": 0.0707
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 5.9209,
+          "importance": 0.0686
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 12,
+          "percentile_label": "12th percentile",
+          "raw_value": 0.4798,
+          "importance": 0.054
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 10,
+          "percentile_label": "bottom 10%",
+          "raw_value": -231.0,
+          "importance": 0.0502
+        }
+      ],
+      "context": {
+        "person": "Sprott Eric",
+        "insider_role": "10% Owner",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 69.2,
+      "predicted_move": 29.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 24.96,
       "entry_hi": 28.22,
-      "target1": 32.56,
-      "target2": 36.63,
-      "stop": 23.87
+      "target1": 35.13,
+      "target2": 40.7,
+      "stop": 22.33
     },
     {
       "ticker": "LYB",
@@ -115,11 +379,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.829,
       "predicted_car": 6.3,
-      "entry_lo": 46.76,
+      "score_breakdown": {
+        "base": 49.7,
+        "magnitude": 12.5,
+        "convergence": 10.0,
+        "person": 4.2
+      },
+      "factors": [
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.0811,
+          "importance": 0.0519
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": -0.1861,
+          "importance": 0.0503
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 10,
+          "percentile_label": "bottom 10%",
+          "raw_value": -231.0,
+          "importance": 0.0502
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
+          "raw_value": 0.1158,
+          "importance": 0.0487
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 81,
+          "percentile_label": "81th percentile",
+          "raw_value": 0.0769,
+          "importance": 0.0437
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 82.9,
+      "predicted_move": 6.3,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 44.81,
       "entry_hi": 50.66,
-      "target1": 58.45,
-      "target2": 65.76,
-      "stop": 42.86
+      "target1": 51.76,
+      "target2": 54.2,
+      "stop": 46.27
     },
     {
       "ticker": "GOOGL",
@@ -139,11 +469,77 @@
       "sector": "Technology",
       "ml_confidence": 0.826,
       "predicted_car": 5.3,
-      "entry_lo": 301.3,
-      "entry_hi": 326.4,
-      "target1": 376.62,
-      "target2": 423.7,
-      "stop": 276.19
+      "score_breakdown": {
+        "base": 49.5,
+        "magnitude": 10.7,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.2824,
+          "importance": 0.0724
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 0.7509,
+          "importance": 0.0622
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 14,
+          "percentile_label": "14th percentile",
+          "raw_value": 0.5394,
+          "importance": 0.0508
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 86,
+          "percentile_label": "86th percentile",
+          "raw_value": 0.9476,
+          "importance": 0.0505
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 14,
+          "percentile_label": "14th percentile",
+          "raw_value": -207.0,
+          "importance": 0.0453
+        }
+      ],
+      "context": {
+        "person": "Nancy Pelosi",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$250,001 - $500,000",
+        "signal_date": "2025-12-30",
+        "disclosure_delay": 27,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 82.6,
+      "predicted_move": 5.3,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 306.32,
+      "entry_hi": 317.61,
+      "target1": 330.59,
+      "target2": 343.98,
+      "stop": 298.16
     },
     {
       "ticker": "AEIS",
@@ -163,11 +559,77 @@
       "sector": "Industrials",
       "ml_confidence": 0.73,
       "predicted_car": 7.8,
-      "entry_lo": 240.91,
+      "score_breakdown": {
+        "base": 43.8,
+        "magnitude": 15.6,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 92,
+          "percentile_label": "top 8%",
+          "raw_value": 0.3183,
+          "importance": 0.0755
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.783,
+          "importance": 0.0628
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.1524,
+          "importance": 0.0591
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": -265.0,
+          "importance": 0.0567
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.9645,
+          "importance": 0.0544
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-20",
+        "disclosure_delay": 27,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 73.0,
+      "predicted_move": 7.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 230.87,
       "entry_hi": 260.99,
-      "target1": 301.14,
-      "target2": 338.78,
-      "stop": 220.84
+      "target1": 270.49,
+      "target2": 286.12,
+      "stop": 238.4
     },
     {
       "ticker": "TPL",
@@ -187,11 +649,68 @@
       "sector": "Energy",
       "ml_confidence": 0.688,
       "predicted_car": 9.5,
-      "entry_lo": 323.98,
+      "score_breakdown": {
+        "base": 41.3,
+        "magnitude": 18.9,
+        "convergence": 10.0,
+        "person": 2.9
+      },
+      "factors": [
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.1466,
+          "importance": 0.0586
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -253.0,
+          "importance": 0.0547
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
+          "raw_value": 0.0802,
+          "importance": 0.0369
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "Low avg return trader",
+          "direction": "bearish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": -0.0208,
+          "importance": 0.0359
+        }
+      ],
+      "context": {
+        "person": "HORIZON KINETICS ASSET MANAGEMENT LLC",
+        "insider_role": "10% Owner",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 68.8,
+      "predicted_move": 9.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 310.48,
       "entry_hi": 350.98,
-      "target1": 404.98,
-      "target2": 455.6,
-      "stop": 296.98
+      "target1": 369.43,
+      "target2": 394.99,
+      "stop": 318.31
     },
     {
       "ticker": "SLGL",
@@ -211,11 +730,77 @@
       "sector": "Healthcare",
       "ml_confidence": 0.603,
       "predicted_car": 15.9,
-      "entry_lo": 56.1,
+      "score_breakdown": {
+        "base": 36.2,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 1.6
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.4985,
+          "importance": 0.0823
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 3.8659,
+          "importance": 0.0684
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 0.3425,
+          "importance": 0.0675
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 8,
+          "percentile_label": "bottom 8%",
+          "raw_value": -245.0,
+          "importance": 0.053
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 9,
+          "percentile_label": "bottom 9%",
+          "raw_value": -0.0374,
+          "importance": 0.0488
+        }
+      ],
+      "context": {
+        "person": "Opaleye Management Inc.",
+        "insider_role": "10% Owner",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 60.3,
+      "predicted_move": 15.9,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 53.76,
       "entry_hi": 60.78,
-      "target1": 70.13,
-      "target2": 78.89,
-      "stop": 51.43
+      "target1": 67.74,
+      "target2": 75.18,
+      "stop": 52.86
     },
     {
       "ticker": "SMPL",
@@ -235,11 +820,77 @@
       "sector": "Consumer Defensive",
       "ml_confidence": 0.717,
       "predicted_car": 7.3,
-      "entry_lo": 15.76,
+      "score_breakdown": {
+        "base": 43.0,
+        "magnitude": 14.5,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 12,
+          "percentile_label": "12th percentile",
+          "raw_value": -0.161,
+          "importance": 0.0669
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Weak recent momentum",
+          "direction": "bearish",
+          "percentile": 4,
+          "percentile_label": "bottom 4%",
+          "raw_value": -0.2052,
+          "importance": 0.0652
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 3,
+          "percentile_label": "bottom 3%",
+          "raw_value": -0.422,
+          "importance": 0.0646
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week low",
+          "direction": "bearish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": 0.0005,
+          "importance": 0.0615
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 2,
+          "percentile_label": "bottom 2%",
+          "raw_value": -308.0,
+          "importance": 0.0599
+        }
+      ],
+      "context": {
+        "person": "Tim Moore",
+        "insider_role": "",
+        "party": "R",
+        "chamber": "",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2026-02-11",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 71.7,
+      "predicted_move": 7.3,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 15.11,
       "entry_hi": 17.08,
-      "target1": 19.7,
-      "target2": 22.17,
-      "stop": 14.45
+      "target1": 17.61,
+      "target2": 18.56,
+      "stop": 15.6
     },
     {
       "ticker": "DD",
@@ -259,11 +910,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.78,
       "predicted_car": 5.3,
-      "entry_lo": 42.06,
+      "score_breakdown": {
+        "base": 46.8,
+        "magnitude": 10.5,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 0.4279,
+          "importance": 0.0802
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 1.0,
+          "importance": 0.0663
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 89,
+          "percentile_label": "89th percentile",
+          "raw_value": 0.4133,
+          "importance": 0.054
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.0814,
+          "importance": 0.0522
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 10,
+          "percentile_label": "bottom 10%",
+          "raw_value": -231.0,
+          "importance": 0.0502
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 78.0,
+      "predicted_move": 5.3,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 40.31,
       "entry_hi": 45.56,
-      "target1": 52.57,
-      "target2": 59.14,
-      "stop": 38.55
+      "target1": 46.12,
+      "target2": 47.96,
+      "stop": 41.62
     },
     {
       "ticker": "RPM",
@@ -283,11 +1000,68 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.778,
       "predicted_car": 5.0,
-      "entry_lo": 106.47,
-      "entry_hi": 115.35,
-      "target1": 133.09,
-      "target2": 149.73,
-      "stop": 97.6
+      "score_breakdown": {
+        "base": 46.7,
+        "magnitude": 10.0,
+        "convergence": 10.0,
+        "person": 4.7
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 3,
+          "percentile_label": "bottom 3%",
+          "raw_value": -283.0,
+          "importance": 0.0589
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.0891,
+          "importance": 0.0531
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 16,
+          "percentile_label": "16th percentile",
+          "raw_value": 0.5709,
+          "importance": 0.0485
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.0285,
+          "importance": 0.043
+        }
+      ],
+      "context": {
+        "person": "David Taylor",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": 18,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 77.8,
+      "predicted_move": 5.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 103.57,
+      "entry_hi": 114.58,
+      "target1": 116.45,
+      "target2": 120.88,
+      "stop": 105.36
     },
     {
       "ticker": "SLGL",
@@ -307,11 +1081,77 @@
       "sector": "Healthcare",
       "ml_confidence": 0.599,
       "predicted_car": 20.0,
-      "entry_lo": 40.45,
+      "score_breakdown": {
+        "base": 35.9,
+        "magnitude": 25.0,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 0.4285,
+          "importance": 0.0802
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 4.645,
+          "importance": 0.0685
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 92,
+          "percentile_label": "top 8%",
+          "raw_value": 2.0016,
+          "importance": 0.0591
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "Low avg return trader",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.1172,
+          "importance": 0.0511
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.9407,
+          "importance": 0.0489
+        }
+      ],
+      "context": {
+        "person": "Opaleye Management Inc.",
+        "insider_role": "10% Owner",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-31",
+        "disclosure_delay": 2,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 59.9,
+      "predicted_move": 20.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 38.77,
       "entry_hi": 43.83,
-      "target1": 50.57,
-      "target2": 56.89,
-      "stop": 37.08
+      "target1": 50.55,
+      "target2": 57.27,
+      "stop": 37.1
     },
     {
       "ticker": "CBRL",
@@ -331,11 +1171,77 @@
       "sector": "Consumer Cyclical",
       "ml_confidence": 0.634,
       "predicted_car": 9.4,
-      "entry_lo": 24.22,
+      "score_breakdown": {
+        "base": 38.0,
+        "magnitude": 18.9,
+        "convergence": 10.0,
+        "person": 4.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 2,
+          "percentile_label": "bottom 2%",
+          "raw_value": -0.4216,
+          "importance": 0.0858
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.6164,
+          "importance": 0.0676
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week low",
+          "direction": "bearish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": 0.0082,
+          "importance": 0.0601
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Weak recent momentum",
+          "direction": "bearish",
+          "percentile": 11,
+          "percentile_label": "11th percentile",
+          "raw_value": -0.1128,
+          "importance": 0.0552
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": -0.0507,
+          "importance": 0.0538
+        }
+      ],
+      "context": {
+        "person": "Tim Moore",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2025-12-31",
+        "disclosure_delay": 8,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 63.4,
+      "predicted_move": 9.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 23.21,
       "entry_hi": 26.24,
-      "target1": 30.27,
-      "target2": 34.06,
-      "stop": 22.2
+      "target1": 27.61,
+      "target2": 29.51,
+      "stop": 23.8
     },
     {
       "ticker": "LIN",
@@ -355,11 +1261,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.79,
       "predicted_car": 4.6,
-      "entry_lo": 426.32,
+      "score_breakdown": {
+        "base": 47.4,
+        "magnitude": 9.2,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 90,
+          "percentile_label": "90th percentile",
+          "raw_value": 0.1309,
+          "importance": 0.0569
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -253.0,
+          "importance": 0.0547
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.0786,
+          "importance": 0.0512
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 17,
+          "percentile_label": "17th percentile",
+          "raw_value": 0.5975,
+          "importance": 0.0465
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 235.0,
+          "importance": 0.0389
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 79.0,
+      "predicted_move": 4.6,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 408.55,
       "entry_hi": 461.84,
-      "target1": 532.9,
-      "target2": 599.51,
-      "stop": 390.79
+      "target1": 464.4,
+      "target2": 480.65,
+      "stop": 421.88
     },
     {
       "ticker": "GNPX",
@@ -379,11 +1351,77 @@
       "sector": "Healthcare",
       "ml_confidence": 0.621,
       "predicted_car": 9.5,
-      "entry_lo": 2.08,
+      "score_breakdown": {
+        "base": 37.2,
+        "magnitude": 19.0,
+        "convergence": 10.0,
+        "person": 3.8
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 0,
+          "percentile_label": "bottom 0%",
+          "raw_value": -0.8137,
+          "importance": 0.0889
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Weak recent momentum",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.4119,
+          "importance": 0.0702
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 0,
+          "percentile_label": "bottom 0%",
+          "raw_value": -0.8356,
+          "importance": 0.0685
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week low",
+          "direction": "bearish",
+          "percentile": 3,
+          "percentile_label": "bottom 3%",
+          "raw_value": 0.0,
+          "importance": 0.0662
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 10,
+          "percentile_label": "bottom 10%",
+          "raw_value": 0.4135,
+          "importance": 0.0565
+        }
+      ],
+      "context": {
+        "person": "Tim Moore",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2025-12-18",
+        "disclosure_delay": 21,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 62.1,
+      "predicted_move": 9.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 2.0,
       "entry_hi": 2.26,
-      "target1": 2.6,
-      "target2": 2.93,
-      "stop": 1.91
+      "target1": 2.38,
+      "target2": 2.54,
+      "stop": 2.05
     },
     {
       "ticker": "GOOGL",
@@ -403,11 +1441,77 @@
       "sector": "Technology",
       "ml_confidence": 0.785,
       "predicted_car": 4.9,
-      "entry_lo": 295.89,
+      "score_breakdown": {
+        "base": 47.1,
+        "magnitude": 9.8,
+        "convergence": 10.0,
+        "person": 3.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.228,
+          "importance": 0.0675
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.7811,
+          "importance": 0.0627
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.1158,
+          "importance": 0.0542
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "Low avg return trader",
+          "direction": "bearish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -0.0321,
+          "importance": 0.045
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 18,
+          "percentile_label": "18th percentile",
+          "raw_value": 0.6177,
+          "importance": 0.0448
+        }
+      ],
+      "context": {
+        "person": "Cleo Fields",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2025-12-15",
+        "disclosure_delay": 3,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 78.5,
+      "predicted_move": 4.9,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 283.56,
       "entry_hi": 320.55,
-      "target1": 369.86,
-      "target2": 416.1,
-      "stop": 271.23
+      "target1": 323.38,
+      "target2": 335.5,
+      "stop": 292.81
     },
     {
       "ticker": "IFF",
@@ -427,11 +1531,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.717,
       "predicted_car": 6.8,
-      "entry_lo": 66.83,
+      "score_breakdown": {
+        "base": 43.0,
+        "magnitude": 13.5,
+        "convergence": 10.0,
+        "person": 3.3
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -251.0,
+          "importance": 0.0538
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 80,
+          "percentile_label": "80th percentile",
+          "raw_value": 0.1309,
+          "importance": 0.0528
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.0809,
+          "importance": 0.0519
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 84,
+          "percentile_label": "84th percentile",
+          "raw_value": 0.0914,
+          "importance": 0.0484
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 17,
+          "percentile_label": "17th percentile",
+          "raw_value": 0.5917,
+          "importance": 0.0469
+        }
+      ],
+      "context": {
+        "person": "Michael McCaul",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$100,001 - $250,000",
+        "signal_date": "2026-01-13",
+        "disclosure_delay": 30,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 71.7,
+      "predicted_move": 6.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 64.04,
       "entry_hi": 72.39,
-      "target1": 83.53,
-      "target2": 93.97,
-      "stop": 61.26
+      "target1": 74.32,
+      "target2": 78.09,
+      "stop": 66.13
     },
     {
       "ticker": "RCG",
@@ -451,11 +1621,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.883,
       "predicted_car": 1.1,
-      "entry_lo": 2.47,
-      "entry_hi": 2.67,
-      "target1": 3.08,
-      "target2": 3.47,
-      "stop": 2.26
+      "score_breakdown": {
+        "base": 53.0,
+        "magnitude": 2.2,
+        "convergence": 10.0,
+        "person": 4.4
+      },
+      "factors": [
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 2.6231,
+          "importance": 0.0649
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -474.0,
+          "importance": 0.0609
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 0.0391,
+          "importance": 0.0464
+        },
+        {
+          "feature": "person_hit_rate_30d",
+          "label": "Strong trader track record",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.55,
+          "importance": 0.0294
+        }
+      ],
+      "context": {
+        "person": "STAHL MURRAY",
+        "insider_role": "President",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-31",
+        "disclosure_delay": 1,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 88.3,
+      "predicted_move": 1.1,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 2.46,
+      "entry_hi": 2.63,
+      "target1": 2.65,
+      "target2": 2.7,
+      "stop": 2.44
     },
     {
       "ticker": "AME",
@@ -475,11 +1702,77 @@
       "sector": "Industrials",
       "ml_confidence": 0.794,
       "predicted_car": 3.8,
-      "entry_lo": 202.21,
+      "score_breakdown": {
+        "base": 47.7,
+        "magnitude": 7.6,
+        "convergence": 10.0,
+        "person": 4.2
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 84,
+          "percentile_label": "84th percentile",
+          "raw_value": 0.1768,
+          "importance": 0.0612
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -247.0,
+          "importance": 0.0534
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.9446,
+          "importance": 0.0498
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 19,
+          "percentile_label": "19th percentile",
+          "raw_value": 0.6292,
+          "importance": 0.0436
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 233.0,
+          "importance": 0.0388
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 79.4,
+      "predicted_move": 3.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 193.79,
       "entry_hi": 219.07,
-      "target1": 252.77,
-      "target2": 284.36,
-      "stop": 185.36
+      "target1": 218.67,
+      "target2": 225.1,
+      "stop": 200.11
     },
     {
       "ticker": "IFF",
@@ -499,11 +1792,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.722,
       "predicted_car": 6.4,
-      "entry_lo": 68.0,
+      "score_breakdown": {
+        "base": 43.3,
+        "magnitude": 12.8,
+        "convergence": 10.0,
+        "person": 3.4
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -253.0,
+          "importance": 0.0547
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.0814,
+          "importance": 0.052
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 86,
+          "percentile_label": "86th percentile",
+          "raw_value": 0.1035,
+          "importance": 0.0512
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 78,
+          "percentile_label": "78th percentile",
+          "raw_value": 0.1179,
+          "importance": 0.0494
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
+          "raw_value": 0.6479,
+          "importance": 0.0414
+        }
+      ],
+      "context": {
+        "person": "Michael McCaul",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$50,001 - $100,000",
+        "signal_date": "2026-01-15",
+        "disclosure_delay": 28,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 72.2,
+      "predicted_move": 6.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 65.16,
       "entry_hi": 73.66,
-      "target1": 85.0,
-      "target2": 95.62,
-      "stop": 62.33
+      "target1": 75.36,
+      "target2": 78.99,
+      "stop": 67.29
     },
     {
       "ticker": "VST",
@@ -523,11 +1882,68 @@
       "sector": "Utilities",
       "ml_confidence": 0.789,
       "predicted_car": 3.3,
-      "entry_lo": 159.94,
+      "score_breakdown": {
+        "base": 47.4,
+        "magnitude": 6.7,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 11,
+          "percentile_label": "11th percentile",
+          "raw_value": -0.1714,
+          "importance": 0.069
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 2.4354,
+          "importance": 0.0633
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -254.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
+          "raw_value": -0.1127,
+          "importance": 0.0394
+        }
+      ],
+      "context": {
+        "person": "Nancy Pelosi",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$100,001 - $250,000",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": 10,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 78.9,
+      "predicted_move": 3.3,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 153.27,
       "entry_hi": 173.26,
-      "target1": 199.92,
-      "target2": 224.91,
-      "stop": 146.61
+      "target1": 172.17,
+      "target2": 176.63,
+      "stop": 158.27
     },
     {
       "ticker": "YORW",
@@ -547,11 +1963,68 @@
       "sector": "Utilities",
       "ml_confidence": 0.802,
       "predicted_car": 2.8,
-      "entry_lo": 32.58,
-      "entry_hi": 35.3,
-      "target1": 40.73,
-      "target2": 45.82,
-      "stop": 29.87
+      "score_breakdown": {
+        "base": 48.1,
+        "magnitude": 5.7,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -255.0,
+          "importance": 0.0551
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 74,
+          "percentile_label": "74th percentile",
+          "raw_value": 0.098,
+          "importance": 0.043
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 90,
+          "percentile_label": "top 10%",
+          "raw_value": 0.0239,
+          "importance": 0.0421
+        },
+        {
+          "feature": "person_hit_rate_30d",
+          "label": "Strong trader track record",
+          "direction": "bullish",
+          "percentile": 99,
+          "percentile_label": "top 1%",
+          "raw_value": 1.0,
+          "importance": 0.0378
+        }
+      ],
+      "context": {
+        "person": "Hand Joseph Thomas",
+        "insider_role": "President & CEO",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 80.2,
+      "predicted_move": 2.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 32.85,
+      "entry_hi": 34.48,
+      "target1": 34.96,
+      "target2": 35.67,
+      "stop": 32.24
     },
     {
       "ticker": "RCG",
@@ -571,11 +2044,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.823,
       "predicted_car": 1.8,
-      "entry_lo": 2.48,
-      "entry_hi": 2.68,
-      "target1": 3.1,
-      "target2": 3.48,
-      "stop": 2.27
+      "score_breakdown": {
+        "base": 49.4,
+        "magnitude": 3.7,
+        "convergence": 10.0,
+        "person": 4.5
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -483.0,
+          "importance": 0.061
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 10,
+          "percentile_label": "10th percentile",
+          "raw_value": 0.4222,
+          "importance": 0.0561
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.0389,
+          "importance": 0.0462
+        },
+        {
+          "feature": "person_hit_rate_30d",
+          "label": "Strong trader track record",
+          "direction": "bullish",
+          "percentile": 89,
+          "percentile_label": "89th percentile",
+          "raw_value": 0.561,
+          "importance": 0.0302
+        }
+      ],
+      "context": {
+        "person": "STAHL MURRAY",
+        "insider_role": "President/Co-Portfolio Manager",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 82.3,
+      "predicted_move": 1.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 2.51,
+      "entry_hi": 2.61,
+      "target1": 2.66,
+      "target2": 2.71,
+      "stop": 2.45
     },
     {
       "ticker": "CMCSA",
@@ -595,11 +2125,77 @@
       "sector": "Communication Services",
       "ml_confidence": 0.765,
       "predicted_car": 3.4,
-      "entry_lo": 26.92,
+      "score_breakdown": {
+        "base": 45.9,
+        "magnitude": 6.7,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 3,
+          "percentile_label": "bottom 3%",
+          "raw_value": -0.0581,
+          "importance": 0.0558
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.0976,
+          "importance": 0.0499
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": 0.553,
+          "importance": 0.0497
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": -213.0,
+          "importance": 0.046
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 18,
+          "percentile_label": "18th percentile",
+          "raw_value": -0.1416,
+          "importance": 0.0444
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 76.5,
+      "predicted_move": 3.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 25.8,
       "entry_hi": 29.16,
-      "target1": 33.65,
-      "target2": 37.86,
-      "stop": 24.68
+      "target1": 28.98,
+      "target2": 29.74,
+      "stop": 26.64
     },
     {
       "ticker": "MOS",
@@ -619,11 +2215,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.743,
       "predicted_car": 4.0,
-      "entry_lo": 24.94,
+      "score_breakdown": {
+        "base": 44.6,
+        "magnitude": 7.9,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 16,
+          "percentile_label": "16th percentile",
+          "raw_value": -0.1361,
+          "importance": 0.0615
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 8,
+          "percentile_label": "bottom 8%",
+          "raw_value": -0.2678,
+          "importance": 0.0577
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.0803,
+          "importance": 0.0515
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 84,
+          "percentile_label": "84th percentile",
+          "raw_value": 0.0939,
+          "importance": 0.0491
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": -217.0,
+          "importance": 0.0468
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 74.3,
+      "predicted_move": 4.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 23.9,
       "entry_hi": 27.02,
-      "target1": 31.18,
-      "target2": 35.07,
-      "stop": 22.86
+      "target1": 27.01,
+      "target2": 27.83,
+      "stop": 24.68
     },
     {
       "ticker": "SCOR",
@@ -643,11 +2305,77 @@
       "sector": "Communication Services",
       "ml_confidence": 0.638,
       "predicted_car": 8.7,
-      "entry_lo": 6.24,
+      "score_breakdown": {
+        "base": 38.3,
+        "magnitude": 17.4,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -0.2169,
+          "importance": 0.076
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 3.2623,
+          "importance": 0.0665
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 2,
+          "percentile_label": "bottom 2%",
+          "raw_value": -0.0693,
+          "importance": 0.0572
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
+          "raw_value": 0.2948,
+          "importance": 0.0461
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": -202.0,
+          "importance": 0.044
+        }
+      ],
+      "context": {
+        "person": "Liberty Broadband Corp  (LBRDA, LBRDB, LBRDK, LBRDP)",
+        "insider_role": "",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-31",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 63.8,
+      "predicted_move": 8.7,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 5.98,
       "entry_hi": 6.76,
-      "target1": 7.8,
-      "target2": 8.78,
-      "stop": 5.72
+      "target1": 7.07,
+      "target2": 7.52,
+      "stop": 6.16
     },
     {
       "ticker": "AEP",
@@ -667,11 +2395,68 @@
       "sector": "Utilities",
       "ml_confidence": 0.765,
       "predicted_car": 2.4,
-      "entry_lo": 114.26,
+      "score_breakdown": {
+        "base": 45.9,
+        "magnitude": 4.9,
+        "convergence": 10.0,
+        "person": 4.8
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -255.0,
+          "importance": 0.0551
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.0274,
+          "importance": 0.0428
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 76,
+          "percentile_label": "76th percentile",
+          "raw_value": 0.8739,
+          "importance": 0.0368
+        },
+        {
+          "feature": "person_hit_rate_30d",
+          "label": "Strong trader track record",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.6,
+          "importance": 0.0321
+        }
+      ],
+      "context": {
+        "person": "David Taylor",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": 18,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 76.5,
+      "predicted_move": 2.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 109.5,
       "entry_hi": 123.78,
-      "target1": 142.82,
-      "target2": 160.68,
-      "stop": 104.74
+      "target1": 122.59,
+      "target2": 124.97,
+      "stop": 113.07
     },
     {
       "ticker": "WPM",
@@ -691,11 +2476,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.635,
       "predicted_car": 6.6,
-      "entry_lo": 143.4,
+      "score_breakdown": {
+        "base": 38.1,
+        "magnitude": 13.1,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 0.5694,
+          "importance": 0.0835
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 1.0,
+          "importance": 0.0663
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.2726,
+          "importance": 0.0661
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.6324,
+          "importance": 0.0602
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": -263.0,
+          "importance": 0.0563
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "D",
+        "chamber": "",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2026-01-27",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 63.5,
+      "predicted_move": 6.6,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 137.43,
       "entry_hi": 155.36,
-      "target1": 179.26,
-      "target2": 201.66,
-      "stop": 131.45
+      "target1": 159.17,
+      "target2": 167.0,
+      "stop": 141.91
     },
     {
       "ticker": "HST",
@@ -715,11 +2566,77 @@
       "sector": "Real Estate",
       "ml_confidence": 0.768,
       "predicted_car": 2.6,
-      "entry_lo": 17.7,
+      "score_breakdown": {
+        "base": 46.1,
+        "magnitude": 5.3,
+        "convergence": 10.0,
+        "person": 4.2
+      },
+      "factors": [
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 1.0,
+          "importance": 0.0663
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.1884,
+          "importance": 0.0632
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -0.0472,
+          "importance": 0.0529
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 8,
+          "percentile_label": "bottom 8%",
+          "raw_value": -239.0,
+          "importance": 0.0521
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 218.0,
+          "importance": 0.0376
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 76.8,
+      "predicted_move": 2.6,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 16.96,
       "entry_hi": 19.18,
-      "target1": 22.13,
-      "target2": 24.89,
-      "stop": 16.23
+      "target1": 18.99,
+      "target2": 19.36,
+      "stop": 17.52
     },
     {
       "ticker": "CB",
@@ -739,11 +2656,77 @@
       "sector": "Financial Services",
       "ml_confidence": 0.768,
       "predicted_car": 2.5,
-      "entry_lo": 294.54,
-      "entry_hi": 319.08,
-      "target1": 368.17,
-      "target2": 414.19,
-      "stop": 269.99
+      "score_breakdown": {
+        "base": 46.1,
+        "magnitude": 5.0,
+        "convergence": 10.0,
+        "person": 4.2
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 9,
+          "percentile_label": "bottom 9%",
+          "raw_value": -238.0,
+          "importance": 0.0517
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 226.0,
+          "importance": 0.0382
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
+          "raw_value": 0.0841,
+          "importance": 0.0381
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 74,
+          "percentile_label": "74th percentile",
+          "raw_value": 0.8583,
+          "importance": 0.0342
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 26,
+          "percentile_label": "26th percentile",
+          "raw_value": 0.7058,
+          "importance": 0.034
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 76.8,
+      "predicted_move": 2.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 284.74,
+      "entry_hi": 317.85,
+      "target1": 316.01,
+      "target2": 322.15,
+      "stop": 291.47
     },
     {
       "ticker": "LPG",
@@ -763,11 +2746,68 @@
       "sector": "Energy",
       "ml_confidence": 0.715,
       "predicted_car": 6.1,
-      "entry_lo": 25.56,
+      "score_breakdown": {
+        "base": 42.9,
+        "magnitude": 12.3,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.1188,
+          "importance": 0.0547
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 10,
+          "percentile_label": "bottom 10%",
+          "raw_value": -232.0,
+          "importance": 0.0507
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 68,
+          "percentile_label": "68th percentile",
+          "raw_value": 0.0657,
+          "importance": 0.0313
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0302
+        }
+      ],
+      "context": {
+        "person": "HADJIPATERAS JOHN C",
+        "insider_role": "President and CEO",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 71.5,
+      "predicted_move": 6.1,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 24.49,
       "entry_hi": 27.69,
-      "target1": 31.95,
-      "target2": 35.94,
-      "stop": 23.43
+      "target1": 28.26,
+      "target2": 29.56,
+      "stop": 25.29
     },
     {
       "ticker": "WYY",
@@ -787,11 +2827,77 @@
       "sector": "Technology",
       "ml_confidence": 0.638,
       "predicted_car": 5.8,
-      "entry_lo": 5.29,
+      "score_breakdown": {
+        "base": 38.3,
+        "magnitude": 11.7,
+        "convergence": 10.0,
+        "person": 5.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_1m",
+          "label": "Weak recent momentum",
+          "direction": "bearish",
+          "percentile": 4,
+          "percentile_label": "bottom 4%",
+          "raw_value": -0.2117,
+          "importance": 0.0654
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.6158,
+          "importance": 0.0601
+        },
+        {
+          "feature": "person_avg_car_30d",
+          "label": "High avg return trader",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 0.0873,
+          "importance": 0.0504
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": -200.0,
+          "importance": 0.0433
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 73,
+          "percentile_label": "73th percentile",
+          "raw_value": 0.0933,
+          "importance": 0.041
+        }
+      ],
+      "context": {
+        "person": "Garfinkle Philip N",
+        "insider_role": "Director",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-30",
+        "disclosure_delay": 4,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 63.8,
+      "predicted_move": 5.8,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 5.07,
       "entry_hi": 5.73,
-      "target1": 6.61,
-      "target2": 7.44,
-      "stop": 4.85
+      "target1": 5.83,
+      "target2": 6.09,
+      "stop": 5.23
     },
     {
       "ticker": "CF",
@@ -811,11 +2917,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.723,
       "predicted_car": 3.7,
-      "entry_lo": 78.87,
+      "score_breakdown": {
+        "base": 43.4,
+        "magnitude": 7.4,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "sector_momentum",
+          "label": "Strong sector momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.0807,
+          "importance": 0.0517
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
+          "raw_value": 0.0856,
+          "importance": 0.0465
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 18,
+          "percentile_label": "18th percentile",
+          "raw_value": -0.1419,
+          "importance": 0.0445
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 222.0,
+          "importance": 0.0379
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 73,
+          "percentile_label": "73th percentile",
+          "raw_value": 1.2524,
+          "importance": 0.0318
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 72.3,
+      "predicted_move": 3.7,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 75.59,
       "entry_hi": 85.45,
-      "target1": 98.59,
-      "target2": 110.92,
-      "stop": 72.3
+      "target1": 85.21,
+      "target2": 87.66,
+      "stop": 78.05
     },
     {
       "ticker": "BABAF",
@@ -835,11 +3007,77 @@
       "sector": "Consumer Cyclical",
       "ml_confidence": 0.678,
       "predicted_car": 5.0,
-      "entry_lo": 20.52,
+      "score_breakdown": {
+        "base": 40.7,
+        "magnitude": 9.9,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": 0.024,
+          "importance": 0.0629
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": -264.0,
+          "importance": 0.0565
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.4654,
+          "importance": 0.0564
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.1144,
+          "importance": 0.054
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 290.0,
+          "importance": 0.0406
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "D",
+        "chamber": "",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-02-03",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 67.8,
+      "predicted_move": 5.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 19.67,
       "entry_hi": 22.24,
-      "target1": 25.66,
-      "target2": 28.86,
-      "stop": 18.81
+      "target1": 22.44,
+      "target2": 23.29,
+      "stop": 20.31
     },
     {
       "ticker": "GOOGL",
@@ -859,11 +3097,77 @@
       "sector": "Technology",
       "ml_confidence": 0.755,
       "predicted_car": 3.2,
-      "entry_lo": 300.97,
-      "entry_hi": 326.05,
-      "target1": 376.21,
-      "target2": 423.24,
-      "stop": 275.89
+      "score_breakdown": {
+        "base": 45.3,
+        "magnitude": 6.5,
+        "convergence": 10.0,
+        "person": 3.1
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 90,
+          "percentile_label": "90th percentile",
+          "raw_value": 0.2725,
+          "importance": 0.0707
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.7817,
+          "importance": 0.0627
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 8,
+          "percentile_label": "bottom 8%",
+          "raw_value": 0.3153,
+          "importance": 0.0595
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.9457,
+          "importance": 0.05
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": -203.0,
+          "importance": 0.0444
+        }
+      ],
+      "context": {
+        "person": "Cleo Fields",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$50,001 - $100,000",
+        "signal_date": "2025-12-26",
+        "disclosure_delay": 24,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 75.5,
+      "predicted_move": 3.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 298.08,
+      "entry_hi": 321.23,
+      "target1": 323.68,
+      "target2": 331.82,
+      "stop": 297.83
     },
     {
       "ticker": "YORW",
@@ -883,11 +3187,59 @@
       "sector": "Utilities",
       "ml_confidence": 0.831,
       "predicted_car": 2.5,
-      "entry_lo": 32.58,
-      "entry_hi": 35.3,
-      "target1": 40.73,
-      "target2": 45.82,
-      "stop": 29.87
+      "score_breakdown": {
+        "base": 49.8,
+        "magnitude": 5.0,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -255.0,
+          "importance": 0.0551
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 74,
+          "percentile_label": "74th percentile",
+          "raw_value": 0.098,
+          "importance": 0.043
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0302
+        }
+      ],
+      "context": {
+        "person": "Chiaruttini Alexandra C",
+        "insider_role": "CAO & General Counsel",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 83.1,
+      "predicted_move": 2.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 32.85,
+      "entry_hi": 34.48,
+      "target1": 34.96,
+      "target2": 35.64,
+      "stop": 32.24
     },
     {
       "ticker": "YORW",
@@ -907,11 +3259,59 @@
       "sector": "Utilities",
       "ml_confidence": 0.831,
       "predicted_car": 2.4,
-      "entry_lo": 32.58,
-      "entry_hi": 35.3,
-      "target1": 40.73,
-      "target2": 45.82,
-      "stop": 29.87
+      "score_breakdown": {
+        "base": 49.8,
+        "magnitude": 4.9,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -255.0,
+          "importance": 0.0551
+        },
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 74,
+          "percentile_label": "74th percentile",
+          "raw_value": 0.098,
+          "importance": 0.043
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0302
+        }
+      ],
+      "context": {
+        "person": "Poff Matthew E",
+        "insider_role": "Chief Financial Officer",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2026-01-16",
+        "disclosure_delay": null,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 83.1,
+      "predicted_move": 2.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 32.85,
+      "entry_hi": 34.48,
+      "target1": 34.96,
+      "target2": 35.64,
+      "stop": 32.24
     },
     {
       "ticker": "IMNM",
@@ -931,11 +3331,77 @@
       "sector": "Healthcare",
       "ml_confidence": 0.671,
       "predicted_car": 7.2,
-      "entry_lo": 20.33,
+      "score_breakdown": {
+        "base": 40.3,
+        "magnitude": 14.4,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 0.8677,
+          "importance": 0.0862
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 98,
+          "percentile_label": "top 2%",
+          "raw_value": 1.3959,
+          "importance": 0.0662
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 92,
+          "percentile_label": "top 8%",
+          "raw_value": 0.1561,
+          "importance": 0.0594
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 9,
+          "percentile_label": "bottom 9%",
+          "raw_value": 0.3613,
+          "importance": 0.058
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": -201.0,
+          "importance": 0.0436
+        }
+      ],
+      "context": {
+        "person": "SIEGALL CLAY B",
+        "insider_role": "CEO",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-30",
+        "disclosure_delay": 0,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 67.2,
+      "predicted_move": 7.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 19.49,
       "entry_hi": 22.03,
-      "target1": 25.42,
-      "target2": 28.59,
-      "stop": 18.64
+      "target1": 22.7,
+      "target2": 23.92,
+      "stop": 20.12
     },
     {
       "ticker": "VNQI",
@@ -955,11 +3421,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.791,
       "predicted_car": 2.1,
-      "entry_lo": 45.39,
-      "entry_hi": 49.17,
-      "target1": 56.74,
-      "target2": 63.83,
-      "stop": 41.61
+      "score_breakdown": {
+        "base": 47.4,
+        "magnitude": 4.1,
+        "convergence": 10.0,
+        "person": 3.1
+      },
+      "factors": [
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 100,
+          "percentile_label": "top 0%",
+          "raw_value": 9.0345,
+          "importance": 0.0697
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 91,
+          "percentile_label": "top 9%",
+          "raw_value": 0.9825,
+          "importance": 0.0584
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Far from earnings",
+          "direction": "bearish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 999.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 184.0,
+          "importance": 0.0347
+        }
+      ],
+      "context": {
+        "person": "John Boozman",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": 23,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 79.1,
+      "predicted_move": 2.1,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 44.44,
+      "entry_hi": 48.7,
+      "target1": 48.7,
+      "target2": 49.64,
+      "stop": 44.92
     },
     {
       "ticker": "RCG",
@@ -979,11 +3502,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.86,
       "predicted_car": 1.4,
-      "entry_lo": 2.47,
-      "entry_hi": 2.67,
-      "target1": 3.08,
-      "target2": 3.47,
-      "stop": 2.26
+      "score_breakdown": {
+        "base": 51.6,
+        "magnitude": 2.7,
+        "convergence": 10.0,
+        "person": 0.0
+      },
+      "factors": [
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 2.6231,
+          "importance": 0.0649
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -474.0,
+          "importance": 0.0609
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0302
+        },
+        {
+          "feature": "person_hit_rate_30d",
+          "label": "Weak trader track record",
+          "direction": "bearish",
+          "percentile": 15,
+          "percentile_label": "15th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0268
+        }
+      ],
+      "context": {
+        "person": "Allen Anita L",
+        "insider_role": "Director",
+        "party": "",
+        "chamber": "",
+        "trade_size_range": "",
+        "signal_date": "2025-12-31",
+        "disclosure_delay": 2,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 86.0,
+      "predicted_move": 1.4,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 2.46,
+      "entry_hi": 2.63,
+      "target1": 2.65,
+      "target2": 2.7,
+      "stop": 2.44
     },
     {
       "ticker": "JMBS",
@@ -1003,11 +3583,59 @@
       "sector": "Financial Services",
       "ml_confidence": 0.81,
       "predicted_car": 1.2,
-      "entry_lo": 43.82,
-      "entry_hi": 47.47,
-      "target1": 54.77,
-      "target2": 61.61,
-      "stop": 40.16
+      "score_breakdown": {
+        "base": 48.6,
+        "magnitude": 2.3,
+        "convergence": 10.0,
+        "person": 3.1
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Far from earnings",
+          "direction": "bearish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 999.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
+          "raw_value": 0.9631,
+          "importance": 0.0541
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 185.0,
+          "importance": 0.0348
+        }
+      ],
+      "context": {
+        "person": "John Boozman",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": 23,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 81.0,
+      "predicted_move": 1.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 44.61,
+      "entry_hi": 46.16,
+      "target1": 47.01,
+      "target2": 47.92,
+      "stop": 43.36
     },
     {
       "ticker": "BMY",
@@ -1027,11 +3655,77 @@
       "sector": "Healthcare",
       "ml_confidence": 0.683,
       "predicted_car": 4.5,
-      "entry_lo": 51.41,
+      "score_breakdown": {
+        "base": 41.0,
+        "magnitude": 9.0,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 87,
+          "percentile_label": "87th percentile",
+          "raw_value": 0.2202,
+          "importance": 0.0667
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 2.55,
+          "importance": 0.0644
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 0.1834,
+          "importance": 0.0619
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 194.0,
+          "importance": 0.0357
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 75,
+          "percentile_label": "75th percentile",
+          "raw_value": 0.1863,
+          "importance": 0.0342
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2025-12-19",
+        "disclosure_delay": 25,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 68.3,
+      "predicted_move": 4.5,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 49.27,
       "entry_hi": 55.7,
-      "target1": 64.27,
-      "target2": 72.3,
-      "stop": 47.13
+      "target1": 55.97,
+      "target2": 57.89,
+      "stop": 50.88
     },
     {
       "ticker": "GIGB",
@@ -1051,11 +3745,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.808,
       "predicted_car": 1.0,
-      "entry_lo": 44.47,
-      "entry_hi": 48.18,
-      "target1": 55.59,
-      "target2": 62.54,
-      "stop": 40.76
+      "score_breakdown": {
+        "base": 48.5,
+        "magnitude": 2.1,
+        "convergence": 10.0,
+        "person": 3.2
+      },
+      "factors": [
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 10,
+          "percentile_label": "10th percentile",
+          "raw_value": 0.4427,
+          "importance": 0.0557
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 89,
+          "percentile_label": "89th percentile",
+          "raw_value": 0.9673,
+          "importance": 0.0552
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Far from earnings",
+          "direction": "bearish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 999.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 93,
+          "percentile_label": "top 7%",
+          "raw_value": 187.0,
+          "importance": 0.035
+        }
+      ],
+      "context": {
+        "person": "John Boozman",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": 23,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 80.8,
+      "predicted_move": 1.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 45.23,
+      "entry_hi": 46.87,
+      "target1": 47.71,
+      "target2": 48.64,
+      "stop": 44.01
     },
     {
       "ticker": "TPYP",
@@ -1075,11 +3826,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.772,
       "predicted_car": 2.2,
-      "entry_lo": 35.36,
+      "score_breakdown": {
+        "base": 46.3,
+        "magnitude": 4.4,
+        "convergence": 10.0,
+        "person": 3.0
+      },
+      "factors": [
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 1.0,
+          "importance": 0.0663
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Far from earnings",
+          "direction": "bearish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 999.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 18,
+          "percentile_label": "18th percentile",
+          "raw_value": 0.6081,
+          "importance": 0.0455
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 92,
+          "percentile_label": "top 8%",
+          "raw_value": 181.0,
+          "importance": 0.0344
+        }
+      ],
+      "context": {
+        "person": "John Boozman",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": 23,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 77.2,
+      "predicted_move": 2.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 33.89,
       "entry_hi": 38.31,
-      "target1": 44.2,
-      "target2": 49.72,
-      "stop": 32.41
+      "target1": 37.94,
+      "target2": 38.67,
+      "stop": 34.99
     },
     {
       "ticker": "FNV",
@@ -1099,11 +3907,77 @@
       "sector": "Basic Materials",
       "ml_confidence": 0.683,
       "predicted_car": 4.2,
-      "entry_lo": 251.45,
+      "score_breakdown": {
+        "base": 41.0,
+        "magnitude": 8.4,
+        "convergence": 10.0,
+        "person": 4.3
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Strong 3-month momentum",
+          "direction": "bullish",
+          "percentile": 95,
+          "percentile_label": "top 5%",
+          "raw_value": 0.4045,
+          "importance": 0.0794
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 1.0,
+          "importance": 0.0663
+        },
+        {
+          "feature": "momentum_1m",
+          "label": "Strong recent momentum",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 0.2608,
+          "importance": 0.0658
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 0.6439,
+          "importance": 0.0604
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 5,
+          "percentile_label": "bottom 5%",
+          "raw_value": -263.0,
+          "importance": 0.0563
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2026-01-27",
+        "disclosure_delay": 20,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 68.3,
+      "predicted_move": 4.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 240.98,
       "entry_hi": 272.41,
-      "target1": 314.32,
-      "target2": 353.61,
-      "stop": 230.5
+      "target1": 272.97,
+      "target2": 281.8,
+      "stop": 248.83
     },
     {
       "ticker": "CBRL",
@@ -1123,11 +3997,77 @@
       "sector": "Consumer Cyclical",
       "ml_confidence": 0.582,
       "predicted_car": 13.2,
-      "entry_lo": 24.77,
+      "score_breakdown": {
+        "base": 34.9,
+        "magnitude": 25.0,
+        "convergence": 0.0,
+        "person": 3.6
+      },
+      "factors": [
+        {
+          "feature": "momentum_3m",
+          "label": "Weak 3-month momentum",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.4728,
+          "importance": 0.0867
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Weak 6-month trend",
+          "direction": "bearish",
+          "percentile": 1,
+          "percentile_label": "bottom 1%",
+          "raw_value": -0.5555,
+          "importance": 0.067
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week low",
+          "direction": "bearish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": 0.0002,
+          "importance": 0.0616
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 7,
+          "percentile_label": "bottom 7%",
+          "raw_value": -0.0426,
+          "importance": 0.0512
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 17,
+          "percentile_label": "17th percentile",
+          "raw_value": -194.0,
+          "importance": 0.0412
+        }
+      ],
+      "context": {
+        "person": "Tim Moore",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$15,001 - $50,000",
+        "signal_date": "2025-12-16",
+        "disclosure_delay": 6,
+        "convergence_sources": ""
+      },
+      "win_probability": 58.2,
+      "predicted_move": 13.2,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 23.74,
       "entry_hi": 26.84,
-      "target1": 30.96,
-      "target2": 34.83,
-      "stop": 22.71
+      "target1": 29.21,
+      "target2": 31.94,
+      "stop": 23.76
     },
     {
       "ticker": "FBK",
@@ -1147,11 +4087,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.734,
       "predicted_car": 2.6,
-      "entry_lo": 54.31,
-      "entry_hi": 58.84,
-      "target1": 67.89,
-      "target2": 76.38,
-      "stop": 49.79
+      "score_breakdown": {
+        "base": 44.1,
+        "magnitude": 5.2,
+        "convergence": 10.0,
+        "person": 4.1
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 11,
+          "percentile_label": "11th percentile",
+          "raw_value": -227.0,
+          "importance": 0.0488
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 78,
+          "percentile_label": "78th percentile",
+          "raw_value": 0.8842,
+          "importance": 0.0394
+        },
+        {
+          "feature": "momentum_6m",
+          "label": "Strong 6-month trend",
+          "direction": "bullish",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
+          "raw_value": 0.2128,
+          "importance": 0.0377
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 96,
+          "percentile_label": "top 4%",
+          "raw_value": 212.0,
+          "importance": 0.0372
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-05",
+        "disclosure_delay": 42,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 73.4,
+      "predicted_move": 2.6,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 55.27,
+      "entry_hi": 57.23,
+      "target1": 58.27,
+      "target2": 59.4,
+      "stop": 53.75
     },
     {
       "ticker": "CMBS",
@@ -1171,11 +4168,68 @@
       "sector": "Financial Services",
       "ml_confidence": 0.803,
       "predicted_car": 1.0,
-      "entry_lo": 47.07,
-      "entry_hi": 50.99,
-      "target1": 58.83,
-      "target2": 66.19,
-      "stop": 43.14
+      "score_breakdown": {
+        "base": 48.2,
+        "magnitude": 2.1,
+        "convergence": 10.0,
+        "person": 3.1
+      },
+      "factors": [
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 89,
+          "percentile_label": "89th percentile",
+          "raw_value": 0.9694,
+          "importance": 0.0556
+        },
+        {
+          "feature": "days_to_earnings",
+          "label": "Far from earnings",
+          "direction": "bearish",
+          "percentile": 94,
+          "percentile_label": "top 6%",
+          "raw_value": 999.0,
+          "importance": 0.0549
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Normal volume",
+          "direction": "bearish",
+          "percentile": 11,
+          "percentile_label": "11th percentile",
+          "raw_value": 0.4684,
+          "importance": 0.0548
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 92,
+          "percentile_label": "top 8%",
+          "raw_value": 182.0,
+          "importance": 0.0345
+        }
+      ],
+      "context": {
+        "person": "John Boozman",
+        "insider_role": "",
+        "party": "",
+        "chamber": "Senate",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-23",
+        "disclosure_delay": 23,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 80.3,
+      "predicted_move": 1.0,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 47.94,
+      "entry_hi": 49.57,
+      "target1": 50.5,
+      "target2": 51.48,
+      "stop": 46.58
     },
     {
       "ticker": "GD",
@@ -1195,12 +4249,98 @@
       "sector": "Industrials",
       "ml_confidence": 0.746,
       "predicted_car": 2.1,
-      "entry_lo": 338.35,
-      "entry_hi": 366.55,
-      "target1": 422.94,
-      "target2": 475.81,
-      "stop": 310.16
+      "score_breakdown": {
+        "base": 44.8,
+        "magnitude": 4.2,
+        "convergence": 10.0,
+        "person": 4.2
+      },
+      "factors": [
+        {
+          "feature": "days_to_earnings",
+          "label": "Near earnings catalyst",
+          "direction": "bullish",
+          "percentile": 6,
+          "percentile_label": "bottom 6%",
+          "raw_value": -253.0,
+          "importance": 0.0547
+        },
+        {
+          "feature": "price_proximity_52wk",
+          "label": "Near 52-week high",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 0.9443,
+          "importance": 0.0497
+        },
+        {
+          "feature": "volume_spike",
+          "label": "Unusual volume activity",
+          "direction": "bullish",
+          "percentile": 85,
+          "percentile_label": "85th percentile",
+          "raw_value": 1.5928,
+          "importance": 0.0492
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Frequent trader",
+          "direction": "bullish",
+          "percentile": 97,
+          "percentile_label": "top 3%",
+          "raw_value": 227.0,
+          "importance": 0.0383
+        },
+        {
+          "feature": "sector_momentum",
+          "label": "Weak sector momentum",
+          "direction": "bearish",
+          "percentile": 18,
+          "percentile_label": "18th percentile",
+          "raw_value": -0.0211,
+          "importance": 0.0377
+        }
+      ],
+      "context": {
+        "person": "Gilbert Cisneros",
+        "insider_role": "",
+        "party": "",
+        "chamber": "House",
+        "trade_size_range": "$1,001 - $15,000",
+        "signal_date": "2026-01-09",
+        "disclosure_delay": 38,
+        "convergence_sources": "congress+edgar"
+      },
+      "win_probability": 74.6,
+      "predicted_move": 2.1,
+      "time_horizon": "30-day forward outlook",
+      "entry_lo": 327.39,
+      "entry_hi": 364.98,
+      "target1": 363.02,
+      "target2": 370.07,
+      "stop": 334.83
     }
   ],
-  "exits": []
+  "exits": [],
+  "population": {
+    "total_score": {
+      "p25": 27.12,
+      "p50": 36.2,
+      "p75": 47.32,
+      "p90": 57.76
+    },
+    "ml_confidence": {
+      "p25": 0.34,
+      "p50": 0.44,
+      "p75": 0.57,
+      "p90": 0.66
+    },
+    "predicted_car": {
+      "p25": -1.31,
+      "p50": -0.25,
+      "p75": 1.06,
+      "p90": 3.17
+    }
+  }
 }
