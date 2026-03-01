@@ -2605,24 +2605,28 @@ function renderNotifications(){
 function renderScoreBar(t){
   if(!t||!t.scoreBreakdown) return '';
   var sb=t.scoreBreakdown;
-  var total=Math.round((sb.base||0)+(sb.magnitude||0)+(sb.convergence||0)+(sb.person||0));
-  var bW=Math.max(0,Math.min(100,sb.base/100*100));
-  var mW=Math.max(0,Math.min(100,sb.magnitude/100*100));
-  var cW=Math.max(0,Math.min(100,sb.convergence/100*100));
-  var pW=Math.max(0,Math.min(100,sb.person/100*100));
+  var total=(sb.base||0)+Math.abs(sb.magnitude||0)+(sb.convergence||0)+(sb.person||0);
+  if(total<=0) return '';
+  // Widths proportional to total so segments fill the bar with no gaps
+  var bW=(sb.base/total*100).toFixed(1);
+  var mW=(Math.abs(sb.magnitude)/total*100).toFixed(1);
+  var cW=(sb.convergence/total*100).toFixed(1);
+  var pW=(sb.person/total*100).toFixed(1);
+  // Base explanation: base = ML confidence × 60, so show the confidence %
+  var mlConfPct=t.mlConfidence?Math.round(t.mlConfidence*100)+'% ML conf':'ML confidence';
   return '<div style="margin:8px 0 4px">'
     +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Score Breakdown</div>'
     +'<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--bg-3);margin-bottom:3px">'
     +'<div style="width:'+bW+'%;background:var(--blue-lt)" title="Base '+sb.base+'"></div>'
-    +'<div style="width:'+Math.abs(mW)+'%;background:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'" title="Magnitude '+sb.magnitude+'"></div>'
-    +'<div style="width:'+cW+'%;background:var(--amber)" title="Convergence '+sb.convergence+'"></div>'
-    +'<div style="width:'+pW+'%;background:var(--purple,#a78bfa)" title="Person '+sb.person+'"></div>'
+    +'<div style="width:'+mW+'%;background:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'" title="Magnitude '+sb.magnitude+'"></div>'
+    +(sb.convergence>0?'<div style="width:'+cW+'%;background:var(--amber)" title="Convergence '+sb.convergence+'"></div>':'')
+    +(sb.person>0?'<div style="width:'+pW+'%;background:var(--purple,#a78bfa)" title="Person '+sb.person+'"></div>':'')
     +'</div>'
     +'<div style="font-size:9px;color:var(--muted)">'
-    +'<span style="color:var(--blue-lt)">Base '+sb.base.toFixed(0)+'</span>'
+    +'<span style="color:var(--blue-lt)">Base '+sb.base.toFixed(0)+' <span style="font-size:8px">('+mlConfPct+')</span></span>'
     +' + <span style="color:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'">Mag '+(sb.magnitude>=0?'+':'')+sb.magnitude.toFixed(0)+'</span>'
-    +' + <span style="color:var(--amber)">Conv '+sb.convergence.toFixed(0)+'</span>'
-    +' + <span style="color:var(--purple,#a78bfa)">Person '+sb.person.toFixed(0)+'</span>'
+    +(sb.convergence>0?' + <span style="color:var(--amber)">Conv '+sb.convergence.toFixed(0)+'</span>':'')
+    +(sb.person>0?' + <span style="color:var(--purple,#a78bfa)">Person '+sb.person.toFixed(0)+'</span>':'')
     +'</div></div>';
 }
 
@@ -2641,6 +2645,32 @@ function renderSignalContext(t){
   return '<div style="font-size:10.5px;color:var(--text-s);margin-bottom:6px">'+parts.join(' · ')+'</div>';
 }
 
+// Helper: format factor raw value into human-readable detail
+function fmtFactorDetail(f){
+  var v=f.raw_value;
+  var feat=f.feature;
+  if(feat==='momentum_1m'||feat==='momentum_3m'||feat==='momentum_6m'||feat==='sector_momentum')
+    return (v>=0?'+':'')+Math.round(v*100)+'%';
+  if(feat==='volume_spike') return v.toFixed(1)+'x avg volume';
+  if(feat==='disclosure_delay') return Math.abs(Math.round(v))+' days to file';
+  if(feat==='days_since_last_buy') return Math.round(v)+' days ago';
+  if(feat==='days_to_earnings') return Math.abs(Math.round(v))+' days to earnings';
+  if(feat==='days_to_catalyst') return Math.abs(Math.round(v))+' days to catalyst';
+  if(feat==='person_hit_rate_30d') return Math.round(v*100)+'% win rate';
+  if(feat==='person_trade_count') return Math.round(v)+' trades';
+  if(feat==='person_avg_car_30d') return (v>=0?'+':'')+Math.round(v*100)+'% avg return';
+  if(feat==='relative_position_size') return v.toFixed(1)+'x avg size';
+  if(feat==='trade_size_points') return Math.round(v)+' pts';
+  if(feat==='insider_buy_ratio_90d') return Math.round(v*100)+'% buys in 90d';
+  if(feat==='price_proximity_52wk') return Math.round(v*100)+'% of 52wk range';
+  if(feat==='vix_at_signal') return 'VIX '+v.toFixed(1);
+  if(feat==='same_ticker_signals_7d') return Math.round(v)+' signals in 7d';
+  if(feat==='same_ticker_signals_30d') return Math.round(v)+' signals in 30d';
+  if(feat==='sector_avg_car') return (v>=0?'+':'')+Math.round(v*100)+'% sector avg';
+  if(feat==='convergence_tier') return 'Tier '+Math.round(v);
+  return '';
+}
+
 // Helper: key factors list
 function renderFactors(t){
   if(!t||!t.factors||!t.factors.length) return '';
@@ -2649,9 +2679,12 @@ function renderFactors(t){
   t.factors.slice(0,5).forEach(function(f){
     var arrow=f.direction==='bullish'?'▲':'▼';
     var color=f.direction==='bullish'?'var(--green-lt)':'var(--red-lt)';
+    var detail=fmtFactorDetail(f);
+    var detailHtml=detail?' <span style="color:var(--text-s);font-size:9px;font-weight:600">'+detail+'</span>':'';
     html+='<div style="font-size:10.5px;margin-bottom:2px">'
       +'<span style="color:'+color+';font-weight:600;margin-right:4px">'+arrow+'</span>'
       +'<span style="color:var(--text-s)">'+f.label+'</span>'
+      +detailHtml
       +' <span style="color:var(--muted);font-size:9px">('+f.percentile_label+')</span>'
       +'</div>';
   });
@@ -2677,23 +2710,31 @@ function renderMLAnalysis(t){
     +parts.join('<span style="color:var(--border)">|</span>')+'</div>';
 }
 
+// Helper: smart price formatting — adaptive precision by price level
+function fmtPrice(v){
+  if(v==null) return '-';
+  if(v<1) return '$'+v.toFixed(3);
+  if(v<10) return '$'+v.toFixed(2);
+  if(v<100) return '$'+v.toFixed(1);
+  return '$'+Math.round(v).toLocaleString();
+}
+
 // Helper: smart price levels
 function renderPriceLevels(t){
   if(!t||!t.entryLo) return '';
-  var fmt=function(v){return v!=null?'$'+v.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}):'-';};
   return '<div style="display:flex;gap:0;margin-top:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px">'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Entry</div>'
-    +'<div style="font-weight:600;color:var(--text-s)">'+fmt(t.entryLo)+'–'+fmt(t.entryHi)+'</div></div>'
+    +'<div style="font-weight:600;color:var(--text-s)">'+fmtPrice(t.entryLo)+'–'+fmtPrice(t.entryHi)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T1</div>'
-    +'<div style="font-weight:600;color:var(--green-lt)">'+fmt(t.target1)+'</div></div>'
+    +'<div style="font-weight:600;color:var(--green-lt)">'+fmtPrice(t.target1)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T2</div>'
-    +'<div style="font-weight:600;color:var(--green-lt)">'+fmt(t.target2)+'</div></div>'
+    +'<div style="font-weight:600;color:var(--green-lt)">'+fmtPrice(t.target2)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Stop</div>'
-    +'<div style="font-weight:600;color:var(--red-lt)">'+fmt(t.stop)+'</div></div>'
+    +'<div style="font-weight:600;color:var(--red-lt)">'+fmtPrice(t.stop)+'</div></div>'
     +'</div>';
 }
 
@@ -2742,12 +2783,24 @@ function renderSignalIdeas(){
       var convTag=sc.hasConvergence||(t&&t.hasConvergence)?'<span class="tag t-clus">Multi-Source</span>':'';
       var tag=convTag||(srcTag);
 
-      // Card header: ticker, tags, score
+      // Current price from Finnhub cache
+      var pc=priceCache[ticker];
+      var priceHtml='';
+      if(pc&&pc.price){
+        var chg=pc.changePct||0;
+        var chgCls=chg>=0?'up':'dn';
+        priceHtml='<span style="font-size:11px;color:var(--text-s);font-weight:600;margin-left:6px">'+fmtPrice(pc.price)+'</span>'
+          +'<span class="val '+chgCls+'" style="font-size:9px;margin-left:3px">'+(chg>=0?'+':'')+chg.toFixed(1)+'%</span>';
+      } else if(t&&t.price){
+        priceHtml='<span style="font-size:11px;color:var(--muted);margin-left:6px">'+fmtPrice(t.price)+' <span style="font-size:8px">at signal</span></span>';
+      }
+
+      // Card header: ticker, price, tags, score
       var card='<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'
         +'<div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
         +'<span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'
-        +tag+'</div></div>'
+        +priceHtml+tag+'</div></div>'
         +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+fmtScore(sc.total)+'</span>'
         +'</div>';
 
