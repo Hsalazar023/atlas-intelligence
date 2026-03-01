@@ -1,17 +1,18 @@
-name: Daily Backtest & Learning Engine
+name: Brain Pipeline — Score & Deploy
 
-# Runs Mon-Fri after market close + data refresh
-# Also runs weekly feature analysis on Mondays
+# Runs Mon-Fri after data refresh completes
+# Daily: ingest + enrich + score + export
+# Monday: + full feature analysis + ML walk-forward
 on:
   schedule:
     - cron: '0 22 * * 1-5'  # Mon-Fri 10:00 PM UTC (5:00 PM ET)
   workflow_dispatch:          # manual trigger
 
 jobs:
-  backtest:
+  brain:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to commit updated weight/results files
+      contents: write  # needed to commit brain export files
 
     steps:
       - name: Checkout repo
@@ -25,39 +26,32 @@ jobs:
       - name: Install dependencies
         run: pip install yfinance pandas numpy requests scikit-learn lightgbm scipy
 
-      - name: Fetch FMP congress data
-        if: env.FMP_API_KEY != ''
+      - name: Run daily pipeline (ingest + enrich + score + export)
         env:
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
-        run: python scripts/fetch_data.py
+          FRED_KEY: ${{ secrets.FRED_KEY }}
+        run: python -m backtest.learning_engine --daily
 
-      - name: Collect price history
-        run: python backtest/collect_prices.py
-
-      - name: Run event study
-        run: python backtest/run_event_study.py
-
-      - name: Optimize weights (grid search)
-        run: python backtest/optimize_weights.py
-
-      - name: Update learning engine (daily collect + backfill)
-        run: python backtest/learning_engine.py --daily
-
-      - name: Run feature analysis (weekly on Mondays)
-        if: github.event.schedule == '0 22 * * 1-5' && contains('Mon', '') || github.event_name == 'workflow_dispatch'
+      - name: Run weekly analysis (Mondays + manual triggers)
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          FRED_KEY: ${{ secrets.FRED_KEY }}
         run: |
           DAY=$(date -u +%u)
           if [ "$DAY" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            python backtest/learning_engine.py --analyze
+            echo "Running full analysis..."
+            python -m backtest.learning_engine --analyze
+          else
+            echo "Skipping analysis (not Monday, not manual)"
           fi
 
-      - name: Print learning engine summary
-        run: python backtest/learning_engine.py --summary
+      - name: Print summary
+        run: python -m backtest.learning_engine --summary
 
-      - name: Commit updated results
+      - name: Commit brain export files
         run: |
-          git config --global user.name  'ATLAS Backtest Bot'
+          git config --global user.name  'ATLAS Brain Bot'
           git config --global user.email 'bot@atlasiq.io'
-          git add data/optimal_weights.json data/backtest_results.json data/backtest_summary.json data/price_history/ data/ale_dashboard.json data/atlas_signals.db data/fmp_congress_feed.json data/sector_map.json data/congress_feed.json data/edgar_feed.json
-          git diff --staged --quiet || git commit -m "chore: refresh data $(date -u '+%Y-%m-%d %H:%M') UTC [skip ci]"
+          git add data/brain_signals.json data/brain_stats.json
+          git diff --staged --quiet || git commit -m "chore(brain): update scores $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push

@@ -17,7 +17,7 @@ venv/
 
 # Deployment & tooling
 .vercel/
-.github/
+# .github/ — NOT ignored: workflows must be in git for GitHub Actions
 
 # OS & editor
 .DS_Store
