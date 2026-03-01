@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from backtest.shared import (
     DATA_DIR, SIGNALS_DB, CONGRESS_FEED, EDGAR_FEED, PRICE_HISTORY_DIR,
     OPTIMAL_WEIGHTS, BACKTEST_SUMMARY, DEFAULT_WEIGHTS,
-    BRAIN_SIGNALS, BRAIN_STATS, BRAIN_HEALTH,
+    BRAIN_SIGNALS, BRAIN_STATS, BRAIN_HEALTH, THIRTEENF_FEED,
     load_json, save_json, match_edgar_ticker, range_to_base_points,
 )
 from backtest.sector_map import get_sector, get_market_cap, get_market_cap_bucket
@@ -39,6 +39,7 @@ log = logging.getLogger(__name__)
 ALE_DASHBOARD = DATA_DIR / "ale_dashboard.json"
 ALE_ANALYSIS_REPORT = DATA_DIR / "ale_analysis_report.md"
 ALE_DIAGNOSTICS_HTML = DATA_DIR / "ale_diagnostics.html"
+MODELS_CACHE = DATA_DIR / "models_cache.pkl"
 
 # ── Database Setup ───────────────────────────────────────────────────────────
 
@@ -129,6 +130,12 @@ CREATE TABLE IF NOT EXISTS signals (
     UNIQUE(ticker, signal_date, source, representative, insider_name)
 );
 
+-- Performance indexes (idempotent via IF NOT EXISTS)
+CREATE INDEX IF NOT EXISTS idx_signals_ticker_date ON signals(ticker, signal_date);
+CREATE INDEX IF NOT EXISTS idx_signals_source_date ON signals(source, signal_date);
+CREATE INDEX IF NOT EXISTS idx_signals_date ON signals(signal_date);
+CREATE INDEX IF NOT EXISTS idx_signals_score ON signals(total_score DESC);
+
 CREATE TABLE IF NOT EXISTS feature_stats (
     feature_name TEXT NOT NULL,
     feature_value TEXT NOT NULL,
@@ -152,6 +159,18 @@ CREATE TABLE IF NOT EXISTS weight_history (
     method TEXT,
     created_at TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS feature_importance_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_date TEXT NOT NULL,
+    feature_name TEXT NOT NULL,
+    importance REAL NOT NULL,
+    rank INTEGER,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_feat_hist_date ON feature_importance_history(run_date);
+CREATE INDEX IF NOT EXISTS idx_feat_hist_name ON feature_importance_history(feature_name);
 
 CREATE TABLE IF NOT EXISTS brain_runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -223,6 +242,9 @@ def _migrate_columns(conn: sqlite3.Connection) -> None:
         ("insider_buy_ratio_90d", "REAL"),
         ("sector_avg_car", "REAL"),
         ("vix_regime_interaction", "REAL"),
+        # v4: person magnitude + sector momentum + repeat buyer signal
+        ("sector_momentum", "REAL"),
+        ("days_since_last_buy", "REAL"),
     ]
     new_feature_cols = [
         ("avg_car_180d", "REAL"),
@@ -395,6 +417,58 @@ def ingest_edgar_feed(conn: sqlite3.Connection, feed_path: Path = None) -> int:
     return inserted
 
 
+def ingest_13f_feed(conn: sqlite3.Connection, feed_path: Path = None) -> int:
+    """Load 13f_feed.json and insert institutional signals.
+
+    Source = '13f', role = 'Institutional'. Only ingests new/increased positions
+    (bullish signals). Convergence detection automatically picks up the third source.
+
+    Returns count inserted.
+    """
+    path = feed_path or THIRTEENF_FEED
+    if not path.exists():
+        log.info("13F feed not found — skipping (run scripts/fetch_13f.py first)")
+        return 0
+
+    data = load_json(path)
+    filings = data.get('filings', [])
+    inserted = 0
+
+    for f in filings:
+        ticker = (f.get('ticker') or '').strip().upper()
+        if not ticker or len(ticker) > 5:
+            continue
+
+        date = f.get('filed_date', '')
+        if not date:
+            continue
+
+        action = f.get('action', '')
+        filer = f.get('filer', '')
+        value = f.get('value', 0) or 0
+
+        # Map value to score points
+        trade_size_points = _buy_value_to_points(value / 1000)  # 13F values are in dollars
+
+        signal = {
+            'ticker': ticker,
+            'signal_date': date,
+            'source': '13f',
+            'insider_name': filer,
+            'insider_role': 'Institutional',
+            'transaction_type': 'New Position' if action == 'new_position' else 'Increased',
+            'representative': None,
+            'trade_size_points': trade_size_points if trade_size_points > 0 else None,
+            'sector': get_sector(ticker),
+            'market_cap_bucket': get_market_cap_bucket(ticker),
+        }
+        if insert_signal(conn, signal):
+            inserted += 1
+
+    log.info(f"13F feed: {len(filings)} changes → {inserted} inserted")
+    return inserted
+
+
 def _buy_value_to_points(value: float) -> int:
     """Map a dollar buy value to base score points (mirrors range_to_base_points)."""
     if value >= 1_000_000: return 15
@@ -407,7 +481,7 @@ def _buy_value_to_points(value: float) -> int:
     return 0
 
 
-def update_aggregate_features(conn: sqlite3.Connection) -> int:
+def update_aggregate_features(conn: sqlite3.Connection, since_date: str = None) -> int:
     """Recompute aggregate features with multi-tier convergence detection.
 
     Convergence Tiers:
@@ -416,14 +490,24 @@ def update_aggregate_features(conn: sqlite3.Connection) -> int:
           (congress 60d lookback, edgar 30d lookback)
       2 — Sector convergence: 3+ signals from 2+ sources in same sector, 30d
       3 — Thematic: sector convergence + active legislation (reserved for frontend)
+
+    Args:
+        since_date: If set, only reprocess signals on or after this date.
+                    Use in --daily for incremental processing; omit in --analyze for full recompute.
     """
     # Congress gets 60d window (STOCK Act allows 45d disclosure delay)
     CONGRESS_WINDOW = 60
     EDGAR_WINDOW = 30
 
-    all_signals = conn.execute(
-        "SELECT id, ticker, signal_date, source, sector FROM signals"
-    ).fetchall()
+    if since_date:
+        all_signals = conn.execute(
+            "SELECT id, ticker, signal_date, source, sector FROM signals "
+            "WHERE signal_date >= ?", (since_date,)
+        ).fetchall()
+    else:
+        all_signals = conn.execute(
+            "SELECT id, ticker, signal_date, source, sector FROM signals"
+        ).fetchall()
     updated = 0
 
     for sig in all_signals:
@@ -1044,10 +1128,12 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
 
 
 # ── Legislative Catalyst Registry ─────────────────────────────────────────────
-# Tracked bills with dates and impacted tickers. Kept in sync with frontend BILLS.
-# When adding a new bill: add here AND in atlas-intelligence.html BILLS array.
+# Dynamically loaded from bills_feed.json (populated by scripts/fetch_bills.py).
+# Falls back to hardcoded list if bills_feed.json doesn't exist yet.
 
-LEGISLATIVE_CATALYSTS = [
+BILLS_FEED = DATA_DIR / "bills_feed.json"
+
+_HARDCODED_CATALYSTS = [
     {'id': 'HR7821', 'date': '2026-02-25', 'tickers': ['NVDA', 'AMD', 'SMCI', 'MSFT'],
      'sector': 'Technology', 'title': 'American AI Infrastructure Act'},
     {'id': 'SB1882', 'date': '2026-03-03', 'tickers': ['RTX', 'LMT', 'NOC', 'BA'],
@@ -1060,13 +1146,47 @@ LEGISLATIVE_CATALYSTS = [
      'sector': 'Energy', 'title': 'Clean Energy Investment Act'},
 ]
 
-# Build a quick lookup: ticker -> list of catalyst dates
-_CATALYST_TICKER_MAP: dict = {}
-_CATALYST_SECTOR_MAP: dict = {}
-for _bill in LEGISLATIVE_CATALYSTS:
-    for _t in _bill['tickers']:
-        _CATALYST_TICKER_MAP.setdefault(_t, []).append(_bill['date'])
-    _CATALYST_SECTOR_MAP.setdefault(_bill['sector'], []).append(_bill['date'])
+
+def _load_legislative_catalysts() -> list:
+    """Load bill catalysts from bills_feed.json, falling back to hardcoded list."""
+    if BILLS_FEED.exists():
+        try:
+            data = load_json(BILLS_FEED)
+            bills = data.get('bills', [])
+            if bills:
+                catalysts = []
+                for b in bills:
+                    date = b.get('action_date') or b.get('introduced_date') or ''
+                    tickers = b.get('impact_tickers', [])
+                    if date and tickers:
+                        catalysts.append({
+                            'id': b.get('id', ''),
+                            'date': date,
+                            'tickers': tickers,
+                            'sector': b.get('sector', ''),
+                            'title': b.get('title', ''),
+                        })
+                if catalysts:
+                    return catalysts
+        except Exception:
+            pass
+    return _HARDCODED_CATALYSTS
+
+
+def _build_catalyst_maps() -> tuple:
+    """Build ticker → dates and sector → dates lookups from catalysts."""
+    catalysts = _load_legislative_catalysts()
+    ticker_map = {}
+    sector_map = {}
+    for bill in catalysts:
+        for t in bill['tickers']:
+            ticker_map.setdefault(t, []).append(bill['date'])
+        sector_map.setdefault(bill['sector'], []).append(bill['date'])
+    return ticker_map, sector_map
+
+
+# Build lookups (refreshed on import)
+_CATALYST_TICKER_MAP, _CATALYST_SECTOR_MAP = _build_catalyst_maps()
 
 
 def _enrich_catalyst_proximity(conn: sqlite3.Connection, signals: list) -> int:
@@ -1427,11 +1547,13 @@ def backfill_outcomes(conn: sqlite3.Connection, spy_index: dict = None) -> int:
     conn.commit()
 
     # Get signals needing backfill (any horizon still unfilled)
+    # Cap to last 400 days — older signals already have all horizons filled
     rows = conn.execute(
         "SELECT id, ticker, signal_date, outcome_5d_filled, outcome_30d_filled, "
         "outcome_90d_filled, outcome_180d_filled, outcome_365d_filled "
-        "FROM signals WHERE outcome_5d_filled = 0 OR outcome_30d_filled = 0 "
-        "OR outcome_90d_filled = 0 OR outcome_180d_filled = 0 OR outcome_365d_filled = 0"
+        "FROM signals WHERE signal_date >= date('now', '-400 days') "
+        "AND (outcome_5d_filled = 0 OR outcome_30d_filled = 0 "
+        "OR outcome_90d_filled = 0 OR outcome_180d_filled = 0 OR outcome_365d_filled = 0)"
     ).fetchall()
 
     windows = [
@@ -3778,11 +3900,34 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         log.warning("ML dependencies not installed — skipping scoring")
         return 0
 
-    # Train full-sample models
-    models = train_full_sample(conn)
+    # Try loading cached models first (skip retraining on daily runs)
+    models = None
+    if MODELS_CACHE.exists():
+        try:
+            import pickle
+            with open(MODELS_CACHE, 'rb') as f:
+                models = pickle.load(f)
+            if len(models) == 4:
+                log.info("Loaded cached ML models — skipping retraining")
+            else:
+                models = None
+        except Exception as e:
+            log.warning(f"Model cache load failed: {e}")
+            models = None
+
     if models is None:
-        log.warning("Could not train models — skipping scoring")
-        return 0
+        models = train_full_sample(conn)
+        if models is None:
+            log.warning("Could not train models — skipping scoring")
+            return 0
+        # Cache for next daily run
+        try:
+            import pickle
+            with open(MODELS_CACHE, 'wb') as f:
+                pickle.dump(models, f)
+            log.info(f"ML models cached to {MODELS_CACHE}")
+        except Exception as e:
+            log.warning(f"Model cache save failed: {e}")
 
     clf_rf, clf_lgb, reg_rf, reg_lgb = models
 
@@ -3812,6 +3957,17 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     ).fetchall()
     meta = {r['id']: (r['convergence_tier'] or 0, r['person_hit_rate_30d'] or 0) for r in rows}
 
+    # Load optimized coefficients if available
+    weights_data = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
+    coeffs = weights_data.get('_score_coefficients', {})
+    base_mult = coeffs.get('base_mult', 60)
+    mag_mult = coeffs.get('magnitude_mult', 200)
+    conv_mult = coeffs.get('converge_mult', 5)
+    person_mult = coeffs.get('person_mult', 8)
+    if coeffs:
+        log.info(f"Using optimized coefficients: base={base_mult}, mag={mag_mult}, "
+                 f"conv={conv_mult}, person={person_mult}")
+
     # Compute scores
     updates = []
     scores = []
@@ -3819,10 +3975,10 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         sig_id = int(ids[i])
         conv_tier, person_hr = meta.get(sig_id, (0, 0))
 
-        base = float(clf_probs[i]) * 60
-        magnitude = max(-20, min(25, float(reg_preds[i]) * 200))
-        converge = float(conv_tier) * 5
-        person = max(0, min(5, float(person_hr) * 8))
+        base = float(clf_probs[i]) * base_mult
+        magnitude = max(-20, min(25, float(reg_preds[i]) * mag_mult))
+        converge = float(conv_tier) * conv_mult
+        person = max(0, min(5, float(person_hr) * person_mult))
         total = max(0, min(100, base + magnitude + converge + person))
         total = round(total, 2)
 
@@ -4077,6 +4233,159 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
     save_json(BRAIN_HEALTH, health)
     log.info(f"Exported health → brain_health.json")
     return health
+
+
+# ── Self-Improving Intelligence ──────────────────────────────────────────────
+
+def analyze_residuals(conn: sqlite3.Connection) -> dict:
+    """Examine worst predictions: high score + negative CAR, low score + high CAR.
+    Logs patterns (sector, source, timing) to brain_health.json as improvement suggestions."""
+    import numpy as np
+    cur = conn.cursor()
+
+    # False positives: high score (≥70) but negative 30d CAR
+    false_pos = cur.execute("""
+        SELECT ticker, sector, source, total_score, car_30d, signal_date,
+               convergence_tier, person_hit_rate_30d, momentum_1m
+        FROM signals
+        WHERE total_score >= 70 AND car_30d IS NOT NULL AND car_30d < -0.05
+        ORDER BY car_30d ASC LIMIT 20
+    """).fetchall()
+
+    # False negatives: low score (<40) but positive 30d CAR
+    false_neg = cur.execute("""
+        SELECT ticker, sector, source, total_score, car_30d, signal_date,
+               convergence_tier, person_hit_rate_30d, momentum_1m
+        FROM signals
+        WHERE total_score < 40 AND car_30d IS NOT NULL AND car_30d > 0.10
+        ORDER BY car_30d DESC LIMIT 20
+    """).fetchall()
+
+    residuals = {'false_positives': [], 'false_negatives': [], 'patterns': []}
+
+    # Analyze false positives
+    fp_sectors = {}
+    fp_sources = {}
+    for r in false_pos:
+        residuals['false_positives'].append({
+            'ticker': r['ticker'], 'sector': r['sector'], 'source': r['source'],
+            'score': r['total_score'], 'car_30d': round(r['car_30d'], 4),
+            'date': r['signal_date'],
+        })
+        fp_sectors[r['sector']] = fp_sectors.get(r['sector'], 0) + 1
+        fp_sources[r['source']] = fp_sources.get(r['source'], 0) + 1
+
+    # Analyze false negatives
+    fn_sectors = {}
+    for r in false_neg:
+        residuals['false_negatives'].append({
+            'ticker': r['ticker'], 'sector': r['sector'], 'source': r['source'],
+            'score': r['total_score'], 'car_30d': round(r['car_30d'], 4),
+            'date': r['signal_date'],
+        })
+        fn_sectors[r['sector']] = fn_sectors.get(r['sector'], 0) + 1
+
+    # Surface patterns
+    if fp_sectors:
+        worst_sector = max(fp_sectors, key=fp_sectors.get)
+        if fp_sectors[worst_sector] >= 3:
+            residuals['patterns'].append(
+                f"False positive cluster in {worst_sector} ({fp_sectors[worst_sector]} signals scored ≥70 but lost >5%)"
+            )
+    if fp_sources:
+        worst_source = max(fp_sources, key=fp_sources.get)
+        if fp_sources[worst_source] >= 3:
+            residuals['patterns'].append(
+                f"False positives concentrated in {worst_source} source ({fp_sources[worst_source]} misses)"
+            )
+
+    log.info(f"Residual analysis: {len(false_pos)} false positives, {len(false_neg)} false negatives, "
+             f"{len(residuals['patterns'])} patterns")
+    return residuals
+
+
+def optimize_score_coefficients(conn: sqlite3.Connection) -> dict | None:
+    """Grid search for optimal scoring formula coefficients that maximize OOS IC.
+
+    Default formula: base=P×60, magnitude=clamp(CAR×200,-20,25), converge=tier×5, person=clamp(hr×8,0,5)
+    Searches around defaults to find the best combo.
+
+    Returns best coefficients dict or None if insufficient data.
+    """
+    import numpy as np
+    from scipy.stats import spearmanr
+
+    rows = conn.execute("""
+        SELECT ml_confidence, predicted_car, convergence_tier, person_hit_rate_30d, car_30d
+        FROM signals
+        WHERE ml_confidence IS NOT NULL AND car_30d IS NOT NULL
+    """).fetchall()
+
+    if len(rows) < 100:
+        log.info("Insufficient data for coefficient optimization (<100 scored signals with outcomes)")
+        return None
+
+    conf = np.array([r['ml_confidence'] or 0 for r in rows])
+    pred_car = np.array([r['predicted_car'] or 0 for r in rows])
+    conv_tier = np.array([r['convergence_tier'] or 0 for r in rows])
+    person_hr = np.array([r['person_hit_rate_30d'] or 0 for r in rows])
+    actual_car = np.array([r['car_30d'] for r in rows])
+
+    # Grid search ranges around defaults
+    base_mults = [40, 50, 60, 70, 80]
+    mag_mults = [100, 150, 200, 250, 300]
+    conv_mults = [3, 5, 7, 10]
+    person_mults = [5, 8, 10, 12]
+
+    best_ic = -1.0
+    best_combo = (60, 200, 5, 8)
+
+    for bm in base_mults:
+        for mm in mag_mults:
+            for cm in conv_mults:
+                for pm in person_mults:
+                    base = conf * bm
+                    magnitude = np.clip(pred_car * mm, -20, 25)
+                    converge = conv_tier * cm
+                    person = np.clip(person_hr * pm, 0, 5)
+                    total = np.clip(base + magnitude + converge + person, 0, 100)
+
+                    ic, _ = spearmanr(total, actual_car)
+                    if not np.isnan(ic) and ic > best_ic:
+                        best_ic = ic
+                        best_combo = (bm, mm, cm, pm)
+
+    result = {
+        'base_mult': best_combo[0],
+        'magnitude_mult': best_combo[1],
+        'converge_mult': best_combo[2],
+        'person_mult': best_combo[3],
+        'optimized_ic': round(best_ic, 6),
+    }
+    log.info(f"Optimal coefficients: base={best_combo[0]}, mag={best_combo[1]}, "
+             f"conv={best_combo[2]}, person={best_combo[3]} → IC={best_ic:.4f}")
+    return result
+
+
+def log_feature_importance_history(conn: sqlite3.Connection, feature_importance: dict) -> None:
+    """Record per-feature importance for trend analysis across runs."""
+    if not feature_importance:
+        return
+
+    run_date = datetime.now(tz=timezone.utc).strftime('%Y-%m-%d')
+    sorted_features = sorted(feature_importance.items(), key=lambda x: x[1], reverse=True)
+
+    rows = []
+    for rank, (name, importance) in enumerate(sorted_features, 1):
+        rows.append((run_date, name, round(importance, 6), rank))
+
+    conn.executemany(
+        "INSERT INTO feature_importance_history (run_date, feature_name, importance, rank) "
+        "VALUES (?, ?, ?, ?)",
+        rows
+    )
+    conn.commit()
+    log.info(f"Logged {len(rows)} feature importances for {run_date}")
 
 
 # ── Factor attribution labels ────────────────────────────────────────────────
@@ -4636,6 +4945,29 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
 
 # ── Daily Pipeline ───────────────────────────────────────────────────────────
 
+def collect_missing_prices(conn: sqlite3.Connection) -> int:
+    """Fetch yfinance data for tickers that have signals but no price file.
+    Returns count of tickers collected."""
+    try:
+        from backtest.collect_prices import collect_ticker
+    except ImportError:
+        log.warning("collect_prices not available — skipping price collection")
+        return 0
+
+    rows = conn.execute("SELECT DISTINCT ticker FROM signals").fetchall()
+    collected = 0
+    for row in rows:
+        ticker = row['ticker']
+        price_file = PRICE_HISTORY_DIR / f"{ticker}.json"
+        if not price_file.exists():
+            try:
+                if collect_ticker(ticker):
+                    collected += 1
+            except Exception as e:
+                log.warning(f"Price collection failed for {ticker}: {e}")
+    return collected
+
+
 def run_daily(conn: sqlite3.Connection) -> None:
     """Daily pipeline: ingest new signals + backfill outcomes."""
     log.info("=== ALE Daily Pipeline ===")
@@ -4643,46 +4975,53 @@ def run_daily(conn: sqlite3.Connection) -> None:
     # 1. Ingest new signals
     c_count = ingest_congress_feed(conn)
     e_count = ingest_edgar_feed(conn)
-    log.info(f"Ingested: {c_count} congress + {e_count} EDGAR signals")
+    f_count = ingest_13f_feed(conn)
+    log.info(f"Ingested: {c_count} congress + {e_count} EDGAR + {f_count} 13F signals")
 
-    # 2. Update aggregate features
-    agg = update_aggregate_features(conn)
+    # 2. Collect prices for any new tickers missing price history
+    new_prices = collect_missing_prices(conn)
+    if new_prices:
+        log.info(f"Collected prices for {new_prices} new tickers")
+
+    # 3. Update aggregate features (incremental: last 60 days only)
+    since = (datetime.now(tz=timezone.utc) - timedelta(days=60)).strftime('%Y-%m-%d')
+    agg = update_aggregate_features(conn, since_date=since)
     log.info(f"Updated aggregate features for {agg} ticker-date pairs")
 
-    # 3. Backfill outcomes
+    # 4. Backfill outcomes
     spy_index = load_price_index('SPY')
     filled = backfill_outcomes(conn, spy_index)
     log.info(f"Backfilled outcomes for {filled} signals")
 
-    # 4. Update person track records
+    # 5. Update person track records
     person_updated = update_person_track_records(conn)
     log.info(f"Updated person track records for {person_updated} signals")
 
-    # 5. Enrich price-based and research-backed features
+    # 6. Enrich price-based and research-backed features
     enriched = enrich_signal_features(conn)
     log.info(f"Enriched {enriched} signal features")
 
-    # 6. Enrich market context (VIX, yield curve, credit spread from FRED)
+    # 7. Enrich market context (VIX, yield curve, credit spread from FRED)
     market_enriched = enrich_market_context(conn)
     log.info(f"Enriched {market_enriched} signals with market context")
 
-    # 7. Generate dashboard + diagnostics
+    # 8. Generate dashboard + diagnostics
     generate_dashboard(conn)
     log.info(f"Dashboard saved to {ALE_DASHBOARD}")
     generate_analysis_report(conn)
     generate_diagnostics_html(conn)
 
-    # 8. Score all signals with ML models
+    # 9. Score all signals with ML models
     try:
         scored = score_all_signals(conn)
         log.info(f"Scored {scored} signals with ML models")
     except Exception as e:
         log.warning(f"Signal scoring failed: {e}")
 
-    # 9. Auto-export brain data for frontend
+    # 10. Auto-export brain data for frontend
     export_brain_data(conn)
 
-    # 10. Log brain run
+    # 11. Log brain run
     log_brain_run(conn, 'daily')
 
 
@@ -4704,7 +5043,10 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     # 2. Generate updated weights from feature stats
     weights = generate_weights_from_stats(conn)
 
-    # 3. Run walk-forward ML training
+    # 3. Run walk-forward ML training (force retrain — clear model cache)
+    if MODELS_CACHE.exists():
+        MODELS_CACHE.unlink()
+        log.info("Cleared ML model cache — will retrain fresh")
     ml_result = None
     try:
         from backtest.ml_engine import walk_forward_train
@@ -4759,6 +5101,21 @@ def run_analyze(conn: sqlite3.Connection) -> None:
         else:
             log.info(f"Weights method: feature_importance (IC {ml_result.oos_ic:.4f} not positive)")
 
+    # 4b. Optimize score coefficients via grid search
+    try:
+        coeffs = optimize_score_coefficients(conn)
+        if coeffs:
+            output['_score_coefficients'] = coeffs
+    except Exception as e:
+        log.warning(f"Coefficient optimization failed: {e}")
+
+    # 4c. Log feature importance history for trend analysis
+    if ml_result and ml_result.feature_importance:
+        try:
+            log_feature_importance_history(conn, ml_result.feature_importance)
+        except Exception as e:
+            log.warning(f"Feature importance history log failed: {e}")
+
     save_json(OPTIMAL_WEIGHTS, output)
 
     # 5. Update dashboard (pass ml_result for ML metrics)
@@ -4776,14 +5133,27 @@ def run_analyze(conn: sqlite3.Connection) -> None:
         import traceback
         traceback.print_exc()
 
-    # 8. Auto-export brain data for frontend
+    # 8. Residual analysis — surface patterns in prediction errors
+    try:
+        residuals = analyze_residuals(conn)
+    except Exception as e:
+        log.warning(f"Residual analysis failed: {e}")
+        residuals = None
+
+    # 9. Auto-export brain data for frontend
     export_brain_data(conn)
 
-    # 9. Log brain run + self-check
+    # 10. Log brain run + self-check
     ic = ml_result.oos_ic if ml_result and ml_result.n_folds > 0 else None
     hr = ml_result.oos_hit_rate if ml_result and ml_result.n_folds > 0 else None
     log_brain_run(conn, 'analyze', oos_ic=ic, oos_hit_rate=hr)
-    run_self_check(conn)
+    health = run_self_check(conn)
+
+    # 11. Add residual patterns to health output
+    if residuals and residuals.get('patterns'):
+        health.setdefault('suggestions', []).extend(residuals['patterns'])
+        health['residuals'] = residuals
+        save_json(BRAIN_HEALTH, health)
 
 
 # ── CLI Entry Point ──────────────────────────────────────────────────────────

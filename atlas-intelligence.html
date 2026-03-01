@@ -1170,6 +1170,7 @@ var SCORE_WEIGHTS = null;
 var SCORE_THRESHOLD = 65;  // default until backtest runs
 
 // Bill data for Congress tracking
+// Bills loaded dynamically from bills_feed.json; hardcoded fallback for offline/initial load
 var BILLS = [
   {id:'HR7821', title:'American AI Infrastructure Act', chamber:'house', congress:119, status:'Floor Vote', date:'2026-02-25', impactTickers:['NVDA','AMD','SMCI','MSFT']},
   {id:'SB1882', title:'National Defense Modernization Act', chamber:'senate', congress:119, status:'Armed Services Markup', date:'2026-03-03', impactTickers:['RTX','LMT','NOC','BA','ITA']},
@@ -1177,6 +1178,27 @@ var BILLS = [
   {id:'HR6419', title:'Critical Minerals & Mining Security Act', chamber:'house', congress:119, status:'Floor Vote', date:'2026-03-17', impactTickers:['FCX','MP','ALB','LTHM']},
   {id:'SB3310', title:'Clean Energy Investment Act', chamber:'senate', congress:119, status:'Energy Committee Hearing', date:'2026-04-01', impactTickers:['ENPH','NEE','FSLR']}
 ];
+
+function loadBillsFeed(){
+  fetch('data/bills_feed.json?v='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.bills||!data.bills.length) return;
+      BILLS=data.bills.map(function(b){
+        return {
+          id: b.id||'',
+          title: b.title||'',
+          chamber: b.chamber||'house',
+          congress: b.congress||119,
+          status: b.status||'',
+          date: b.action_date||b.introduced_date||'',
+          impactTickers: b.impact_tickers||[]
+        };
+      });
+      renderLegislativeCalendar();
+    })
+    .catch(function(){/* bills_feed.json not available — use fallback */});
+}
 
 // ═══════════════════════════════════════════════════════
 // TICKER → SECTOR MAP (client-side, extended by data/sector_map.json when available)
@@ -3758,6 +3780,49 @@ function loadBrainHealth(){
 }
 
 // ═══════════════════════════════════════════════════════
+// 13F INSTITUTIONAL FEED — loads data/13f_feed.json
+// ═══════════════════════════════════════════════════════
+function load13fFeed(){
+  fetch('data/13f_feed.json?v='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.filings||!data.filings.length) return;
+      var container=document.querySelector('#page-flows .col-stack');
+      if(!container) return;
+      // Build live 13F cards — replace static placeholder cards
+      var html='';
+      var shown=0;
+      data.filings.forEach(function(f){
+        if(shown>=8) return;
+        if(!f.ticker) return;
+        var val=f.value||0;
+        var valStr=val>=1e9?'$'+(val/1e9).toFixed(1)+'B':val>=1e6?'$'+(val/1e6).toFixed(0)+'M':'$'+val.toLocaleString();
+        var isNew=f.action==='new_position';
+        var actionLabel=isNew?'New Position':'Increased +'+(f.pct_change?Math.round(f.pct_change*100)+'%':'');
+        var borderColor=isNew?'var(--green)':'var(--amber)';
+        html+='<div class="flow-card" style="border-top-color:'+borderColor+'">'
+          +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+          +'<div><div class="flow-ticker">'+f.ticker+'</div><div class="flow-co">'+f.issuer+' · '+f.filer+'</div></div>'
+          +'<div style="text-align:right"><div class="val up" style="font-size:15px;font-family:var(--mono)">'+valStr+'</div>'
+          +'<div class="sym-sub">'+actionLabel+'</div></div></div>'
+          +'<div class="flow-divider"></div>'
+          +'<div class="flow-foot"><span class="tag t-flow">13F · '+f.filer+'</span>'
+          +'<span class="tag t-buy">'+actionLabel+'</span>'
+          +'<span class="sym-sub">Filed '+f.filed_date+'</span></div></div>';
+        shown++;
+      });
+      if(html) container.innerHTML=html;
+      // Update KPI count
+      var kpiEl=container.closest('#page-flows');
+      if(kpiEl){
+        var countEl=kpiEl.querySelector('.kpi-value');
+        if(countEl) countEl.textContent=data.count||data.filings.length;
+      }
+    })
+    .catch(function(){/* 13f_feed.json not available */});
+}
+
+// ═══════════════════════════════════════════════════════
 // INITIALIZATION — Load all live data on startup
 // ═══════════════════════════════════════════════════════
 window.addEventListener('load', function(){
@@ -3765,6 +3830,7 @@ window.addEventListener('load', function(){
   loadBrainSignals();
   loadBrainStats();
   loadBrainHealth();
+  load13fFeed();
 
   // Load SEC company→ticker map for EDGAR matching (10,000+ entries)
   fetch('data/sec_tickers.json')
@@ -3792,6 +3858,7 @@ window.addEventListener('load', function(){
 
   // ── STEP 1b: Render Legislative Calendar from BILLS array (no API needed) ──
   renderLegislativeCalendar();
+  loadBillsFeed();  // async upgrade from bills_feed.json if available
 
   // ── STEP 2: Attempt live Finnhub fetch (works when hosted over HTTP) ──
   // If it succeeds, prices update to real-time and dot turns green.

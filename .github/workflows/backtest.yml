@@ -1,8 +1,8 @@
 name: Brain Pipeline — Score & Deploy
 
-# Runs Mon-Fri after data refresh completes
-# Daily: ingest + enrich + score + export
-# Monday: + full feature analysis + ML walk-forward
+# Runs Mon-Fri after the last data refresh (4:30 PM ET = 21:30 UTC)
+# Daily: fetch fresh data → collect prices → ingest + enrich + score + export
+# Monday (or manual): + full feature analysis + ML walk-forward
 on:
   schedule:
     - cron: '0 22 * * 1-5'  # Mon-Fri 10:00 PM UTC (5:00 PM ET)
@@ -23,8 +23,41 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Restore signal database from cache
+        uses: actions/cache@v4
+        with:
+          path: data/atlas_signals.db
+          key: atlas-db-${{ github.run_number }}
+          restore-keys: atlas-db-
+
+      - name: Restore ML model cache
+        uses: actions/cache@v4
+        with:
+          path: data/models_cache.pkl
+          key: atlas-models-${{ github.run_number }}
+          restore-keys: atlas-models-
+
       - name: Install dependencies
         run: pip install yfinance pandas numpy requests scikit-learn lightgbm scipy
+
+      - name: Fetch fresh data feeds
+        env:
+          QUIVER_KEY: ${{ secrets.QUIVER_KEY }}
+          FRED_KEY: ${{ secrets.FRED_KEY }}
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
+        run: |
+          python3 scripts/fetch_data.py
+          if [ -f scripts/fetch_bills.py ]; then
+            python3 scripts/fetch_bills.py || echo "Bill fetch skipped (no API key or error)"
+          fi
+          if [ -f scripts/fetch_13f.py ]; then
+            python3 scripts/fetch_13f.py || echo "13F fetch skipped (error)"
+          fi
+
+      - name: Collect prices for signal tickers
+        run: python -m backtest.collect_prices || echo "Price collection had errors (non-fatal)"
 
       - name: Run daily pipeline (ingest + enrich + score + export)
         env:
@@ -53,5 +86,8 @@ jobs:
           git config --global user.name  'ATLAS Brain Bot'
           git config --global user.email 'bot@atlasiq.io'
           git add data/brain_signals.json data/brain_stats.json data/brain_health.json
+          git add data/optimal_weights.json || true
+          git add data/congress_feed.json data/edgar_feed.json data/market_data.json || true
+          git add data/bills_feed.json data/13f_feed.json || true
           git diff --staged --quiet || git commit -m "chore(brain): update scores $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push

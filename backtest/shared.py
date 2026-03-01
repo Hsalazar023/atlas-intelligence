@@ -24,6 +24,7 @@ FMP_CONGRESS_FEED = DATA_DIR / "fmp_congress_feed.json"
 BRAIN_SIGNALS = DATA_DIR / "brain_signals.json"
 BRAIN_STATS = DATA_DIR / "brain_stats.json"
 BRAIN_HEALTH = DATA_DIR / "brain_health.json"
+THIRTEENF_FEED = DATA_DIR / "13f_feed.json"
 
 # Fallback EDGAR company name → ticker mapping (used when SEC download fails)
 _FALLBACK_KEYWORDS = {
