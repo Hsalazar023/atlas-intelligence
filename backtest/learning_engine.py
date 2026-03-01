@@ -4341,7 +4341,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             'context': context,
             'win_probability': win_probability,
             'predicted_move': predicted_move,
-            'time_horizon': '30-day forward outlook',
+            'time_horizon': '30d',  # model trains on car_30d
             # Smart targets
             'entry_lo': targets['entry_lo'],
             'entry_hi': targets['entry_hi'],
