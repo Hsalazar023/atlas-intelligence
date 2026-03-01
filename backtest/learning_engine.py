@@ -3751,14 +3751,15 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     clf_rf, clf_lgb, reg_rf, reg_lgb = models
 
     # Ensure score breakdown columns exist
-    for col in ['ml_confidence', 'predicted_car']:
+    for col in ['ml_confidence', 'predicted_car',
+                'score_base', 'score_magnitude', 'score_converge', 'score_person']:
         try:
             conn.execute(f"ALTER TABLE signals ADD COLUMN {col} REAL")
         except Exception:
             pass  # column already exists
 
     # Prepare features for ALL signals
-    X, ids, dates, tickers, cars = prepare_features_all(conn)
+    X, ids, dates, tickers, cars, X_raw = prepare_features_all(conn)
     if len(X) == 0:
         log.warning("No signals to score")
         return 0
@@ -3789,12 +3790,19 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         total = max(0, min(100, base + magnitude + converge + person))
         total = round(total, 2)
 
-        updates.append((total, round(float(clf_probs[i]), 4), round(float(reg_preds[i]), 6), sig_id))
+        updates.append((total,
+                        round(float(clf_probs[i]), 4),
+                        round(float(reg_preds[i]), 6),
+                        round(base, 2), round(magnitude, 2),
+                        round(converge, 2), round(person, 2),
+                        sig_id))
         scores.append(total)
 
     # Batch update
     conn.executemany(
-        "UPDATE signals SET total_score = ?, ml_confidence = ?, predicted_car = ? WHERE id = ?",
+        "UPDATE signals SET total_score = ?, ml_confidence = ?, predicted_car = ?, "
+        "score_base = ?, score_magnitude = ?, score_converge = ?, score_person = ? "
+        "WHERE id = ?",
         updates
     )
     conn.commit()
@@ -4002,6 +4010,185 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
     return health
 
 
+# ── Factor attribution labels ────────────────────────────────────────────────
+FACTOR_LABELS = {
+    'momentum_3m':            ('3-month momentum',       'high', 'Strong 3-month momentum', 'Weak 3-month momentum'),
+    'momentum_1m':            ('1-month momentum',       'high', 'Strong recent momentum', 'Weak recent momentum'),
+    'momentum_6m':            ('6-month momentum',       'high', 'Strong 6-month trend', 'Weak 6-month trend'),
+    'disclosure_delay':       ('Disclosure delay',       'low',  'Fast disclosure filing', 'Slow disclosure filing'),
+    'relative_position_size': ('Position size',          'high', 'Large relative position', 'Small relative position'),
+    'trade_size_points':      ('Trade size',             'high', 'Large trade size', 'Small trade size'),
+    'person_hit_rate_30d':    ('Person hit rate',        'high', 'Strong trader track record', 'Weak trader track record'),
+    'person_trade_count':     ('Person trade count',     'high', 'Frequent trader', 'Infrequent trader'),
+    'person_avg_car_30d':     ('Person avg return',      'high', 'High avg return trader', 'Low avg return trader'),
+    'days_since_last_buy':    ('Days since last buy',    'low',  'Repeat buyer signal', 'Long gap since last buy'),
+    'insider_buy_ratio_90d':  ('Insider buy ratio',      'high', 'High insider buy ratio', 'Low insider buy ratio'),
+    'volume_spike':           ('Volume spike',           'high', 'Unusual volume activity', 'Normal volume'),
+    'price_proximity_52wk':   ('52-week position',       'high', 'Near 52-week high', 'Near 52-week low'),
+    'convergence_tier':       ('Convergence tier',       'high', 'Multi-source convergence', 'No convergence'),
+    'has_convergence':        ('Has convergence',        'high', 'Congress + insider overlap', 'Single source only'),
+    'same_ticker_signals_7d': ('7-day cluster',          'high', 'Signal cluster forming', 'Isolated signal'),
+    'same_ticker_signals_30d':('30-day cluster',         'high', 'Multiple signals in 30d', 'Single signal in 30d'),
+    'vix_at_signal':          ('VIX level',              'low',  'Low volatility environment', 'High volatility environment'),
+    'days_to_earnings':       ('Days to earnings',       'low',  'Near earnings catalyst', 'Far from earnings'),
+    'days_to_catalyst':       ('Days to catalyst',       'low',  'Near catalyst event', 'Far from catalyst'),
+    'sector_avg_car':         ('Sector returns',         'high', 'Strong sector returns', 'Weak sector returns'),
+    'sector_momentum':        ('Sector momentum',        'high', 'Strong sector momentum', 'Weak sector momentum'),
+    'cluster_velocity':       ('Cluster velocity',       'high', 'Fast signal clustering', 'Slow signal clustering'),
+    'vix_regime_interaction': ('VIX regime',             'high', 'Favorable VIX regime', 'Unfavorable VIX regime'),
+}
+
+
+def compute_signal_factors(X_raw, all_ids, export_ids, feature_importance):
+    """Compute top factors explaining why each signal scored high.
+
+    Uses percentile-based attribution: for each feature, computes the signal's
+    percentile rank vs the full population, then scores by
+    global_importance × abs(percentile - 0.5) × 2.
+
+    Args:
+        X_raw: Raw (pre-encoded) feature DataFrame for ALL signals
+        all_ids: Array of signal IDs matching X_raw rows
+        export_ids: Set of signal IDs being exported (compute factors for these)
+        feature_importance: Dict of feature_name → global importance weight
+
+    Returns:
+        Dict of signal_id → list of top 5 factor dicts
+    """
+    import numpy as np
+    import pandas as pd
+
+    if X_raw.empty or not feature_importance:
+        return {}
+
+    # Compute percentile ranks for each feature across full population
+    percentiles = pd.DataFrame(index=X_raw.index, columns=X_raw.columns, dtype=float)
+    for col in X_raw.columns:
+        vals = X_raw[col].values.astype(float)
+        # rank as fraction (0-1)
+        ranked = pd.Series(vals).rank(pct=True, method='average').values
+        percentiles[col] = ranked
+
+    # Map all_ids to row index
+    id_to_idx = {int(sid): i for i, sid in enumerate(all_ids)}
+
+    factors_out = {}
+    for sig_id in export_ids:
+        idx = id_to_idx.get(sig_id)
+        if idx is None:
+            factors_out[sig_id] = []
+            continue
+
+        scored_features = []
+        for feat in X_raw.columns:
+            imp = feature_importance.get(feat, 0)
+            if imp < 0.005:  # skip near-zero importance features
+                continue
+            pctile = float(percentiles.iloc[idx][feat])
+            # How extreme is this feature? 0.5 = median (boring), 0/1 = extreme
+            extremity = abs(pctile - 0.5) * 2  # 0-1 scale
+            attribution = imp * extremity
+            scored_features.append((feat, attribution, pctile))
+
+        # Sort by attribution, take top 5
+        scored_features.sort(key=lambda x: x[1], reverse=True)
+        top5 = scored_features[:5]
+
+        factors = []
+        for feat, attr, pctile in top5:
+            label_info = FACTOR_LABELS.get(feat)
+            if not label_info:
+                continue
+            name, direction, bull_text, bear_text = label_info
+            # Determine if this factor is bullish or bearish
+            is_high = pctile > 0.5
+            if direction == 'low':
+                is_high = pctile < 0.5  # for "low is good" features
+            text = bull_text if is_high else bear_text
+            pctile_display = int(round(pctile * 100))
+            # Show percentile context
+            if pctile >= 0.9:
+                pctile_label = f"top {100 - pctile_display}%"
+            elif pctile <= 0.1:
+                pctile_label = f"bottom {pctile_display}%"
+            else:
+                pctile_label = f"{pctile_display}th percentile"
+
+            raw_val = float(X_raw.iloc[idx][feat])
+            factors.append({
+                'feature': feat,
+                'label': text,
+                'direction': 'bullish' if is_high else 'bearish',
+                'percentile': pctile_display,
+                'percentile_label': pctile_label,
+                'raw_value': round(raw_val, 4),
+                'importance': round(attr, 4),
+            })
+
+        factors_out[sig_id] = factors
+
+    return factors_out
+
+
+def compute_smart_targets(price, predicted_car, momentum_1m, direction):
+    """Compute smart entry/target/stop from model predictions.
+
+    Args:
+        price: Current price at signal
+        predicted_car: ML-predicted 30-day cumulative abnormal return (decimal)
+        momentum_1m: 1-month momentum (decimal, e.g. 0.05 = 5%)
+        direction: 'long' or 'short'
+
+    Returns:
+        Dict with entry_lo, entry_hi, target1, target2, stop
+    """
+    if not price or price <= 0:
+        return {'entry_lo': None, 'entry_hi': None, 'target1': None, 'target2': None, 'stop': None}
+
+    # Volatility factor from momentum (more volatile → wider zones)
+    vol_factor = max(0.02, min(0.08, abs(momentum_1m or 0) * 1.5 + 0.02))
+
+    if predicted_car is not None and predicted_car != 0:
+        car = predicted_car
+        if direction == 'long':
+            entry_lo = round(price * (1 - vol_factor), 2)
+            entry_hi = round(price * (1 + vol_factor * 0.5), 2)
+            t1_mult = max(0.03, min(0.50, abs(car)))
+            t2_mult = max(0.05, min(0.50, abs(car) * 1.8))
+            target1 = round(price * (1 + t1_mult), 2)
+            target2 = round(price * (1 + t2_mult), 2)
+            stop_pct = max(abs(car) * 0.6, 0.05)
+            stop = round(price * (1 - stop_pct), 2)
+        else:
+            entry_lo = round(price * (1 - vol_factor * 0.5), 2)
+            entry_hi = round(price * (1 + vol_factor), 2)
+            t1_mult = max(0.03, min(0.50, abs(car)))
+            t2_mult = max(0.05, min(0.50, abs(car) * 1.8))
+            target1 = round(price * (1 - t1_mult), 2)
+            target2 = round(price * (1 - t2_mult), 2)
+            stop_pct = max(abs(car) * 0.6, 0.05)
+            stop = round(price * (1 + stop_pct), 2)
+    else:
+        # Fallback: dumb multipliers when no ML prediction
+        if direction == 'long':
+            entry_lo = round(price * 0.96, 2)
+            entry_hi = round(price * 1.04, 2)
+            target1 = round(price * 1.20, 2)
+            target2 = round(price * 1.35, 2)
+            stop = round(price * 0.88, 2)
+        else:
+            entry_lo = round(price * 0.96, 2)
+            entry_hi = round(price * 1.04, 2)
+            target1 = round(price * 0.80, 2)
+            target2 = round(price * 0.65, 2)
+            stop = round(price * 1.12, 2)
+
+    return {
+        'entry_lo': entry_lo, 'entry_hi': entry_hi,
+        'target1': target1, 'target2': target2, 'stop': stop,
+    }
+
+
 def export_brain_data(conn: sqlite3.Connection) -> None:
     """Export brain_signals.json + brain_stats.json for the frontend."""
     log.info("=== Exporting Brain Data ===")
@@ -4014,11 +4201,18 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
     MAX_PER_TICKER = 3
     EXPORT_LIMIT = 50
     cur.execute("""
-        SELECT ticker, price_at_signal, signal_date, source, total_score,
+        SELECT id, ticker, price_at_signal, signal_date, source, total_score,
+               score_base, score_magnitude, score_converge, score_person,
                convergence_tier, has_convergence, representative, insider_name,
                insider_role, transaction_type, person_hit_rate_30d,
                person_trade_count, sector, car_30d,
-               same_ticker_signals_7d, ml_confidence, predicted_car
+               same_ticker_signals_7d, ml_confidence, predicted_car,
+               party, chamber, trade_size_range,
+               momentum_1m, momentum_3m, volume_spike,
+               price_proximity_52wk, market_cap_bucket, vix_at_signal,
+               days_to_earnings, disclosure_delay, relative_position_size,
+               convergence_sources, person_avg_car_30d, sector_avg_car,
+               days_since_last_buy, insider_buy_ratio_90d
         FROM signals
         WHERE signal_date >= date('now', '-90 days')
           AND total_score IS NOT NULL
@@ -4040,9 +4234,29 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         if len(rows) >= EXPORT_LIMIT:
             break
 
-    signals_out = []
+    # Prepare factor attribution data
+    export_ids = set()
+    rows_dicts = []
     for row in rows:
         r = dict(zip(cols, row))
+        rows_dicts.append(r)
+        export_ids.add(r['id'])
+
+    # Load feature importance + raw features for factor computation
+    weights = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
+    feature_importance = weights.get('_feature_importance', {})
+
+    factors_map = {}
+    try:
+        from backtest.ml_engine import prepare_features_all
+        X_enc, all_ids, _, _, _, X_raw = prepare_features_all(conn)
+        if not X_raw.empty and feature_importance:
+            factors_map = compute_signal_factors(X_raw, all_ids, export_ids, feature_importance)
+    except Exception as e:
+        log.warning(f"Could not compute signal factors: {e}")
+
+    signals_out = []
+    for r in rows_dicts:
         price = r['price_at_signal'] or 0
         tx = (r['transaction_type'] or '').lower()
         is_sale = 'sale' in tx or 'disposition' in tx
@@ -4058,7 +4272,6 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             note_parts.append(f"Tier {r['convergence_tier']} convergence")
         if (r['same_ticker_signals_7d'] or 0) >= 3:
             note_parts.append("cluster")
-        # Add company name if known and not already obvious
         company = TICKER_NAMES.get(r['ticker'])
         if company:
             note_parts.append(company)
@@ -4066,18 +4279,40 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
 
         person = r['representative'] or r['insider_name'] or ''
 
-        if direction == 'long':
-            entry_lo = round(price * 0.96, 2) if price else None
-            entry_hi = round(price * 1.04, 2) if price else None
-            target1 = round(price * 1.20, 2) if price else None
-            target2 = round(price * 1.35, 2) if price else None
-            stop = round(price * 0.88, 2) if price else None
-        else:
-            entry_lo = round(price * 0.96, 2) if price else None
-            entry_hi = round(price * 1.04, 2) if price else None
-            target1 = round(price * 0.80, 2) if price else None
-            target2 = round(price * 0.65, 2) if price else None
-            stop = round(price * 1.12, 2) if price else None
+        # Smart targets from ML predictions
+        targets = compute_smart_targets(
+            price, r.get('predicted_car'), r.get('momentum_1m'), direction
+        )
+
+        # Score breakdown
+        score_breakdown = None
+        if r.get('score_base') is not None:
+            score_breakdown = {
+                'base': round(r['score_base'], 1),
+                'magnitude': round(r['score_magnitude'], 1),
+                'convergence': round(r['score_converge'], 1),
+                'person': round(r['score_person'], 1),
+            }
+
+        # Signal context
+        context = {
+            'person': person,
+            'insider_role': r['insider_role'] or '',
+            'party': r.get('party') or '',
+            'chamber': r.get('chamber') or '',
+            'trade_size_range': r.get('trade_size_range') or '',
+            'signal_date': r['signal_date'],
+            'disclosure_delay': r.get('disclosure_delay'),
+            'convergence_sources': r.get('convergence_sources') or '',
+        }
+
+        # Predicted move as percentage
+        pred_car = r.get('predicted_car')
+        predicted_move = round(pred_car * 100, 1) if pred_car is not None else None
+
+        # Win probability from ml_confidence
+        ml_conf = r.get('ml_confidence')
+        win_probability = round(ml_conf * 100, 1) if ml_conf is not None else None
 
         signals_out.append({
             'ticker': r['ticker'],
@@ -4095,14 +4330,41 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             'person_trade_count': r['person_trade_count'] or 0,
             'insider_role': r['insider_role'],
             'sector': r['sector'],
-            'ml_confidence': round(r['ml_confidence'], 3) if r.get('ml_confidence') is not None else None,
-            'predicted_car': round(r['predicted_car'] * 100, 1) if r.get('predicted_car') is not None else None,
-            'entry_lo': entry_lo,
-            'entry_hi': entry_hi,
-            'target1': target1,
-            'target2': target2,
-            'stop': stop,
+            'ml_confidence': round(ml_conf, 3) if ml_conf is not None else None,
+            'predicted_car': predicted_move,
+            # New enriched fields
+            'score_breakdown': score_breakdown,
+            'factors': factors_map.get(r['id'], []),
+            'context': context,
+            'win_probability': win_probability,
+            'predicted_move': predicted_move,
+            'time_horizon': '30-day forward outlook',
+            # Smart targets
+            'entry_lo': targets['entry_lo'],
+            'entry_hi': targets['entry_hi'],
+            'target1': targets['target1'],
+            'target2': targets['target2'],
+            'stop': targets['stop'],
         })
+
+    # Population stats for context (percentiles across all scored signals)
+    import numpy as np
+    pop_rows = cur.execute(
+        "SELECT total_score, ml_confidence, predicted_car FROM signals "
+        "WHERE total_score IS NOT NULL"
+    ).fetchall()
+    population = {}
+    if pop_rows:
+        scores_arr = np.array([r[0] or 0 for r in pop_rows])
+        conf_arr = np.array([r[1] or 0 for r in pop_rows])
+        car_arr = np.array([(r[2] or 0) * 100 for r in pop_rows])
+        for name, arr in [('total_score', scores_arr), ('ml_confidence', conf_arr), ('predicted_car', car_arr)]:
+            population[name] = {
+                'p25': round(float(np.percentile(arr, 25)), 2),
+                'p50': round(float(np.percentile(arr, 50)), 2),
+                'p75': round(float(np.percentile(arr, 75)), 2),
+                'p90': round(float(np.percentile(arr, 90)), 2),
+            }
 
     # Exits: EDGAR sales from last 30 days
     cur.execute("""
@@ -4129,6 +4391,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         'generated': now,
         'signals': signals_out,
         'exits': exits_out,
+        'population': population,
     }
     save_json(BRAIN_SIGNALS, brain_signals)
     log.info(f"Exported {len(signals_out)} signals + {len(exits_out)} exits → brain_signals.json")

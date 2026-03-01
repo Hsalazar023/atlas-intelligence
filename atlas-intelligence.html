@@ -531,9 +531,9 @@ button,input,select{font-family:var(--sans);outline:none}
       <div class="card-hd"><div class="card-title">Top Signals — All Sources · Rolling 30 Days</div><div class="card-action" onclick="goPage('ideas',document.querySelector('.nav-item:nth-child(6)'))">View Trade Ideas →</div></div>
       <div class="tbl-wrap" style="max-height:480px;overflow-y:auto">
         <table class="tbl">
-          <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">ML Conf</th><th>Direction</th></tr></thead>
+          <thead><tr><th onclick="sortTbl(this)">Security</th><th>Signal Type</th><th>Actor / Event</th><th class="c" onclick="sortTbl(this)">Score</th><th class="r" onclick="sortTbl(this)">ML Conf</th><th class="r" onclick="sortTbl(this)">Predicted</th><th>Direction</th></tr></thead>
           <tbody id="top-signals-tbl">
-            <tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
+            <tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">
               <span class="new-pulse" style="display:inline-block;margin-right:6px"></span>
               Computing live convergence scores...
             </td></tr>
@@ -2391,7 +2391,7 @@ function renderTopSignals(){
     return b.sc.total-a.sc.total;
   }).slice(0,20);
   if(!rows.length){
-    tbody.innerHTML='<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No signals above threshold yet — feeds loading...</td></tr>';
+    tbody.innerHTML='<tr><td colspan="7" style="padding:16px;text-align:center;color:var(--muted);font-size:11px">No signals above threshold yet — feeds loading...</td></tr>';
     return;
   }
   var html='';
@@ -2413,12 +2413,17 @@ function renderTopSignals(){
     var totalCls=Math.abs(sc.total)>=85?'sc4':Math.abs(sc.total)>=65?'sc3':'sc1';
     var mlConf=t&&t.mlConfidence?Math.round(t.mlConfidence*100)+'%':'—';
     var confCls=t&&t.mlConfidence>=0.6?'up':t&&t.mlConfidence>=0.5?'':'dn';
+    var predMove=t&&t.predictedMove!=null?(t.predictedMove>=0?'+':'')+t.predictedMove.toFixed(1)+'%':'—';
+    var predCls=t&&t.predictedMove!=null?(t.predictedMove>=0?'up':'dn'):'';
+    // Include signal date in actor column
+    var actorDate=t&&t.sigDate?' <span style="color:var(--muted);font-size:9px">'+t.sigDate+'</span>':'';
     html+='<tr>'
       +'<td><div class="sym">'+ticker+'</div></td>'
       +'<td><span class="tag '+tagCls+'">'+sigType+'</span></td>'
-      +'<td style="font-size:11px">'+actor+'</td>'
+      +'<td style="font-size:11px">'+actor+actorDate+'</td>'
       +'<td class="c"><span class="score '+totalCls+'">'+fmtScore(sc.total)+'</span></td>'
       +'<td class="r"><span class="val '+confCls+'">'+mlConf+'</span></td>'
+      +'<td class="r"><span class="val '+predCls+'">'+predMove+'</span></td>'
       +'<td>'+dirTag+'</td>'
       +'</tr>';
   });
@@ -2592,9 +2597,106 @@ function renderNotifications(){
 }
 
 // ═══════════════════════════════════════════════════════
-// renderSignalIdeas() — auto-generate trade idea cards when score ≥ 65
+// renderSignalIdeas() — auto-generate enriched trade idea cards
 // Watchlist tier for scores 40–64; ideas tier for scores ≥ 65
 // ═══════════════════════════════════════════════════════
+
+// Helper: score breakdown bar
+function renderScoreBar(t){
+  if(!t||!t.scoreBreakdown) return '';
+  var sb=t.scoreBreakdown;
+  var total=Math.round((sb.base||0)+(sb.magnitude||0)+(sb.convergence||0)+(sb.person||0));
+  var bW=Math.max(0,Math.min(100,sb.base/100*100));
+  var mW=Math.max(0,Math.min(100,sb.magnitude/100*100));
+  var cW=Math.max(0,Math.min(100,sb.convergence/100*100));
+  var pW=Math.max(0,Math.min(100,sb.person/100*100));
+  return '<div style="margin:8px 0 4px">'
+    +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Score Breakdown</div>'
+    +'<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--bg-3);margin-bottom:3px">'
+    +'<div style="width:'+bW+'%;background:var(--blue-lt)" title="Base '+sb.base+'"></div>'
+    +'<div style="width:'+Math.abs(mW)+'%;background:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'" title="Magnitude '+sb.magnitude+'"></div>'
+    +'<div style="width:'+cW+'%;background:var(--amber)" title="Convergence '+sb.convergence+'"></div>'
+    +'<div style="width:'+pW+'%;background:var(--purple,#a78bfa)" title="Person '+sb.person+'"></div>'
+    +'</div>'
+    +'<div style="font-size:9px;color:var(--muted)">'
+    +'<span style="color:var(--blue-lt)">Base '+sb.base.toFixed(0)+'</span>'
+    +' + <span style="color:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'">Mag '+(sb.magnitude>=0?'+':'')+sb.magnitude.toFixed(0)+'</span>'
+    +' + <span style="color:var(--amber)">Conv '+sb.convergence.toFixed(0)+'</span>'
+    +' + <span style="color:var(--purple,#a78bfa)">Person '+sb.person.toFixed(0)+'</span>'
+    +'</div></div>';
+}
+
+// Helper: signal context line (who, how much, when)
+function renderSignalContext(t){
+  if(!t||!t.context) return '';
+  var c=t.context;
+  var parts=[];
+  if(c.person) parts.push(c.person);
+  if(c.insider_role&&c.insider_role!=='Other') parts.push(c.insider_role);
+  if(c.trade_size_range) parts.push(c.trade_size_range);
+  if(c.signal_date) parts.push(c.signal_date);
+  if(c.party) parts.push(c.party);
+  if(c.chamber) parts.push(c.chamber);
+  if(!parts.length) return '';
+  return '<div style="font-size:10.5px;color:var(--text-s);margin-bottom:6px">'+parts.join(' · ')+'</div>';
+}
+
+// Helper: key factors list
+function renderFactors(t){
+  if(!t||!t.factors||!t.factors.length) return '';
+  var html='<div style="margin:6px 0">'
+    +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Key Factors</div>';
+  t.factors.slice(0,5).forEach(function(f){
+    var arrow=f.direction==='bullish'?'▲':'▼';
+    var color=f.direction==='bullish'?'var(--green-lt)':'var(--red-lt)';
+    html+='<div style="font-size:10.5px;margin-bottom:2px">'
+      +'<span style="color:'+color+';font-weight:600;margin-right:4px">'+arrow+'</span>'
+      +'<span style="color:var(--text-s)">'+f.label+'</span>'
+      +' <span style="color:var(--muted);font-size:9px">('+f.percentile_label+')</span>'
+      +'</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// Helper: ML analysis line (win prob, predicted move, horizon)
+function renderMLAnalysis(t){
+  if(!t) return '';
+  var parts=[];
+  if(t.winProbability!=null){
+    var wpCls=t.winProbability>=60?'up':t.winProbability>=50?'':'dn';
+    parts.push('<span class="val '+wpCls+'" style="font-weight:600">Win: '+t.winProbability.toFixed(0)+'%</span>');
+  }
+  if(t.predictedMove!=null){
+    var pmCls=t.predictedMove>=0?'up':'dn';
+    parts.push('<span class="val '+pmCls+'" style="font-weight:600">Move: '+(t.predictedMove>=0?'+':'')+t.predictedMove.toFixed(1)+'%</span>');
+  }
+  if(t.timeHorizon) parts.push('<span style="color:var(--muted)">'+t.timeHorizon+'</span>');
+  if(!parts.length) return '';
+  return '<div style="font-size:10.5px;margin:6px 0;display:flex;gap:10px;align-items:center">'
+    +parts.join('<span style="color:var(--border)">|</span>')+'</div>';
+}
+
+// Helper: smart price levels
+function renderPriceLevels(t){
+  if(!t||!t.entryLo) return '';
+  var fmt=function(v){return v!=null?'$'+v.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}):'-';};
+  return '<div style="display:flex;gap:0;margin-top:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px">'
+    +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
+    +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Entry</div>'
+    +'<div style="font-weight:600;color:var(--text-s)">'+fmt(t.entryLo)+'–'+fmt(t.entryHi)+'</div></div>'
+    +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
+    +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T1</div>'
+    +'<div style="font-weight:600;color:var(--green-lt)">'+fmt(t.target1)+'</div></div>'
+    +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
+    +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T2</div>'
+    +'<div style="font-weight:600;color:var(--green-lt)">'+fmt(t.target2)+'</div></div>'
+    +'<div style="flex:1;padding:6px 8px">'
+    +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Stop</div>'
+    +'<div style="font-weight:600;color:var(--red-lt)">'+fmt(t.stop)+'</div></div>'
+    +'</div>';
+}
+
 function renderSignalIdeas(){
   var container=document.getElementById('idea-cards-container');
   if(!container) return;
@@ -2624,9 +2726,8 @@ function renderSignalIdeas(){
     if(msBoxEl) msBoxEl.textContent=maxScore||'—';
     return;
   }
-  var now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   var html='';
-  // Trade Ideas section
+  // Trade Ideas section — enriched cards
   if(ideas.length){
     html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue-lt);margin-bottom:10px">Trade Ideas — Score ≥ '+IDEA_THRESHOLD+'</div>';
     html+=ideas.map(function(r){
@@ -2634,44 +2735,60 @@ function renderSignalIdeas(){
       var parts=[];
       if(sc.congress.count>0) parts.push(sc.congress.count+' congressional buy'+(sc.congress.count>1?'s':''));
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
-      // Use Brain note when live feed data is sparse
       if(!parts.length&&t&&t.note) parts.push(t.note);
       var signal=parts.join(' · ')||'Convergence signal';
       var scoreCls=sc.total>=95?'sc4':sc.total>=IDEA_THRESHOLD?'sc3':'sc1';
       var srcTag=t&&t.source==='congress'?'<span class="tag t-warn">Congress</span>':'<span class="tag t-buy">EDGAR</span>';
-      var tag=sc.hasConvergence?'<span class="tag t-clus">Multi-Source</span>':srcTag;
-      // Build "why this signal" context line from Brain data
-      var ctx=[];
-      if(t&&t.mlConfidence) ctx.push(Math.round(t.mlConfidence*100)+'% ML confidence');
-      if(t&&t.predictedCar!=null) ctx.push((t.predictedCar>=0?'+':'')+t.predictedCar.toFixed(1)+'% predicted');
-      if(t&&t.personHitRate!=null&&t.personTradeCount>=3) ctx.push('Person '+Math.round(t.personHitRate*100)+'% hit ('+t.personTradeCount+' trades)');
-      if(t&&t.insiderRole&&t.insiderRole!=='Other') ctx.push(t.insiderRole);
-      if(sc.hasConvergence) ctx.push('Tier '+(t?t.convergenceTier:'')+' convergence');
-      var ctxLine=ctx.length?ctx.join(' · '):'Engine-generated · '+now;
-      return '<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
-        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
-        +'<div><div style="display:flex;align-items:center;gap:6px"><span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'+tag+'</div>'
-        +'<div class="sym-sub" style="margin-top:3px">'+signal+'</div></div>'
+      var convTag=sc.hasConvergence||(t&&t.hasConvergence)?'<span class="tag t-clus">Multi-Source</span>':'';
+      var tag=convTag||(srcTag);
+
+      // Card header: ticker, tags, score
+      var card='<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'
+        +'<div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+        +'<span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'
+        +tag+'</div></div>'
         +'<span class="score '+scoreCls+'" style="font-size:17px;flex-shrink:0">'+fmtScore(sc.total)+'</span>'
-        +'</div>'
-        +'<div style="font-size:10px;color:var(--muted)">'+ctxLine+'</div>'
         +'</div>';
+
+      // Signal context line
+      card+=renderSignalContext(t);
+
+      // Score breakdown bar (if Brain data available)
+      card+=renderScoreBar(t);
+
+      // Key factors
+      card+=renderFactors(t);
+
+      // ML analysis: win probability, predicted move, time horizon
+      card+=renderMLAnalysis(t);
+
+      // Smart price levels
+      card+=renderPriceLevels(t);
+
+      card+='</div>';
+      return card;
     }).join('');
   }
-  // Watchlist section
+  // Watchlist section — compact
   if(watchlist.length){
     html+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:16px 0 10px">Monitoring — Score '+WATCH_THRESHOLD+'–'+(IDEA_THRESHOLD-1)+'</div>';
     html+=watchlist.slice(0,8).map(function(r){
-      var sc=r.sc; var ticker=r.ticker;
+      var sc=r.sc; var ticker=r.ticker; var t=TRACKED[ticker];
       var parts=[];
       if(sc.congress.count>0) parts.push(sc.congress.count+' cong. trade'+(sc.congress.count>1?'s':''));
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
       var signal=parts.join(' · ')||'Signal activity';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
+      var watchCard='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
         +'<div><div class="sym" style="font-size:13px;font-weight:600">'+ticker+'</div>'
-        +'<div class="sym-sub" style="margin-top:1px">'+signal+'</div></div>'
-        +'<span class="score sc1" style="font-size:13px">'+fmtScore(sc.total)+'</span>'
-        +'</div>';
+        +'<div class="sym-sub" style="margin-top:1px">'+signal+'</div>';
+      // Mini ML line for watchlist
+      if(t&&t.predictedMove!=null){
+        var pmCls=t.predictedMove>=0?'up':'dn';
+        watchCard+='<div style="font-size:9px;margin-top:2px"><span class="val '+pmCls+'">'+(t.predictedMove>=0?'+':'')+t.predictedMove.toFixed(1)+'%</span> predicted</div>';
+      }
+      watchCard+='</div><span class="score sc1" style="font-size:13px">'+fmtScore(sc.total)+'</span></div>';
+      return watchCard;
     }).join('');
   }
   container.innerHTML=html;
@@ -3199,9 +3316,18 @@ function loadBrainSignals(){
           personHitRate: s.person_hit_rate,
           personTradeCount: s.person_trade_count || 0,
           sector: s.sector || '',
-          insiderRole: s.insider_role || ''
+          insiderRole: s.insider_role || '',
+          // Enriched Brain fields
+          scoreBreakdown: s.score_breakdown || null,
+          factors: s.factors || [],
+          context: s.context || {},
+          winProbability: s.win_probability,
+          predictedMove: s.predicted_move,
+          timeHorizon: s.time_horizon || ''
         };
       });
+      // Store population stats globally
+      window.BRAIN_POPULATION = data.population || {};
       if(Object.keys(newTracked).length > 0){
         TRACKED = newTracked;
       }

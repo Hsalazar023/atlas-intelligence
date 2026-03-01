@@ -118,7 +118,8 @@ def prepare_features_all(conn: sqlite3.Connection):
     """Extract features for ALL signals (including those without outcomes).
 
     Used for scoring — no outcome filter so recent/actionable signals are included.
-    Returns (X, ids, dates, tickers, cars) where cars may be NaN for pending signals.
+    Returns (X, ids, dates, tickers, cars, X_raw) where cars may be NaN for pending
+    signals and X_raw is the pre-encoded feature DataFrame for factor attribution.
     """
     import pandas as pd
 
@@ -128,7 +129,8 @@ def prepare_features_all(conn: sqlite3.Connection):
     ).fetchall()
 
     if not rows:
-        return pd.DataFrame(), np.array([]), np.array([]), np.array([]), np.array([])
+        empty = pd.DataFrame()
+        return empty, np.array([]), np.array([]), np.array([]), np.array([]), empty
 
     data = [dict(r) for r in rows]
     df = pd.DataFrame(data)
@@ -137,6 +139,8 @@ def prepare_features_all(conn: sqlite3.Connection):
     tickers = df['ticker'].values
     cars = df['car_30d'].values.astype(float)
 
+    X_raw = df[FEATURE_COLUMNS].copy().fillna(0).infer_objects(copy=False)
+
     X = df[FEATURE_COLUMNS].copy()
     for col in CATEGORICAL_FEATURES:
         if col in X.columns:
@@ -144,7 +148,7 @@ def prepare_features_all(conn: sqlite3.Connection):
             X[col] = X[col].astype('category').cat.codes
 
     X = X.fillna(0).infer_objects(copy=False)
-    return X, ids, dates, tickers, cars
+    return X, ids, dates, tickers, cars, X_raw
 
 
 def train_full_sample(conn: sqlite3.Connection):
