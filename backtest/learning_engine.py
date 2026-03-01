@@ -4038,6 +4038,33 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
             health['suggestions'].append(f"Feature importance shifts (>50%): {', '.join(big_shifts[:5])}")
         health['checks'].append(f"Feature drift: {len(big_shifts)} features shifted >50%")
 
+    # ── 8. Feature Auto-Pruning Candidates ──
+    # Track features consistently <1% importance across consecutive runs
+    PRUNE_THRESHOLD = 0.01
+    PRUNE_CONSECUTIVE_RUNS = 3
+    fi_history = cur.execute(
+        "SELECT feature_importance_json FROM brain_runs "
+        "WHERE feature_importance_json IS NOT NULL ORDER BY id DESC LIMIT ?",
+        (PRUNE_CONSECUTIVE_RUNS,)
+    ).fetchall()
+    if len(fi_history) >= PRUNE_CONSECUTIVE_RUNS:
+        all_fi = [json.loads(r['feature_importance_json']) for r in fi_history]
+        # Find features below threshold in ALL recent runs
+        candidates = []
+        all_features = set(all_fi[0].keys())
+        for feat in all_features:
+            if all(fi.get(feat, 0) < PRUNE_THRESHOLD for fi in all_fi):
+                avg_imp = sum(fi.get(feat, 0) for fi in all_fi) / len(all_fi)
+                candidates.append((feat, round(avg_imp, 4)))
+        candidates.sort(key=lambda x: x[1])
+        health['prune_candidates'] = [{'feature': f, 'avg_importance': i} for f, i in candidates]
+        if candidates:
+            names = ', '.join(f'{f}={i:.3f}' for f, i in candidates)
+            health['suggestions'].append(
+                f"Prune candidates (<1% importance for {PRUNE_CONSECUTIVE_RUNS}+ runs): {names}"
+            )
+        health['checks'].append(f"Auto-prune: {len(candidates)} features below 1% for {PRUNE_CONSECUTIVE_RUNS}+ runs")
+
     # ── Summary ──
     log.info(f"Health status: {health['status'].upper()}")
     for c in health['checks']:
