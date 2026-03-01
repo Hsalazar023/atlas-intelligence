@@ -3672,6 +3672,92 @@ REP_COMMITTEES: dict[str, str] = {
 }
 
 
+def score_all_signals(conn: sqlite3.Connection) -> int:
+    """Score ALL signals using full-sample ML models. Writes total_score to DB.
+
+    Scoring formula (0-100):
+      base      = clf_probability × 60          (ML confidence)
+      magnitude = clamp(reg_car × 200, -20, 25) (predicted return bonus/penalty)
+      converge  = convergence_tier × 5          (convergence bonus: 0/5/10)
+      person    = clamp(person_hit_rate × 8, 0, 5) (track record bonus)
+      total     = clamp(sum, 0, 100)
+    """
+    log.info("=== Scoring All Signals ===")
+
+    try:
+        from backtest.ml_engine import train_full_sample, prepare_features_all
+    except ImportError:
+        log.warning("ML dependencies not installed — skipping scoring")
+        return 0
+
+    # Train full-sample models
+    models = train_full_sample(conn)
+    if models is None:
+        log.warning("Could not train models — skipping scoring")
+        return 0
+
+    clf_rf, clf_lgb, reg_rf, reg_lgb = models
+
+    # Prepare features for ALL signals
+    X, ids, dates, tickers, cars = prepare_features_all(conn)
+    if len(X) == 0:
+        log.warning("No signals to score")
+        return 0
+
+    # Classification: ensemble P(beat SPY)
+    clf_probs = (clf_rf.predict_proba(X)[:, 1] + clf_lgb.predict_proba(X)[:, 1]) / 2
+
+    # Regression: ensemble predicted CAR
+    reg_preds = (reg_rf.predict(X) + reg_lgb.predict(X)) / 2
+
+    # Fetch convergence + person data for bonus terms
+    rows = conn.execute(
+        "SELECT id, convergence_tier, person_hit_rate_30d FROM signals"
+    ).fetchall()
+    meta = {r['id']: (r['convergence_tier'] or 0, r['person_hit_rate_30d'] or 0) for r in rows}
+
+    # Compute scores
+    updates = []
+    scores = []
+    for i in range(len(ids)):
+        sig_id = int(ids[i])
+        conv_tier, person_hr = meta.get(sig_id, (0, 0))
+
+        base = float(clf_probs[i]) * 60
+        magnitude = max(-20, min(25, float(reg_preds[i]) * 200))
+        converge = float(conv_tier) * 5
+        person = max(0, min(5, float(person_hr) * 8))
+        total = max(0, min(100, base + magnitude + converge + person))
+        total = round(total, 2)
+
+        updates.append((total, sig_id))
+        scores.append(total)
+
+    # Batch update
+    conn.executemany("UPDATE signals SET total_score = ? WHERE id = ?", updates)
+    conn.commit()
+
+    # Log distribution
+    import numpy as np
+    scores_arr = np.array(scores)
+    log.info(f"Scored {len(scores)} signals")
+    log.info(f"  Distribution: mean={scores_arr.mean():.1f}, median={np.median(scores_arr):.1f}, "
+             f"min={scores_arr.min():.1f}, max={scores_arr.max():.1f}")
+
+    # Score tier counts
+    tiers = {
+        '80-100 (strong buy)': int(np.sum(scores_arr >= 80)),
+        '60-80 (buy)': int(np.sum((scores_arr >= 60) & (scores_arr < 80))),
+        '40-60 (neutral)': int(np.sum((scores_arr >= 40) & (scores_arr < 60))),
+        '20-40 (weak)': int(np.sum((scores_arr >= 20) & (scores_arr < 40))),
+        '0-20 (avoid)': int(np.sum(scores_arr < 20)),
+    }
+    for tier, count in tiers.items():
+        log.info(f"  {tier}: {count}")
+
+    return len(scores)
+
+
 def export_brain_data(conn: sqlite3.Connection) -> None:
     """Export brain_signals.json + brain_stats.json for the frontend."""
     log.info("=== Exporting Brain Data ===")
@@ -3991,7 +4077,14 @@ def run_daily(conn: sqlite3.Connection) -> None:
     generate_analysis_report(conn)
     generate_diagnostics_html(conn)
 
-    # 8. Auto-export brain data for frontend
+    # 8. Score all signals with ML models
+    try:
+        scored = score_all_signals(conn)
+        log.info(f"Scored {scored} signals with ML models")
+    except Exception as e:
+        log.warning(f"Signal scoring failed: {e}")
+
+    # 9. Auto-export brain data for frontend
     export_brain_data(conn)
 
 
@@ -4035,6 +4128,21 @@ def run_analyze(conn: sqlite3.Connection) -> None:
         import traceback
         traceback.print_exc()
 
+    # 3b. Run walk-forward regression (for diagnostics + magnitude validation)
+    reg_result = None
+    try:
+        from backtest.ml_engine import walk_forward_regression
+        log.info("Running walk-forward regression...")
+        reg_result = walk_forward_regression(conn)
+        log.info(f"Regression results: {reg_result.n_folds} folds, OOS IC={reg_result.oos_ic}, "
+                 f"OOS RMSE={reg_result.oos_rmse}")
+    except ImportError:
+        log.warning("ML dependencies not installed — skipping regression")
+    except Exception as e:
+        log.warning(f"Regression training failed: {e}")
+        import traceback
+        traceback.print_exc()
+
     # 4. Save weights — only update if ML outperforms current by >5%
     threshold = weights.pop('_optimal_threshold', 65)
     output = {
@@ -4068,6 +4176,18 @@ def run_analyze(conn: sqlite3.Connection) -> None:
     generate_analysis_report(conn, ml_result=ml_result)
     generate_diagnostics_html(conn, ml_result=ml_result)
 
+    # 7. Score all signals with full-sample ML models
+    try:
+        scored = score_all_signals(conn)
+        log.info(f"Scored {scored} signals with ML models")
+    except Exception as e:
+        log.warning(f"Signal scoring failed: {e}")
+        import traceback
+        traceback.print_exc()
+
+    # 8. Auto-export brain data for frontend
+    export_brain_data(conn)
+
 
 # ── CLI Entry Point ──────────────────────────────────────────────────────────
 
@@ -4079,6 +4199,7 @@ def main():
     parser.add_argument('--bootstrap', action='store_true', help='Run historical bootstrap')
     parser.add_argument('--diagnostics', action='store_true', help='Generate diagnostics HTML + analysis report')
     parser.add_argument('--export', action='store_true', help='Export brain_signals.json + brain_stats.json for frontend')
+    parser.add_argument('--score', action='store_true', help='Score all signals with ML + export brain data')
     args = parser.parse_args()
 
     conn = init_db()
@@ -4091,6 +4212,10 @@ def main():
         generate_analysis_report(conn)
         generate_diagnostics_html(conn)
         print(f"Diagnostics saved to:\n  {ALE_DIAGNOSTICS_HTML}\n  {ALE_ANALYSIS_REPORT}")
+    elif args.score:
+        scored = score_all_signals(conn)
+        export_brain_data(conn)
+        print(f"Scored {scored} signals + exported:\n  {BRAIN_SIGNALS}\n  {BRAIN_STATS}")
     elif args.export:
         export_brain_data(conn)
         print(f"Brain data exported to:\n  {BRAIN_SIGNALS}\n  {BRAIN_STATS}")

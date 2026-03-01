@@ -1,63 +1,67 @@
 # ATLAS Brain — Status & Health
-*Updated after each bootstrap/analyze run. Archive old sections when stale.*
+*Updated after each analyze run. Current: Mar 1, 2026.*
 
 ---
 
-## Latest Run: Feb 28, 2026
+## Latest Run: Mar 1, 2026
 
-### Critical Finding: EDGAR Data Contamination
-**~96% of 10,563 EDGAR signals are NOT purchases.** They're grants (48%), exercises (10%), sales (14%), tax withholding, and other Form 4 transaction types. The bootstrap ingested all Form 4 filings because EFTS doesn't expose transaction type — XML must be parsed to determine direction.
+### Post-Cleanup Results
+| Metric | Pre-Cleanup (Feb 28) | Post-Cleanup (Mar 1) | Change |
+|---|---|---|---|
+| Total signals | 12,769 | 3,212 | -75% (noise removed) |
+| EDGAR signals | 10,563 | 1,005 | -90% (buys only) |
+| OOS IC | -0.02 | **+0.072** | Positive! |
+| OOS Hit Rate | ~50% | **55.3%** | +5.3pp |
+| Walk-forward folds | — | 22 | ✅ |
 
-**Impact:** Brain trained on ~10,100 noise signals. OOS IC went negative (-0.02). Insider features (role, trade size, disclosure delay) had near-zero importance because most signals weren't real insider buys.
+### Scoring Pipeline: Live
+All 3,212 signals scored (0-100). Brain export deployed to Vercel.
 
-**Fix:** `backfill_edgar_xml.py` running — parses XML for every EDGAR signal, deletes non-purchases, enriches real buys. Bootstrap also fixed to filter at insertion.
-
-### Summary (Pre-Cleanup — will change after backfill)
-| Metric | Value | Assessment |
+| Tier | Count | Pct |
 |---|---|---|
-| Total signals | 12,769 (2,206 congress + 10,563 EDGAR) | ⚠️ ~10K EDGAR signals are noise |
-| OOS IC | -0.0209 | ❌ Negative — noise is the cause |
-| Regression avg IC | 0.0889 | ⚠️ Moderate |
-| RMSE | 0.1434 | Baseline |
-
-### Fixed Issues
-| Issue | Status |
-|---|---|
-| CAR winsorization (was +1,733% max) | ✅ Hard clip [-100%, +300%] |
-| market_cap_bucket (was 0%) | ✅ 99.4% fill |
-| sector_avg_car (was 0.8%) | ✅ 99.4% fill |
-| ML min samples (was 30/5) | ✅ 200 train / 20 test |
-| Feature importance (last fold only) | ✅ Averaged across all folds |
-| urgent_filing (0% importance) | ✅ Removed |
+| 80+ (strong buy) | 27 | 0.8% |
+| 65-79 (buy) | 125 | 3.9% |
+| 40-64 (neutral) | 1,146 | 35.7% |
+| <40 (weak/avoid) | 1,914 | 59.6% |
 
 ---
 
-## Scoring Performance (Pre-Cleanup)
-*These numbers are contaminated by ~10K non-purchase EDGAR signals. Will recompute after backfill.*
+## Data Quality
 
-| Horizon | Hit Rate | Avg CAR | Conv Hit | Conv CAR |
+| Feature | Fill Rate | Assessment |
+|---|---|---|
+| sector | 97.6% | ✅ |
+| market_cap_bucket | 97.6% | ✅ |
+| momentum_1m | 96.2% | ✅ |
+| vix_at_signal | 100% | ✅ |
+| disclosure_delay | 95.0% | ✅ |
+| person_hit_rate_30d | 73.6% | ⚠️ New traders have no history |
+| trade_pattern | 31.3% | ❌ Needs 3yr history, most lack it |
+| insider_role | 29.7% | ❌ Congress has no roles (expected); 51 EDGAR missing |
+
+### Source Quality
+| Source | Signals | Avg CAR | Hit Rate | Assessment |
 |---|---|---|---|---|
-| 30d | 45.7% | +0.69% | 52.1% | +0.20% |
-| 180d | 39.7% | +1.77% | 56.3% | +3.16% |
-| 365d | 34.3% | -0.47% | 48.6% | +9.39% |
+| EDGAR (buys) | 1,005 | **+3.71%** | 47.9% | ✅ Real alpha source |
+| Congress | 2,207 | -0.36% | 45.0% | ⚠️ Slightly negative avg |
 
-**Convergence is the edge** at longer horizons — but only 4.4% of signals have it.
-
----
-
-## ML Feature Importance (Pre-Cleanup)
-
-Top 5: momentum_3m (0.161), momentum_1m (0.135), volume_spike (0.116), momentum_6m (0.112), vix_at_signal (0.095)
-
-*Momentum dominates because insider features have no signal when 96% of "insider" data is noise. Expect insider features to gain importance after cleanup.*
+**Key insight:** EDGAR insider buys produce 10x more alpha than congressional trades. Congress signals are most valuable as convergence confirmers, not standalone plays.
 
 ---
 
-## Action Items (After Backfill Completes)
+## Convergence
+| Tier | Count | Pct |
+|---|---|---|
+| Tier 0 (none) | 844 | 26.3% |
+| Tier 1 | 1 | 0.03% |
+| Tier 2 | 2,367 | 73.7% |
 
-1. Run `--daily` then `--analyze` on clean data
-2. Compare OOS IC (baseline: -0.02, target: >0.10)
-3. Check if insider_role, trade_size_points, disclosure_delay gain ML importance
-4. Recompute convergence tiers — may trigger Tier 2 now
-5. Recompute person track records
-6. Investigate cluster_velocity=fast (-5.15% CAR)
+Tier 2 dominates because many congress signals cluster on the same tickers in the same sector/window.
+
+---
+
+## Known Issues
+1. **Top signals dominated by BITB** — 8/10 top scores are one ticker. Needs diversification.
+2. **ML weights not saving** — IC passed 0 but method still shows `feature_importance`.
+3. **Congress negative alpha** — may need down-weighting in scoring formula.
+4. **trade_pattern feature** — 31% fill rate, potentially adding noise to ML.

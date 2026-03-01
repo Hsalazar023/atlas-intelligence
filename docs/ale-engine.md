@@ -17,11 +17,13 @@ Self-improving scoring brain. Accumulates signals, tracks 5 time horizons of for
 
 | Command | Purpose |
 |---|---|
-| `--daily` | Collect signals + backfill outcomes + enrich features + generate diagnostics |
-| `--analyze` | Feature analysis + ML walk-forward + weight update + diagnostics |
+| `--daily` | Ingest + enrich + score + export + diagnostics |
+| `--analyze` | Feature analysis + ML walk-forward + weight update + score + export |
+| `--score` | Score all signals with ML + export brain data |
 | `--summary` | Console status + person leaderboards |
 | `--diagnostics` | Generate HTML dashboard + markdown analysis report (standalone) |
-| `bootstrap_historical.py` | One-time: populate DB with ~21 months of data |
+| `--export` | Export brain_signals.json + brain_stats.json only |
+| `bootstrap_historical.py` | One-time: populate DB with ~39 months of data |
 | `backfill_edgar_xml.py` | One-time: parse XML for EDGAR signals, delete non-purchases, enrich buys |
 
 ---

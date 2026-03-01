@@ -109,6 +109,72 @@ def prepare_features(conn: sqlite3.Connection):
     return X, y, ids, dates, car_clipped.values
 
 
+def prepare_features_all(conn: sqlite3.Connection):
+    """Extract features for ALL signals (including those without outcomes).
+
+    Used for scoring — no outcome filter so recent/actionable signals are included.
+    Returns (X, ids, dates, tickers, cars) where cars may be NaN for pending signals.
+    """
+    import pandas as pd
+
+    cols = ', '.join(FEATURE_COLUMNS)
+    rows = conn.execute(
+        f"SELECT id, signal_date, ticker, car_30d, {cols} FROM signals"
+    ).fetchall()
+
+    if not rows:
+        return pd.DataFrame(), np.array([]), np.array([]), np.array([]), np.array([])
+
+    data = [dict(r) for r in rows]
+    df = pd.DataFrame(data)
+    ids = df['id'].values
+    dates = df['signal_date'].values
+    tickers = df['ticker'].values
+    cars = df['car_30d'].values.astype(float)
+
+    X = df[FEATURE_COLUMNS].copy()
+    for col in CATEGORICAL_FEATURES:
+        if col in X.columns:
+            X[col] = X[col].fillna('unknown').astype(str)
+            X[col] = X[col].astype('category').cat.codes
+
+    X = X.fillna(0).infer_objects(copy=False)
+    return X, ids, dates, tickers, cars
+
+
+def train_full_sample(conn: sqlite3.Connection):
+    """Train 4 models on ALL historical data with outcomes (full sample, not walk-forward).
+
+    Returns (clf_rf, clf_lgb, reg_rf, reg_lgb) or None if insufficient data.
+    """
+    import pandas as pd
+    from sklearn.ensemble import RandomForestRegressor
+
+    X, y, ids, dates, car_winsorized = prepare_features(conn)
+    if len(X) < 50:
+        log.warning(f"Insufficient data for full-sample training ({len(X)} signals)")
+        return None
+
+    # Classification: P(beat SPY)
+    clf_rf = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
+    clf_rf.fit(X, y)
+
+    clf_lgb = lgb.LGBMClassifier(n_estimators=100, max_depth=6, random_state=42,
+                                  verbose=-1, n_jobs=-1)
+    clf_lgb.fit(X, y)
+
+    # Regression: predicted CAR magnitude
+    reg_rf = RandomForestRegressor(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
+    reg_rf.fit(X, car_winsorized)
+
+    reg_lgb = lgb.LGBMRegressor(n_estimators=100, max_depth=6, random_state=42,
+                                 verbose=-1, n_jobs=-1)
+    reg_lgb.fit(X, car_winsorized)
+
+    log.info(f"Full-sample models trained on {len(X)} signals")
+    return clf_rf, clf_lgb, reg_rf, reg_lgb
+
+
 def compute_information_coefficient(predicted, actual) -> float:
     """Spearman rank correlation between predictions and actual returns."""
     if len(predicted) < 3 or len(actual) < 3:
