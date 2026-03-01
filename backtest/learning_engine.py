@@ -2420,7 +2420,7 @@ def generate_analysis_report(conn: sqlite3.Connection, ml_result=None, reg_resul
     if scored:
         scores = sorted(r['total_score'] for r in scored)
         n_scored = len(scores)
-        quintile_bounds = [scores[int(n_scored * q)] for q in [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]] if n_scored >= 5 else []
+        quintile_bounds = [scores[min(int(n_scored * q), n_scored - 1)] for q in [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]] if n_scored >= 5 else []
         if len(quintile_bounds) == 6:
             lines.append("| Quintile | Score Range | N | Hit Rate | Avg CAR |")
             lines.append("|----------|------------|---|----------|---------|")
