@@ -1159,21 +1159,8 @@ button,input,select{font-family:var(--sans);outline:none}
 var FINNHUB_KEY  = 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g';
 var FRED_KEY     = '71a0b94ed47b56a81f405947f88d08aa'; // FRED API — 10yr Treasury yield (DGS10)
 
-// ── ACCURATE PRICES as of Feb 22, 2026 (sourced live) ──
-// Entry zones, targets & stops recalculated from CURRENT prices
-var TRACKED = {
-  RTX:  {price:205.28, entryLo:198, entryHi:208, target1:232, target2:252, stop:188, dir:'long',  sigDate:'2026-02-18', note:'Armed Svcs cluster · SB 1882'},
-  NVDA: {price:190.00, entryLo:182, entryHi:198, target1:228, target2:255, stop:168, dir:'long',  sigDate:'2026-02-17', note:'AI Subcommittee · Druckenmiller · HR 7821'},
-  OXY:  {price:51.70,  entryLo:48,  entryHi:54,  target1:62,  target2:70,  stop:44,  dir:'long',  sigDate:'2026-02-17', note:'CEO cluster · Berkshire · Third Point'},
-  TMDX: {price:135.50, entryLo:126, entryHi:140, target1:168, target2:195, stop:114, dir:'long',  sigDate:'2026-02-19', note:'CEO $4.2M · 4/4 accuracy · NOP catalyst'},
-  FCX:  {price:64.45,  entryLo:60,  entryHi:66,  target1:76,  target2:88,  stop:55,  dir:'long',  sigDate:'2026-02-12', note:'Nat. Resources buy · HR 6419 Mar 17'},
-  ITA:  {price:243.65, entryLo:235, entryHi:250, target1:272, target2:295, stop:220, dir:'long',  sigDate:'2026-02-18', note:'Defense cluster · SB 1882 ETF play · SIGNAL STALE — original entry $155–165, price ran to $243'},
-  PFE:  {price:26.65,  entryLo:25,  entryHi:28,  target1:22,  target2:19,  stop:31,  dir:'short', sigDate:'2026-02-09', note:'Dual-source bear · SB 2241 · Inst. exits'},
-  TSM:  {price:370.54, entryLo:355, entryHi:378, target1:320, target2:290, stop:400, dir:'short', sigDate:'2026-02-10', note:'Foreign Affairs full exit · Taiwan risk'},
-  META: {price:648.00, entryLo:620, entryHi:660, target1:740, target2:820, stop:578, dir:'long',  sigDate:'2026-02-18', note:'Dir. Sandberg $19.4M · Tepper +$1.2B'},
-  WFRD: {price:104.50, entryLo:98,  entryHi:108, target1:125, target2:145, stop:88,  dir:'long',  sigDate:'2026-02-18', note:'CEO+CFO cluster · 52-wk low · SIGNAL SUSPENDED — original price data was incorrect, awaiting new valid signal'},
-  SMPL: {price:33.62,  entryLo:30,  entryHi:34,  target1:26,  target2:22,  stop:37,  dir:'short', sigDate:'2026-02-16', note:'CEO 38% exit · no plan'}
-};
+// Populated dynamically by loadBrainSignals() — no hardcoded signal data
+var TRACKED = {};
 
 // ═══════════════════════════════════════════════════════
 // DYNAMIC SCORING WEIGHTS — loaded from data/optimal_weights.json
@@ -2616,7 +2603,7 @@ function renderScoreBar(t){
   var mlConfPct=t.mlConfidence?Math.round(t.mlConfidence*100)+'% ML conf':'ML confidence';
   return '<div style="margin:8px 0 4px">'
     +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Score Breakdown</div>'
-    +'<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--bg-3);margin-bottom:3px">'
+    +'<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--border-s);margin-bottom:3px">'
     +'<div style="width:'+bW+'%;background:var(--blue-lt)" title="Base '+sb.base+'"></div>'
     +'<div style="width:'+mW+'%;background:'+(sb.magnitude>=0?'var(--green-lt)':'var(--red-lt)')+'" title="Magnitude '+sb.magnitude+'"></div>'
     +(sb.convergence>0?'<div style="width:'+cW+'%;background:var(--amber)" title="Convergence '+sb.convergence+'"></div>':'')
@@ -2719,22 +2706,45 @@ function fmtPrice(v){
   return '$'+Math.round(v).toLocaleString();
 }
 
-// Helper: smart price levels
-function renderPriceLevels(t){
-  if(!t||!t.entryLo) return '';
+// Compute live price targets from current Finnhub price + predicted CAR
+function computeLiveTargets(ticker,t){
+  var pc=priceCache[ticker];
+  if(!pc||!pc.price||!t||t.predictedCar==null) return null;
+  var p=pc.price;
+  var car=Math.abs(t.predictedCar/100); // stored as %, convert to decimal
+  var isLong=(t.dir||'long')==='long';
+  var vf=0.03; // simplified vol factor (2-5% range, use 3%)
+  var t1Pct=Math.max(0.03,Math.min(car,0.50));
+  var t2Pct=Math.max(0.05,Math.min(car*1.8,0.50));
+  var stopPct=Math.max(car*0.6,0.05);
+  if(isLong){
+    return {entryLo:p*(1-vf),entryHi:p*(1+vf),target1:p*(1+t1Pct),target2:p*(1+t2Pct),stop:p*(1-stopPct)};
+  } else {
+    return {entryLo:p*(1-vf),entryHi:p*(1+vf),target1:p*(1-t1Pct),target2:p*(1-t2Pct),stop:p*(1+stopPct)};
+  }
+}
+
+// Helper: smart price levels (uses live price when available)
+function renderPriceLevels(t,ticker){
+  var lvl=computeLiveTargets(ticker,t);
+  if(!lvl&&t) lvl={entryLo:t.entryLo,entryHi:t.entryHi,target1:t.target1,target2:t.target2,stop:t.stop};
+  if(!lvl||!lvl.entryLo) return '';
+  var isShort=t&&(t.dir||'long')==='short';
+  var tgtColor=isShort?'var(--red-lt)':'var(--green-lt)';
+  var stopColor=isShort?'var(--green-lt)':'var(--red-lt)';
   return '<div style="display:flex;gap:0;margin-top:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px">'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Entry</div>'
-    +'<div style="font-weight:600;color:var(--text-s)">'+fmtPrice(t.entryLo)+'–'+fmtPrice(t.entryHi)+'</div></div>'
+    +'<div style="font-weight:600;color:var(--text-s)">'+fmtPrice(lvl.entryLo)+'–'+fmtPrice(lvl.entryHi)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T1</div>'
-    +'<div style="font-weight:600;color:var(--green-lt)">'+fmtPrice(t.target1)+'</div></div>'
+    +'<div style="font-weight:600;color:'+tgtColor+'">'+fmtPrice(lvl.target1)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px;border-right:1px solid var(--border)">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">T2</div>'
-    +'<div style="font-weight:600;color:var(--green-lt)">'+fmtPrice(t.target2)+'</div></div>'
+    +'<div style="font-weight:600;color:'+tgtColor+'">'+fmtPrice(lvl.target2)+'</div></div>'
     +'<div style="flex:1;padding:6px 8px">'
     +'<div style="color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:0.5px">Stop</div>'
-    +'<div style="font-weight:600;color:var(--red-lt)">'+fmtPrice(t.stop)+'</div></div>'
+    +'<div style="font-weight:600;color:'+stopColor+'">'+fmtPrice(lvl.stop)+'</div></div>'
     +'</div>';
 }
 
@@ -2795,8 +2805,14 @@ function renderSignalIdeas(){
         priceHtml='<span style="font-size:11px;color:var(--muted);margin-left:6px">'+fmtPrice(t.price)+' <span style="font-size:8px">at signal</span></span>';
       }
 
+      // Data attributes for filters
+      var dStr=sc.total>=86?'exc':sc.total>=76?'str':'not';
+      var dDir=t&&t.dir||'long';
+      var pm=t&&t.predictedMove!=null?Math.abs(t.predictedMove):0;
+      var dMove=pm>=50?'m50 m30 m20':pm>=30?'m30 m20':pm>=20?'m20':'';
+      var dSrc=sc.hasConvergence||(t&&t.hasConvergence)?'multi':'';
       // Card header: ticker, price, tags, score
-      var card='<div class="idea-card" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
+      var card='<div class="idea-card" data-strength="'+dStr+'" data-dir="'+dDir+'" data-horizon="mt" data-move="'+dMove+'" data-sources="'+dSrc+'" style="border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'
         +'<div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
         +'<span class="sym" style="font-size:15px;font-weight:700">'+ticker+'</span>'
@@ -2817,7 +2833,7 @@ function renderSignalIdeas(){
       card+=renderMLAnalysis(t);
 
       // Smart price levels
-      card+=renderPriceLevels(t);
+      card+=renderPriceLevels(t,ticker);
 
       card+='</div>';
       return card;
@@ -2832,7 +2848,12 @@ function renderSignalIdeas(){
       if(sc.congress.count>0) parts.push(sc.congress.count+' cong. trade'+(sc.congress.count>1?'s':''));
       if(sc.insider.count>0) parts.push(sc.insider.count+' EDGAR filing'+(sc.insider.count>1?'s':''));
       var signal=parts.join(' · ')||'Signal activity';
-      var watchCard='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
+      var wStr=sc.total>=86?'exc':sc.total>=76?'str':'not';
+      var wDir=t&&t.dir||'long';
+      var wPm=t&&t.predictedMove!=null?Math.abs(t.predictedMove):0;
+      var wMove=wPm>=50?'m50 m30 m20':wPm>=30?'m30 m20':wPm>=20?'m20':'';
+      var wSrc=sc.hasConvergence||(t&&t.hasConvergence)?'multi':'';
+      var watchCard='<div class="idea-card" data-strength="'+wStr+'" data-dir="'+wDir+'" data-horizon="mt" data-move="'+wMove+'" data-sources="'+wSrc+'" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px">'
         +'<div><div class="sym" style="font-size:13px;font-weight:600">'+ticker+'</div>'
         +'<div class="sym-sub" style="margin-top:1px">'+signal+'</div>';
       // Mini ML line for watchlist
@@ -3309,7 +3330,7 @@ function saveSMS(){showToast('Configuration Saved ✓','SMS alerts activated. Yo
 
 // ═══════════════════════════════════════════════════════
 // DYNAMIC WEIGHTS LOADER — reads data/optimal_weights.json
-// Generated weekly by optimize_weights.py (runs Sundays 02:00 UTC)
+// Generated by learning_engine.py --analyze (Brain pipeline)
 // ═══════════════════════════════════════════════════════
 function loadOptimalWeights(){
   fetch('data/optimal_weights.json')
