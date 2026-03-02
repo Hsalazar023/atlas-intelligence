@@ -245,6 +245,11 @@ def _migrate_columns(conn: sqlite3.Connection) -> None:
         # v4: person magnitude + sector momentum + repeat buyer signal
         ("sector_momentum", "REAL"),
         ("days_since_last_buy", "REAL"),
+        # v5: volume + analyst features
+        ("volume_dry_up", "INTEGER DEFAULT 0"),
+        ("analyst_revision_30d", "INTEGER"),
+        ("analyst_consensus", "REAL"),
+        ("analyst_insider_confluence", "INTEGER DEFAULT 0"),
     ]
     new_feature_cols = [
         ("avg_car_180d", "REAL"),
@@ -1121,6 +1126,58 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
         ) WHERE days_since_last_buy IS NULL
     """).rowcount
     updated += dslb
+
+    # ── 9. Volume dry-up (from existing volume_spike) ──
+    # Low volume on insider buy often signals accumulation before a move
+    vol_dry = conn.execute("""
+        UPDATE signals SET volume_dry_up = CASE
+            WHEN volume_spike IS NOT NULL AND volume_spike < 0.4 THEN 1
+            ELSE 0
+        END
+        WHERE volume_dry_up IS NULL AND volume_spike IS NOT NULL
+    """).rowcount
+    updated += vol_dry
+    if vol_dry:
+        log.info(f"Computed volume_dry_up for {vol_dry} signals")
+
+    # ── 10. Analyst features (from data/analyst_data.json) ──
+    analyst_path = DATA_DIR / "analyst_data.json"
+    if analyst_path.exists():
+        try:
+            analyst_raw = load_json(analyst_path)
+            analyst_tickers = analyst_raw.get('tickers', {})
+            if analyst_tickers:
+                needs_analyst = conn.execute(
+                    "SELECT id, ticker, source FROM signals WHERE analyst_revision_30d IS NULL"
+                ).fetchall()
+                analyst_updated = 0
+                for sig in needs_analyst:
+                    ticker = sig['ticker']
+                    a = analyst_tickers.get(ticker)
+                    if not a:
+                        # No analyst data — fill with 0/null
+                        conn.execute(
+                            "UPDATE signals SET analyst_revision_30d=0, analyst_consensus=NULL, "
+                            "analyst_insider_confluence=0 WHERE id=?",
+                            (sig['id'],)
+                        )
+                    else:
+                        rev = a.get('revision_momentum', 0) or 0
+                        consensus = a.get('analyst_consensus')
+                        # Confluence: positive revision + insider buy
+                        is_insider_buy = sig['source'] == 'edgar'
+                        confluence = 1 if (rev > 0 and is_insider_buy) else 0
+                        conn.execute(
+                            "UPDATE signals SET analyst_revision_30d=?, analyst_consensus=?, "
+                            "analyst_insider_confluence=? WHERE id=?",
+                            (rev, consensus, confluence, sig['id'])
+                        )
+                    analyst_updated += 1
+                updated += analyst_updated
+                if analyst_updated:
+                    log.info(f"Enriched analyst features for {analyst_updated} signals")
+        except Exception as e:
+            log.warning(f"Analyst enrichment failed: {e}")
 
     conn.commit()
     log.info(f"Enriched {updated} features")
@@ -3953,12 +4010,16 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     # Regression: ensemble predicted CAR
     reg_preds = (reg_rf.predict(X) + reg_lgb.predict(X)) / 2
 
-    # Fetch convergence + person + source data for bonus terms
+    # Fetch convergence + person + source + role + name + sector data for bonus terms
     rows = conn.execute(
-        "SELECT id, convergence_tier, person_hit_rate_30d, source, has_convergence FROM signals"
+        "SELECT id, convergence_tier, person_hit_rate_30d, source, has_convergence, "
+        "insider_role, representative, insider_name, sector FROM signals"
     ).fetchall()
     meta = {r['id']: (r['convergence_tier'] or 0, r['person_hit_rate_30d'] or 0,
-                      r['source'] or '', r['has_convergence'] or 0) for r in rows}
+                      r['source'] or '', r['has_convergence'] or 0,
+                      r['insider_role'] or '',
+                      r['representative'] or r['insider_name'] or '',
+                      r['sector'] or 'Unknown') for r in rows}
 
     # Load optimized coefficients if available
     weights_data = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
@@ -3980,12 +4041,30 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         log.info(f"Source quality multipliers: edgar={edgar_sq:.3f}, congress={congress_sq:.3f}, "
                  f"convergence={convergence_sq:.3f}")
 
+    # Load role quality bonuses (learned from --analyze, or defaults)
+    role_quality = weights_data.get('_role_quality', {})
+    # Defaults: COO/CFO/President get highest bonus, CEO/Director moderate
+    ROLE_QUALITY_DEFAULTS = {
+        'COO': 1.25, 'CFO': 1.25, 'President': 1.25,
+        'CEO': 1.10, 'Director': 1.10, 'Officer': 1.10,
+    }
+    if role_quality:
+        log.info(f"Role quality bonuses loaded: {len(role_quality)} roles")
+
+    # Load trader tiers for fade signal (learned from --analyze)
+    trader_tier_data = weights_data.get('_trader_tiers', {})
+    trader_tiers = trader_tier_data.get('tiers', {})
+    fade_multiplier = trader_tier_data.get('fade_multiplier', 0.35)
+    if trader_tiers:
+        n_fade = sum(1 for v in trader_tiers.values() if v == 'fade')
+        log.info(f"Trader tiers loaded: {len(trader_tiers)} traders ({n_fade} fade)")
+
     # Compute scores
     updates = []
     scores = []
     for i in range(len(ids)):
         sig_id = int(ids[i])
-        conv_tier, person_hr, source, has_conv = meta.get(sig_id, (0, 0, '', 0))
+        conv_tier, person_hr, source, has_conv, role, person_name, sector = meta.get(sig_id, (0, 0, '', 0, '', '', 'Unknown'))
 
         base = float(clf_probs[i]) * base_mult
         magnitude = max(-20, min(25, float(reg_preds[i]) * mag_mult))
@@ -4002,7 +4081,19 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
             source_mult = congress_sq
         else:
             source_mult = 1.0
-        total = max(0, min(100, raw_total * source_mult))
+
+        # Apply role quality bonus (multiplicative, after source_mult)
+        role_bonus = 1.0
+        if role:
+            role_upper = role.strip().split(',')[0].strip()  # take first role if multiple
+            role_bonus = role_quality.get(role_upper, ROLE_QUALITY_DEFAULTS.get(role_upper, 1.0))
+
+        # Apply trader tier fade (reduce score for contra-signal traders)
+        trader_mult = 1.0
+        if person_name and trader_tiers.get(person_name) == 'fade':
+            trader_mult = fade_multiplier
+
+        total = max(0, min(100, raw_total * source_mult * role_bonus * trader_mult))
         total = round(total, 2)
 
         updates.append((total,
@@ -4012,6 +4103,28 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
                         round(converge, 2), round(person, 2),
                         sig_id))
         scores.append(total)
+
+    # Sector rank-normalization: blend absolute score with sector percentile
+    # Prevents one sector from monopolizing top signals during sector runs
+    sector_scores = {}  # sector → list of (index, score)
+    for i, (total, *_, sig_id) in enumerate(updates):
+        _, _, _, _, _, _, sector = meta.get(sig_id, (0, 0, '', 0, '', '', 'Unknown'))
+        sector_scores.setdefault(sector, []).append((i, total))
+
+    for sector, entries in sector_scores.items():
+        if len(entries) < 3:
+            continue  # too few signals in sector for meaningful percentile
+        sector_vals = sorted(e[1] for e in entries)
+        for idx, score in entries:
+            # Compute percentile rank within sector (0-100)
+            rank = sum(1 for v in sector_vals if v <= score) / len(sector_vals) * 100
+            # Blend: 75% absolute + 25% sector percentile
+            blended = round(0.75 * score + 0.25 * rank, 2)
+            blended = max(0, min(100, blended))
+            # Replace total_score in the update tuple
+            old_tuple = updates[idx]
+            updates[idx] = (blended,) + old_tuple[1:]
+            scores[idx] = blended
 
     # Batch update
     conn.executemany(
@@ -4576,13 +4689,145 @@ def _compute_source_quality(conn: sqlite3.Connection) -> dict | None:
     return result
 
 
+def _compute_role_quality(conn: sqlite3.Connection) -> dict | None:
+    """Compute role quality bonuses from historical CAR by insider_role.
+
+    Returns dict mapping normalized role → bonus multiplier (1.0 = neutral).
+    Roles with avg_car significantly above baseline get bonus > 1.0.
+    Only considers roles with n >= 10 observations.
+    """
+    cur = conn.cursor()
+    MIN_N = 10
+
+    # Baseline: avg CAR across all EDGAR signals with outcomes
+    baseline_row = cur.execute("""
+        SELECT AVG(car_30d) as avg_car, COUNT(*) as n
+        FROM signals
+        WHERE source = 'edgar' AND outcome_30d_filled = 1 AND car_30d IS NOT NULL
+    """).fetchone()
+    if not baseline_row or baseline_row['n'] < 50:
+        return None
+    baseline_car = baseline_row['avg_car']
+    if baseline_car is None or baseline_car <= 0:
+        return None
+
+    # Get avg CAR by insider_role
+    role_rows = cur.execute("""
+        SELECT insider_role, AVG(car_30d) as avg_car, COUNT(*) as n,
+               AVG(CASE WHEN car_30d > 0 THEN 1.0 ELSE 0.0 END) as hit_rate
+        FROM signals
+        WHERE source = 'edgar' AND outcome_30d_filled = 1
+          AND car_30d IS NOT NULL
+          AND insider_role IS NOT NULL AND insider_role != ''
+        GROUP BY insider_role
+        HAVING COUNT(*) >= ?
+    """, (MIN_N,)).fetchall()
+
+    if not role_rows:
+        return None
+
+    role_bonuses = {}
+    for r in role_rows:
+        role = r['insider_role']
+        avg_car = r['avg_car']
+        # Bonus = ratio of role_car to baseline, clamped [0.7, 1.5]
+        if avg_car is not None and baseline_car > 0:
+            ratio = avg_car / baseline_car
+            bonus = round(max(0.7, min(1.5, ratio)), 3)
+        else:
+            bonus = 1.0
+        role_bonuses[role] = bonus
+        log.info(f"  Role '{role}': CAR={avg_car:.4f}, hit={r['hit_rate']:.2f}, "
+                 f"n={r['n']}, bonus={bonus}")
+
+    return role_bonuses
+
+
+def _compute_trader_tiers(conn: sqlite3.Connection) -> dict:
+    """Classify congressional traders into quality tiers based on historical performance.
+
+    Returns dict with:
+        'tiers': {person_name: tier_label}  — 'elite'/'good'/'neutral'/'fade'
+        'leaderboard': {'elite': [...], 'good': [...], 'fade': [...]}
+        'fade_multiplier': float (applied to fade-tier traders' scores)
+    """
+    cur = conn.cursor()
+
+    # Get person-level stats for congress signals with sufficient history
+    person_rows = cur.execute("""
+        SELECT representative, COUNT(*) as n,
+               AVG(CASE WHEN car_30d > 0 THEN 1.0 ELSE 0.0 END) as hit_rate,
+               AVG(car_30d) as avg_car
+        FROM signals
+        WHERE source = 'congress' AND outcome_30d_filled = 1
+          AND car_30d IS NOT NULL AND representative IS NOT NULL AND representative != ''
+        GROUP BY representative
+        HAVING COUNT(*) >= 5
+    """).fetchall()
+
+    # Also get insider stats for EDGAR
+    insider_rows = cur.execute("""
+        SELECT insider_name, COUNT(*) as n,
+               AVG(CASE WHEN car_30d > 0 THEN 1.0 ELSE 0.0 END) as hit_rate,
+               AVG(car_30d) as avg_car
+        FROM signals
+        WHERE source = 'edgar' AND outcome_30d_filled = 1
+          AND car_30d IS NOT NULL AND insider_name IS NOT NULL AND insider_name != ''
+        GROUP BY insider_name
+        HAVING COUNT(*) >= 5
+    """).fetchall()
+
+    tiers = {}
+    leaderboard = {'elite': [], 'good': [], 'fade': []}
+
+    for rows, name_field in [(person_rows, 'representative'), (insider_rows, 'insider_name')]:
+        for r in rows:
+            name = r[name_field]
+            hr = r['hit_rate'] or 0
+            avg = r['avg_car'] or 0
+            n = r['n']
+
+            if hr >= 0.65 and avg >= 0.05 and n >= 5:
+                tier = 'elite'
+            elif hr >= 0.55 and avg >= 0.02 and n >= 5:
+                tier = 'good'
+            elif avg < -0.03 and n >= 5:
+                tier = 'fade'
+            else:
+                tier = 'neutral'
+
+            tiers[name] = tier
+
+            if tier in ('elite', 'good', 'fade'):
+                leaderboard[tier].append({
+                    'name': name,
+                    'hit_rate': round(hr, 3),
+                    'avg_car': round(avg, 4),
+                    'n': n,
+                })
+
+    # Sort leaderboards
+    for key in leaderboard:
+        leaderboard[key].sort(key=lambda x: x['avg_car'], reverse=(key != 'fade'))
+
+    log.info(f"Trader tiers: {sum(1 for v in tiers.values() if v == 'elite')} elite, "
+             f"{sum(1 for v in tiers.values() if v == 'good')} good, "
+             f"{sum(1 for v in tiers.values() if v == 'fade')} fade, "
+             f"{sum(1 for v in tiers.values() if v == 'neutral')} neutral")
+
+    return {
+        'tiers': tiers,
+        'leaderboard': leaderboard,
+        'fade_multiplier': 0.35,  # default — can be calibrated
+    }
+
+
 # ── Factor attribution labels ────────────────────────────────────────────────
 FACTOR_LABELS = {
     'momentum_3m':            ('3-month momentum',       'high', 'Strong 3-month momentum', 'Weak 3-month momentum'),
     'momentum_1m':            ('1-month momentum',       'high', 'Strong recent momentum', 'Weak recent momentum'),
     'momentum_6m':            ('6-month momentum',       'high', 'Strong 6-month trend', 'Weak 6-month trend'),
     'disclosure_delay':       ('Disclosure delay',       'low',  'Fast disclosure filing', 'Slow disclosure filing'),
-    'relative_position_size': ('Position size',          'high', 'Large relative position', 'Small relative position'),
     'trade_size_points':      ('Trade size',             'high', 'Large trade size', 'Small trade size'),
     'person_hit_rate_30d':    ('Person hit rate',        'high', 'Strong trader track record', 'Weak trader track record'),
     'person_trade_count':     ('Person trade count',     'high', 'Frequent trader', 'Infrequent trader'),
@@ -4591,13 +4836,12 @@ FACTOR_LABELS = {
     'insider_buy_ratio_90d':  ('Insider buy ratio',      'high', 'High insider buy ratio', 'Low insider buy ratio'),
     'volume_spike':           ('Volume spike',           'high', 'Unusual volume activity', 'Normal volume'),
     'price_proximity_52wk':   ('52-week position',       'high', 'Near 52-week high', 'Near 52-week low'),
-    'convergence_tier':       ('Convergence tier',       'high', 'Multi-source convergence', 'No convergence'),
-    'has_convergence':        ('Has convergence',        'high', 'Congress + insider overlap', 'Single source only'),
+    # convergence_tier, has_convergence pruned in v5
     'same_ticker_signals_7d': ('7-day cluster',          'high', 'Signal cluster forming', 'Isolated signal'),
     'same_ticker_signals_30d':('30-day cluster',         'high', 'Multiple signals in 30d', 'Single signal in 30d'),
     'vix_at_signal':          ('VIX level',              'low',  'Low volatility environment', 'High volatility environment'),
     'days_to_earnings':       ('Days to earnings',       'low',  'Near earnings catalyst', 'Far from earnings'),
-    'days_to_catalyst':       ('Days to catalyst',       'low',  'Near catalyst event', 'Far from catalyst'),
+    # days_to_catalyst pruned in v5
     'sector_avg_car':         ('Sector returns',         'high', 'Strong sector returns', 'Weak sector returns'),
     'sector_momentum':        ('Sector momentum',        'high', 'Strong sector momentum', 'Weak sector momentum'),
     'cluster_velocity':       ('Cluster velocity',       'high', 'Fast signal clustering', 'Slow signal clustering'),
@@ -4791,17 +5035,31 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
     all_rows = cur.fetchall()
     cols = [d[0] for d in cur.description]
 
-    # Diversify: max N signals per ticker
+    # Diversify: max N signals per ticker, max M per sector
+    MAX_PER_SECTOR = 8
     ticker_counts = {}
+    sector_counts = {}
     rows = []
+    overflow = []  # signals that exceeded sector cap — used to fill remaining slots
     for row in all_rows:
         r = dict(zip(cols, row))
         t = r['ticker']
+        s = r['sector'] or 'Unknown'
         ticker_counts[t] = ticker_counts.get(t, 0) + 1
-        if ticker_counts[t] <= MAX_PER_TICKER:
+        if ticker_counts[t] > MAX_PER_TICKER:
+            continue
+        sector_counts[s] = sector_counts.get(s, 0) + 1
+        if sector_counts[s] <= MAX_PER_SECTOR:
             rows.append(row)
+        else:
+            overflow.append(row)  # over sector cap — save for later fill
         if len(rows) >= EXPORT_LIMIT:
             break
+
+    # If we haven't hit EXPORT_LIMIT, backfill from overflow (sector-capped signals)
+    if len(rows) < EXPORT_LIMIT and overflow:
+        remaining = EXPORT_LIMIT - len(rows)
+        rows.extend(overflow[:remaining])
 
     # Prepare factor attribution data
     export_ids = set()
@@ -4814,6 +5072,9 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
     # Load feature importance + raw features for factor computation
     weights = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
     feature_importance = weights.get('_feature_importance', {})
+    # Load trader tiers for export
+    _trader_tier_data = weights.get('_trader_tiers', {})
+    _trader_tiers = _trader_tier_data.get('tiers', {})
 
     factors_map = {}
     try:
@@ -4898,6 +5159,7 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             'person_hit_rate': round(r['person_hit_rate_30d'], 2) if r['person_hit_rate_30d'] is not None else None,
             'person_trade_count': r['person_trade_count'] or 0,
             'insider_role': r['insider_role'],
+            'trader_tier': _trader_tiers.get(person, 'neutral'),
             'sector': r['sector'],
             'ml_confidence': round(ml_conf, 3) if ml_conf is not None else None,
             'predicted_car': predicted_move,
@@ -5128,6 +5390,20 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         'ml': ml_stats,
     }
 
+    # Trader tiers leaderboard from optimal_weights
+    if _trader_tier_data and _trader_tier_data.get('leaderboard'):
+        brain_stats['trader_tiers'] = _trader_tier_data['leaderboard']
+
+    # Sector distribution in exported signals
+    export_sector_counts = {}
+    for s in signals_out:
+        sec = s.get('sector') or 'Unknown'
+        export_sector_counts[sec] = export_sector_counts.get(sec, 0) + 1
+    if export_sector_counts:
+        brain_stats['sector_distribution'] = dict(
+            sorted(export_sector_counts.items(), key=lambda x: x[1], reverse=True)
+        )
+
     # Ticker distribution in exported signals
     export_ticker_counts = {}
     for s in signals_out:
@@ -5153,6 +5429,20 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         {'feature': r[0], 'value': r[1], 'avg_car_30d': round(r[2], 4), 'n': r[3]}
         for r in harmful_rows
     ]
+
+    # Features pruned from ML training (historical record)
+    brain_stats['features_pruned_history'] = {
+        'pruned': [
+            {'feature': 'source', 'date': '2026-02-28', 'reason': '0.16% importance', 'avg_car': None},
+            {'feature': 'trade_pattern', 'date': '2026-02-28', 'reason': '0.40% importance, 31% fill', 'avg_car': None},
+            {'feature': 'convergence_tier', 'date': '2026-03-01', 'reason': '<1% importance, 3+ consecutive runs', 'avg_car': None},
+            {'feature': 'has_convergence', 'date': '2026-03-01', 'reason': '<1% importance, 3+ consecutive runs', 'avg_car': None},
+            {'feature': 'days_to_catalyst', 'date': '2026-03-01', 'reason': '<1% importance, 3+ consecutive runs', 'avg_car': None},
+            {'feature': 'relative_position_size', 'date': '2026-03-01', 'reason': '<1% importance, 3+ consecutive runs', 'avg_car': None},
+            {'feature': 'cluster_velocity', 'date': '2026-03-01', 'reason': '<1% importance, 3+ consecutive runs', 'avg_car': None},
+        ],
+        'current_feature_count': 23,
+    }
 
     save_json(BRAIN_STATS, brain_stats)
     log.info(f"Exported brain stats → brain_stats.json")
@@ -5341,6 +5631,23 @@ def run_analyze(conn: sqlite3.Connection) -> None:
                      f"convergence={source_quality.get('convergence', 1.0):.3f}")
     except Exception as e:
         log.warning(f"Source quality computation failed: {e}")
+
+    # 4e. Compute role quality bonuses from historical CAR by insider_role
+    try:
+        role_quality = _compute_role_quality(conn)
+        if role_quality:
+            output['_role_quality'] = role_quality
+            log.info(f"Role quality: {len(role_quality)} roles with learned bonuses")
+    except Exception as e:
+        log.warning(f"Role quality computation failed: {e}")
+
+    # 4f. Compute trader quality tiers (elite/good/neutral/fade)
+    try:
+        trader_tiers = _compute_trader_tiers(conn)
+        output['_trader_tiers'] = trader_tiers
+        log.info(f"Trader tiers computed: {len(trader_tiers.get('tiers', {}))} traders classified")
+    except Exception as e:
+        log.warning(f"Trader tier computation failed: {e}")
 
     save_json(OPTIMAL_WEIGHTS, output)
 

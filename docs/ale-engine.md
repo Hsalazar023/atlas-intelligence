@@ -42,20 +42,22 @@
 
 ---
 
-## Feature List (28) — v4
+## Feature List (27) — v5
 
 | Category | Features |
 |---|---|
-| Trade | trade_size_points, disclosure_delay, relative_position_size |
-| Clustering | same_ticker_signals_7d/30d, has_convergence, convergence_tier, cluster_velocity |
+| Trade | trade_size_points, disclosure_delay |
+| Clustering | same_ticker_signals_7d/30d |
 | Person | person_trade_count, person_hit_rate_30d, person_avg_car_30d |
 | Classification | insider_role, sector, market_cap_bucket |
-| Price-based | price_proximity_52wk, momentum_1m/3m/6m, volume_spike |
+| Price-based | price_proximity_52wk, momentum_1m/3m/6m, volume_spike, volume_dry_up |
 | Market context | vix_at_signal, yield_curve_at_signal, credit_spread_at_signal |
-| Catalysts | days_to_earnings, days_to_catalyst |
+| Catalysts | days_to_earnings |
+| Analyst | analyst_revision_30d, analyst_consensus, analyst_insider_confluence |
 | Derived (DB) | insider_buy_ratio_90d, sector_avg_car, vix_regime_interaction, sector_momentum, days_since_last_buy |
 
-**v4 changes:** Pruned `source` (0.16% imp) and `trade_pattern` (0.40% imp, 31% fill). Added `person_avg_car_30d`, `sector_momentum`, `days_since_last_buy`.
+**v5 changes:** Pruned 5 features (<1% importance, 3+ runs): `convergence_tier`, `has_convergence`, `days_to_catalyst`, `relative_position_size`, `cluster_velocity`. Added 4 new: `volume_dry_up`, `analyst_revision_30d`, `analyst_consensus`, `analyst_insider_confluence`. Added `_role_quality` bonuses + trader tiers + fade signal. insider_role kept — role VALUES (COO/CEO) are highly predictive. Net: 28→27 features.
+**v4 changes:** Pruned `source` (0.16%), `trade_pattern` (0.40%, 31% fill). Added `person_avg_car_30d`, `sector_momentum`, `days_since_last_buy`.
 
 ---
 

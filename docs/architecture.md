@@ -9,7 +9,7 @@
 | Frontend | Single HTML (`atlas-intelligence.html`, ~3400 lines) | Live |
 | Hosting | Vercel (auto-deploy on push) | Live |
 | Stock prices | Finnhub `/quote` (60s refresh) | Live |
-| Congressional data | FMP → `congress_feed.json` | Live |
+| Congressional data | FMP + House XML scraper → `congress_feed.json` | Live |
 | Insider data | SEC EDGAR Form 4 → `edgar_feed.json` | Live |
 | Market data | FRED API → VIX, yield curve | Live |
 | Historical prices | yfinance → `price_history/` | Live |
@@ -73,3 +73,4 @@
 | FMP | financialmodelingprep.com | GitHub Secrets (backend) |
 | FRED | fred.stlouisfed.org | GitHub Secrets (backend) |
 | NTFY_CHANNEL | ntfy.sh (free, no account) | GitHub Secrets (backend) — any string like `atlas-henry-abc123`. Subscribe at ntfy.sh/atlas-{your-string} to receive push notifications on pipeline success/failure. |
+| House Disclosures | disclosures-clerk.house.gov | No auth needed. Rate limit 1 req/sec. Senate scraper deferred (CSRF + HTML complexity — Phase 3). |

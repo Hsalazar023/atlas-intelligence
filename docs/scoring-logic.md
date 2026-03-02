@@ -12,7 +12,10 @@ base      = clf_probability × 60          (0-60, ML confidence)
 magnitude = clamp(reg_car × 200, -20, 25) (predicted return bonus/penalty)
 converge  = convergence_tier × 5          (0/5/10 convergence bonus)
 person    = clamp(person_hit_rate × 8, 0, 5)
-total     = clamp(sum, 0, 100)
+raw       = sum of above
+× source_mult × role_bonus × trader_mult (see below)
+× sector blend: 0.75 × absolute + 0.25 × sector_percentile_rank
+total     = clamp(result, 0, 100)
 ```
 
 ### Score Tiers
@@ -31,9 +34,11 @@ total     = clamp(sum, 0, 100)
 Applied as final multiplier on raw score. Values are computed each `--analyze` run from historical CAR by source.
 
 ```
-raw       = base + magnitude + converge + person
-source_mult = lookup by source type (stored in optimal_weights.json → _source_quality)
-total     = clamp(raw × source_mult, 0, 100)
+raw         = base + magnitude + converge + person
+source_mult = lookup by source type (optimal_weights.json → _source_quality)
+role_bonus  = learned multiplier by insider_role (optimal_weights.json → _role_quality)
+trader_mult = 0.35 if trader is 'fade' tier, else 1.0 (optimal_weights.json → _trader_tiers)
+total       = clamp(raw × source_mult × role_bonus × trader_mult, 0, 100)
 ```
 
 | Source | Default | Rationale |
@@ -43,6 +48,36 @@ total     = clamp(raw × source_mult, 0, 100)
 | Convergence (both) | ~1.35 | Bonus when EDGAR + Congress agree on ticker |
 
 Multipliers auto-update via `_compute_source_quality()` in `run_analyze`. If Congress alpha improves, its multiplier rises automatically.
+
+---
+
+## Role Quality Bonus (Learned)
+
+Applied multiplicatively after source_mult. Learned from historical CAR by insider_role in `_compute_role_quality()`.
+
+| Role Tier | Roles | Default Bonus |
+|---|---|---|
+| Top | COO, CFO, President | 1.25 |
+| Mid | CEO, Director, Officer | 1.10 |
+| Other/Missing | all others | 1.0 |
+
+Values auto-update via `--analyze`. Stored in `optimal_weights.json → _role_quality`.
+
+---
+
+## Trader Quality Tiers & Fade Signal
+
+Traders classified by historical performance. Computed in `_compute_trader_tiers()`.
+
+| Tier | Criteria | Score Effect |
+|---|---|---|
+| elite | hit_rate ≥ 65%, avg_car ≥ 5%, n ≥ 5 | None (already reflected in person_hr) |
+| good | hit_rate ≥ 55%, avg_car ≥ 2%, n ≥ 5 | None |
+| neutral | insufficient data or mixed results | None |
+| fade | avg_car < -3%, n ≥ 5 | × 0.35 (score drastically reduced) |
+
+The fade multiplier is stored in `optimal_weights.json → _trader_tiers.fade_multiplier`.
+Trader leaderboard exported to `brain_stats.json → trader_tiers`.
 
 ---
 

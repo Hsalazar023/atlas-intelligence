@@ -2,8 +2,8 @@
 """
 ATLAS Data Fetcher
 ==================
-Fetches live data from EDGAR EFTS and QuiverQuant, saves to data/ directory
-as static JSON files served by Vercel. No CORS issues — runs server-side.
+Fetches live data from EDGAR EFTS, FMP (congress + insiders), and FRED (market context).
+Saves to data/ directory as static JSON files served by Vercel. No CORS issues — runs server-side.
 
 Usage:
   python3 scripts/fetch_data.py
@@ -13,7 +13,7 @@ Schedule:
   GitHub Actions: see .github/workflows/fetch-data.yml (runs every 4h, auto-commits)
 
 Environment variables:
-  QUIVER_KEY   — QuiverQuant API token (register at quiverquant.com/quiverapi)
+  FMP_API_KEY  — Financial Modeling Prep API key (congress + insider trades)
   FRED_KEY     — FRED API key (register at fred.stlouisfed.org/docs/api/api_key.html)
   FINNHUB_KEY  — Finnhub API key (for market_data.json index prices)
 """
@@ -29,7 +29,6 @@ except ImportError:
 USER_AGENT   = 'ATLAS Intelligence Platform contact@atlasiq.io'
 SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR     = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
-QUIVER_KEY   = os.environ.get('QUIVER_KEY',  '')
 FRED_KEY     = os.environ.get('FRED_KEY',    '71a0b94ed47b56a81f405947f88d08aa')
 FINNHUB_KEY  = os.environ.get('FINNHUB_KEY', 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g')
 
@@ -146,7 +145,7 @@ def fetch_edgar_form4(days=7, max_results=200, window_days=7):
         'User-Agent': USER_AGENT,
         'Accept': 'application/json',
     }
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.UTC)
     filings = []
     n_windows = max(1, days // window_days)
     per_window = max(50, max_results // n_windows)
@@ -289,35 +288,12 @@ def enrich_form4_xml(filings):
     return filings
 
 
-# ── QuiverQuant Congressional Trades ─────────────────────────────────────────
-def fetch_quiver_congress(api_key):
-    """
-    Fetch recent congressional trades from QuiverQuant live endpoint.
-    Requires a free API token from quiverquant.com/quiverapi.
-    """
-    url = 'https://api.quiverquant.com/beta/live/congresstrading'
-    headers = {
-        'Authorization': f'Token {api_key}',
-        'Accept': 'application/json',
-    }
-    r = requests.get(url, headers=headers, timeout=20)
-    if not r.ok:
-        print(f'  QuiverQuant error: HTTP {r.status_code}')
-        return []
-    data = r.json()
-    if not isinstance(data, list):
-        print(f'  QuiverQuant unexpected response: {str(data)[:200]}')
-        return []
-    # Sort most recent first
-    return sorted(data, key=lambda x: x.get('Date', ''), reverse=True)[:150]
-
-
 # ── FMP Congressional Trades ──────────────────────────────────────────────
 FMP_API_KEY = os.environ.get('FMP_API_KEY', 'UefVEEvF1XXtpgWcsidPCGxcDJ6N0kXv')
 
 def normalize_fmp_congress(raw, chamber):
     """
-    Normalize a single FMP stable API response dict into the QuiverQuant-compatible
+    Normalize a single FMP stable API response dict into the standard
     congress_feed.json format.
 
     FMP stable API fields: transactionDate, disclosureDate, firstName, lastName,
@@ -331,7 +307,7 @@ def normalize_fmp_congress(raw, chamber):
     if not symbol or len(symbol) > 5:
         return None
 
-    # Map FMP 'type' to QuiverQuant 'Transaction' format
+    # Map FMP 'type' to standard 'Transaction' format
     fmp_type = (raw.get('type') or '').strip()
     if fmp_type.lower().startswith('purchase'):
         transaction = 'Purchase'
@@ -381,7 +357,7 @@ def normalize_fmp_congress(raw, chamber):
 def fetch_fmp_congress(api_key, pages=10):
     """
     Fetch congressional trades from FMP (Financial Modeling Prep) stable API.
-    Pulls from both Senate and House endpoints, normalizes to QuiverQuant format,
+    Pulls from both Senate and House endpoints, normalizes to standard format,
     deduplicates, and returns sorted list (most recent first).
     """
     all_trades = []
@@ -431,26 +407,546 @@ def fetch_fmp_congress(api_key, pages=10):
     return all_trades
 
 
-# ── QuiverQuant Insider Trades ─────────────────────────────────────────────
-def fetch_quiver_insiders(api_key, page_size=100):
+# ── House Financial Disclosures (Direct Scraper) ─────────────────────────
+# No API key needed. Fetches PTR XML index directly from the Clerk of the
+# House, then parses individual filing pages for trade details.
+# Rate limit: 1 req/sec for all government site requests.
+
+# Words that look like tickers but aren't
+_NON_TICKER_WORDS = frozenset([
+    'AND', 'THE', 'FOR', 'LLC', 'INC', 'ETF', 'USA', 'NEW', 'ALL', 'ARE',
+    'HAS', 'HIS', 'HER', 'ITS', 'NOT', 'OUR', 'OUT', 'OWN', 'CAN', 'DID',
+    'GET', 'GOT', 'HAD', 'HAS', 'LET', 'MAY', 'OLD', 'PUT', 'RAN', 'SAY',
+    'SHE', 'TOO', 'USE', 'WAR', 'WAY', 'WHO', 'BOY', 'HOW', 'MAN', 'TRY',
+    'ASK', 'BIG', 'END', 'FAR', 'FEW', 'RUN', 'SET', 'TOP', 'NAN', 'USD',
+    'ACT', 'AGO', 'BUY', 'TWO', 'COM', 'LTD', 'CEO', 'CFO', 'COO', 'CTO',
+    'EST', 'AVG', 'MAX', 'MIN', 'NET', 'TAX', 'SEC', 'PER', 'JAN', 'FEB',
+    'MAR', 'APR', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'REP',
+    'PTR', 'PDF', 'XML', 'DOC', 'NONE', 'FUND', 'BOND', 'CASH', 'DEBT',
+    'CORP', 'MISC', 'PART', 'EACH', 'FROM', 'THAT', 'THIS', 'WILL', 'WITH',
+    'TYPE', 'DATE', 'NAME', 'FILE', 'FORM', 'SALE', 'SOLD',
+])
+
+# Regex for dollar amount ranges (e.g., "$1,001 - $15,000")
+_AMOUNT_RE = re.compile(r'\$[\d,]+\s*-\s*\$[\d,]+')
+
+# Regex for ticker-like strings (1-5 uppercase letters)
+_TICKER_RE = re.compile(r'\b([A-Z]{1,5})\b')
+
+# Date patterns: MM/DD/YYYY or YYYY-MM-DD
+_DATE_MDY_RE = re.compile(r'(\d{1,2})/(\d{1,2})/(\d{4})')
+_DATE_YMD_RE = re.compile(r'(\d{4})-(\d{2})-(\d{2})')
+
+
+def fetch_house_disclosures(lookback_days=30):
     """
-    Fetch recent insider transactions from QuiverQuant.
-    Tier 2 endpoint — included with free token if access is granted.
-    Fields: ticker, date, owner name, transaction type, shares, value, role
+    Fetch recent PTR (Periodic Transaction Report) filings from the
+    House of Representatives Financial Disclosures.
+
+    Returns list of normalized trades matching congress_feed.json schema,
+    or [] on any failure.
     """
-    url = f'https://api.quiverquant.com/beta/live/insiders?page_size={page_size}'
-    headers = {
-        'Authorization': f'Token {api_key}',
-        'Accept': 'application/json',
-    }
-    r = requests.get(url, headers=headers, timeout=20)
-    if not r.ok:
-        print(f'  QuiverQuant insiders error: HTTP {r.status_code}')
+    try:
+        return _fetch_house_disclosures_inner(lookback_days)
+    except Exception as e:
+        print(f'  House scraper error (safe fallback to []): {e}')
         return []
-    data = r.json()
-    if not isinstance(data, list):
+
+
+def _fetch_house_disclosures_inner(lookback_days):
+    """Inner implementation — may raise; caller wraps in try/except."""
+    today = datetime.date.today()
+    cutoff = today - datetime.timedelta(days=lookback_days)
+    headers = {'User-Agent': 'ATLAS Research Tool'}
+
+    # Determine which years of XML index to fetch
+    years = [today.year]
+    if today.month <= 2:
+        years.append(today.year - 1)
+
+    # ── STEP 1: Fetch & parse PTR XML index ─────────────────────────────
+    all_filings = []
+    filings_parsed = 0
+    filings_failed = 0
+
+    for year in years:
+        xml_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{year}FD.xml'
+        print(f'  Fetching House PTR index: {year}...')
+        try:
+            r = requests.get(xml_url, headers=headers, timeout=15)
+            if not r.ok:
+                print(f'  House XML index {year}: HTTP {r.status_code}')
+                continue
+        except Exception as e:
+            print(f'  House XML index {year} fetch error: {e}')
+            continue
+
+        time.sleep(1)  # rate limit
+
+        # ── STEP 2: Parse XML, filter to recent filings ─────────────────
+        try:
+            root = ET.fromstring(r.content)
+        except ET.ParseError as e:
+            print(f'  House XML parse error for {year}: {e}')
+            continue
+
+        # The XML structure: <FinancialDisclosure> → <Member> elements
+        members = root.findall('.//Member')
+        if not members:
+            # Try alternate structure
+            members = root.findall('.//')
+
+        for member in root.iter('Member'):
+            filing_date_str = ''
+            doc_id = ''
+            member_name = ''
+
+            # Extract fields — try common element names
+            for child in member:
+                tag = child.tag.lower() if child.tag else ''
+                text = (child.text or '').strip()
+                if 'filingdate' in tag or tag == 'filing_date':
+                    filing_date_str = text
+                elif 'docid' in tag or tag == 'doc_id':
+                    doc_id = text
+                elif tag in ('prefix', 'last', 'first', 'suffix'):
+                    # Build name from parts
+                    if tag == 'last':
+                        member_name = text + (', ' + member_name if member_name else '')
+                    elif tag == 'first':
+                        member_name = (member_name + ' ' if member_name else '') + text
+                elif 'name' in tag or tag == 'membername':
+                    member_name = text
+                elif tag == 'filingtype' or 'type' in tag:
+                    # Only process PTR filings
+                    if text and 'ptr' not in text.lower() and 'transaction' not in text.lower():
+                        continue
+
+            # Also try attributes
+            if not doc_id:
+                doc_id = member.get('DocID', member.get('docid', ''))
+            if not filing_date_str:
+                filing_date_str = member.get('FilingDate', member.get('filing_date', ''))
+
+            if not doc_id or not filing_date_str:
+                continue
+
+            # Parse filing date
+            filing_date = _parse_date_flex(filing_date_str)
+            if not filing_date or filing_date < cutoff:
+                continue
+
+            # Build name from child elements if not found yet
+            if not member_name:
+                last = _get_child_text(member, 'Last')
+                first = _get_child_text(member, 'First')
+                if last and first:
+                    member_name = f'{first} {last}'
+                elif last:
+                    member_name = last
+
+            all_filings.append({
+                'doc_id': doc_id,
+                'member_name': _clean_member_name(member_name),
+                'filing_date': filing_date.isoformat(),
+            })
+
+    print(f'  House PTR index: {len(all_filings)} recent filings found (last {lookback_days}d)')
+    if not all_filings:
         return []
-    return sorted(data, key=lambda x: x.get('Date', x.get('date', '')), reverse=True)
+
+    # ── STEP 3: Fetch individual filing pages for trade details ──────
+    all_trades = []
+    for filing in all_filings:
+        doc_id = filing['doc_id']
+        # Try the HTML report URL
+        doc_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{doc_id}.pdf'
+        # Also try the structured HTML view
+        html_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{doc_id}.htm'
+
+        trades_from_filing = []
+        try:
+            # Try HTML first (more parseable than PDF)
+            r = requests.get(html_url, headers=headers, timeout=15)
+            if r.ok and len(r.text) > 200:
+                trades_from_filing = _parse_house_filing_page(
+                    r.text, filing['member_name'], filing['filing_date']
+                )
+                filings_parsed += 1
+            else:
+                # If HTML fails, we can't parse PDF — log and skip
+                filings_failed += 1
+        except Exception as e:
+            print(f'  Filing {doc_id} parse error: {e}')
+            filings_failed += 1
+
+        all_trades.extend(trades_from_filing)
+        time.sleep(1)  # rate limit: 1 req/sec for government sites
+
+    # ── STEP 5: Return normalized trades ────────────────────────────────
+    # Sort most recent first
+    all_trades.sort(key=lambda x: x.get('TransactionDate', ''), reverse=True)
+
+    print(f'  House scraper: {len(all_trades)} trades extracted '
+          f'({filings_parsed} filings parsed, {filings_failed} failed)')
+
+    return all_trades
+
+
+def _parse_house_filing_page(html, member_name, filing_date):
+    """
+    Parse a House PTR filing HTML page for individual trades.
+    Returns list of normalized trade dicts.
+    """
+    trades = []
+    text = html
+
+    # Look for table rows or structured data
+    # House filing pages typically have tabular trade data with:
+    # Asset/Ticker, Transaction Type, Date, Amount
+    # Try to find ticker symbols in context of transaction keywords
+
+    # Split into transaction blocks — look for purchase/sale keywords
+    # Each "block" around a transaction keyword likely describes one trade
+    lines = text.split('\n')
+    full_text = ' '.join(lines)
+
+    # Strategy: find all ticker-like symbols that appear near transaction keywords
+    # Extract tickers with surrounding context
+    ticker_matches = list(_TICKER_RE.finditer(full_text))
+
+    # Find transaction types
+    txn_purchase = [(m.start(), 'Purchase') for m in re.finditer(r'(?i)\b(purchase[d]?|bought|buy)\b', full_text)]
+    txn_sale = [(m.start(), 'Sale') for m in re.finditer(r'(?i)\b(sale|sold|sell|disposition)\b', full_text)]
+    all_txns = sorted(txn_purchase + txn_sale, key=lambda x: x[0])
+
+    # Find dates in the text
+    date_matches = []
+    for m in _DATE_MDY_RE.finditer(full_text):
+        try:
+            d = datetime.date(int(m.group(3)), int(m.group(1)), int(m.group(2)))
+            date_matches.append((m.start(), d))
+        except ValueError:
+            pass
+    for m in _DATE_YMD_RE.finditer(full_text):
+        try:
+            d = datetime.date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+            date_matches.append((m.start(), d))
+        except ValueError:
+            pass
+    date_matches.sort(key=lambda x: x[0])
+
+    # Find amount ranges
+    amount_matches = [(m.start(), m.group()) for m in _AMOUNT_RE.finditer(full_text)]
+
+    # For each transaction keyword, find the nearest valid ticker, date, and amount
+    seen_trades = set()
+    for txn_pos, txn_type in all_txns:
+        # Look for nearest ticker within ±500 chars
+        best_ticker = None
+        best_dist = 500
+        for tm in ticker_matches:
+            t = tm.group(1)
+            if t in _NON_TICKER_WORDS or len(t) < 2:
+                continue
+            dist = abs(tm.start() - txn_pos)
+            if dist < best_dist:
+                best_dist = dist
+                best_ticker = t
+
+        if not best_ticker:
+            continue
+
+        # Nearest date within ±1000 chars
+        best_date = None
+        best_date_dist = 1000
+        for dp, d in date_matches:
+            dist = abs(dp - txn_pos)
+            if dist < best_date_dist:
+                best_date_dist = dist
+                best_date = d
+
+        # Use filing date as fallback for transaction date
+        txn_date = best_date.isoformat() if best_date else filing_date
+
+        # Nearest amount
+        best_amount = ''
+        best_amt_dist = 500
+        for ap, amt in amount_matches:
+            dist = abs(ap - txn_pos)
+            if dist < best_amt_dist:
+                best_amt_dist = dist
+                best_amount = amt
+
+        # ── STEP 4: Normalize to congress_feed.json schema ──────────────
+        # Dedup key within this filing
+        dedup_key = (best_ticker, txn_date, txn_type)
+        if dedup_key in seen_trades:
+            continue
+        seen_trades.add(dedup_key)
+
+        # Compute disclosure delay
+        disclosure_delay = None
+        if best_date:
+            try:
+                fd = datetime.date.fromisoformat(filing_date)
+                disclosure_delay = (fd - best_date).days
+            except (ValueError, TypeError):
+                pass
+
+        trades.append({
+            'Ticker': best_ticker,
+            'TransactionDate': txn_date,
+            'Representative': member_name,
+            'Transaction': txn_type,
+            'Range': best_amount,
+            'Chamber': 'House',
+            'Party': '',  # not reliably available in filing page
+            'DisclosureDate': filing_date,
+            'DisclosureDelay': disclosure_delay,
+            'Source': 'House',
+        })
+
+    return trades
+
+
+def _get_child_text(elem, tag_name):
+    """Get text of a child element by tag name (case-insensitive)."""
+    for child in elem:
+        if child.tag and child.tag.lower() == tag_name.lower():
+            return (child.text or '').strip()
+    return ''
+
+
+def _clean_member_name(name):
+    """Normalize 'LAST, First' or 'First Last' to 'First Last'."""
+    if not name:
+        return ''
+    name = name.strip()
+    # Handle "LAST, First" format
+    if ',' in name:
+        parts = name.split(',', 1)
+        last = parts[0].strip().title()
+        first = parts[1].strip().title()
+        return f'{first} {last}'
+    return name.title()
+
+
+def _parse_date_flex(date_str):
+    """Parse a date string in MM/DD/YYYY or YYYY-MM-DD format."""
+    if not date_str:
+        return None
+    date_str = date_str.strip()
+    for fmt in ('%m/%d/%Y', '%Y-%m-%d', '%m/%d/%y'):
+        try:
+            return datetime.datetime.strptime(date_str, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+# ── FMP Insider Trades ─────────────────────────────────────────────────────
+def fetch_fmp_insiders(api_key, pages=10):
+    """
+    Fetch recent insider trades from FMP (Financial Modeling Prep).
+    Uses the stable API insider-trading endpoint with pagination.
+    Filters to purchases only (P-Purchase) to match Brain's buy-signal focus.
+    """
+    all_trades = []
+    seen = set()  # (symbol, date, reportingName) for dedup
+
+    for page in range(pages):
+        url = (
+            f'https://financialmodelingprep.com/stable/insider-trading'
+            f'?transactionType=P-Purchase&page={page}&apikey={api_key}'
+        )
+        try:
+            r = requests.get(url, timeout=20)
+            if not r.ok:
+                print(f'  FMP insiders page {page} error: HTTP {r.status_code}')
+                break
+            data = r.json()
+            if not isinstance(data, list) or len(data) == 0:
+                break
+
+            for raw in data:
+                symbol = (raw.get('symbol') or '').strip().upper()
+                if not symbol or len(symbol) > 5:
+                    continue
+
+                txn_date = raw.get('transactionDate', '')
+                reporter = raw.get('reportingName', '')
+                dedup_key = (symbol, txn_date, reporter)
+                if dedup_key in seen:
+                    continue
+                seen.add(dedup_key)
+
+                shares = raw.get('securitiesTransacted', 0) or 0
+                owned = raw.get('securitiesOwned', 0) or 0
+                txn_type = raw.get('transactionType', '')
+
+                all_trades.append({
+                    'Ticker': symbol,
+                    'Date': txn_date,
+                    'Owner': reporter,
+                    'Transaction': txn_type,
+                    'Shares': shares,
+                    'SecuritiesOwned': owned,
+                    'SecurityName': raw.get('securityName', ''),
+                    'FormType': raw.get('formType', ''),
+                    'Link': raw.get('link', ''),
+                    'Source': 'FMP',
+                })
+
+        except Exception as e:
+            print(f'  FMP insiders page {page} error: {e}')
+            break
+
+        time.sleep(0.3)  # Rate limit
+
+    all_trades.sort(key=lambda x: x.get('Date', ''), reverse=True)
+    print(f'  FMP total: {len(all_trades)} insider purchases ({len(seen)} deduped)')
+    return all_trades
+
+
+# ── Volume Data (yfinance) ──────────────────────────────────────────────────
+def fetch_volume_data(tickers):
+    """
+    Fetch 35-day volume history for tickers with recent signals.
+    Computes relative volume (latest / 30-day avg).
+    Saves to data/volume_data.json.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping volume data')
+        return
+
+    if not tickers:
+        print('  No tickers for volume data')
+        return
+
+    print(f'  Fetching volume data for {len(tickers)} tickers...')
+    volume_data = {}
+    fetched = 0
+    failed = 0
+
+    for ticker in tickers:
+        try:
+            t = yf.Ticker(ticker)
+            hist = t.history(period='35d')
+            if hist.empty or 'Volume' not in hist.columns:
+                continue
+            vols = hist['Volume'].dropna().values
+            if len(vols) < 5:
+                continue
+            avg_30d = float(vols[:-1].mean()) if len(vols) > 1 else float(vols.mean())
+            latest = float(vols[-1])
+            rel_vol = round(latest / avg_30d, 4) if avg_30d > 0 else None
+            volume_data[ticker] = {
+                'rel_volume': rel_vol,
+                'avg_30d': round(avg_30d),
+                'latest_volume': round(latest),
+                'date': hist.index[-1].strftime('%Y-%m-%d'),
+            }
+            fetched += 1
+        except Exception as e:
+            failed += 1
+        time.sleep(0.2)
+
+    if volume_data:
+        save_json('volume_data.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': len(volume_data),
+            'tickers': volume_data,
+        })
+    print(f'  Volume data: {fetched} tickers fetched, {failed} failed')
+
+
+# ── Analyst Data (yfinance) ──────────────────────────────────────────────────
+def fetch_analyst_data(tickers):
+    """
+    Fetch analyst recommendation and price target data for signal tickers.
+    Computes revision momentum (upgrades - downgrades in last 30d) and consensus.
+    Saves to data/analyst_data.json.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping analyst data')
+        return
+
+    if not tickers:
+        print('  No tickers for analyst data')
+        return
+
+    print(f'  Fetching analyst data for {len(tickers)} tickers...')
+    analyst_data = {}
+    fetched = 0
+    failed = 0
+    cutoff_30d = (datetime.date.today() - datetime.timedelta(days=30)).isoformat()
+
+    for ticker in tickers:
+        try:
+            t = yf.Ticker(ticker)
+            entry = {
+                'upgrades_30d': 0,
+                'downgrades_30d': 0,
+                'revision_momentum': 0,
+                'analyst_consensus': None,
+            }
+
+            # Get recommendations
+            try:
+                recs = t.recommendations
+                if recs is not None and not recs.empty:
+                    # Filter to last 30 days
+                    if hasattr(recs.index, 'strftime'):
+                        recent = recs[recs.index >= cutoff_30d]
+                    else:
+                        recent = recs.tail(10)  # fallback: last 10 entries
+
+                    for _, row in recent.iterrows():
+                        to_grade = str(row.get('To Grade', row.get('toGrade', ''))).lower()
+                        if any(w in to_grade for w in ['buy', 'strong buy', 'overweight', 'outperform']):
+                            entry['upgrades_30d'] += 1
+                        elif any(w in to_grade for w in ['sell', 'underweight', 'underperform', 'reduce']):
+                            entry['downgrades_30d'] += 1
+
+                    entry['revision_momentum'] = entry['upgrades_30d'] - entry['downgrades_30d']
+            except Exception:
+                pass
+
+            # Get analyst consensus from recommendations_summary if available
+            try:
+                summary = getattr(t, 'recommendations_summary', None)
+                if summary is not None and not summary.empty:
+                    row = summary.iloc[0] if len(summary) > 0 else None
+                    if row is not None:
+                        strong_buy = int(row.get('strongBuy', 0))
+                        buy = int(row.get('buy', 0))
+                        hold = int(row.get('hold', 0))
+                        sell = int(row.get('sell', 0))
+                        strong_sell = int(row.get('strongSell', 0))
+                        total = strong_buy + buy + hold + sell + strong_sell
+                        if total > 0:
+                            entry['analyst_consensus'] = round((strong_buy + buy) / total, 3)
+            except Exception:
+                pass
+
+            analyst_data[ticker] = entry
+            fetched += 1
+        except Exception:
+            failed += 1
+        time.sleep(0.2)
+
+    if analyst_data:
+        save_json('analyst_data.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': len(analyst_data),
+            'tickers': analyst_data,
+        })
+    print(f'  Analyst data: {fetched} tickers fetched, {failed} failed')
 
 
 # ── Market Context Data (VIX + 10yr Treasury) ────────────────────────────────
@@ -468,7 +964,7 @@ def fetch_market_data():
         f'?api_key={FRED_KEY}&limit=5&sort_order=desc&file_type=json&series_id='
     )
 
-    market = {'updated': datetime.datetime.utcnow().isoformat() + 'Z', 'source': 'FRED'}
+    market = {'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z', 'source': 'FRED'}
 
     for series_id, key, label in [('DGS10', 'treasury_10yr', '10yr Treasury'),
                                    ('VIXCLS', 'vix', 'VIX')]:
@@ -496,7 +992,7 @@ def fetch_market_data():
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    print(f'\n=== ATLAS Data Fetcher — {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")} UTC ===\n')
+    print(f'\n=== ATLAS Data Fetcher — {datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M")} UTC ===\n')
 
     # ── Market context (VIX + 10yr yield from FRED) ────────────────────────
     print('Fetching market context data (FRED)...')
@@ -513,16 +1009,18 @@ def main():
         filings = enrich_form4_xml(filings)
 
         save_json('edgar_feed.json', {
-            'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
             'count': len(filings),
             'source': 'SEC EDGAR EFTS + Form 4 XML',
             'filings': filings,
         })
         print(f'  {len(filings)} enriched Form 4 filings saved')
     except Exception as e:
+        import traceback
         print(f'  EDGAR error: {e}')
+        traceback.print_exc()
 
-    # ── Congressional trades (FMP + QuiverQuant) ──────────────────────────
+    # ── Congressional trades (FMP) ────────────────────────────────────────
     congress_trades = []
     congress_source = []
 
@@ -536,7 +1034,7 @@ def main():
             if fmp_trades:
                 # Save raw FMP data separately
                 save_json('fmp_congress_feed.json', {
-                    'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
                     'count': len(fmp_trades),
                     'source': 'FMP',
                     'trades': fmp_trades,
@@ -549,56 +1047,69 @@ def main():
     else:
         print('\nFMP_API_KEY not set — skipping FMP congressional trades')
 
-    # QuiverQuant congressional trades (fallback / supplemental)
-    if QUIVER_KEY:
-        print('\nFetching congressional trades (QuiverQuant)...')
-        try:
-            quiver_trades = fetch_quiver_congress(QUIVER_KEY)
-            if quiver_trades:
-                # Add Source field to QuiverQuant trades for tracking
-                for t in quiver_trades:
-                    t['Source'] = 'QuiverQuant'
-                congress_trades.extend(quiver_trades)
-                congress_source.append('QuiverQuant')
-                print(f'  {len(quiver_trades)} QuiverQuant congressional trades fetched')
-        except Exception as e:
-            print(f'  QuiverQuant congress error: {e}')
+    # House Financial Disclosures (direct scraper — no API key needed)
+    house_trades = []
+    try:
+        print('\nFetching House financial disclosures (direct scraper)...')
+        house_trades = fetch_house_disclosures()
+        if house_trades:
+            congress_source.append('House')
+            # Count how many are genuinely new (not in FMP data)
+            fmp_keys = set()
+            for t in congress_trades:
+                fmp_keys.add((
+                    t.get('Ticker', ''),
+                    t.get('TransactionDate', ''),
+                    t.get('Representative', ''),
+                    t.get('Transaction', ''),
+                ))
+            house_new = sum(
+                1 for t in house_trades
+                if (t['Ticker'], t['TransactionDate'], t['Representative'], t['Transaction']) not in fmp_keys
+            )
+            congress_trades.extend(house_trades)
+            print(f'  House scraper: {len(house_trades)} total, {house_new} new (not in FMP)')
+    except Exception as e:
+        print(f'  House scraper failed, FMP-only fallback: {e}')
 
-        # ── Insider trades (QuiverQuant Tier 2) ───────────────────────────
-        print('\nFetching insider trades (QuiverQuant)...')
+    # ── Insider trades (FMP) ─────────────────────────────────────────────
+    if FMP_API_KEY:
+        insider_pages = 30 if '--bootstrap' in sys.argv else 10
+        print(f'\nFetching insider trades (FMP, {insider_pages} pages, purchases only)...')
         try:
-            insiders = fetch_quiver_insiders(QUIVER_KEY)
+            insiders = fetch_fmp_insiders(FMP_API_KEY, pages=insider_pages)
             if insiders:
                 save_json('insiders_feed.json', {
-                    'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
                     'count': len(insiders),
-                    'source': 'QuiverQuant',
+                    'source': 'FMP',
                     'trades': insiders,
                 })
-                print(f'  {len(insiders)} insider trades saved')
+                print(f'  {len(insiders)} insider purchase trades saved')
             else:
-                print('  No insider data returned (Tier 2 access may not be included)')
+                print('  No insider trades returned from FMP')
         except Exception as e:
-            print(f'  QuiverQuant insiders error: {e}')
+            print(f'  FMP insiders error: {e}')
     else:
-        print('\nQUIVER_KEY not set — skipping QuiverQuant congressional and insider trade fetch')
-        print('  Register at quiverquant.com/quiverapi, then:')
-        print('  export QUIVER_KEY=your_token && python3 scripts/fetch_data.py')
+        print('\nFMP_API_KEY not set — skipping insider trades')
 
     # Merge and deduplicate combined congressional trades
     if congress_trades:
-        # Dedup by (Ticker, TransactionDate, Representative)
-        seen = set()
-        merged = []
+        # Dedup by (Ticker, TransactionDate, Representative, Transaction)
+        # When duplicate exists in both FMP + House, prefer House record (fresher)
+        seen = {}  # key → trade dict
         for t in congress_trades:
             key = (
                 t.get('Ticker', ''),
                 t.get('TransactionDate', t.get('Date', '')),
                 t.get('Representative', ''),
+                t.get('Transaction', ''),
             )
             if key not in seen:
-                seen.add(key)
-                merged.append(t)
+                seen[key] = t
+            elif t.get('Source') == 'House' and seen[key].get('Source') != 'House':
+                seen[key] = t  # prefer House record
+        merged = list(seen.values())
         # Sort most recent first
         merged.sort(
             key=lambda x: x.get('TransactionDate', x.get('Date', '')),
@@ -606,7 +1117,7 @@ def main():
         )
         source_label = ' + '.join(congress_source)
         save_json('congress_feed.json', {
-            'updated': datetime.datetime.utcnow().isoformat() + 'Z',
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
             'count': len(merged),
             'source': source_label,
             'trades': merged,
@@ -633,6 +1144,41 @@ def main():
         print(f'  {len(sec_map)} company→ticker mappings saved')
     except Exception as e:
         print(f'  SEC ticker map error: {e}')
+
+    # ── Volume + Analyst data (yfinance) ─────────────────────────────────
+    # Collect unique tickers from recent signals (congress + insiders)
+    signal_tickers = set()
+    if congress_trades:
+        for t in congress_trades:
+            ticker = t.get('Ticker', '')
+            if ticker and len(ticker) <= 5:
+                signal_tickers.add(ticker)
+    # Also try loading existing brain signals for ticker list
+    try:
+        brain_path = os.path.join(DATA_DIR, 'brain_signals.json')
+        if os.path.exists(brain_path):
+            with open(brain_path) as f:
+                brain = json.load(f)
+            for s in brain.get('signals', []):
+                if s.get('ticker'):
+                    signal_tickers.add(s['ticker'])
+    except Exception:
+        pass
+
+    if signal_tickers:
+        tickers_list = sorted(signal_tickers)[:100]  # cap at 100 to limit API calls
+
+        print(f'\nFetching volume data ({len(tickers_list)} tickers)...')
+        try:
+            fetch_volume_data(tickers_list)
+        except Exception as e:
+            print(f'  Volume data error (skipped): {e}')
+
+        print(f'\nFetching analyst data ({len(tickers_list)} tickers)...')
+        try:
+            fetch_analyst_data(tickers_list)
+        except Exception as e:
+            print(f'  Analyst data error (skipped): {e}')
 
     print('\nDone.\n')
 

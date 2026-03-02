@@ -198,7 +198,7 @@ def fetch_edgar_historical(days: int = 635, raw_per_month: int = 1500,
 def fetch_congress_trades() -> list:
     """Fetch congressional trades from all available sources.
 
-    Priority: FMP API (deep history) > existing congress_feed.json > QuiverQuant.
+    Priority: FMP API (deep history) > existing congress_feed.json.
     Results are merged, deduplicated, and saved back to congress_feed.json.
     """
     trades = []
@@ -221,7 +221,7 @@ def fetch_congress_trades() -> list:
     else:
         log.info("FMP_API_KEY not set — skipping FMP fetch")
 
-    # 2. Load existing congress_feed.json (may have QuiverQuant or prior FMP data)
+    # 2. Load existing congress_feed.json (may have prior data)
     feed_path = DATA_DIR / "congress_feed.json"
     if feed_path.exists():
         data = load_json(feed_path)
@@ -229,29 +229,6 @@ def fetch_congress_trades() -> list:
         trades.extend(existing)
         sources.append('congress_feed.json')
         log.info(f"Loaded {len(existing)} trades from congress_feed.json")
-
-    # 3. Try QuiverQuant historical endpoint (fallback)
-    quiver_key = os.environ.get('QUIVER_KEY', '')
-    if quiver_key:
-        try:
-            url = 'https://api.quiverquant.com/beta/historical/congresstrading'
-            headers = {
-                'Authorization': f'Token {quiver_key}',
-                'Accept': 'application/json',
-            }
-            r = requests.get(url, headers=headers, timeout=30)
-            if r.ok:
-                historical = r.json()
-                if isinstance(historical, list):
-                    log.info(f"QuiverQuant historical: {len(historical)} trades")
-                    trades.extend(historical)
-                    sources.append('QuiverQuant')
-                else:
-                    log.info("QuiverQuant historical returned non-list response")
-            else:
-                log.info(f"QuiverQuant historical: HTTP {r.status_code} (may need paid tier)")
-        except Exception as e:
-            log.warning(f"QuiverQuant historical error: {e}")
 
     # Deduplicate by (ticker, date, representative)
     seen = set()
