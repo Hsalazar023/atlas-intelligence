@@ -500,8 +500,13 @@ def _print_data_quality_report(conn) -> None:
     print(f"\n{'='*70}\n")
 
 
-def bootstrap(conn=None):
-    """Main bootstrap pipeline."""
+def bootstrap(conn=None, edgar_days: int = 900):
+    """Main bootstrap pipeline.
+
+    Args:
+        conn: SQLite connection (created if None)
+        edgar_days: How far back to fetch EDGAR filings (default 900 = ~30 months)
+    """
     log.info("=" * 60)
     log.info("  ATLAS Adaptive Learning Engine — Historical Bootstrap")
     log.info("=" * 60)
@@ -511,10 +516,11 @@ def bootstrap(conn=None):
     if conn is None:
         conn = init_db()
 
+    months_approx = edgar_days // 30
     # ── 1. Fetch historical EDGAR filings ────────────────────────────────
-    log.info("\n[1/11] Fetching historical EDGAR Form 4 filings (~21 months)...")
+    log.info(f"\n[1/11] Fetching historical EDGAR Form 4 filings (~{months_approx} months)...")
     elapsed = _step_timer()
-    edgar_filings = fetch_edgar_historical(days=635, raw_per_month=1500, keep_per_month=500)
+    edgar_filings = fetch_edgar_historical(days=edgar_days, raw_per_month=1500, keep_per_month=500)
 
     # ── 1b. Enrich via Form 4 XML — extract role, direction, buy value ────
     # Without this, we'd ingest grants/sales/exercises as buy signals (noise).

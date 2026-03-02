@@ -41,11 +41,21 @@
 
 ---
 
-## Session 3 Priorities
+## Session 3 Checkpoint (Mar 1, 2026 — Pipeline Fixes & Signal Expansion)
 
-1. **Run `--analyze` + `--score` and validate** — new features (volume_dry_up, analyst) will be mostly NULL until fetch_data.py runs. Run pipeline, check IC/hit_rate delta from pruning + new features.
-2. **Frontend trader tier badges** — show elite/fade badge on trade idea cards, "Why this signal" context.
-3. **Senate scraper** — CSRF + HTML complexity. Research feasibility, may need Playwright.
+### Completed — All Tasks
+- [x] **Task 0A — Fix FMP Insider Trades 404.** Rewrote `fetch_fmp_insiders()` with multi-endpoint fallback: stable → v4-rss → v4. Auto-detects working endpoint, filters purchases from RSS feed.
+- [x] **Task 0B — Fix House XML Scraper URL.** Correct URL `financial-pdfs/{YEAR}FD.xml`. PTR PDFs are encrypted — metadata-only approach.
+- [x] **Task 0C — Fix --self-check KeyError.** Fixed dict iteration, missing keys (`recommendations`).
+- [x] **Task 1 — Feature backfill.** Added `backfill_features()` + `--backfill` CLI flag. Resets v5/v6 columns to NULL, re-enriches, reports before/after counts.
+- [x] **Task 2 — Committee membership.** Added `fetch_committee_data()` (GitHub unitedstates/congress-legislators, free). Maps committees to sectors. Added `committee_overlap` ML feature — 1 if congress member sits on oversight committee for traded sector. Added pyyaml to fetch-data.yml.
+- [x] **Task 3 — Earnings surprise.** Added `fetch_earnings_surprise()` (yfinance EPS data). Added `earnings_surprise` ML feature — EPS surprise % for most recent quarter.
+- [x] **Task 4 — News sentiment.** Added `fetch_news_sentiment()` (Finnhub headlines + VADER/keyword scoring). Added `news_sentiment_30d` ML feature. Falls back to keyword heuristic if nltk not installed.
+- [x] **Task 5 — Time-weighted learning.** Added `_compute_time_weights()` with 12-month half-life. Applied to `walk_forward_train`, `walk_forward_regression`, and `train_full_sample` via `sample_weight`. Recent signals weighted higher.
+- [x] **Task 6 — Feature candidate evaluation.** Added `evaluate_feature_candidates()` to ml_engine.py. Tests candidate columns against baseline IC via walk-forward. Added `--eval-features COL [COL...]` CLI flag. Reports IC delta + recommendation (ADD/NEUTRAL/SKIP).
+- [x] **Task 7 — Historical data expansion.** Increased EDGAR bootstrap default from 635 days (~21 months) to 900 days (~30 months). Made configurable via `--edgar-days N` CLI parameter.
+
+Feature count: 27 → 30 (v6). New: `committee_overlap`, `earnings_surprise`, `news_sentiment_30d`.
 
 ---
 

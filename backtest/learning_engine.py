@@ -250,6 +250,10 @@ def _migrate_columns(conn: sqlite3.Connection) -> None:
         ("analyst_revision_30d", "INTEGER"),
         ("analyst_consensus", "REAL"),
         ("analyst_insider_confluence", "INTEGER DEFAULT 0"),
+        # v6: committee overlap + earnings surprise + news sentiment
+        ("committee_overlap", "INTEGER DEFAULT 0"),
+        ("earnings_surprise", "REAL"),
+        ("news_sentiment_30d", "REAL"),
     ]
     new_feature_cols = [
         ("avg_car_180d", "REAL"),
@@ -1179,9 +1183,182 @@ def enrich_signal_features(conn: sqlite3.Connection) -> int:
         except Exception as e:
             log.warning(f"Analyst enrichment failed: {e}")
 
+    # ── 11. Committee overlap (from data/committee_data.json) ──
+    # If a congress member trades a stock in a sector their committee oversees,
+    # that's a high-conviction information-edge signal.
+    committee_path = DATA_DIR / "committee_data.json"
+    if committee_path.exists():
+        try:
+            comm_raw = load_json(committee_path)
+            comm_members = comm_raw.get('members', {})
+            if comm_members:
+                needs_committee = conn.execute(
+                    "SELECT id, representative, sector FROM signals "
+                    "WHERE committee_overlap IS NULL AND source = 'congress' "
+                    "AND representative IS NOT NULL AND sector IS NOT NULL"
+                ).fetchall()
+                comm_updated = 0
+                for sig in needs_committee:
+                    rep = sig['representative'].strip().lower()
+                    sig_sector = sig['sector']
+                    overlap = 0
+                    # Try matching representative name to committee member
+                    # Committee data uses "LastName, FirstName" format
+                    for name_key, info in comm_members.items():
+                        # Check if representative name matches (fuzzy: last name match)
+                        rep_parts = rep.replace(',', ' ').split()
+                        key_parts = name_key.replace(',', ' ').split()
+                        if rep_parts and key_parts and rep_parts[0] == key_parts[0]:
+                            # Last name match — check sector overlap
+                            member_sectors = info.get('sectors', [])
+                            if sig_sector in member_sectors:
+                                overlap = 1
+                            break
+                    conn.execute(
+                        "UPDATE signals SET committee_overlap=? WHERE id=?",
+                        (overlap, sig['id'])
+                    )
+                    comm_updated += 1
+                # Fill non-congress signals with 0
+                non_congress = conn.execute(
+                    "UPDATE signals SET committee_overlap=0 "
+                    "WHERE committee_overlap IS NULL AND source != 'congress'"
+                ).rowcount
+                comm_updated += non_congress
+                updated += comm_updated
+                if comm_updated:
+                    log.info(f"Enriched committee_overlap for {comm_updated} signals")
+        except Exception as e:
+            log.warning(f"Committee enrichment failed: {e}")
+
+    # ── 12. Earnings surprise (from data/earnings_surprise.json) ──
+    # Insider buying after an earnings beat = accumulation; after miss = turnaround bet
+    surprise_path = DATA_DIR / "earnings_surprise.json"
+    if surprise_path.exists():
+        try:
+            surprise_raw = load_json(surprise_path)
+            surprise_tickers = surprise_raw.get('tickers', {})
+            if surprise_tickers:
+                needs_surprise = conn.execute(
+                    "SELECT id, ticker FROM signals WHERE earnings_surprise IS NULL"
+                ).fetchall()
+                surprise_updated = 0
+                for sig in needs_surprise:
+                    ticker = sig['ticker']
+                    s = surprise_tickers.get(ticker)
+                    if s:
+                        conn.execute(
+                            "UPDATE signals SET earnings_surprise=? WHERE id=?",
+                            (s.get('surprise_pct', 0), sig['id'])
+                        )
+                    else:
+                        conn.execute(
+                            "UPDATE signals SET earnings_surprise=0 WHERE id=?",
+                            (sig['id'],)
+                        )
+                    surprise_updated += 1
+                updated += surprise_updated
+                if surprise_updated:
+                    log.info(f"Enriched earnings_surprise for {surprise_updated} signals")
+        except Exception as e:
+            log.warning(f"Earnings surprise enrichment failed: {e}")
+
+    # ── 13. News sentiment (from data/news_sentiment.json) ──
+    sentiment_path = DATA_DIR / "news_sentiment.json"
+    if sentiment_path.exists():
+        try:
+            sent_raw = load_json(sentiment_path)
+            sent_tickers = sent_raw.get('tickers', {})
+            if sent_tickers:
+                needs_sentiment = conn.execute(
+                    "SELECT id, ticker FROM signals WHERE news_sentiment_30d IS NULL"
+                ).fetchall()
+                sent_updated = 0
+                for sig in needs_sentiment:
+                    ticker = sig['ticker']
+                    s = sent_tickers.get(ticker)
+                    if s:
+                        conn.execute(
+                            "UPDATE signals SET news_sentiment_30d=? WHERE id=?",
+                            (s.get('sentiment_30d', 0), sig['id'])
+                        )
+                    else:
+                        conn.execute(
+                            "UPDATE signals SET news_sentiment_30d=0 WHERE id=?",
+                            (sig['id'],)
+                        )
+                    sent_updated += 1
+                updated += sent_updated
+                if sent_updated:
+                    log.info(f"Enriched news_sentiment_30d for {sent_updated} signals")
+        except Exception as e:
+            log.warning(f"News sentiment enrichment failed: {e}")
+
     conn.commit()
     log.info(f"Enriched {updated} features")
     return updated
+
+
+def backfill_features(conn: sqlite3.Connection) -> dict:
+    """Re-enrich analyst + volume features for ALL signals (not just NULLs).
+
+    This resets the v5 feature columns to NULL so enrich_signal_features()
+    will recompute them from the latest data on disk. Useful when:
+      - analyst_data.json was empty during initial enrichment
+      - volume data was missing at bootstrap time
+      - Feature logic was updated and needs to propagate
+
+    Returns dict with counts of signals re-enriched.
+    """
+    log.info("=== Backfill Features (v5/v6: volume, analyst, committee) ===")
+
+    BACKFILL_COLS = ('volume_dry_up', 'analyst_revision_30d', 'analyst_consensus',
+                     'analyst_insider_confluence', 'committee_overlap',
+                     'earnings_surprise', 'news_sentiment_30d')
+
+    # 1. Count current state
+    total = conn.execute("SELECT COUNT(*) FROM signals").fetchone()[0]
+    nulls_before = {}
+    for col in BACKFILL_COLS:
+        n = conn.execute(f"SELECT COUNT(*) FROM signals WHERE {col} IS NULL").fetchone()[0]
+        nulls_before[col] = n
+
+    log.info(f"Total signals: {total}")
+    for col, n in nulls_before.items():
+        log.info(f"  {col}: {n}/{total} NULL ({100*n/total:.1f}%)")
+
+    # 2. Reset v5/v6 columns to NULL so enrich picks them all up
+    conn.execute("UPDATE signals SET volume_dry_up = NULL")
+    conn.execute("""UPDATE signals SET analyst_revision_30d = NULL,
+                     analyst_consensus = NULL,
+                     analyst_insider_confluence = NULL""")
+    conn.execute("UPDATE signals SET committee_overlap = NULL")
+    conn.execute("UPDATE signals SET earnings_surprise = NULL")
+    conn.execute("UPDATE signals SET news_sentiment_30d = NULL")
+    conn.commit()
+    log.info("Reset v5 columns to NULL for re-enrichment")
+
+    # 3. Run the standard enrichment (handles the NULL → computed fill)
+    enriched = enrich_signal_features(conn)
+
+    # 4. Report post-backfill state
+    nulls_after = {}
+    for col in BACKFILL_COLS:
+        n = conn.execute(f"SELECT COUNT(*) FROM signals WHERE {col} IS NULL").fetchone()[0]
+        nulls_after[col] = n
+
+    log.info("Post-backfill NULL counts:")
+    for col, n in nulls_after.items():
+        filled = nulls_before[col] - n
+        log.info(f"  {col}: {n}/{total} NULL (filled {filled})")
+
+    result = {
+        'total_signals': total,
+        'enriched': enriched,
+        'nulls_before': nulls_before,
+        'nulls_after': nulls_after,
+    }
+    return result
 
 
 # ── Legislative Catalyst Registry ─────────────────────────────────────────────
@@ -5701,6 +5878,11 @@ def main():
     parser.add_argument('--export', action='store_true', help='Export brain_signals.json + brain_stats.json for frontend')
     parser.add_argument('--score', action='store_true', help='Score all signals with ML + export brain data')
     parser.add_argument('--self-check', action='store_true', dest='self_check', help='Run Brain health diagnostics')
+    parser.add_argument('--backfill', action='store_true', help='Re-enrich v5/v6 features (volume, analyst, committee, earnings) for all signals')
+    parser.add_argument('--eval-features', nargs='+', dest='eval_features', metavar='COL',
+                        help='Evaluate candidate feature columns against baseline IC')
+    parser.add_argument('--edgar-days', type=int, default=900, dest='edgar_days',
+                        help='EDGAR lookback days for --bootstrap (default 900 = ~30 months)')
     args = parser.parse_args()
 
     conn = init_db()
@@ -5708,21 +5890,42 @@ def main():
     if args.bootstrap:
         # Delegate to bootstrap script
         from backtest.bootstrap_historical import bootstrap
-        bootstrap(conn)
+        bootstrap(conn, edgar_days=args.edgar_days)
     elif args.diagnostics:
         generate_analysis_report(conn)
         generate_diagnostics_html(conn)
         print(f"Diagnostics saved to:\n  {ALE_DIAGNOSTICS_HTML}\n  {ALE_ANALYSIS_REPORT}")
     elif args.self_check:
         health = run_self_check(conn)
-        print(f"\nBrain Health: {health['status'].upper()}")
-        for c in health['checks']:
-            print(f"  [CHECK]   {c}")
-        for w in health['warnings']:
-            print(f"  [WARN]    {w}")
-        for s in health['suggestions']:
-            print(f"  [SUGGEST] {s}")
+        overall = str(health.get('overall_status', 'unknown')).upper()
+        print(f"\nBrain Health: {overall}")
+        for name, check in health.get('checks', {}).items():
+            status = str(check.get('status', 'ok')).upper()
+            print(f"  [{status:8s}] {name}")
+        for rec in health.get('recommendations', []):
+            print(f"  [SUGGEST] {rec}")
         print(f"\nSaved to {BRAIN_HEALTH}")
+    elif args.backfill:
+        result = backfill_features(conn)
+        print(f"\nBackfill complete: {result['enriched']} features re-enriched")
+        for col in ('volume_dry_up', 'analyst_revision_30d', 'analyst_consensus',
+                     'analyst_insider_confluence', 'committee_overlap',
+                     'earnings_surprise', 'news_sentiment_30d'):
+            before = result['nulls_before'][col]
+            after = result['nulls_after'][col]
+            print(f"  {col}: {before} → {after} NULLs")
+    elif args.eval_features:
+        from backtest.ml_engine import evaluate_feature_candidates
+        result = evaluate_feature_candidates(conn, args.eval_features)
+        print(f"\nFeature Evaluation (baseline IC={result['baseline_ic']:.4f}, "
+              f"{result['baseline_features']} features)")
+        for name, info in result['candidates'].items():
+            if info['status'] == 'evaluated':
+                delta = info['ic_delta']
+                print(f"  {name}: IC={info['ic']:.4f} (delta={delta:+.4f}) "
+                      f"fill={info['fill_rate']:.0%} → {info['recommendation']}")
+            else:
+                print(f"  {name}: {info['status']} — {info.get('reason', '')}")
     elif args.score:
         scored = score_all_signals(conn)
         export_brain_data(conn)

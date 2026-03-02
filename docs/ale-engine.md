@@ -14,11 +14,14 @@
 | `--diagnostics` | Generate HTML dashboard + markdown analysis report (standalone) |
 | `--export` | Export brain_signals.json + brain_stats.json only |
 | `--self-check` | IC trend, feature drift, model health (planned) |
+| `--backfill` | Re-enrich v5/v6 features (volume, analyst, committee, earnings, sentiment) for all signals |
+| `--eval-features COL [COL...]` | Evaluate candidate feature columns against baseline IC |
+| `--edgar-days N` | EDGAR lookback days for --bootstrap (default 900 = ~30 months) |
 
 **One-time scripts:**
 | Script | Purpose |
 |---|---|
-| `bootstrap_historical.py` | Populate DB with ~39 months of historical data |
+| `bootstrap_historical.py` | Populate DB with historical data (default ~30 months EDGAR) |
 | `backfill_edgar_xml.py` | Parse XML for EDGAR signals, delete non-purchases, enrich buys |
 
 ---
@@ -42,7 +45,7 @@
 
 ---
 
-## Feature List (27) — v5
+## Feature List (30) — v6
 
 | Category | Features |
 |---|---|
@@ -52,10 +55,13 @@
 | Classification | insider_role, sector, market_cap_bucket |
 | Price-based | price_proximity_52wk, momentum_1m/3m/6m, volume_spike, volume_dry_up |
 | Market context | vix_at_signal, yield_curve_at_signal, credit_spread_at_signal |
-| Catalysts | days_to_earnings |
+| Catalysts | days_to_earnings, earnings_surprise |
 | Analyst | analyst_revision_30d, analyst_consensus, analyst_insider_confluence |
+| Committee | committee_overlap |
+| Sentiment | news_sentiment_30d |
 | Derived (DB) | insider_buy_ratio_90d, sector_avg_car, vix_regime_interaction, sector_momentum, days_since_last_buy |
 
+**v6 changes:** Added `committee_overlap` (congress oversight ↔ stock sector, GitHub data), `earnings_surprise` (EPS surprise %, yfinance), `news_sentiment_30d` (Finnhub news + VADER/keyword scoring). Net: 27→30 features.
 **v5 changes:** Pruned 5 features (<1% importance, 3+ runs): `convergence_tier`, `has_convergence`, `days_to_catalyst`, `relative_position_size`, `cluster_velocity`. Added 4 new: `volume_dry_up`, `analyst_revision_30d`, `analyst_consensus`, `analyst_insider_confluence`. Added `_role_quality` bonuses + trader tiers + fade signal. insider_role kept — role VALUES (COO/CEO) are highly predictive. Net: 28→27 features.
 **v4 changes:** Pruned `source` (0.16%), `trade_pattern` (0.40%, 31% fill). Added `person_avg_car_30d`, `sector_momentum`, `days_since_last_buy`.
 

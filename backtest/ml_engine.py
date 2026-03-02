@@ -41,6 +41,8 @@ FEATURE_COLUMNS = [
     # v5: volume + analyst features
     'volume_dry_up', 'analyst_revision_30d', 'analyst_consensus',
     'analyst_insider_confluence',
+    # v6: committee overlap + earnings surprise + news sentiment
+    'committee_overlap', 'earnings_surprise', 'news_sentiment_30d',
 ]
 # Pruned in v4: 'source' (0.16%), 'trade_pattern' (0.40%, 31% fill)
 # Pruned in v5: 'convergence_tier' (<1%), 'has_convergence' (<1%),
@@ -216,9 +218,26 @@ def prepare_features_all(conn: sqlite3.Connection, horizon: str = '30d'):
     return X, ids, dates, tickers, cars, X_raw
 
 
+def _compute_time_weights(dates, half_life_months: int = 12) -> np.ndarray:
+    """Compute exponential decay weights so recent signals matter more.
+
+    w_i = 0.5^(age_months / half_life). A 12-month half-life means
+    signals from 1 year ago have half the weight of today's signals.
+    Weights are clipped to [0.1, 1.0] to avoid zero-weight old signals.
+    """
+    import pandas as pd
+    date_series = pd.to_datetime(dates)
+    max_date = date_series.max()
+    age_days = (max_date - date_series).dt.days.values.astype(float)
+    age_months = age_days / 30.44  # average days per month
+    weights = np.power(0.5, age_months / half_life_months)
+    return np.clip(weights, 0.1, 1.0)
+
+
 def train_full_sample(conn: sqlite3.Connection, horizon: str = '30d'):
     """Train 4 models on ALL historical data with outcomes (full sample, not walk-forward).
 
+    Uses time-weighted sampling: recent signals weighted higher (12-month half-life).
     Returns (clf_rf, clf_lgb, reg_rf, reg_lgb) or None if insufficient data.
     """
     import pandas as pd
@@ -229,21 +248,24 @@ def train_full_sample(conn: sqlite3.Connection, horizon: str = '30d'):
         log.warning(f"Insufficient data for full-sample training ({len(X)} signals)")
         return None
 
+    # Time-weighted: recent signals matter more
+    sw = _compute_time_weights(dates)
+
     # Classification: P(beat SPY)
     clf_rf = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
-    clf_rf.fit(X, y)
+    clf_rf.fit(X, y, sample_weight=sw)
 
     clf_lgb = lgb.LGBMClassifier(n_estimators=100, max_depth=6, random_state=42,
                                   verbose=-1, n_jobs=-1)
-    clf_lgb.fit(X, y)
+    clf_lgb.fit(X, y, sample_weight=sw)
 
     # Regression: predicted CAR magnitude
     reg_rf = RandomForestRegressor(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
-    reg_rf.fit(X, car_winsorized)
+    reg_rf.fit(X, car_winsorized, sample_weight=sw)
 
     reg_lgb = lgb.LGBMRegressor(n_estimators=100, max_depth=6, random_state=42,
                                  verbose=-1, n_jobs=-1)
-    reg_lgb.fit(X, car_winsorized)
+    reg_lgb.fit(X, car_winsorized, sample_weight=sw)
 
     log.info(f"Full-sample models trained on {len(X)} signals")
     return clf_rf, clf_lgb, reg_rf, reg_lgb
@@ -452,15 +474,18 @@ def walk_forward_train(conn: sqlite3.Connection,
         X_train, y_train = X[train_mask], y[train_mask]
         X_test, y_test = X[test_mask], y[test_mask]
 
+        # Time-weighted: recent training signals matter more
+        train_sw = _compute_time_weights(date_series[train_mask].values)
+
         # Train Random Forest
         rf = RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42, n_jobs=-1)
-        rf.fit(X_train, y_train)
+        rf.fit(X_train, y_train, sample_weight=train_sw)
         rf_probs = rf.predict_proba(X_test)[:, 1]
 
         # Train LightGBM
         lgb_model = lgb.LGBMClassifier(n_estimators=100, max_depth=6, random_state=42,
                                         verbose=-1, n_jobs=-1)
-        lgb_model.fit(X_train, y_train)
+        lgb_model.fit(X_train, y_train, sample_weight=train_sw)
         lgb_probs = lgb_model.predict_proba(X_test)[:, 1]
 
         # Ensemble: average probabilities
@@ -639,16 +664,19 @@ def walk_forward_regression(conn: sqlite3.Connection,
         X_train, y_train = X[train_mask], y[train_mask]
         X_test, y_test = X[test_mask], y[test_mask]
 
+        # Time-weighted: recent training signals matter more
+        train_sw = _compute_time_weights(date_series[train_mask].values)
+
         # Train Random Forest Regressor
         rf = RandomForestRegressor(n_estimators=100, max_depth=6,
                                     random_state=42, n_jobs=-1)
-        rf.fit(X_train, y_train)
+        rf.fit(X_train, y_train, sample_weight=train_sw)
         rf_preds = rf.predict(X_test)
 
         # Train LightGBM Regressor
         lgb_model = lgb.LGBMRegressor(n_estimators=100, max_depth=6,
                                        random_state=42, verbose=-1, n_jobs=-1)
-        lgb_model.fit(X_train, y_train)
+        lgb_model.fit(X_train, y_train, sample_weight=train_sw)
         lgb_preds = lgb_model.predict(X_test)
 
         # Ensemble: average predictions
@@ -855,3 +883,92 @@ def train_full_sample_multi(conn):
 
     log.info(f"Full-sample multi: trained {list(models.keys())}")
     return models
+
+
+def evaluate_feature_candidates(conn: sqlite3.Connection,
+                                 candidates: list[str],
+                                 horizon: str = '30d') -> dict:
+    """Test whether adding candidate feature columns improves OOS IC.
+
+    Runs walk-forward with baseline features (current FEATURE_COLUMNS),
+    then with each candidate added individually. Reports IC delta.
+
+    Args:
+        conn: SQLite connection
+        candidates: list of column names to evaluate (must exist in DB)
+        horizon: which CAR horizon to evaluate against
+
+    Returns dict with baseline IC and per-candidate IC + delta.
+    """
+    import pandas as pd
+
+    # 1. Baseline walk-forward with current features
+    baseline = walk_forward_train(conn, horizon=horizon)
+    baseline_ic = baseline.oos_ic
+
+    results = {
+        'baseline_ic': baseline_ic,
+        'baseline_features': len(FEATURE_COLUMNS),
+        'horizon': horizon,
+        'candidates': {},
+    }
+
+    log.info(f"Feature eval baseline: IC={baseline_ic:.4f} ({len(FEATURE_COLUMNS)} features)")
+
+    # 2. For each candidate, temporarily add to features and re-run
+    for candidate in candidates:
+        # Check if column exists in DB
+        try:
+            conn.execute(f"SELECT {candidate} FROM signals LIMIT 1")
+        except Exception:
+            results['candidates'][candidate] = {
+                'status': 'error',
+                'reason': 'column not found in DB',
+            }
+            continue
+
+        # Check fill rate
+        total = conn.execute("SELECT COUNT(*) FROM signals").fetchone()[0]
+        filled = conn.execute(
+            f"SELECT COUNT(*) FROM signals WHERE {candidate} IS NOT NULL"
+        ).fetchone()[0]
+        fill_rate = filled / max(total, 1)
+
+        if fill_rate < 0.1:
+            results['candidates'][candidate] = {
+                'status': 'skip',
+                'reason': f'fill rate too low ({fill_rate:.1%})',
+                'fill_rate': round(fill_rate, 3),
+            }
+            continue
+
+        # Temporarily extend FEATURE_COLUMNS
+        original_cols = FEATURE_COLUMNS.copy()
+        FEATURE_COLUMNS.append(candidate)
+        try:
+            candidate_result = walk_forward_train(conn, horizon=horizon)
+            ic_delta = candidate_result.oos_ic - baseline_ic
+            results['candidates'][candidate] = {
+                'status': 'evaluated',
+                'ic': round(candidate_result.oos_ic, 6),
+                'ic_delta': round(ic_delta, 6),
+                'hit_rate': candidate_result.oos_hit_rate,
+                'fill_rate': round(fill_rate, 3),
+                'recommendation': 'ADD' if ic_delta > 0.005 else (
+                    'NEUTRAL' if ic_delta > -0.005 else 'SKIP'
+                ),
+            }
+            log.info(f"  {candidate}: IC={candidate_result.oos_ic:.4f} "
+                     f"(delta={ic_delta:+.4f}) → "
+                     f"{'ADD' if ic_delta > 0.005 else 'SKIP'}")
+        except Exception as e:
+            results['candidates'][candidate] = {
+                'status': 'error',
+                'reason': str(e),
+            }
+        finally:
+            # Restore original features
+            FEATURE_COLUMNS.clear()
+            FEATURE_COLUMNS.extend(original_cols)
+
+    return results

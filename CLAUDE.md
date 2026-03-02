@@ -51,7 +51,7 @@ Use `Grep` to find section headers, then `Read` with offset/limit. Never read en
 | `## CLI` | All --flags and one-time scripts |
 | `## Database` | SQLite file, tables, diagnostics paths |
 | `## ML Engine` | Models, validation, CAR, safety rail |
-| `## Feature List` | 28 features by category (v4) |
+| `## Feature List` | 30 features by category (v6) |
 | `## Data Quality` | EDGAR buy filtering, XML enrichment |
 | `## Bootstrap Pipeline` | 11-step historical data load |
 

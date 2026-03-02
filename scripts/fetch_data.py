@@ -454,7 +454,21 @@ def fetch_house_disclosures(lookback_days=30):
 
 
 def _fetch_house_disclosures_inner(lookback_days):
-    """Inner implementation — may raise; caller wraps in try/except."""
+    """Inner implementation — may raise; caller wraps in try/except.
+
+    XML index URL: https://disclosures-clerk.house.gov/public_disc/financial-pdfs/{YEAR}FD.xml
+    (NOT ptr-pdfs — that's for individual filing PDFs)
+
+    XML structure per <Member>:
+        <Prefix>, <Last>, <First>, <Suffix>, <FilingType>, <StateDst>,
+        <Year>, <FilingDate> (M/D/YYYY), <DocID>
+    FilingType: P=PTR (periodic transaction report), others: C/D/X/W/A/E/G
+
+    Individual PTR docs are encrypted PDFs at:
+        https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{YEAR}/{DocID}.pdf
+    No HTML viewer available — trade detail extraction is NOT possible from PDFs.
+    This scraper returns filing metadata only (member, date, filing count).
+    """
     today = datetime.date.today()
     cutoff = today - datetime.timedelta(days=lookback_days)
     headers = {'User-Agent': 'ATLAS Research Tool'}
@@ -464,14 +478,12 @@ def _fetch_house_disclosures_inner(lookback_days):
     if today.month <= 2:
         years.append(today.year - 1)
 
-    # ── STEP 1: Fetch & parse PTR XML index ─────────────────────────────
+    # ── STEP 1: Fetch & parse FD XML index ──────────────────────────────
     all_filings = []
-    filings_parsed = 0
-    filings_failed = 0
 
     for year in years:
-        xml_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{year}FD.xml'
-        print(f'  Fetching House PTR index: {year}...')
+        xml_url = f'https://disclosures-clerk.house.gov/public_disc/financial-pdfs/{year}FD.xml'
+        print(f'  Fetching House FD index: {year}...')
         try:
             r = requests.get(xml_url, headers=headers, timeout=15)
             if not r.ok:
@@ -483,114 +495,92 @@ def _fetch_house_disclosures_inner(lookback_days):
 
         time.sleep(1)  # rate limit
 
-        # ── STEP 2: Parse XML, filter to recent filings ─────────────────
+        # ── STEP 2: Parse XML, filter to PTR filings in lookback window ─
         try:
             root = ET.fromstring(r.content)
         except ET.ParseError as e:
             print(f'  House XML parse error for {year}: {e}')
             continue
 
-        # The XML structure: <FinancialDisclosure> → <Member> elements
-        members = root.findall('.//Member')
-        if not members:
-            # Try alternate structure
-            members = root.findall('.//')
-
+        year_count = 0
         for member in root.iter('Member'):
-            filing_date_str = ''
-            doc_id = ''
-            member_name = ''
+            # Extract fields using exact tag names from the XML structure
+            filing_type = _get_child_text(member, 'FilingType')
+            # Only PTR filings (FilingType=P) contain transaction reports
+            if filing_type != 'P':
+                continue
 
-            # Extract fields — try common element names
-            for child in member:
-                tag = child.tag.lower() if child.tag else ''
-                text = (child.text or '').strip()
-                if 'filingdate' in tag or tag == 'filing_date':
-                    filing_date_str = text
-                elif 'docid' in tag or tag == 'doc_id':
-                    doc_id = text
-                elif tag in ('prefix', 'last', 'first', 'suffix'):
-                    # Build name from parts
-                    if tag == 'last':
-                        member_name = text + (', ' + member_name if member_name else '')
-                    elif tag == 'first':
-                        member_name = (member_name + ' ' if member_name else '') + text
-                elif 'name' in tag or tag == 'membername':
-                    member_name = text
-                elif tag == 'filingtype' or 'type' in tag:
-                    # Only process PTR filings
-                    if text and 'ptr' not in text.lower() and 'transaction' not in text.lower():
-                        continue
-
-            # Also try attributes
-            if not doc_id:
-                doc_id = member.get('DocID', member.get('docid', ''))
-            if not filing_date_str:
-                filing_date_str = member.get('FilingDate', member.get('filing_date', ''))
+            filing_date_str = _get_child_text(member, 'FilingDate')
+            doc_id = _get_child_text(member, 'DocID')
+            last = _get_child_text(member, 'Last')
+            first = _get_child_text(member, 'First')
+            state_dst = _get_child_text(member, 'StateDst')
 
             if not doc_id or not filing_date_str:
                 continue
 
-            # Parse filing date
             filing_date = _parse_date_flex(filing_date_str)
             if not filing_date or filing_date < cutoff:
                 continue
 
-            # Build name from child elements if not found yet
-            if not member_name:
-                last = _get_child_text(member, 'Last')
-                first = _get_child_text(member, 'First')
-                if last and first:
-                    member_name = f'{first} {last}'
-                elif last:
-                    member_name = last
+            member_name = _clean_member_name(f'{last}, {first}' if last else first)
 
             all_filings.append({
                 'doc_id': doc_id,
-                'member_name': _clean_member_name(member_name),
+                'member_name': member_name,
                 'filing_date': filing_date.isoformat(),
+                'state_district': state_dst,
+                'year': year,
             })
+            year_count += 1
 
-    print(f'  House PTR index: {len(all_filings)} recent filings found (last {lookback_days}d)')
+        print(f'  House {year}: {year_count} PTR filings in last {lookback_days}d')
+
+    print(f'  House PTR index total: {len(all_filings)} recent filings')
     if not all_filings:
         return []
 
-    # ── STEP 3: Fetch individual filing pages for trade details ──────
+    # ── STEP 3: Save filing metadata ────────────────────────────────────
+    # PTR PDFs are encrypted — cannot extract trade details from them.
+    # Save filing metadata for: (1) freshness tracking, (2) filing frequency
+    # signals, (3) future integration if HTML viewer becomes available.
+    save_json('house_filings.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'count': len(all_filings),
+        'source': 'House Clerk XML Index',
+        'note': 'Metadata only — PTR PDFs are encrypted, trade details not extractable',
+        'filings': all_filings,
+    })
+
+    # ── STEP 4: Generate trades from filing metadata ────────────────────
+    # Without trade details from the PDFs, we generate one "filing signal"
+    # per member per filing date. This at minimum tells us WHO filed WHEN,
+    # which the Brain can cross-reference with FMP data for freshness.
+    # These are NOT full trade records — they're filing activity signals.
     all_trades = []
     for filing in all_filings:
-        doc_id = filing['doc_id']
-        # Try the HTML report URL
-        doc_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{doc_id}.pdf'
-        # Also try the structured HTML view
-        html_url = f'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/{doc_id}.htm'
+        all_trades.append({
+            'Ticker': '',  # unknown without PDF parsing
+            'TransactionDate': filing['filing_date'],
+            'Representative': filing['member_name'],
+            'Transaction': 'PTR Filing',  # indicates filing activity, not a specific trade
+            'Range': '',
+            'Chamber': 'House',
+            'Party': '',
+            'DisclosureDate': filing['filing_date'],
+            'DisclosureDelay': 0,
+            'Source': 'House',
+            'DocID': filing['doc_id'],
+        })
 
-        trades_from_filing = []
-        try:
-            # Try HTML first (more parseable than PDF)
-            r = requests.get(html_url, headers=headers, timeout=15)
-            if r.ok and len(r.text) > 200:
-                trades_from_filing = _parse_house_filing_page(
-                    r.text, filing['member_name'], filing['filing_date']
-                )
-                filings_parsed += 1
-            else:
-                # If HTML fails, we can't parse PDF — log and skip
-                filings_failed += 1
-        except Exception as e:
-            print(f'  Filing {doc_id} parse error: {e}')
-            filings_failed += 1
+    # Filter out trades with no ticker — they can't merge into congress_feed
+    # but we still saved the metadata in house_filings.json
+    trades_with_ticker = [t for t in all_trades if t['Ticker']]
 
-        all_trades.extend(trades_from_filing)
-        time.sleep(1)  # rate limit: 1 req/sec for government sites
+    print(f'  House scraper: {len(all_filings)} filing metadata records saved, '
+          f'{len(trades_with_ticker)} trades with tickers (0 expected — PDFs encrypted)')
 
-    # ── STEP 5: Return normalized trades ────────────────────────────────
-    # Sort most recent first
-    all_trades.sort(key=lambda x: x.get('TransactionDate', ''), reverse=True)
-
-    print(f'  House scraper: {len(all_trades)} trades extracted '
-          f'({filings_parsed} filings parsed, {filings_failed} failed)')
-
-    return all_trades
+    return trades_with_ticker
 
 
 def _parse_house_filing_page(html, member_name, filing_date):
@@ -749,17 +739,54 @@ def _parse_date_flex(date_str):
 def fetch_fmp_insiders(api_key, pages=10):
     """
     Fetch recent insider trades from FMP (Financial Modeling Prep).
-    Uses the stable API insider-trading endpoint with pagination.
+    Tries multiple endpoint patterns (stable → v4 RSS → v4 per-page) since
+    FMP periodically updates API paths.
     Filters to purchases only (P-Purchase) to match Brain's buy-signal focus.
     """
     all_trades = []
     seen = set()  # (symbol, date, reportingName) for dedup
 
+    # Endpoint priority: try stable first, fall back to v4
+    ENDPOINTS = [
+        # Stable API (current as of late 2025)
+        ('stable', 'https://financialmodelingprep.com/stable/insider-trading'
+                   '?transactionType=P-Purchase&page={page}&apikey={key}'),
+        # v4 RSS feed — returns recent Form 4 filings, all transaction types
+        ('v4-rss', 'https://financialmodelingprep.com/api/v4/insider-trading-rss-feed'
+                   '?page={page}&apikey={key}'),
+        # v4 paginated (no symbol filter = all recent)
+        ('v4', 'https://financialmodelingprep.com/api/v4/insider-trading'
+               '?transactionType=P-Purchase&page={page}&apikey={key}'),
+    ]
+
+    working_endpoint = None
+    for ep_name, ep_template in ENDPOINTS:
+        test_url = ep_template.format(page=0, key=api_key)
+        try:
+            r = requests.get(test_url, timeout=20)
+            if r.ok:
+                data = r.json()
+                if isinstance(data, list) and len(data) > 0:
+                    print(f'  FMP insider endpoint: {ep_name} working ({len(data)} items on page 0)')
+                    working_endpoint = (ep_name, ep_template)
+                    break
+                else:
+                    print(f'  FMP insider endpoint {ep_name}: OK but empty response')
+            else:
+                print(f'  FMP insider endpoint {ep_name}: HTTP {r.status_code}')
+        except Exception as e:
+            print(f'  FMP insider endpoint {ep_name}: {e}')
+        time.sleep(0.5)
+
+    if not working_endpoint:
+        print('  WARNING: All FMP insider endpoints failed — returning 0 trades')
+        return []
+
+    ep_name, ep_template = working_endpoint
+    is_rss = 'rss' in ep_name
+
     for page in range(pages):
-        url = (
-            f'https://financialmodelingprep.com/stable/insider-trading'
-            f'?transactionType=P-Purchase&page={page}&apikey={api_key}'
-        )
+        url = ep_template.format(page=page, key=api_key)
         try:
             r = requests.get(url, timeout=20)
             if not r.ok:
@@ -774,6 +801,11 @@ def fetch_fmp_insiders(api_key, pages=10):
                 if not symbol or len(symbol) > 5:
                     continue
 
+                # Filter to purchases — RSS feed returns all types
+                txn_type = raw.get('transactionType', '')
+                if is_rss and 'P' not in txn_type.upper().split('-')[0]:
+                    continue
+
                 txn_date = raw.get('transactionDate', '')
                 reporter = raw.get('reportingName', '')
                 dedup_key = (symbol, txn_date, reporter)
@@ -783,7 +815,6 @@ def fetch_fmp_insiders(api_key, pages=10):
 
                 shares = raw.get('securitiesTransacted', 0) or 0
                 owned = raw.get('securitiesOwned', 0) or 0
-                txn_type = raw.get('transactionType', '')
 
                 all_trades.append({
                     'Ticker': symbol,
@@ -805,7 +836,7 @@ def fetch_fmp_insiders(api_key, pages=10):
         time.sleep(0.3)  # Rate limit
 
     all_trades.sort(key=lambda x: x.get('Date', ''), reverse=True)
-    print(f'  FMP total: {len(all_trades)} insider purchases ({len(seen)} deduped)')
+    print(f'  FMP total: {len(all_trades)} insider purchases ({len(seen)} deduped) via {ep_name}')
     return all_trades
 
 
@@ -947,6 +978,316 @@ def fetch_analyst_data(tickers):
             'tickers': analyst_data,
         })
     print(f'  Analyst data: {fetched} tickers fetched, {failed} failed')
+
+
+# ── Earnings Surprise Data (yfinance) ────────────────────────────────────────
+def fetch_earnings_surprise(tickers):
+    """
+    Fetch most recent earnings surprise for signal tickers.
+    Computes surprise_pct = (actual - estimate) / |estimate| × 100.
+    Saves to data/earnings_surprise.json.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping earnings surprise')
+        return
+
+    if not tickers:
+        print('  No tickers for earnings surprise')
+        return
+
+    print(f'  Fetching earnings surprise for {len(tickers)} tickers...')
+    surprise_data = {}
+    fetched = 0
+    failed = 0
+
+    for ticker in tickers:
+        try:
+            t = yf.Ticker(ticker)
+            # get_earnings_dates returns recent + upcoming with EPS estimates/actuals
+            dates = t.get_earnings_dates(limit=8)
+            if dates is None or dates.empty:
+                continue
+
+            # Find most recent row with actual EPS (reported earnings)
+            for _, row in dates.iterrows():
+                actual = row.get('Reported EPS')
+                estimate = row.get('EPS Estimate')
+                if actual is not None and estimate is not None:
+                    try:
+                        actual_f = float(actual)
+                        estimate_f = float(estimate)
+                    except (ValueError, TypeError):
+                        continue
+                    if abs(estimate_f) > 0.001:
+                        surprise_pct = round((actual_f - estimate_f) / abs(estimate_f) * 100, 2)
+                    elif actual_f > 0:
+                        surprise_pct = 100.0
+                    elif actual_f < 0:
+                        surprise_pct = -100.0
+                    else:
+                        surprise_pct = 0.0
+                    surprise_data[ticker] = {
+                        'surprise_pct': surprise_pct,
+                        'actual_eps': actual_f,
+                        'estimate_eps': estimate_f,
+                        'date': _.strftime('%Y-%m-%d') if hasattr(_, 'strftime') else str(_),
+                    }
+                    fetched += 1
+                    break  # most recent only
+        except Exception:
+            failed += 1
+        time.sleep(0.2)
+
+    if surprise_data:
+        save_json('earnings_surprise.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': len(surprise_data),
+            'tickers': surprise_data,
+        })
+    print(f'  Earnings surprise: {fetched} tickers fetched, {failed} failed')
+
+
+# ── News Sentiment (Finnhub + VADER/FinBERT) ─────────────────────────────────
+
+def fetch_news_sentiment(tickers):
+    """
+    Fetch recent news headlines via Finnhub and score sentiment.
+    Uses VADER (lightweight) by default; falls back to keyword heuristic.
+    Saves to data/news_sentiment.json.
+    """
+    if not FINNHUB_KEY:
+        print('  FINNHUB_KEY not set — skipping news sentiment')
+        return
+    if not tickers:
+        print('  No tickers for news sentiment')
+        return
+
+    # Try VADER first, then keyword fallback
+    vader = None
+    try:
+        from nltk.sentiment.vader import SentimentIntensityAnalyzer
+        import nltk
+        try:
+            vader = SentimentIntensityAnalyzer()
+        except LookupError:
+            nltk.download('vader_lexicon', quiet=True)
+            vader = SentimentIntensityAnalyzer()
+    except ImportError:
+        pass
+
+    print(f'  Fetching news sentiment for {len(tickers)} tickers...')
+    sentiment_data = {}
+    fetched = 0
+    failed = 0
+
+    today = datetime.date.today()
+    from_date = (today - datetime.timedelta(days=30)).strftime('%Y-%m-%d')
+    to_date = today.strftime('%Y-%m-%d')
+
+    for ticker in tickers:
+        try:
+            url = (f'https://finnhub.io/api/v1/company-news'
+                   f'?symbol={ticker}&from={from_date}&to={to_date}'
+                   f'&token={FINNHUB_KEY}')
+            r = requests.get(url, timeout=10)
+            if r.status_code != 200:
+                failed += 1
+                continue
+            articles = r.json()
+            if not articles:
+                continue
+
+            # Score each headline
+            scores = []
+            for art in articles[:20]:  # cap at 20 articles
+                headline = art.get('headline', '')
+                if not headline:
+                    continue
+                if vader:
+                    sc = vader.polarity_scores(headline)
+                    scores.append(sc['compound'])
+                else:
+                    # Simple keyword heuristic
+                    hl = headline.lower()
+                    pos = sum(1 for w in ['beat', 'surge', 'gain', 'profit', 'upgrade',
+                                          'growth', 'strong', 'record', 'bullish', 'buy']
+                              if w in hl)
+                    neg = sum(1 for w in ['miss', 'fall', 'loss', 'downgrade', 'weak',
+                                          'decline', 'bearish', 'sell', 'cut', 'warning']
+                              if w in hl)
+                    scores.append((pos - neg) / max(pos + neg, 1))
+
+            if scores:
+                avg_score = round(sum(scores) / len(scores), 4)
+                sentiment_data[ticker] = {
+                    'sentiment_30d': avg_score,
+                    'article_count': len(scores),
+                    'positive_pct': round(sum(1 for s in scores if s > 0.05) / len(scores), 3),
+                }
+                fetched += 1
+        except Exception:
+            failed += 1
+        time.sleep(0.3)
+
+    if sentiment_data:
+        save_json('news_sentiment.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': len(sentiment_data),
+            'method': 'vader' if vader else 'keyword',
+            'tickers': sentiment_data,
+        })
+    print(f'  News sentiment: {fetched} tickers fetched, {failed} failed'
+          f' (method: {"vader" if vader else "keyword"})')
+
+
+# ── Committee Membership Data (GitHub unitedstates/congress-legislators) ─────
+
+# Map committee names/jurisdiction keywords to GICS sectors for overlap detection
+_COMMITTEE_SECTOR_MAP = {
+    # Finance / Banking
+    'banking':        'Financial Services',
+    'finance':        'Financial Services',
+    'financial':      'Financial Services',
+    'securities':     'Financial Services',
+    'insurance':      'Financial Services',
+    # Energy
+    'energy':         'Energy',
+    'natural resources': 'Energy',
+    'nuclear':        'Energy',
+    'oil':            'Energy',
+    'gas':            'Energy',
+    # Technology
+    'science':        'Technology',
+    'technology':     'Technology',
+    'space':          'Technology',
+    'innovation':     'Technology',
+    'cyber':          'Technology',
+    # Healthcare
+    'health':         'Healthcare',
+    'drug':           'Healthcare',
+    'pharmaceutical': 'Healthcare',
+    'biotech':        'Healthcare',
+    'medical':        'Healthcare',
+    # Defense / Industrials
+    'armed services': 'Industrials',
+    'defense':        'Industrials',
+    'military':       'Industrials',
+    'veterans':       'Industrials',
+    'homeland security': 'Industrials',
+    # Telecom
+    'commerce':       'Communication Services',
+    'communications': 'Communication Services',
+    'telecommunications': 'Communication Services',
+    # Real Estate / Utilities
+    'housing':        'Real Estate',
+    'infrastructure': 'Industrials',
+    'transportation': 'Industrials',
+    # Agriculture / Consumer Staples
+    'agriculture':    'Consumer Staples',
+    'nutrition':      'Consumer Staples',
+    'food':           'Consumer Staples',
+    'forestry':       'Basic Materials',
+}
+
+
+def fetch_committee_data():
+    """
+    Download current congress committee membership from GitHub
+    (unitedstates/congress-legislators). Builds member→committees→sectors
+    mapping. Saves to data/committee_data.json.
+
+    No API key needed — public GitHub raw content.
+    """
+    try:
+        import yaml
+    except ImportError:
+        print('  PyYAML not installed — skipping committee data')
+        return
+
+    BASE = 'https://raw.githubusercontent.com/unitedstates/congress-legislators/main'
+    print('  Fetching committee definitions...')
+    try:
+        r_comms = requests.get(f'{BASE}/committees-current.yaml', timeout=30)
+        r_comms.raise_for_status()
+        committees_raw = yaml.safe_load(r_comms.text)
+    except Exception as e:
+        print(f'  Committee definitions failed: {e}')
+        return
+
+    # Build committee_id → {name, type, sectors} mapping
+    committee_info = {}
+    for comm in committees_raw:
+        cid = comm.get('thomas_id', '')
+        name = comm.get('name', '')
+        ctype = comm.get('type', '')
+        jurisdiction = (comm.get('jurisdiction', '') or '').lower()
+        name_lower = name.lower()
+
+        # Map committee to sectors via keyword matching
+        sectors = set()
+        for keyword, sector in _COMMITTEE_SECTOR_MAP.items():
+            if keyword in name_lower or keyword in jurisdiction:
+                sectors.add(sector)
+
+        committee_info[cid] = {
+            'name': name,
+            'type': ctype,
+            'sectors': sorted(sectors),
+        }
+
+    print(f'  Parsed {len(committee_info)} committees')
+
+    print('  Fetching committee membership...')
+    try:
+        r_members = requests.get(f'{BASE}/committee-membership-current.yaml', timeout=30)
+        r_members.raise_for_status()
+        membership_raw = yaml.safe_load(r_members.text)
+    except Exception as e:
+        print(f'  Committee membership failed: {e}')
+        return
+
+    # Build member_name → {committees, sectors} mapping
+    # Membership YAML: { committee_id: [ {name, party, rank, bioguide, ...} ] }
+    member_map = {}  # name_key → { committees: [...], sectors: set() }
+    for comm_id, members in membership_raw.items():
+        # Strip subcommittee suffix (e.g., SSAF13 → SSAF)
+        parent_id = comm_id[:4] if len(comm_id) > 4 else comm_id
+        info = committee_info.get(parent_id, {})
+        comm_name = info.get('name', comm_id)
+        comm_sectors = info.get('sectors', [])
+
+        for m in (members or []):
+            name = m.get('name', '')
+            if not name:
+                continue
+            # Normalize name for matching: "LastName, FirstName" → "firstname lastname"
+            name_key = name.strip().lower()
+            if name_key not in member_map:
+                member_map[name_key] = {
+                    'name': name,
+                    'bioguide': m.get('bioguide', ''),
+                    'committees': [],
+                    'sectors': set(),
+                }
+            # Only add parent committee (not subcommittees) to avoid duplication
+            if comm_id == parent_id:
+                member_map[name_key]['committees'].append(comm_name)
+            member_map[name_key]['sectors'].update(comm_sectors)
+
+    # Convert sets to sorted lists for JSON serialization
+    for key in member_map:
+        member_map[key]['sectors'] = sorted(member_map[key]['sectors'])
+
+    save_json('committee_data.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'members_count': len(member_map),
+        'committees_count': len(committee_info),
+        'committees': committee_info,
+        'members': {k: v for k, v in member_map.items()},
+    })
+    print(f'  Committee data: {len(member_map)} members across {len(committee_info)} committees')
 
 
 # ── Market Context Data (VIX + 10yr Treasury) ────────────────────────────────
@@ -1179,6 +1520,25 @@ def main():
             fetch_analyst_data(tickers_list)
         except Exception as e:
             print(f'  Analyst data error (skipped): {e}')
+
+        print(f'\nFetching earnings surprise ({len(tickers_list)} tickers)...')
+        try:
+            fetch_earnings_surprise(tickers_list)
+        except Exception as e:
+            print(f'  Earnings surprise error (skipped): {e}')
+
+        print(f'\nFetching news sentiment ({len(tickers_list)} tickers)...')
+        try:
+            fetch_news_sentiment(tickers_list)
+        except Exception as e:
+            print(f'  News sentiment error (skipped): {e}')
+
+    # ── Committee membership (GitHub, no API key) ─────────────────────────
+    print('\nFetching committee membership data...')
+    try:
+        fetch_committee_data()
+    except Exception as e:
+        print(f'  Committee data error (skipped): {e}')
 
     print('\nDone.\n')
 
