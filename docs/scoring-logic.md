@@ -26,6 +26,26 @@ total     = clamp(sum, 0, 100)
 
 ---
 
+## Source Quality Multiplier (Learned)
+
+Applied as final multiplier on raw score. Values are computed each `--analyze` run from historical CAR by source.
+
+```
+raw       = base + magnitude + converge + person
+source_mult = lookup by source type (stored in optimal_weights.json → _source_quality)
+total     = clamp(raw × source_mult, 0, 100)
+```
+
+| Source | Default | Rationale |
+|---|---|---|
+| EDGAR (insider buy) | 1.0 | Baseline — highest avg CAR |
+| Congress | ~0.65 | Ratio of congress_car / edgar_car, clamped 0.3–1.0 |
+| Convergence (both) | ~1.35 | Bonus when EDGAR + Congress agree on ticker |
+
+Multipliers auto-update via `_compute_source_quality()` in `run_analyze`. If Congress alpha improves, its multiplier rises automatically.
+
+---
+
 ## Convergence Tiers
 
 | Tier | Condition |

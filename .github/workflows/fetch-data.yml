@@ -57,3 +57,9 @@ jobs:
           # Only commit if something actually changed — skips empty runs
           git diff --staged --quiet || git commit -m "chore: refresh data $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          curl -s -d "ATLAS data fetch failed: ${{ github.workflow }} at $(date -u)" \
+            https://ntfy.sh/atlas-${{ secrets.NTFY_CHANNEL }} || true

@@ -72,3 +72,4 @@
 | Congress.gov | api.congress.gov | HTML (frontend) |
 | FMP | financialmodelingprep.com | GitHub Secrets (backend) |
 | FRED | fred.stlouisfed.org | GitHub Secrets (backend) |
+| NTFY_CHANNEL | ntfy.sh (free, no account) | GitHub Secrets (backend) — any string like `atlas-henry-abc123`. Subscribe at ntfy.sh/atlas-{your-string} to receive push notifications on pipeline success/failure. |

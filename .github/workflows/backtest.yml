@@ -78,6 +78,9 @@ jobs:
             echo "Skipping analysis (not Monday, not manual)"
           fi
 
+      - name: Run self-check
+        run: python -m backtest.learning_engine --self-check
+
       - name: Print summary
         run: python -m backtest.learning_engine --summary
 
@@ -91,3 +94,16 @@ jobs:
           git add data/bills_feed.json data/13f_feed.json || true
           git diff --staged --quiet || git commit -m "chore(brain): update scores $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push
+
+      - name: Notify brain health on success
+        if: success()
+        run: |
+          STATUS=$(python3 -c "import json; d=json.load(open('data/brain_health.json')); print(d['overall_status'])" 2>/dev/null || echo "unknown")
+          curl -s -d "ATLAS daily complete. Brain: $STATUS" \
+            https://ntfy.sh/atlas-${{ secrets.NTFY_CHANNEL }} || true
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          curl -s -d "ATLAS pipeline failed: ${{ github.workflow }} at $(date -u)" \
+            https://ntfy.sh/atlas-${{ secrets.NTFY_CHANNEL }} || true

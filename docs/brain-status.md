@@ -57,5 +57,29 @@ Tier 2 dominates because many congress signals cluster on the same tickers in th
 
 ---
 
+## Self-Check System
+
+`--self-check` runs after every `--daily` pipeline. Exports `data/brain_health.json`.
+
+### Structured Checks
+| Check | What It Measures | Warn Threshold | Critical Threshold |
+|---|---|---|---|
+| `ic_trend` | OOS IC direction across last 3 runs | IC < 0.04 or declining | IC < 0 |
+| `hit_rate` | OOS hit rate (current + 30d rolling) | < 50% | < 45% |
+| `data_freshness` | Hours since last signal (per source) | 48h | 96h |
+| `feature_drift` | Fill rate < 50% or importance shifts > 50% | Any feature below 50% | — |
+| `score_concentration` | Top-5 tickers % of top-50 signals | > 30% | — |
+| `harmful_features` | Feature values with CAR < -2% and n ≥ 30 | Any detected | — |
+
+### overall_status Logic
+- **critical**: any single check is critical
+- **degraded**: 2+ checks are warn
+- **healthy**: all ok or ≤1 warn
+
+### Notifications
+Pipeline success/failure + brain health status pushed to ntfy.sh channel via GitHub Actions.
+
+---
+
 ## Known Issues
 See `docs/todo.md` P0 for current issues and priorities.

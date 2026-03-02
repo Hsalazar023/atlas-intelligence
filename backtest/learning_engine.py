@@ -3890,7 +3890,9 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
       magnitude = clamp(reg_car × 200, -20, 25) (predicted return bonus/penalty)
       converge  = convergence_tier × 5          (convergence bonus: 0/5/10)
       person    = clamp(person_hit_rate × 8, 0, 5) (track record bonus)
-      total     = clamp(sum, 0, 100)
+      raw       = sum of above
+      source_mult = learned multiplier by source (edgar=1.0, congress≈0.65, convergence≈1.35)
+      total     = clamp(raw × source_mult, 0, 100)
     """
     log.info("=== Scoring All Signals ===")
 
@@ -3951,11 +3953,12 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
     # Regression: ensemble predicted CAR
     reg_preds = (reg_rf.predict(X) + reg_lgb.predict(X)) / 2
 
-    # Fetch convergence + person data for bonus terms
+    # Fetch convergence + person + source data for bonus terms
     rows = conn.execute(
-        "SELECT id, convergence_tier, person_hit_rate_30d FROM signals"
+        "SELECT id, convergence_tier, person_hit_rate_30d, source, has_convergence FROM signals"
     ).fetchall()
-    meta = {r['id']: (r['convergence_tier'] or 0, r['person_hit_rate_30d'] or 0) for r in rows}
+    meta = {r['id']: (r['convergence_tier'] or 0, r['person_hit_rate_30d'] or 0,
+                      r['source'] or '', r['has_convergence'] or 0) for r in rows}
 
     # Load optimized coefficients if available
     weights_data = load_json(OPTIMAL_WEIGHTS) if OPTIMAL_WEIGHTS.exists() else {}
@@ -3968,18 +3971,38 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
         log.info(f"Using optimized coefficients: base={base_mult}, mag={mag_mult}, "
                  f"conv={conv_mult}, person={person_mult}")
 
+    # Load source quality multipliers (learned from --analyze)
+    src_quality = weights_data.get('_source_quality', {})
+    edgar_sq = src_quality.get('edgar', 1.0)
+    congress_sq = src_quality.get('congress', 1.0)
+    convergence_sq = src_quality.get('convergence', 1.0)
+    if src_quality:
+        log.info(f"Source quality multipliers: edgar={edgar_sq:.3f}, congress={congress_sq:.3f}, "
+                 f"convergence={convergence_sq:.3f}")
+
     # Compute scores
     updates = []
     scores = []
     for i in range(len(ids)):
         sig_id = int(ids[i])
-        conv_tier, person_hr = meta.get(sig_id, (0, 0))
+        conv_tier, person_hr, source, has_conv = meta.get(sig_id, (0, 0, '', 0))
 
         base = float(clf_probs[i]) * base_mult
         magnitude = max(-20, min(25, float(reg_preds[i]) * mag_mult))
         converge = float(conv_tier) * conv_mult
         person = max(0, min(5, float(person_hr) * person_mult))
-        total = max(0, min(100, base + magnitude + converge + person))
+        raw_total = base + magnitude + converge + person
+
+        # Apply source quality multiplier
+        if has_conv and convergence_sq != 1.0:
+            source_mult = convergence_sq
+        elif source == 'edgar':
+            source_mult = edgar_sq
+        elif source == 'congress':
+            source_mult = congress_sq
+        else:
+            source_mult = 1.0
+        total = max(0, min(100, raw_total * source_mult))
         total = round(total, 2)
 
         updates.append((total,
@@ -4059,13 +4082,15 @@ def log_brain_run(conn: sqlite3.Connection, run_type: str,
 def run_self_check(conn: sqlite3.Connection) -> dict:
     """Run Brain health diagnostics and export brain_health.json.
 
-    Checks: IC trend, score concentration, data freshness, feature fill rates,
-    source alpha balance, and generates warnings/suggestions.
+    Produces structured health report with per-check status (ok/warn/critical),
+    overall_status derived from individual checks, and actionable recommendations.
     """
     import numpy as np
     log.info("=== Brain Self-Check ===")
     cur = conn.cursor()
-    health = {'generated': datetime.now(tz=timezone.utc).isoformat(), 'status': 'healthy', 'checks': [], 'warnings': [], 'suggestions': []}
+    now_utc = datetime.now(tz=timezone.utc)
+    checks = {}
+    recommendations = []
 
     # ── 1. IC Trend ──
     runs = cur.execute(
@@ -4073,51 +4098,83 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
         "WHERE oos_ic IS NOT NULL ORDER BY id DESC LIMIT 10"
     ).fetchall()
     ic_history = [{'date': r['run_date'], 'ic': r['oos_ic'], 'hit_rate': r['oos_hit_rate'], 'type': r['run_type']} for r in runs]
-    health['ic_history'] = ic_history
 
-    if len(ic_history) >= 3:
-        last3 = [h['ic'] for h in ic_history[:3]]
-        if all(last3[i] < last3[i+1] for i in range(2)):
-            health['warnings'].append('IC declining for 3 consecutive runs: ' + ' → '.join(f"{x:.4f}" for x in reversed(last3)))
-            health['status'] = 'warning'
-        health['checks'].append(f"IC trend: {' → '.join(f'{x:.4f}' for x in reversed(last3[-3:]))}")
-    elif ic_history:
-        health['checks'].append(f"IC latest: {ic_history[0]['ic']:.4f} (need 3+ runs for trend)")
+    ic_check = {'status': 'ok', 'threshold_warn': 0.04, 'threshold_critical': 0.0}
+    if ic_history:
+        current_ic = ic_history[0]['ic']
+        prev_ic = ic_history[1]['ic'] if len(ic_history) >= 2 else None
+        ic_check['current_ic'] = round(current_ic, 4)
+        ic_check['prev_ic'] = round(prev_ic, 4) if prev_ic is not None else None
+        if len(ic_history) >= 3:
+            last3 = [h['ic'] for h in ic_history[:3]]
+            if all(last3[i] < last3[i+1] for i in range(2)):
+                ic_check['trend'] = 'degrading'
+                ic_check['status'] = 'warn'
+                recommendations.append(f"IC declining for 3 runs ({' → '.join(f'{x:.4f}' for x in reversed(last3))}). Run --analyze with fresh data.")
+            elif all(last3[i] > last3[i+1] for i in range(2)):
+                ic_check['trend'] = 'improving'
+            else:
+                ic_check['trend'] = 'stable'
+        else:
+            ic_check['trend'] = 'insufficient_data'
+        if current_ic < 0:
+            ic_check['status'] = 'critical'
+            recommendations.append("IC is negative — model predictions are inversely correlated with outcomes. Retrain immediately.")
+        elif current_ic < 0.04:
+            ic_check['status'] = 'warn'
     else:
-        health['checks'].append("No IC history yet — run --analyze to populate")
+        ic_check['status'] = 'warn'
+        ic_check['current_ic'] = None
+        ic_check['prev_ic'] = None
+        ic_check['trend'] = 'no_data'
+        recommendations.append("No IC history. Run --analyze to train ML models.")
+    checks['ic_trend'] = ic_check
 
-    # ── 2. Score Concentration ──
-    top50 = cur.execute(
-        "SELECT ticker FROM signals WHERE total_score IS NOT NULL "
-        "ORDER BY total_score DESC LIMIT 50"
-    ).fetchall()
-    ticker_counts = {}
-    for r in top50:
-        ticker_counts[r['ticker']] = ticker_counts.get(r['ticker'], 0) + 1
-    if ticker_counts:
-        top_t = max(ticker_counts, key=ticker_counts.get)
-        top_pct = ticker_counts[top_t] / len(top50)
-        health['score_concentration'] = {
-            'top_ticker': top_t, 'count': ticker_counts[top_t],
-            'pct_of_top50': round(top_pct, 3), 'unique_in_top50': len(ticker_counts)
-        }
-        if top_pct > 0.3:
-            health['warnings'].append(f"Score concentration: {top_t} is {top_pct:.0%} of top 50 signals")
-            health['status'] = 'warning'
-        health['checks'].append(f"Top 50 diversity: {len(ticker_counts)} unique tickers, top={top_t} ({ticker_counts[top_t]}/50)")
+    # ── 2. Hit Rate ──
+    hr_check = {'status': 'ok', 'threshold_warn': 0.50, 'threshold_critical': 0.45}
+    if ic_history:
+        current_hr = ic_history[0]['hit_rate']
+        hr_check['current'] = round(current_hr, 3) if current_hr else None
+        # 30d rolling: average of runs in last 30 days
+        recent_hrs = [h['hit_rate'] for h in ic_history
+                      if h['hit_rate'] is not None and h['date'] >= (now_utc - timedelta(days=30)).strftime('%Y-%m-%d')]
+        hr_check['30d_rolling'] = round(sum(recent_hrs) / len(recent_hrs), 3) if recent_hrs else None
+        effective = hr_check['30d_rolling'] or hr_check['current']
+        if effective is not None:
+            if effective < 0.45:
+                hr_check['status'] = 'critical'
+                recommendations.append(f"Hit rate critically low ({effective:.1%}). Model may need retraining or data quality review.")
+            elif effective < 0.50:
+                hr_check['status'] = 'warn'
+    else:
+        hr_check['current'] = None
+        hr_check['30d_rolling'] = None
+    checks['hit_rate'] = hr_check
 
     # ── 3. Data Freshness ──
-    latest = cur.execute("SELECT MAX(signal_date) as d FROM signals").fetchone()['d']
-    if latest:
-        days_stale = (datetime.now(tz=timezone.utc).date() - datetime.fromisoformat(latest).date()).days
-        health['data_freshness'] = {'latest_signal': latest, 'days_since': days_stale}
-        if days_stale > 3:
-            health['warnings'].append(f"No new signals in {days_stale} days (latest: {latest})")
-            health['status'] = 'warning'
-        health['checks'].append(f"Data freshness: latest signal {latest} ({days_stale}d ago)")
+    fresh_check = {'status': 'ok', 'threshold_warn_hours': 48, 'threshold_critical_hours': 96}
+    congress_latest = cur.execute("SELECT MAX(signal_date) as d FROM signals WHERE source='congress'").fetchone()['d']
+    edgar_latest = cur.execute("SELECT MAX(signal_date) as d FROM signals WHERE source='edgar'").fetchone()['d']
+    fresh_check['congress_last_updated'] = congress_latest
+    fresh_check['edgar_last_updated'] = edgar_latest
 
-    # ── 4. Feature Fill Rates (v4 active features only) ──
-    # insider_role and repeat_buyer are EDGAR-only features — measure against EDGAR signals only
+    for source_name, latest_date in [('congress', congress_latest), ('edgar', edgar_latest)]:
+        hrs_key = f'hours_since_{source_name}'
+        if latest_date:
+            delta = now_utc - datetime.fromisoformat(latest_date).replace(tzinfo=timezone.utc)
+            hours = delta.total_seconds() / 3600
+            fresh_check[hrs_key] = round(hours, 1)
+            if hours > 96:
+                fresh_check['status'] = 'critical'
+                recommendations.append(f"{source_name} data is {hours/24:.0f} days stale. Check fetch pipeline.")
+            elif hours > 48 and fresh_check['status'] != 'critical':
+                fresh_check['status'] = 'warn'
+        else:
+            fresh_check[hrs_key] = None
+    checks['data_freshness'] = fresh_check
+
+    # ── 4. Feature Drift ──
+    drift_check = {'status': 'ok', 'features_below_50pct_fill': [], 'features_degraded_since_last_run': []}
     fill_sql = """
         SELECT
             ROUND(100.0*SUM(CASE WHEN sector IS NOT NULL AND sector != '' THEN 1 ELSE 0 END)/COUNT(*),1) as sector,
@@ -4136,47 +4193,13 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
     """
     fill = dict(cur.execute(fill_sql).fetchone())
     fill.update(dict(cur.execute(edgar_fill_sql).fetchone()))
-    health['feature_fill_rates'] = fill
-    low_fills = {k: v for k, v in fill.items() if v < 50}
-    if low_fills:
-        health['suggestions'].append(f"Low fill features ({', '.join(f'{k}={v}%' for k, v in low_fills.items())}) — consider pruning from ML if <1% importance")
-    health['checks'].append(f"Feature fills: {sum(1 for v in fill.values() if v >= 80)}/{len(fill)} above 80%")
+    drift_check['feature_fill_rates'] = fill
+    drift_check['features_below_50pct_fill'] = [k for k, v in fill.items() if v is not None and v < 50]
+    if drift_check['features_below_50pct_fill']:
+        drift_check['status'] = 'warn'
+        recommendations.append(f"Low fill features: {', '.join(f'{k}={fill[k]}%' for k in drift_check['features_below_50pct_fill'])}")
 
-    # ── 5. Source Alpha ──
-    source_stats = cur.execute("""
-        SELECT source, COUNT(*) as n, ROUND(AVG(car_30d),4) as avg_car,
-            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
-        FROM signals WHERE car_30d IS NOT NULL GROUP BY source
-    """).fetchall()
-    health['source_alpha'] = [{'source': r['source'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in source_stats]
-    for s in health['source_alpha']:
-        if s['avg_car'] is not None and s['avg_car'] < -0.005:
-            health['suggestions'].append(f"{s['source']} signals have negative avg CAR ({s['avg_car']:.2%}) — consider down-weighting")
-
-    # ── 6. Score Band Validation ──
-    bands = cur.execute("""
-        SELECT
-            CASE WHEN total_score >= 80 THEN '80+'
-                 WHEN total_score >= 65 THEN '65-79'
-                 WHEN total_score >= 40 THEN '40-64'
-                 ELSE '<40' END as band,
-            COUNT(*) as n,
-            ROUND(AVG(car_30d),4) as avg_car,
-            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
-        FROM signals WHERE car_30d IS NOT NULL GROUP BY band ORDER BY band DESC
-    """).fetchall()
-    health['score_bands'] = [{'band': r['band'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in bands]
-    # Check monotonicity: higher bands should have higher CAR
-    band_cars = {r['band']: r['avg_car'] for r in bands if r['avg_car'] is not None}
-    if band_cars.get('80+', 0) < band_cars.get('65-79', 0):
-        health['warnings'].append("Score band inversion: 80+ signals have lower CAR than 65-79 — scoring formula may need recalibration")
-        health['status'] = 'warning'
-    if band_cars.get('80+', 0) < band_cars.get('<40', 0):
-        health['warnings'].append("Critical: 80+ signals underperform <40 — model may be inverting")
-        health['status'] = 'critical'
-    health['checks'].append(f"Score bands: 80+ CAR={band_cars.get('80+','N/A')}, 65-79={band_cars.get('65-79','N/A')}, <40={band_cars.get('<40','N/A')}")
-
-    # ── 7. Feature Importance Drift ──
+    # Feature importance drift between runs
     fi_runs = cur.execute(
         "SELECT feature_importance_json FROM brain_runs "
         "WHERE feature_importance_json IS NOT NULL ORDER BY id DESC LIMIT 2"
@@ -4184,18 +4207,77 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
     if len(fi_runs) >= 2:
         fi_new = json.loads(fi_runs[0]['feature_importance_json'])
         fi_old = json.loads(fi_runs[1]['feature_importance_json'])
-        big_shifts = []
         for feat in fi_new:
             old_v = fi_old.get(feat, 0)
             new_v = fi_new[feat]
             if old_v > 0 and abs(new_v - old_v) / old_v > 0.5:
-                big_shifts.append(f"{feat}: {old_v:.3f}→{new_v:.3f}")
-        if big_shifts:
-            health['suggestions'].append(f"Feature importance shifts (>50%): {', '.join(big_shifts[:5])}")
-        health['checks'].append(f"Feature drift: {len(big_shifts)} features shifted >50%")
+                drift_check['features_degraded_since_last_run'].append(
+                    f"{feat}: {old_v:.3f}→{new_v:.3f}"
+                )
+    checks['feature_drift'] = drift_check
 
-    # ── 8. Feature Auto-Pruning Candidates ──
-    # Track features consistently <1% importance across consecutive runs
+    # ── 5. Score Concentration ──
+    conc_check = {'status': 'ok', 'threshold_warn': 0.30}
+    top50 = cur.execute(
+        "SELECT ticker FROM signals WHERE total_score IS NOT NULL "
+        "ORDER BY total_score DESC LIMIT 50"
+    ).fetchall()
+    ticker_counts = {}
+    for r in top50:
+        ticker_counts[r['ticker']] = ticker_counts.get(r['ticker'], 0) + 1
+    if ticker_counts:
+        top_t = max(ticker_counts, key=ticker_counts.get)
+        sorted_counts = sorted(ticker_counts.values(), reverse=True)
+        top5_pct = sum(sorted_counts[:5]) / len(top50) if len(top50) > 0 else 0
+        conc_check['top_ticker'] = top_t
+        conc_check['top_ticker_signal_count'] = ticker_counts[top_t]
+        conc_check['pct_signals_in_top5_tickers'] = round(top5_pct, 3)
+        if top5_pct > 0.30:
+            conc_check['status'] = 'warn'
+            recommendations.append(f"Top 5 tickers hold {top5_pct:.0%} of top-50 signals. Consider diversification cap.")
+    else:
+        conc_check['top_ticker'] = None
+        conc_check['top_ticker_signal_count'] = 0
+        conc_check['pct_signals_in_top5_tickers'] = 0.0
+    checks['score_concentration'] = conc_check
+
+    # ── 6. Harmful Features ──
+    harmful_check = {'status': 'ok', 'active_harmful_features': [], 'note': 'features/values with CAR < -2% and n > 30'}
+    harmful_rows = cur.execute(
+        "SELECT feature_name, feature_value, avg_car_30d, n_observations "
+        "FROM feature_stats WHERE avg_car_30d < -0.02 AND n_observations >= 30 "
+        "ORDER BY avg_car_30d ASC"
+    ).fetchall()
+    for r in harmful_rows:
+        harmful_check['active_harmful_features'].append({
+            'feature': r['feature_name'], 'value': r['feature_value'],
+            'avg_car_30d': round(r['avg_car_30d'], 4), 'n': r['n_observations'],
+        })
+    if harmful_check['active_harmful_features']:
+        harmful_check['status'] = 'warn'
+        names = ', '.join(f"{h['feature']}={h['value']}" for h in harmful_check['active_harmful_features'][:5])
+        recommendations.append(f"Harmful feature values detected: {names}. ML trees handle this but monitor for worsening.")
+    checks['harmful_features'] = harmful_check
+
+    # ── 7. Score Band Validation (internal, feeds recommendations) ──
+    bands = cur.execute("""
+        SELECT
+            CASE WHEN total_score >= 80 THEN '80+'
+                 WHEN total_score >= 65 THEN '65-79'
+                 WHEN total_score >= 40 THEN '40-64'
+                 ELSE '<40' END as band,
+            COUNT(*) as n, ROUND(AVG(car_30d),4) as avg_car,
+            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
+        FROM signals WHERE car_30d IS NOT NULL GROUP BY band ORDER BY band DESC
+    """).fetchall()
+    score_bands = [{'band': r['band'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in bands]
+    band_cars = {r['band']: r['avg_car'] for r in bands if r['avg_car'] is not None}
+    if band_cars.get('80+', 0) < band_cars.get('<40', 0):
+        recommendations.append("CRITICAL: 80+ signals underperform <40 — model may be inverting. Retrain immediately.")
+    elif band_cars.get('80+', 0) < band_cars.get('65-79', 0):
+        recommendations.append("Score band inversion: 80+ CAR < 65-79 CAR. Recalibrate scoring coefficients.")
+
+    # ── 8. Auto-Pruning Candidates (internal, feeds recommendations) ──
     PRUNE_THRESHOLD = 0.01
     PRUNE_CONSECUTIVE_RUNS = 3
     fi_history = cur.execute(
@@ -4203,32 +4285,63 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
         "WHERE feature_importance_json IS NOT NULL ORDER BY id DESC LIMIT ?",
         (PRUNE_CONSECUTIVE_RUNS,)
     ).fetchall()
+    prune_candidates = []
     if len(fi_history) >= PRUNE_CONSECUTIVE_RUNS:
         all_fi = [json.loads(r['feature_importance_json']) for r in fi_history]
-        # Find features below threshold in ALL recent runs
-        candidates = []
         all_features = set(all_fi[0].keys())
         for feat in all_features:
             if all(fi.get(feat, 0) < PRUNE_THRESHOLD for fi in all_fi):
                 avg_imp = sum(fi.get(feat, 0) for fi in all_fi) / len(all_fi)
-                candidates.append((feat, round(avg_imp, 4)))
-        candidates.sort(key=lambda x: x[1])
-        health['prune_candidates'] = [{'feature': f, 'avg_importance': i} for f, i in candidates]
-        if candidates:
-            names = ', '.join(f'{f}={i:.3f}' for f, i in candidates)
-            health['suggestions'].append(
-                f"Prune candidates (<1% importance for {PRUNE_CONSECUTIVE_RUNS}+ runs): {names}"
-            )
-        health['checks'].append(f"Auto-prune: {len(candidates)} features below 1% for {PRUNE_CONSECUTIVE_RUNS}+ runs")
+                prune_candidates.append({'feature': feat, 'avg_importance': round(avg_imp, 4)})
+        prune_candidates.sort(key=lambda x: x['avg_importance'])
+        if prune_candidates:
+            names = ', '.join(f"{c['feature']}={c['avg_importance']:.3f}" for c in prune_candidates)
+            recommendations.append(f"Prune candidates (<1% importance for {PRUNE_CONSECUTIVE_RUNS}+ runs): {names}")
 
-    # ── Summary ──
-    log.info(f"Health status: {health['status'].upper()}")
-    for c in health['checks']:
-        log.info(f"  [CHECK] {c}")
-    for w in health['warnings']:
-        log.info(f"  [WARN]  {w}")
-    for s in health['suggestions']:
-        log.info(f"  [SUGGEST] {s}")
+    # ── 9. Source Alpha ──
+    source_stats = cur.execute("""
+        SELECT source, COUNT(*) as n, ROUND(AVG(car_30d),4) as avg_car,
+            ROUND(100.0*SUM(CASE WHEN car_30d > 0 THEN 1 ELSE 0 END)/NULLIF(SUM(CASE WHEN car_30d IS NOT NULL THEN 1 ELSE 0 END),0),1) as hit_rate
+        FROM signals WHERE car_30d IS NOT NULL GROUP BY source
+    """).fetchall()
+    source_alpha = [{'source': r['source'], 'n': r['n'], 'avg_car': r['avg_car'], 'hit_rate': r['hit_rate']} for r in source_stats]
+    for s in source_alpha:
+        if s['avg_car'] is not None and s['avg_car'] < -0.005:
+            recommendations.append(f"{s['source']} signals have negative avg CAR ({s['avg_car']:.2%}). Consider source quality down-weighting.")
+
+    # ── Determine overall_status ──
+    statuses = [c.get('status', 'ok') for c in checks.values()]
+    n_critical = statuses.count('critical')
+    n_warn = statuses.count('warn')
+    if n_critical > 0:
+        overall = 'critical'
+    elif n_warn >= 2:
+        overall = 'degraded'
+    else:
+        overall = 'healthy'
+
+    # Also escalate if score bands show inversion
+    if band_cars.get('80+', 0) < band_cars.get('<40', 0):
+        overall = 'critical'
+
+    health = {
+        'generated_at': now_utc.isoformat(),
+        'overall_status': overall,
+        'checks': checks,
+        'recommendations': recommendations,
+        # Supplementary data for dashboards
+        'ic_history': ic_history,
+        'score_bands': score_bands,
+        'source_alpha': source_alpha,
+        'prune_candidates': prune_candidates,
+    }
+
+    # ── Summary log ──
+    log.info(f"Health status: {overall.upper()}")
+    for name, check in checks.items():
+        log.info(f"  [{check.get('status', '?').upper():>8}] {name}")
+    for r in recommendations:
+        log.info(f"  [RECOMMEND] {r}")
 
     save_json(BRAIN_HEALTH, health)
     log.info(f"Exported health → brain_health.json")
@@ -4386,6 +4499,81 @@ def log_feature_importance_history(conn: sqlite3.Connection, feature_importance:
     )
     conn.commit()
     log.info(f"Logged {len(rows)} feature importances for {run_date}")
+
+
+def _compute_source_quality(conn: sqlite3.Connection) -> dict | None:
+    """Compute source quality multipliers from historical CAR by source.
+
+    Returns dict with multipliers:
+        edgar: baseline 1.0
+        congress: ratio of congress_car / edgar_car (clamped 0.3-1.0)
+        convergence: bonus multiplier for signals with both sources (clamped 1.0-1.5)
+
+    Multipliers are LEARNED from data, not hardcoded. They update each --analyze run.
+    """
+    cur = conn.cursor()
+    MIN_OBSERVATIONS = 50
+
+    # Get avg CAR by source for signals with outcomes
+    source_rows = cur.execute("""
+        SELECT source, AVG(car_30d) as avg_car, COUNT(*) as n
+        FROM signals
+        WHERE outcome_30d_filled = 1 AND car_30d IS NOT NULL
+        GROUP BY source
+    """).fetchall()
+    source_car = {r['source']: (r['avg_car'], r['n']) for r in source_rows}
+
+    edgar_car, edgar_n = source_car.get('edgar', (None, 0))
+    congress_car, congress_n = source_car.get('congress', (None, 0))
+
+    if edgar_n < MIN_OBSERVATIONS or congress_n < MIN_OBSERVATIONS:
+        return None
+
+    # Convergence signals: both sources agree on same ticker
+    conv_row = cur.execute("""
+        SELECT AVG(car_30d) as avg_car, COUNT(*) as n
+        FROM signals
+        WHERE outcome_30d_filled = 1 AND car_30d IS NOT NULL AND has_convergence = 1
+    """).fetchone()
+    conv_car = conv_row['avg_car'] if conv_row and conv_row['n'] >= 20 else None
+
+    # Compute multipliers relative to EDGAR (best source)
+    # If EDGAR has positive CAR, use it as baseline
+    if edgar_car is not None and edgar_car > 0:
+        base_car = edgar_car
+        edgar_mult = 1.0
+        # Congress multiplier: ratio of congress/edgar CAR, clamped
+        if congress_car is not None:
+            raw_ratio = congress_car / base_car if base_car != 0 else 0.5
+            congress_mult = round(max(0.3, min(1.0, raw_ratio)), 3)
+        else:
+            congress_mult = 0.65
+    else:
+        # Both negative or EDGAR negative — use uniform weights
+        edgar_mult = 1.0
+        congress_mult = 1.0
+
+    # Convergence bonus: how much better are convergence signals vs average?
+    all_avg = cur.execute(
+        "SELECT AVG(car_30d) FROM signals WHERE outcome_30d_filled=1 AND car_30d IS NOT NULL"
+    ).fetchone()[0]
+    if conv_car is not None and all_avg is not None and all_avg > 0:
+        conv_ratio = conv_car / all_avg
+        conv_mult = round(max(1.0, min(1.5, conv_ratio)), 3)
+    else:
+        conv_mult = 1.2  # default modest bonus
+
+    result = {
+        'edgar': edgar_mult,
+        'congress': congress_mult,
+        'convergence': conv_mult,
+        'edgar_avg_car': round(edgar_car, 6) if edgar_car else None,
+        'congress_avg_car': round(congress_car, 6) if congress_car else None,
+        'convergence_avg_car': round(conv_car, 6) if conv_car else None,
+        'edgar_n': edgar_n,
+        'congress_n': congress_n,
+    }
+    return result
 
 
 # ── Factor attribution labels ────────────────────────────────────────────────
@@ -4939,6 +5127,33 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
         'insider_sectors': insider_sectors,
         'ml': ml_stats,
     }
+
+    # Ticker distribution in exported signals
+    export_ticker_counts = {}
+    for s in signals_out:
+        t = s['ticker']
+        export_ticker_counts[t] = export_ticker_counts.get(t, 0) + 1
+    if export_ticker_counts:
+        sorted_tickers = sorted(export_ticker_counts.items(), key=lambda x: x[1], reverse=True)
+        brain_stats['ticker_distribution'] = {
+            'unique_tickers_in_export': len(export_ticker_counts),
+            'max_signals_per_ticker': sorted_tickers[0][1] if sorted_tickers else 0,
+            'top_5_tickers_by_signal_count': [
+                {'ticker': t, 'count': c} for t, c in sorted_tickers[:5]
+            ],
+        }
+
+    # Pruning log: harmful feature values from feature_stats
+    harmful_rows = cur.execute(
+        "SELECT feature_name, feature_value, avg_car_30d, n_observations "
+        "FROM feature_stats WHERE avg_car_30d < -0.02 AND n_observations >= 30 "
+        "ORDER BY avg_car_30d ASC"
+    ).fetchall()
+    brain_stats['pruning_log'] = [
+        {'feature': r[0], 'value': r[1], 'avg_car_30d': round(r[2], 4), 'n': r[3]}
+        for r in harmful_rows
+    ]
+
     save_json(BRAIN_STATS, brain_stats)
     log.info(f"Exported brain stats → brain_stats.json")
 
@@ -5115,6 +5330,17 @@ def run_analyze(conn: sqlite3.Connection) -> None:
             log_feature_importance_history(conn, ml_result.feature_importance)
         except Exception as e:
             log.warning(f"Feature importance history log failed: {e}")
+
+    # 4d. Compute source quality multipliers from historical CAR by source
+    try:
+        source_quality = _compute_source_quality(conn)
+        if source_quality:
+            output['_source_quality'] = source_quality
+            log.info(f"Source quality: edgar={source_quality.get('edgar', 1.0):.3f}, "
+                     f"congress={source_quality.get('congress', 1.0):.3f}, "
+                     f"convergence={source_quality.get('convergence', 1.0):.3f}")
+    except Exception as e:
+        log.warning(f"Source quality computation failed: {e}")
 
     save_json(OPTIMAL_WEIGHTS, output)
 

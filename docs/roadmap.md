@@ -94,6 +94,44 @@ See `docs/archive/completed-milestones.md` for details.
 
 ---
 
+## Phase 4B — Signal Expansion Roadmap
+
+> Based on quant literature, Renaissance/Two Sigma approaches, and ATLAS feature gaps.
+> Current feature set: 28 ML features + 4 categorical. Cross-referenced against existing demo sections.
+
+| Rank | Signal/Feature | Expected Alpha | Data Source | Difficulty | ML / Convergence | Rationale |
+|---|---|---|---|---|---|---|
+| 1 | **Relative volume** (vol / 30d avg) | High | yfinance (free) | Low | ML feature | Simple but powerful. Unusual volume precedes moves. Renaissance heavily uses microstructure signals. Cheap to compute from existing price data. |
+| 2 | **Analyst estimate revision momentum** | High | yfinance (free, via `earnings_history`) | Low | ML feature | Academic literature shows strong persistence of earnings surprise direction. Analyst revisions predict next-quarter surprise. |
+| 3 | **Congressional committee membership** | Medium-High | Existing QuiverQuant data + static mapping | Low | Convergence modifier | Quiver Quant research: Finance/Armed Services/Energy committee members trade with higher alpha in their committee's sectors. Already have `REP_COMMITTEES` mapping — just need to use as signal amplifier. |
+| 4 | **Earnings surprise persistence** | Medium-High | yfinance (free) | Low | ML feature | 2+ consecutive positive surprises predict continuation. Well-documented in academic literature (Post-Earnings Announcement Drift). |
+| 5 | **Unusual options volume / IV skew** | High | CBOE (paid) or Unusual Whales ($) | High (data cost) | Both | Replaces existing demo section. Options-implied vol skew before events is a strong informed trading signal. Dark pool + options = Renaissance's bread and butter. |
+| 6 | **Short interest change rate** (Δ SI / 14d) | Medium | FINRA (free, bi-monthly) or Ortex ($) | Medium | ML feature | Replaces existing demo section. Rapid SI increases predict pressure; rapid decreases + insider buying = squeeze setup. Contrarian signal. |
+| 7 | **Lobbying spend by company** | Medium | Quiver Quant API (free tier) | Low | Convergence modifier | Companies increasing lobbying spend before legislation = early positioning signal. Amplifies congressional trade conviction when same sector. |
+| 8 | **Put/call ratio by ticker** | Medium | CBOE (delayed free) | Medium | ML feature | Ticker-level P/C ratio (not market-wide VIX) captures sentiment extremes. High P/C + insider buying = strong contrarian entry. |
+| 9 | **News sentiment via FinBERT** | Medium | Self-hosted (free, open source) | High | ML feature | FinBERT fine-tuned on financial text. Event-driven catalyst detection: M&A rumors, FDA decisions, patent rulings. Latency matters — need <1hr processing. |
+| 10 | **Dark pool print %** | Medium-High | FINRA ADF (paid, $200+/mo) | High (cost + complexity) | ML feature | Dark pool prints as % of total volume. Clustering of large dark prints = institutional positioning. Two Sigma uses this extensively. Flag: paid data source required. |
+
+### Implementation Priority Tiers
+
+**Tier A — Add Now** (free data, low effort, high ROI):
+- Relative volume (Rank 1): Already have yfinance price data. Compute `volume_today / avg_volume_30d`. Add as feature in next `enrich_signal_features` pass.
+- Analyst revisions (Rank 2): yfinance `ticker.recommendations` or `earnings_history`. Parse revision direction.
+- Committee membership (Rank 3): Already have `REP_COMMITTEES`. Multiply convergence score by 1.2x when representative's committee matches signal sector.
+- Earnings surprise persistence (Rank 4): yfinance actual vs estimate for last 2 quarters.
+
+**Tier B — Medium Term** (some cost/complexity):
+- Short interest (Rank 6): FINRA data is free but bi-monthly. Parse into `si_change_14d` feature.
+- Lobbying spend (Rank 7): Quiver Quant free tier. Aggregate by ticker, look for spend increases.
+- Put/call ratio (Rank 8): CBOE delayed data. Daily aggregation per ticker.
+
+**Tier C — Long Term** (paid sources or infrastructure):
+- Options flow / IV skew (Rank 5): Need Unusual Whales or CBOE paid feed. Would replace demo section.
+- FinBERT news sentiment (Rank 9): Need a hosted inference endpoint. Consider HuggingFace API free tier.
+- Dark pool prints (Rank 10): FINRA ADF feed is expensive. Only pursue if AUM justifies cost.
+
+---
+
 ## Phase 5 — UI/UX Redesign
 > Goal: Professional, clean, fast. Information density without clutter.
 
