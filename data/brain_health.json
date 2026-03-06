@@ -1,202 +1,119 @@
 {
-  "generated_at": "2026-03-05T22:31:39.704865+00:00",
+  "generated_at": "2026-03-06T22:49:44.773524+00:00",
   "overall_status": "degraded",
   "checks": {
     "ic_trend": {
-      "status": "ok",
+      "status": "warn",
       "threshold_warn": 0.04,
       "threshold_critical": 0.0,
-      "current_ic": 0.1009,
-      "prev_ic": 0.1027,
-      "trend": "stable"
+      "current_ic": null,
+      "prev_ic": null,
+      "trend": "no_data"
     },
     "hit_rate": {
       "status": "ok",
       "threshold_warn": 0.5,
       "threshold_critical": 0.45,
-      "current": 0.543,
-      "30d_rolling": 0.546
+      "current": null,
+      "30d_rolling": null
     },
     "data_freshness": {
       "status": "warn",
       "threshold_warn_hours": 48,
       "threshold_critical_hours": 96,
-      "congress_last_updated": "2026-02-13",
-      "edgar_last_updated": "2026-03-04",
-      "hours_since_congress": 502.5,
-      "hours_since_edgar": 46.5
+      "congress_last_updated": "2026-02-17",
+      "edgar_last_updated": "2026-03-06",
+      "hours_since_congress": 430.8,
+      "hours_since_edgar": 22.8
     },
     "feature_drift": {
       "status": "warn",
       "features_below_50pct_fill": [
+        "sector",
+        "person_hr",
+        "person_car",
+        "sector_mom",
         "repeat_buyer"
       ],
       "features_degraded_since_last_run": [],
       "feature_fill_rates": {
-        "sector": 98.4,
-        "market_cap": 98.3,
-        "momentum": 52.0,
-        "person_hr": 54.0,
-        "person_car": 54.0,
-        "sector_mom": 63.7,
+        "sector": 0.0,
+        "market_cap": 96.7,
+        "momentum": 87.9,
+        "person_hr": 38.8,
+        "person_car": 38.8,
+        "sector_mom": 0.0,
         "insider_role": 100.0,
-        "repeat_buyer": 35.2
+        "repeat_buyer": 6.2
       }
     },
     "score_concentration": {
-      "status": "warn",
+      "status": "ok",
       "threshold_warn": 0.3,
-      "top_ticker": "BITB",
-      "top_ticker_signal_count": 11,
-      "pct_signals_in_top5_tickers": 0.52
+      "top_ticker": "NONE",
+      "top_ticker_signal_count": 2,
+      "pct_signals_in_top5_tickers": 0.2
     },
     "harmful_features": {
-      "status": "warn",
-      "active_harmful_features": [
-        {
-          "feature": "sector",
-          "value": "Communication Services",
-          "avg_car_30d": -0.0262,
-          "n": 238
-        }
-      ],
+      "status": "ok",
+      "active_harmful_features": [],
       "note": "features/values with CAR < -2% and n > 30"
     },
     "db_integrity": {
       "status": "ok",
-      "size_mb": 6.47,
+      "size_mb": 0.54,
       "indexes": 11
     }
   },
   "recommendations": [
-    "Low fill features: repeat_buyer=35.2%",
-    "Top 5 tickers hold 52% of top-50 signals. Consider diversification cap.",
-    "Harmful feature values detected: sector=Communication Services. ML trees handle this but monitor for worsening.",
-    "Prune candidates (<1% importance for 3+ runs): sect_ticker_momentum=0.004, volume_cluster_signal=0.005, market_regime=0.005, news_sentiment_30d=0.005",
-    "congress signals have negative avg CAR (-0.58%). Consider source quality down-weighting.",
-    "Candidate features below fill threshold (60%): short_interest_pct=7%, short_interest_change=7%, institutional_holders=4%, institutional_pct_held=4%, options_bullish=4%, options_unusual_calls=4%, options_insider_confluence=4%, options_bearish_divergence=4%",
+    "No IC history. Run --analyze to train ML models.",
+    "Low fill features: sector=0.0%, person_hr=38.8%, person_car=38.8%, sector_mom=0.0%, repeat_buyer=6.2%",
+    "Score band inversion: 80+ CAR < 65-79 CAR. Recalibrate scoring coefficients.",
+    "Candidate features below fill threshold (60%): short_interest_pct=17%, short_interest_change=17%, institutional_holders=10%, institutional_pct_held=10%, options_bullish=10%, options_unusual_calls=10%, options_insider_confluence=10%, options_bearish_divergence=10%",
     "Auto-promoted features: news_sentiment_30d, market_regime, sect_ticker_momentum, volume_cluster_signal"
   ],
-  "ic_history": [
-    {
-      "date": "2026-03-05",
-      "ic": 0.100871,
-      "hit_rate": 0.5432,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-04",
-      "ic": 0.102654,
-      "hit_rate": 0.5419,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-04",
-      "ic": 0.099998,
-      "hit_rate": 0.5437,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-04",
-      "ic": 0.099563,
-      "hit_rate": 0.5433,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-04",
-      "ic": 0.102816,
-      "hit_rate": 0.5446,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-04",
-      "ic": 0.104541,
-      "hit_rate": 0.5495,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-03",
-      "ic": 0.109184,
-      "hit_rate": 0.55,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-03",
-      "ic": 0.109184,
-      "hit_rate": 0.55,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-03",
-      "ic": 0.111995,
-      "hit_rate": 0.5517,
-      "type": "analyze"
-    },
-    {
-      "date": "2026-03-03",
-      "ic": 0.095522,
-      "hit_rate": 0.5421,
-      "type": "analyze"
-    }
-  ],
+  "ic_history": [],
   "score_bands": [
     {
       "band": "<40",
-      "n": 4313,
-      "avg_car": -0.031,
-      "hit_rate": 36.6
+      "n": 527,
+      "avg_car": -0.0029,
+      "hit_rate": 48.0
     },
     {
       "band": "80+",
-      "n": 441,
-      "avg_car": 0.1967,
-      "hit_rate": 93.0
+      "n": 1,
+      "avg_car": 0.0069,
+      "hit_rate": 100.0
     },
     {
       "band": "65-79",
-      "n": 615,
-      "avg_car": 0.1124,
-      "hit_rate": 75.8
+      "n": 15,
+      "avg_car": 0.1196,
+      "hit_rate": 100.0
     },
     {
       "band": "40-64",
-      "n": 1869,
-      "avg_car": 0.0439,
-      "hit_rate": 59.6
+      "n": 39,
+      "avg_car": 0.12,
+      "hit_rate": 92.3
     }
   ],
   "source_alpha": [
     {
       "source": "congress",
-      "n": 3147,
-      "avg_car": -0.0058,
-      "hit_rate": 44.7
+      "n": 564,
+      "avg_car": 0.0064,
+      "hit_rate": 51.8
     },
     {
       "source": "edgar",
-      "n": 4091,
-      "avg_car": 0.0299,
-      "hit_rate": 52.8
+      "n": 18,
+      "avg_car": 0.0751,
+      "hit_rate": 72.2
     }
   ],
-  "prune_candidates": [
-    {
-      "feature": "sect_ticker_momentum",
-      "avg_importance": 0.0044
-    },
-    {
-      "feature": "volume_cluster_signal",
-      "avg_importance": 0.0047
-    },
-    {
-      "feature": "market_regime",
-      "avg_importance": 0.0049
-    },
-    {
-      "feature": "news_sentiment_30d",
-      "avg_importance": 0.005
-    }
-  ],
+  "prune_candidates": [],
   "feature_fill_gate": {
     "threshold": 0.6,
     "candidates": {
@@ -217,35 +134,35 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.17,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.17,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.041,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.041,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       }
     }
@@ -257,360 +174,26 @@
   },
   "db_health": {
     "tables": {
-      "signals": 7655,
-      "feature_stats": 96,
-      "weight_history": 41,
-      "feature_importance_history": 642,
-      "brain_runs": 34
+      "signals": 758,
+      "feature_stats": 0,
+      "weight_history": 0,
+      "feature_importance_history": 0,
+      "brain_runs": 1
     },
-    "db_size_mb": 6.47,
+    "db_size_mb": 0.54,
     "journal_mode": "delete",
     "index_count": 11,
     "integrity": "ok",
     "null_rates": {
-      "car_30d": 0.054,
+      "car_30d": 0.232,
       "total_score": 0.0,
-      "sector": 0.016,
-      "spy_return_30d": 0.024
+      "sector": 1.0,
+      "spy_return_30d": 0.144
     },
-    "outcome_fill_rate": 0.946,
+    "outcome_fill_rate": 0.768,
     "date_range": {
-      "min": "2019-01-30",
-      "max": "2026-03-04"
+      "min": "2023-01-03",
+      "max": "2026-03-06"
     }
-  },
-  "suggestions": [
-    "False positive cluster in Technology (7 signals scored \u226570 but lost >5%)",
-    "False positives concentrated in edgar source (20 misses)"
-  ],
-  "residuals": {
-    "false_positives": [
-      {
-        "ticker": "SABS",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 71.39,
-        "car_30d": -0.3801,
-        "date": "2023-11-30"
-      },
-      {
-        "ticker": "RVPH",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 95.68,
-        "car_30d": -0.3545,
-        "date": "2022-06-30"
-      },
-      {
-        "ticker": "STSS",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 74.42,
-        "car_30d": -0.2909,
-        "date": "2023-12-29"
-      },
-      {
-        "ticker": "NVCT",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 72.68,
-        "car_30d": -0.2223,
-        "date": "2022-06-30"
-      },
-      {
-        "ticker": "SMRT",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 72.55,
-        "car_30d": -0.2222,
-        "date": "2021-11-30"
-      },
-      {
-        "ticker": "SBH",
-        "sector": "Consumer Cyclical",
-        "source": "edgar",
-        "score": 80.66,
-        "car_30d": -0.2088,
-        "date": "2019-05-31"
-      },
-      {
-        "ticker": "ZYXIQ",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 70.7,
-        "car_30d": -0.1791,
-        "date": "2020-07-30"
-      },
-      {
-        "ticker": "UWHR",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 73.54,
-        "car_30d": -0.1688,
-        "date": "2022-12-30"
-      },
-      {
-        "ticker": "DOMH",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 95.07,
-        "car_30d": -0.1584,
-        "date": "2024-05-31"
-      },
-      {
-        "ticker": "DOMH",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 75.11,
-        "car_30d": -0.1584,
-        "date": "2024-05-31"
-      },
-      {
-        "ticker": "ADMQ",
-        "sector": "Industrials",
-        "source": "edgar",
-        "score": 76.9,
-        "car_30d": -0.15,
-        "date": "2020-09-30"
-      },
-      {
-        "ticker": "UWHR",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 75.28,
-        "car_30d": -0.1494,
-        "date": "2020-09-30"
-      },
-      {
-        "ticker": "UWHR",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 72.82,
-        "car_30d": -0.1494,
-        "date": "2020-09-30"
-      },
-      {
-        "ticker": "CWBC",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 72.86,
-        "car_30d": -0.1344,
-        "date": "2020-04-29"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "CWAN",
-        "sector": "Technology",
-        "source": "edgar",
-        "score": 77.14,
-        "car_30d": -0.1328,
-        "date": "2021-09-30"
-      }
-    ],
-    "false_negatives": [
-      {
-        "ticker": "WBHC",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 37.41,
-        "car_30d": 3.0,
-        "date": "2024-01-31"
-      },
-      {
-        "ticker": "EVFM",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 34.65,
-        "car_30d": 1.9722,
-        "date": "2022-05-31"
-      },
-      {
-        "ticker": "SEZL",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 25.2,
-        "car_30d": 1.0771,
-        "date": "2023-11-30"
-      },
-      {
-        "ticker": "LFMD",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 35.94,
-        "car_30d": 0.7358,
-        "date": "2023-08-31"
-      },
-      {
-        "ticker": "KYMR",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 29.68,
-        "car_30d": 0.6797,
-        "date": "2022-05-31"
-      },
-      {
-        "ticker": "SSSS",
-        "sector": "Financial Services",
-        "source": "edgar",
-        "score": 37.88,
-        "car_30d": 0.5029,
-        "date": "2020-06-30"
-      },
-      {
-        "ticker": "PHAT",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 39.03,
-        "car_30d": 0.5015,
-        "date": "2020-03-31"
-      },
-      {
-        "ticker": "EP",
-        "sector": "Energy",
-        "source": "edgar",
-        "score": 37.93,
-        "car_30d": 0.4976,
-        "date": "2021-09-30"
-      },
-      {
-        "ticker": "BE",
-        "sector": "Industrials",
-        "source": "congress",
-        "score": 29.6,
-        "car_30d": 0.4906,
-        "date": "2025-09-26"
-      },
-      {
-        "ticker": "BHVN",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 34.92,
-        "car_30d": 0.4839,
-        "date": "2023-08-31"
-      },
-      {
-        "ticker": "SEI",
-        "sector": "Energy",
-        "source": "congress",
-        "score": 22.36,
-        "car_30d": 0.4559,
-        "date": "2025-09-02"
-      },
-      {
-        "ticker": "ADMQ",
-        "sector": "Industrials",
-        "source": "edgar",
-        "score": 26.77,
-        "car_30d": 0.4439,
-        "date": "2020-10-29"
-      },
-      {
-        "ticker": "MYO",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 37.59,
-        "car_30d": 0.4416,
-        "date": "2023-08-31"
-      },
-      {
-        "ticker": "XP",
-        "sector": "Financial Services",
-        "source": "congress",
-        "score": 12.5,
-        "car_30d": 0.4301,
-        "date": "2023-04-03"
-      },
-      {
-        "ticker": "INMB",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 37.17,
-        "car_30d": 0.429,
-        "date": "2022-05-31"
-      },
-      {
-        "ticker": "RZLT",
-        "sector": "Healthcare",
-        "source": "edgar",
-        "score": 39.17,
-        "car_30d": 0.4286,
-        "date": "2020-03-31"
-      },
-      {
-        "ticker": "CXDO",
-        "sector": "Communication Services",
-        "source": "edgar",
-        "score": 26.84,
-        "car_30d": 0.4033,
-        "date": "2019-09-30"
-      },
-      {
-        "ticker": "PRSI",
-        "sector": "Consumer Cyclical",
-        "source": "edgar",
-        "score": 37.2,
-        "car_30d": 0.3889,
-        "date": "2020-06-30"
-      },
-      {
-        "ticker": "PYPL",
-        "sector": "Financial Services",
-        "source": "congress",
-        "score": 26.06,
-        "car_30d": 0.3867,
-        "date": "2022-06-29"
-      },
-      {
-        "ticker": "CBRL",
-        "sector": "Consumer Cyclical",
-        "source": "congress",
-        "score": 29.27,
-        "car_30d": 0.3813,
-        "date": "2025-12-16"
-      }
-    ],
-    "patterns": [
-      "False positive cluster in Technology (7 signals scored \u226570 but lost >5%)",
-      "False positives concentrated in edgar source (20 misses)"
-    ]
   }
 }

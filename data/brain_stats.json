@@ -1,159 +1,68 @@
 {
-  "generated": "2026-03-06T01:55:14.753123+00:00",
+  "generated": "2026-03-06T22:49:42.267454+00:00",
   "alpha": {
-    "value": 0.1476,
-    "label": "+14.8%",
+    "value": 0.1125,
+    "label": "+11.3%",
     "horizon": "30d",
-    "n_signals": 1056
+    "n_signals": 16
   },
   "score_tiers": [
     {
-      "tier": "90+",
-      "n": 255,
-      "hit_rate": 0.95,
-      "avg_car_30d": 0.2122,
-      "note": "in-sample (training data)"
-    },
-    {
       "tier": "80-89",
-      "n": 186,
-      "hit_rate": 0.9,
-      "avg_car_30d": 0.1754,
+      "n": 1,
+      "hit_rate": 1.0,
+      "avg_car_30d": 0.0069,
       "note": "in-sample (training data)"
     },
     {
       "tier": "65-79",
-      "n": 615,
-      "hit_rate": 0.76,
-      "avg_car_30d": 0.1124,
+      "n": 15,
+      "hit_rate": 1.0,
+      "avg_car_30d": 0.1196,
       "note": "in-sample (training data)"
     },
     {
       "tier": "<65",
-      "n": 6182,
-      "hit_rate": 0.44,
-      "avg_car_30d": -0.0084,
+      "n": 566,
+      "hit_rate": 0.51,
+      "avg_car_30d": 0.0056,
       "note": "in-sample (training data)"
     }
   ],
-  "sectors": [
-    {
-      "sector": "Energy",
-      "n": 319,
-      "avg_car_30d": 0.042,
-      "hit_rate": 0.51
-    },
-    {
-      "sector": "Healthcare",
-      "n": 1092,
-      "avg_car_30d": 0.0284,
-      "hit_rate": 0.45
-    },
-    {
-      "sector": "Basic Materials",
-      "n": 213,
-      "avg_car_30d": 0.0281,
-      "hit_rate": 0.54
-    },
-    {
-      "sector": "Industrials",
-      "n": 536,
-      "avg_car_30d": 0.0277,
-      "hit_rate": 0.53
-    },
-    {
-      "sector": "Consumer Cyclical",
-      "n": 553,
-      "avg_car_30d": 0.0212,
-      "hit_rate": 0.52
-    },
-    {
-      "sector": "Utilities",
-      "n": 102,
-      "avg_car_30d": 0.0192,
-      "hit_rate": 0.6
-    },
-    {
-      "sector": "Financial Services",
-      "n": 2414,
-      "avg_car_30d": 0.0158,
-      "hit_rate": 0.53
-    },
-    {
-      "sector": "Real Estate",
-      "n": 376,
-      "avg_car_30d": 0.0034,
-      "hit_rate": 0.51
-    },
-    {
-      "sector": "Technology",
-      "n": 1026,
-      "avg_car_30d": -0.0007,
-      "hit_rate": 0.45
-    },
-    {
-      "sector": "Consumer Defensive",
-      "n": 318,
-      "avg_car_30d": -0.0159,
-      "hit_rate": 0.39
-    },
-    {
-      "sector": "Communication Services",
-      "n": 238,
-      "avg_car_30d": -0.0296,
-      "hit_rate": 0.41
-    }
-  ],
+  "sectors": [],
   "committees": [
     {
-      "name": "Science & Tech",
-      "n_trades": 366,
-      "match_rate": 0.38
-    },
-    {
       "name": "Finance",
-      "n_trades": 297,
-      "match_rate": 0.52
-    },
-    {
-      "name": "Armed Services",
-      "n_trades": 282,
-      "match_rate": 0.41
+      "n_trades": 55,
+      "match_rate": 0.56
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 94,
-      "match_rate": 0.41
-    },
-    {
-      "name": "Energy/Enviro",
-      "n_trades": 20,
-      "match_rate": 0.15
+      "n_trades": 29,
+      "match_rate": 0.34
     },
     {
       "name": "Judiciary",
-      "n_trades": 10,
+      "n_trades": 7,
+      "match_rate": 0.43
+    },
+    {
+      "name": "Armed Services",
+      "n_trades": 4,
       "match_rate": 0.5
     },
     {
-      "name": "Commerce",
-      "n_trades": 1,
+      "name": "Energy/Enviro",
+      "n_trades": 3,
       "match_rate": 0.0
+    },
+    {
+      "name": "Science & Tech",
+      "n_trades": 2,
+      "match_rate": 0.5
     }
   ],
   "congress_heatmap": [
-    {
-      "ticker": "V",
-      "name": "Visa",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "PGR",
-      "name": "Progressive",
-      "count": 2,
-      "heat": 2
-    },
     {
       "ticker": "PG",
       "name": "Procter & Gamble",
@@ -161,20 +70,8 @@
       "heat": 2
     },
     {
-      "ticker": "MSFT",
-      "name": "Microsoft",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "CRM",
-      "name": "Salesforce",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "AMZN",
-      "name": "Amazon",
+      "ticker": "BBAI",
+      "name": "BBAI",
       "count": 2,
       "heat": 2
     },
@@ -185,8 +82,20 @@
       "heat": 1
     },
     {
-      "ticker": "SMPL",
-      "name": "SMPL",
+      "ticker": "V",
+      "name": "Visa",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "PGR",
+      "name": "Progressive",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
       "count": 1,
       "heat": 1
     },
@@ -237,73 +146,29 @@
       "name": "CRS",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "C",
+      "name": "Citigroup",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
-    "top_score": 93,
-    "top_score_tickers": "RCG",
-    "exceptional_count": 5,
+    "top_score": 68,
+    "top_score_tickers": "WDFC",
+    "exceptional_count": 0,
     "cluster_count": 1,
-    "congress_flags": 29,
-    "convergence_count": 130
+    "congress_flags": 25,
+    "convergence_count": 0
   },
-  "insider_sectors": [
-    {
-      "sector": "Energy",
-      "n": 219,
-      "avg_car": 0.0597
-    },
-    {
-      "sector": "Industrials",
-      "n": 249,
-      "avg_car": 0.0512
-    },
-    {
-      "sector": "Consumer Cyclical",
-      "n": 278,
-      "avg_car": 0.0451
-    },
-    {
-      "sector": "Healthcare",
-      "n": 737,
-      "avg_car": 0.0433
-    },
-    {
-      "sector": "Basic Materials",
-      "n": 106,
-      "avg_car": 0.0429
-    },
-    {
-      "sector": "Utilities",
-      "n": 46,
-      "avg_car": 0.0326
-    },
-    {
-      "sector": "Financial Services",
-      "n": 1584,
-      "avg_car": 0.0279
-    },
-    {
-      "sector": "Technology",
-      "n": 318,
-      "avg_car": 0.0186
-    },
-    {
-      "sector": "Real Estate",
-      "n": 266,
-      "avg_car": 0.0168
-    },
-    {
-      "sector": "Consumer Defensive",
-      "n": 126,
-      "avg_car": -0.0143
-    },
-    {
-      "sector": "Communication Services",
-      "n": 138,
-      "avg_car": -0.0399
-    }
-  ],
+  "insider_sectors": [],
   "ml": {
     "oos_ic": 0.100871,
     "oos_hit_rate": 0.5432,
@@ -737,64 +602,42 @@
     ]
   },
   "sector_distribution": {
-    "Financial Services": 8,
-    "Healthcare": 8,
-    "Utilities": 8,
-    "Basic Materials": 7,
-    "Technology": 4,
-    "Industrials": 4,
-    "Unknown": 4,
-    "Consumer Cyclical": 3,
-    "Energy": 3,
-    "Consumer Defensive": 1
+    "Unknown": 50
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 38,
-    "max_signals_per_ticker": 3,
+    "unique_tickers_in_export": 45,
+    "max_signals_per_ticker": 2,
     "top_5_tickers_by_signal_count": [
       {
-        "ticker": "RCG",
-        "count": 3
+        "ticker": "NONE",
+        "count": 2
       },
       {
-        "ticker": "CABA",
-        "count": 3
+        "ticker": "N/A",
+        "count": 2
       },
       {
         "ticker": "YORW",
-        "count": 3
+        "count": 2
       },
       {
-        "ticker": "RGCO",
-        "count": 3
+        "ticker": "RPM",
+        "count": 2
       },
       {
-        "ticker": "WYY",
+        "ticker": "WRB",
         "count": 2
       }
     ]
   },
-  "pruning_log": [
-    {
-      "feature": "sector",
-      "value": "Communication Services",
-      "avg_car_30d": -0.0262,
-      "n": 238
-    }
-  ],
+  "pruning_log": [],
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "crisis": 12,
-      "elevated": 599,
-      "low_vol": 1249,
-      "normal": 5378
+      "normal": 582
     },
     "hit_rates": {
-      "crisis": 0.583,
-      "elevated": 0.508,
-      "low_vol": 0.419,
-      "normal": 0.509
+      "normal": 0.524
     }
   },
   "features_pruned_history": {
@@ -864,60 +707,59 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.17,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.17,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.041,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.041,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.04,
+        "fill_rate": 0.096,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.001734,
-    "n_matched_signals": 7238,
-    "spy_avg_30d_return": 0.016112,
-    "alpha_80plus": 0.156202,
-    "n_80plus": 441,
-    "alpha_60_79": 0.071908,
-    "n_60_79": 910,
-    "alpha_below_60": -0.024949,
-    "n_below_60": 5887,
-    "alpha_congress": -0.020324,
-    "beta_vs_spy": 0.8258,
-    "beta_vs_spy_raw": 0.9078,
-    "sharpe_market_adjusted_80plus": 1.6393
+    "alpha_all_signals": -0.004347,
+    "n_matched_signals": 582,
+    "spy_avg_30d_return": 0.012898,
+    "alpha_80plus": 0.01501,
+    "n_80plus": 1,
+    "alpha_60_79": 0.139441,
+    "n_60_79": 20,
+    "alpha_below_60": -0.009507,
+    "n_below_60": 561,
+    "alpha_congress": -0.007191,
+    "beta_vs_spy": -0.385,
+    "beta_vs_spy_raw": -0.4398
   },
   "signal_concentration": {
-    "top_ticker": "RCG",
-    "top_ticker_pct": 0.06,
-    "top_5_ticker_pct": 0.28,
-    "unique_tickers": 38,
-    "unique_sectors": 10,
+    "top_ticker": "NONE",
+    "top_ticker_pct": 0.04,
+    "top_5_ticker_pct": 0.2,
+    "unique_tickers": 45,
+    "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
   }
