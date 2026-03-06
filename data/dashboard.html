@@ -802,7 +802,9 @@ tr:hover td { background: rgba(68,136,255,0.06); }
     // ═══════════════════════════════════════════════
 
     (function renderPerformance() {
-      const ps = portfolio?.summary || {};
+      const strat = portfolio?.strategy || {};
+      const raw = portfolio?.raw || {};
+      const rules = strat.rules || {};
       let ph = '';
 
       // Active portfolio card
@@ -822,58 +824,120 @@ tr:hover td { background: rgba(68,136,255,0.06); }
       ph += '<div class="dim" style="font-size:0.68rem;margin-top:4px">3% entry timing adjustment applied (disclosure-to-execution lag)</div>';
       ph += '</div></div>';
 
-      // Closed signals summary (from portfolio_stats.json — honest full DB)
-      ph += '<div class="section"><div class="section-header">Closed Signal Performance (Full History)</div><div style="padding:12px 16px">';
-      if (ps.total_closed) {
-        ph += '<div class="stats-row">';
-        ph += `<div class="stat-card"><div class="label">Total Closed</div><div class="value mono">${ps.total_closed.toLocaleString()}</div></div>`;
-        ph += `<div class="stat-card"><div class="label">Win Rate</div><div class="value mono">${(ps.win_rate * 100).toFixed(1)}%</div></div>`;
-        ph += `<div class="stat-card"><div class="label">Avg Win</div><div class="value mono pos">+${(ps.avg_win * 100).toFixed(1)}%</div></div>`;
-        ph += `<div class="stat-card"><div class="label">Avg Loss</div><div class="value mono neg">${(ps.avg_loss * 100).toFixed(1)}%</div></div>`;
-        if (ps.best) ph += `<div class="stat-card"><div class="label">Best</div><div class="value mono pos" style="font-size:0.9rem">${ps.best.ticker} +${(ps.best.car_30d * 100).toFixed(1)}%</div></div>`;
-        if (ps.worst) ph += `<div class="stat-card"><div class="label">Worst</div><div class="value mono neg" style="font-size:0.9rem">${ps.worst.ticker} ${(ps.worst.car_30d * 100).toFixed(1)}%</div></div>`;
-        ph += '</div>';
-      } else {
-        ph += '<div class="dim">Run --export to generate portfolio_stats.json</div>';
-      }
-      ph += '</div></div>';
+      // Strategy performance (with trading rules applied)
+      if (strat.total_trades) {
+        const exitR = strat.exit_reasons || {};
+        ph += '<div class="section"><div class="section-header">Strategy Performance';
+        ph += `<span class="dim" style="font-weight:400;font-size:0.7rem;margin-left:8px">score \u2265 ${rules.entry_threshold || 65} | stop ${((rules.stop_loss_pct || -0.1) * 100).toFixed(0)}% | TP +${((rules.take_profit_pct || 0.2) * 100).toFixed(0)}% | ${rules.hold_days || 30}d hold</span>`;
+        ph += '</div><div style="padding:12px 16px">';
 
-      // Monthly performance
-      const monthly = ps.monthly || [];
+        ph += '<div class="stats-row">';
+        ph += `<div class="stat-card"><div class="label">Total Trades</div><div class="value mono">${strat.total_trades.toLocaleString()}</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Win Rate</div><div class="value mono ${strat.win_rate >= 0.6 ? 'pos' : 'neg'}">${(strat.win_rate * 100).toFixed(1)}%</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Avg Return</div><div class="value mono ${strat.avg_return >= 0 ? 'pos' : 'neg'}">${strat.avg_return >= 0 ? '+' : ''}${(strat.avg_return * 100).toFixed(2)}%</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Weighted Avg</div><div class="value mono ${strat.weighted_avg_return >= 0 ? 'pos' : 'neg'}">${strat.weighted_avg_return >= 0 ? '+' : ''}${(strat.weighted_avg_return * 100).toFixed(2)}%</div><div class="sub">position-size weighted</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Cumulative</div><div class="value mono pos">${strat.total_cumulative?.toFixed(1)}x</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Best / Worst</div><div class="value mono" style="font-size:0.8rem"><span class="pos">+${(strat.best * 100).toFixed(0)}%</span> / <span class="neg">${(strat.worst * 100).toFixed(0)}%</span></div></div>`;
+        ph += '</div>';
+
+        // Exit reasons bar
+        const totalExits = strat.total_trades;
+        const stopPct = (exitR.stop_loss || 0) / totalExits * 100;
+        const tpPct = (exitR.take_profit || 0) / totalExits * 100;
+        const holdPct = (exitR.hold_expire || 0) / totalExits * 100;
+        ph += '<div style="margin:10px 0 6px"><div class="dim" style="font-size:0.7rem;margin-bottom:4px">Exit Reasons</div>';
+        ph += '<div style="display:flex;height:12px;border-radius:4px;overflow:hidden;gap:1px">';
+        if (tpPct > 0) ph += `<div style="width:${tpPct}%;background:var(--green)" title="Take Profit: ${exitR.take_profit}"></div>`;
+        if (holdPct > 0) ph += `<div style="width:${holdPct}%;background:var(--blue)" title="Hold Expire: ${exitR.hold_expire}"></div>`;
+        if (stopPct > 0) ph += `<div style="width:${stopPct}%;background:var(--red)" title="Stop Loss: ${exitR.stop_loss}"></div>`;
+        ph += '</div>';
+        ph += `<div class="dim" style="font-size:0.65rem;margin-top:3px"><span class="pos">\u25A0</span> TP: ${exitR.take_profit || 0} &nbsp; <span style="color:var(--blue)">\u25A0</span> Hold: ${exitR.hold_expire || 0} &nbsp; <span class="neg">\u25A0</span> Stop: ${exitR.stop_loss || 0}</div>`;
+        ph += '</div>';
+
+        // Score tier breakdown
+        const tiers = strat.tiers || [];
+        if (tiers.length > 0) {
+          ph += '<div style="margin-top:10px"><div class="dim" style="font-size:0.7rem;margin-bottom:4px">Score Tier Performance</div>';
+          ph += '<div class="table-wrap"><table><thead><tr><th>Tier</th><th>Weight</th><th>Trades</th><th>Win Rate</th><th>Avg Return</th><th>Weighted</th></tr></thead><tbody>';
+          tiers.forEach(t => {
+            ph += `<tr><td class="mono">${t.tier}</td><td class="mono">${t.weight}x</td><td class="mono">${t.n}</td>`;
+            ph += `<td class="mono ${t.win_rate >= 0.7 ? 'pos' : ''}">${(t.win_rate * 100).toFixed(0)}%</td>`;
+            ph += `<td class="mono ${t.avg_return >= 0 ? 'pos' : 'neg'}">${t.avg_return >= 0 ? '+' : ''}${(t.avg_return * 100).toFixed(1)}%</td>`;
+            ph += `<td class="mono ${t.avg_weighted >= 0 ? 'pos' : 'neg'}">${t.avg_weighted >= 0 ? '+' : ''}${(t.avg_weighted * 100).toFixed(1)}%</td></tr>`;
+          });
+          ph += '</tbody></table></div></div>';
+        }
+        ph += '</div></div>';
+
+        // Raw comparison
+        ph += '<div class="section"><div class="section-header">Raw Signal Universe (no rules)</div><div style="padding:8px 16px">';
+        ph += '<div class="stats-row">';
+        ph += `<div class="stat-card"><div class="label">Total Signals</div><div class="value mono">${(raw.total_signals || 0).toLocaleString()}</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Win Rate</div><div class="value mono">${((raw.win_rate || 0) * 100).toFixed(1)}%</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Avg Return</div><div class="value mono ${(raw.avg_return || 0) >= 0 ? 'pos' : 'neg'}">${(raw.avg_return || 0) >= 0 ? '+' : ''}${((raw.avg_return || 0) * 100).toFixed(2)}%</div></div>`;
+        ph += '</div>';
+        ph += '<div class="dim" style="font-size:0.65rem">All scored signals regardless of threshold — shows why trading rules matter</div>';
+        ph += '</div></div>';
+      } else {
+        ph += '<div class="section"><div class="section-header">Strategy Performance</div><div style="padding:12px 16px">';
+        ph += '<div class="dim">Run --export to generate portfolio_stats.json</div>';
+        ph += '</div></div>';
+      }
+
+      // Monthly performance (strategy)
+      const monthly = strat.monthly || [];
       if (monthly.length > 0) {
-        const maxAbs = Math.max(...monthly.map(m => Math.abs(m.avg_return)), 0.01);
-        ph += '<div class="section"><div class="section-header">Monthly Performance (last 12)</div>';
-        ph += '<div class="table-wrap"><table><thead><tr><th>Month</th><th>Signals</th><th>Win Rate</th><th>Avg Return</th><th></th></tr></thead><tbody>';
-        monthly.slice(0, 12).forEach(m => {
+        const maxAbs = Math.max(...monthly.map(m => Math.abs(m.weighted_return || m.avg_return)), 0.01);
+        ph += '<div class="section"><div class="section-header">Monthly Performance</div>';
+        ph += '<div class="table-wrap"><table><thead><tr><th>Month</th><th>Trades</th><th>Win%</th><th>Avg</th><th>Weighted</th><th>Cumul.</th><th>Stops</th><th>TPs</th><th></th></tr></thead><tbody>';
+        monthly.slice(0, 18).forEach(m => {
           const wr = (m.win_rate * 100).toFixed(0);
           const ar = (m.avg_return * 100).toFixed(1);
-          const barW = Math.min(100, Math.abs(m.avg_return) / maxAbs * 100);
-          const barCls = m.avg_return >= 0 ? 'bar-pos' : 'bar-neg';
+          const wtr = ((m.weighted_return || m.avg_return) * 100).toFixed(1);
+          const cum = m.cumulative ? m.cumulative.toFixed(1) + 'x' : '';
+          const barVal = m.weighted_return || m.avg_return;
+          const barW = Math.min(100, Math.abs(barVal) / maxAbs * 100);
+          const barCls = barVal >= 0 ? 'bar-pos' : 'bar-neg';
           ph += `<tr><td class="dim">${m.month}</td><td class="mono">${m.n}</td><td class="mono">${wr}%</td>`;
           ph += `<td class="mono ${m.avg_return >= 0 ? 'pos' : 'neg'}">${m.avg_return >= 0 ? '+' : ''}${ar}%</td>`;
+          ph += `<td class="mono ${barVal >= 0 ? 'pos' : 'neg'}">${barVal >= 0 ? '+' : ''}${wtr}%</td>`;
+          ph += `<td class="mono dim">${cum}</td>`;
+          ph += `<td class="mono ${m.stops ? 'neg' : 'dim'}">${m.stops || 0}</td>`;
+          ph += `<td class="mono ${m.targets ? 'pos' : 'dim'}">${m.targets || 0}</td>`;
           ph += `<td><div class="${barCls}" style="width:${barW}%"></div></td></tr>`;
         });
         ph += '</tbody></table></div></div>';
       }
 
-      // Closed positions log (paginated — first 50 from portfolio_stats)
+      // Closed positions log with expandable details
       const closedList = portfolio?.closed_signals || [];
       if (closedList.length > 0) {
         ph += '<div class="section"><div class="section-header">Recent Closed Positions<span class="count">' + closedList.length + '</span></div>';
-        ph += '<div class="table-wrap"><table><thead><tr><th>Ticker</th><th>Date</th><th>Score</th><th>OOS</th><th>P&L (30d)</th><th>Result</th><th>Source</th><th>Sector</th></tr></thead><tbody>';
-        closedList.slice(0, 50).forEach(s => {
-          const car = s.car_30d;
-          const win = car != null && car > 0;
-          ph += '<tr>';
+        ph += '<div class="table-wrap"><table><thead><tr><th>Ticker</th><th>Date</th><th>Score</th><th>Entry</th><th>Exit</th><th>Return</th><th>Exit Type</th><th>Weight</th></tr></thead><tbody>';
+        closedList.slice(0, 50).forEach((s, i) => {
+          const ret = s.return_pct;
+          const win = ret != null && ret > 0;
+          const exitTag = s.exit_reason === 'take_profit' ? '<span class="tag tag-win">TP +20%</span>'
+            : s.exit_reason === 'stop_loss' ? '<span class="tag tag-loss">STOP -10%</span>'
+            : '<span class="tag" style="background:var(--blue);color:#fff">HOLD</span>';
+          ph += `<tr class="expandable-row" onclick="this.nextElementSibling.classList.toggle('hidden')" style="cursor:pointer">`;
           ph += `<td class="ticker">${s.ticker}</td>`;
           ph += `<td class="dim">${fmtDate(s.signal_date)}</td>`;
-          ph += `<td>${scoreBar(s.total_score)}</td>`;
-          ph += `<td>${oosCell(s)}</td>`;
-          ph += `<td class="mono ${pctClass(car)}">${pct(car)}</td>`;
-          ph += `<td>${car != null ? (win ? '<span class="tag tag-win">WIN</span>' : '<span class="tag tag-loss">LOSS</span>') : '<span class="dim">pending</span>'}</td>`;
-          ph += `<td>${sourceTag(s.source)}</td>`;
-          ph += `<td class="dim">${sectorShort(s.sector)}</td>`;
+          ph += `<td>${scoreBar(s.score)}</td>`;
+          ph += `<td class="mono">$${s.entry_price?.toFixed(2) || '\u2014'}</td>`;
+          ph += `<td class="mono">$${s.exit_price?.toFixed(2) || '\u2014'}</td>`;
+          ph += `<td class="mono ${ret >= 0 ? 'pos' : 'neg'}">${ret != null ? (ret >= 0 ? '+' : '') + (ret * 100).toFixed(1) + '%' : '\u2014'}</td>`;
+          ph += `<td>${exitTag}</td>`;
+          ph += `<td class="mono">${s.weight}x</td>`;
           ph += '</tr>';
+          // Expandable detail row
+          ph += `<tr class="detail-row hidden"><td colspan="8" style="padding:8px 16px;background:var(--card)">`;
+          ph += `<div class="dim" style="font-size:0.72rem">`;
+          ph += `Signal: ${s.signal_date || '\u2014'} &rarr; Exit: ${s.exit_date || 'N/A'} &nbsp;|&nbsp; `;
+          ph += `OOS: ${s.oos_score != null ? s.oos_score : 'N/A'} &nbsp;|&nbsp; `;
+          ph += `Source: ${s.source || '\u2014'} &nbsp;|&nbsp; Sector: ${s.sector || '\u2014'} &nbsp;|&nbsp; `;
+          ph += `Weighted return: ${s.weighted_return != null ? (s.weighted_return >= 0 ? '+' : '') + (s.weighted_return * 100).toFixed(2) + '%' : '\u2014'}`;
+          ph += `</div></td></tr>`;
         });
         ph += '</tbody></table></div></div>';
       }

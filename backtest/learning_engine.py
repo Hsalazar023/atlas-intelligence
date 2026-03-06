@@ -686,6 +686,68 @@ def _compute_cluster_velocity(dates: list) -> str:
     return 'slow'
 
 
+# ── Entry Price Backfill ──────────────────────────────────────────────────────
+
+def backfill_entry_prices(conn: sqlite3.Connection) -> int:
+    """Backfill price_at_signal for signals missing it, using price_history cache.
+
+    Looks up the close price on signal_date (or nearest prior trading day).
+    Returns count of signals updated.
+    """
+    rows = conn.execute("""
+        SELECT id, ticker, signal_date FROM signals
+        WHERE (price_at_signal IS NULL OR price_at_signal = 0)
+    """).fetchall()
+
+    if not rows:
+        return 0
+
+    _cache = {}
+    updated = 0
+    for r in rows:
+        ticker = r['ticker']
+        sig_date = r['signal_date']
+
+        if ticker not in _cache:
+            path = PRICE_HISTORY_DIR / f"{ticker}.json"
+            if path.exists():
+                try:
+                    with open(path) as f:
+                        _cache[ticker] = json.load(f)
+                except Exception:
+                    _cache[ticker] = {}
+            else:
+                _cache[ticker] = {}
+
+        prices = _cache[ticker]
+        if not prices:
+            continue
+
+        # Try exact date first, then look back up to 5 trading days
+        close = None
+        if sig_date in prices and isinstance(prices[sig_date], dict):
+            close = prices[sig_date].get('c')
+        else:
+            from datetime import datetime as dt_cls, timedelta
+            d = dt_cls.strptime(sig_date, '%Y-%m-%d')
+            for offset in range(1, 6):
+                prev = (d - timedelta(days=offset)).strftime('%Y-%m-%d')
+                if prev in prices and isinstance(prices[prev], dict):
+                    close = prices[prev].get('c')
+                    if close:
+                        break
+
+        if close and close > 0:
+            conn.execute("UPDATE signals SET price_at_signal = ? WHERE id = ?",
+                         (close, r['id']))
+            updated += 1
+
+    if updated:
+        conn.commit()
+        log.info(f"Backfilled price_at_signal for {updated}/{len(rows)} signals")
+    return updated
+
+
 # ── Liquidity / Transaction Cost Enrichment ──────────────────────────────────
 
 def enrich_liquidity_features(conn: sqlite3.Connection) -> int:
@@ -6250,6 +6312,231 @@ def compute_kelly_size(oos_score, hit_rate, avg_win, avg_loss,
     return round(max(min_position, min(max_position, sized)), 3)
 
 
+# ── Trading Rules Engine ─────────────────────────────────────────────────────
+
+TRADING_RULES = {
+    'entry_threshold': 65,       # minimum total_score to initiate a buy
+    'stop_loss_pct': -0.10,      # -10% trailing stop from entry price
+    'take_profit_pct': 0.20,     # +20% take profit target
+    'hold_days': 30,             # max hold period (days)
+    'position_tiers': [          # (min_score, weight_multiplier)
+        (85, 1.5),               # 85+: conviction — 1.5x
+        (75, 1.0),               # 75-84: standard — 1.0x
+        (65, 0.5),               # 65-74: starter — 0.5x
+    ],
+}
+
+
+def _position_weight(score: float, rules: dict = None) -> float:
+    """Map score to position weight multiplier."""
+    rules = rules or TRADING_RULES
+    for min_score, weight in rules['position_tiers']:
+        if score >= min_score:
+            return weight
+    return 0.0
+
+
+def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
+    """Simulate trades with entry threshold, stop-loss, take-profit, position sizing.
+
+    For each signal above entry_threshold with a filled outcome:
+      1. Entry at price_at_signal on signal_date
+      2. Scan daily lows for stop-loss hit (-10% from entry)
+      3. Scan daily highs for take-profit hit (+20% from entry)
+      4. If neither triggered, exit at close on hold_days or last available date
+      5. Position weight based on score tier
+
+    Returns list of trade dicts with entry/exit details and weighted return.
+    """
+    import pandas as pd
+    rules = rules or TRADING_RULES
+    threshold = rules['entry_threshold']
+    stop_pct = rules['stop_loss_pct']
+    tp_pct = rules['take_profit_pct']
+    max_hold = rules['hold_days']
+
+    rows = conn.execute("""
+        SELECT id, ticker, signal_date, total_score, oos_score,
+               price_at_signal, car_30d, source, sector, insider_name
+        FROM signals
+        WHERE total_score >= ? AND outcome_30d_filled = 1
+          AND car_30d IS NOT NULL AND price_at_signal IS NOT NULL
+          AND price_at_signal > 0
+        ORDER BY signal_date DESC
+    """, (threshold,)).fetchall()
+
+    trades = []
+    # Cache loaded price files
+    _price_cache = {}
+
+    for r in rows:
+        ticker = r['ticker']
+        entry_date = r['signal_date']
+        entry_price = float(r['price_at_signal'])
+        score = float(r['total_score'])
+        oos = float(r['oos_score']) if r['oos_score'] else None
+        weight = _position_weight(score, rules)
+
+        # Load price data
+        if ticker not in _price_cache:
+            cache_path = PRICE_HISTORY_DIR / f"{ticker}.json"
+            if cache_path.exists():
+                try:
+                    with open(cache_path) as f:
+                        _price_cache[ticker] = json.load(f)
+                except Exception:
+                    _price_cache[ticker] = {}
+            else:
+                _price_cache[ticker] = {}
+
+        prices = _price_cache[ticker]
+        if not prices:
+            # No price data — fall back to raw CAR
+            trades.append({
+                'id': r['id'], 'ticker': ticker, 'signal_date': entry_date,
+                'score': round(score, 1), 'oos_score': round(oos, 1) if oos else None,
+                'entry_price': round(entry_price, 2),
+                'exit_price': round(entry_price * (1 + float(r['car_30d'])), 2),
+                'exit_date': None, 'exit_reason': 'hold_expire',
+                'return_pct': round(float(r['car_30d']), 4),
+                'weight': weight,
+                'weighted_return': round(float(r['car_30d']) * weight, 4),
+                'source': r['source'], 'sector': r['sector'] or 'Unknown',
+            })
+            continue
+
+        # Get sorted trading days after entry
+        stop_price = entry_price * (1 + stop_pct)
+        tp_price = entry_price * (1 + tp_pct)
+
+        trading_days = sorted([d for d in prices.keys()
+                               if d > entry_date and isinstance(prices[d], dict)])[:max_hold]
+
+        exit_price = None
+        exit_date = None
+        exit_reason = 'hold_expire'
+
+        for day in trading_days:
+            bar = prices[day]
+            low = bar.get('l', bar.get('c', entry_price))
+            high = bar.get('h', bar.get('c', entry_price))
+
+            # Check stop-loss (low breaches stop price)
+            if low <= stop_price:
+                exit_price = stop_price
+                exit_date = day
+                exit_reason = 'stop_loss'
+                break
+
+            # Check take-profit (high breaches target)
+            if high >= tp_price:
+                exit_price = tp_price
+                exit_date = day
+                exit_reason = 'take_profit'
+                break
+
+        # If no trigger, exit at last day's close (or hold_days close)
+        if exit_price is None:
+            if trading_days:
+                last_day = trading_days[-1]
+                exit_price = prices[last_day].get('c', entry_price)
+                exit_date = last_day
+            else:
+                exit_price = entry_price * (1 + float(r['car_30d']))
+                exit_date = None
+
+        ret = (exit_price - entry_price) / entry_price
+
+        trades.append({
+            'id': r['id'], 'ticker': ticker, 'signal_date': entry_date,
+            'score': round(score, 1), 'oos_score': round(oos, 1) if oos else None,
+            'entry_price': round(entry_price, 2),
+            'exit_price': round(exit_price, 2),
+            'exit_date': exit_date, 'exit_reason': exit_reason,
+            'return_pct': round(ret, 4),
+            'weight': weight,
+            'weighted_return': round(ret * weight, 4),
+            'source': r['source'], 'sector': r['sector'] or 'Unknown',
+        })
+
+    log.info(f"Simulated {len(trades)} trades (threshold={threshold}, "
+             f"stop={stop_pct:.0%}, tp={tp_pct:.0%})")
+    return trades
+
+
+def compute_strategy_stats(trades: list[dict]) -> dict:
+    """Compute strategy-level statistics from simulated trades."""
+    import pandas as pd
+    if not trades:
+        return {}
+
+    df = pd.DataFrame(trades)
+
+    # Exit reason breakdown
+    exit_counts = df['exit_reason'].value_counts().to_dict()
+
+    # Weighted returns
+    total_weight = df['weight'].sum()
+    weighted_avg = (df['return_pct'] * df['weight']).sum() / total_weight if total_weight > 0 else 0
+
+    wins = df[df['return_pct'] > 0]
+    losses = df[df['return_pct'] <= 0]
+
+    # Monthly cumulative (weighted)
+    df['month'] = pd.to_datetime(df['signal_date']).dt.to_period('M').astype(str)
+    monthly = []
+    for m, grp in df.groupby('month'):
+        m_weight = grp['weight'].sum()
+        m_wavg = (grp['return_pct'] * grp['weight']).sum() / m_weight if m_weight > 0 else 0
+        monthly.append({
+            'month': str(m),
+            'n': len(grp),
+            'win_rate': round(float((grp['return_pct'] > 0).mean()), 3),
+            'avg_return': round(float(grp['return_pct'].mean()), 4),
+            'weighted_return': round(float(m_wavg), 4),
+            'stops': int((grp['exit_reason'] == 'stop_loss').sum()),
+            'targets': int((grp['exit_reason'] == 'take_profit').sum()),
+        })
+    monthly.sort(key=lambda x: x['month'], reverse=True)
+
+    # Cumulative equity curve (equal-weight per-month)
+    monthly_sorted = sorted(monthly, key=lambda x: x['month'])
+    cum = 1.0
+    for m in monthly_sorted:
+        cum *= (1 + m['weighted_return'])
+        m['cumulative'] = round(cum, 4)
+
+    # Score tier breakdown
+    tier_stats = []
+    for label, lo, hi in [('85+', 85, 999), ('75-84', 75, 84.99), ('65-74', 65, 74.99)]:
+        tier = df[(df['score'] >= lo) & (df['score'] <= hi)]
+        if len(tier) > 0:
+            tier_stats.append({
+                'tier': label,
+                'n': len(tier),
+                'weight': round(float(tier['weight'].iloc[0]), 1),
+                'win_rate': round(float((tier['return_pct'] > 0).mean()), 3),
+                'avg_return': round(float(tier['return_pct'].mean()), 4),
+                'avg_weighted': round(float(tier['weighted_return'].mean()), 4),
+            })
+
+    return {
+        'rules': TRADING_RULES,
+        'total_trades': len(df),
+        'win_rate': round(float((df['return_pct'] > 0).mean()), 3),
+        'avg_return': round(float(df['return_pct'].mean()), 4),
+        'weighted_avg_return': round(float(weighted_avg), 4),
+        'avg_win': round(float(wins['return_pct'].mean()), 4) if len(wins) > 0 else 0,
+        'avg_loss': round(float(losses['return_pct'].mean()), 4) if len(losses) > 0 else 0,
+        'best': round(float(df['return_pct'].max()), 4),
+        'worst': round(float(df['return_pct'].min()), 4),
+        'total_cumulative': round(float(cum), 4) if monthly_sorted else 1.0,
+        'exit_reasons': {k: int(v) for k, v in exit_counts.items()},
+        'tiers': tier_stats,
+        'monthly': monthly[:24],
+    }
+
+
 def export_brain_data(conn: sqlite3.Connection) -> None:
     """Export brain_signals.json + brain_stats.json for the frontend."""
     log.info("=== Exporting Brain Data ===")
@@ -6629,58 +6916,47 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
     log.info(f"Exported {len(signals_out)} signals + {len(closed_out)} closed + {len(exits_out)} exits → brain_signals.json")
 
     # ── portfolio_stats.json ──────────────────────────────────────────────
+    # Strategy simulation: apply trading rules (threshold, stop-loss, take-profit, sizing)
+    try:
+        strategy_trades = simulate_trades(conn)
+        strategy_stats = compute_strategy_stats(strategy_trades)
+        # Recent closed trades for dashboard (last 200, with full detail)
+        recent_trades = sorted(strategy_trades, key=lambda t: t['signal_date'], reverse=True)[:200]
+    except Exception as e:
+        log.warning(f"Strategy simulation failed: {e}")
+        strategy_trades = []
+        strategy_stats = {}
+        recent_trades = []
+
+    # Raw stats (all signals, no threshold) for comparison
     import pandas as pd
     ps_df = pd.read_sql("""
         SELECT ticker, signal_date, total_score, oos_score,
-               price_at_signal, car_30d, insider_name, insider_role,
-               source, sector, vix_at_signal
+               price_at_signal, car_30d, source, sector
         FROM signals
         WHERE car_30d IS NOT NULL AND total_score IS NOT NULL
         ORDER BY signal_date DESC
     """, conn)
-    ps_closed = []
-    for _, r in ps_df.iterrows():
-        ps_closed.append({
-            'ticker': r['ticker'],
-            'signal_date': r['signal_date'],
-            'total_score': round(float(r['total_score']), 1),
-            'oos_score': round(float(r['oos_score']), 1) if pd.notna(r['oos_score']) else None,
-            'car_30d': round(float(r['car_30d']), 4),
-            'source': r['source'],
-            'insider_role': r.get('insider_role', ''),
-            'sector': r.get('sector', ''),
-        })
-    wins_df = ps_df[ps_df.car_30d > 0]
-    losses_df = ps_df[ps_df.car_30d <= 0]
-    best_row = ps_df.loc[ps_df.car_30d.idxmax()] if len(ps_df) > 0 else None
-    worst_row = ps_df.loc[ps_df.car_30d.idxmin()] if len(ps_df) > 0 else None
-    # Monthly breakdown
-    ps_df['close_month'] = pd.to_datetime(ps_df['signal_date']).dt.to_period('M').apply(
-        lambda p: (p + 1).strftime('%Y-%m'))
-    monthly = []
-    for m, grp in ps_df.groupby('close_month'):
-        monthly.append({
-            'month': str(m),
-            'n': len(grp),
-            'win_rate': round(float((grp.car_30d > 0).mean()), 3),
-            'avg_return': round(float(grp.car_30d.mean()), 4),
-        })
-    monthly.sort(key=lambda x: x['month'], reverse=True)
+    raw_wins = ps_df[ps_df.car_30d > 0]
+    raw_losses = ps_df[ps_df.car_30d <= 0]
+
     portfolio_stats = {
         'generated': now,
-        'closed_signals': ps_closed[:200],
-        'summary': {
-            'total_closed': len(ps_df),
+        'closed_signals': recent_trades,
+        'strategy': strategy_stats,
+        'raw': {
+            'total_signals': len(ps_df),
             'win_rate': round(float((ps_df.car_30d > 0).mean()), 3) if len(ps_df) > 0 else 0,
-            'avg_win': round(float(wins_df.car_30d.mean()), 4) if len(wins_df) > 0 else 0,
-            'avg_loss': round(float(losses_df.car_30d.mean()), 4) if len(losses_df) > 0 else 0,
-            'best': {'ticker': best_row['ticker'], 'car_30d': round(float(best_row['car_30d']), 4)} if best_row is not None else None,
-            'worst': {'ticker': worst_row['ticker'], 'car_30d': round(float(worst_row['car_30d']), 4)} if worst_row is not None else None,
-            'monthly': monthly[:24],
+            'avg_return': round(float(ps_df.car_30d.mean()), 4) if len(ps_df) > 0 else 0,
+            'avg_win': round(float(raw_wins.car_30d.mean()), 4) if len(raw_wins) > 0 else 0,
+            'avg_loss': round(float(raw_losses.car_30d.mean()), 4) if len(raw_losses) > 0 else 0,
         },
     }
     save_json(PORTFOLIO_STATS, portfolio_stats)
-    log.info(f"Exported portfolio_stats.json: {len(ps_df)} closed signals, {len(monthly)} months")
+    n_stops = strategy_stats.get('exit_reasons', {}).get('stop_loss', 0)
+    n_tp = strategy_stats.get('exit_reasons', {}).get('take_profit', 0)
+    log.info(f"Exported portfolio_stats.json: {len(strategy_trades)} strategy trades "
+             f"({n_stops} stops, {n_tp} targets), {len(ps_df)} raw signals")
 
     # ── brain_stats.json ────────────────────────────────────────────────────
 
@@ -6997,6 +7273,11 @@ def run_daily(conn: sqlite3.Connection) -> None:
     new_prices = collect_missing_prices(conn)
     if new_prices:
         log.info(f"Collected prices for {new_prices} new tickers")
+
+    # 2b. Backfill entry prices from price cache (recovers older signals)
+    price_filled = backfill_entry_prices(conn)
+    if price_filled:
+        log.info(f"Backfilled entry prices for {price_filled} signals")
 
     # 3. Update aggregate features (incremental: last 60 days only)
     since = (datetime.now(tz=timezone.utc) - timedelta(days=60)).strftime('%Y-%m-%d')
@@ -8081,6 +8362,10 @@ def main():
             print(f"  [SUGGEST] {rec}")
         print(f"\nSaved to {BRAIN_HEALTH}")
     elif args.backfill:
+        # Backfill entry prices first (recovers 800+ older EDGAR signals)
+        price_filled = backfill_entry_prices(conn)
+        if price_filled:
+            print(f"Backfilled entry prices for {price_filled} signals")
         result = backfill_features(conn)
         print(f"\nBackfill complete: {result['enriched']} features re-enriched")
         for col in ('volume_dry_up', 'analyst_revision_30d', 'analyst_consensus',

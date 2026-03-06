@@ -1,5 +1,57 @@
 # ATLAS Todo
-_Last updated: Session 18 — March 5, 2026_
+_Last updated: Session 19 — March 6, 2026_
+
+---
+
+## Session 19 — CI Fix + Session 20 Planning
+
+### Completed
+- [x] **CI pipeline fix** — backtest.yml crashing on `no such column: score_base` + `TimedeltaIndex.dt` error. Moved score columns to `_migrate_columns`, pushed local ml_engine fix.
+- [x] **.gitignore whitelist** — 12 JSON files + `data/dashboard.html` were silently blocked. CI `git add || true` swallowed errors. All dashboard data files now whitelisted.
+- [x] **All 3 dashboards deployed** — `/` (main site), `/dashboard.html` (original), `/data/dashboard.html` (4-tab analysis).
+
+---
+
+## Session 20 Plan — Trading Logic, Performance Accuracy, Model Diagnostics
+
+### P0: Trading Rules (Performance is misleading without these)
+
+1. **Score threshold for buy** — Model currently "trades" every signal. Define minimum score (e.g. 65+) that constitutes an actionable buy. Backtest performance with threshold applied.
+
+2. **Stop-loss mechanism** — Implement fixed or trailing stop-loss (e.g. -8% or -10%). Apply retroactively to closed signals to see impact on win rate and drawdown.
+
+3. **Position sizing by score** — Higher-score signals get larger weight. Performance should be weighted by position size, not equal-weight averaged.
+
+4. **Sell / exit rules** — Define target-hit exits (e.g. +15%) and time-based exits (30d horizon). Currently only measures CAR at fixed 30d window.
+
+### P1: Dashboard Performance Tab Fixes
+
+5. **Cumulative return chart** — Monthly performance should show cumulative (compounded) return, weighted by position size. Current avg return per month is misleading.
+
+6. **Recently closed: expandable details** — Add dropdown showing: signal date, entry price/date, exit price/date, hold period, score at entry, return. Keep table clean.
+
+7. **Filter out low-score trades** — Closed positions with scores below threshold should be excluded from performance stats (model wouldn't have bought them).
+
+### P2: Score vs OOS Clarity
+
+8. **Score vs OOS explainer** — Add tooltip or info section explaining: score = full-sample ML prediction, OOS = honest walk-forward prediction that never saw the signal's data. OOS is the real metric.
+
+9. **Investigate 52/75 folds** — Walk-forward should produce 75 folds (86 months - 11 min training). Debug why only 52 are completing.
+
+### P3: Model Mistake Tracker
+
+10. **Residual analysis system** — Track signals where model score diverges most from actual outcome:
+    - High-score misses: scored 75+ but returned < -5%
+    - Low-score winners: scored < 50 but returned > 15%
+    - Cross-reference with features to find systematic blind spots
+    - Surface in dashboard Intelligence tab
+
+11. **Fama-French gap analysis** — Factor alpha shows +128.9% annualized but live performance is weaker. Diagnose: is the gap from no score threshold? No stop-loss? Timing of entry? Different signal universe?
+
+### Carry Forward
+- [ ] **Liquidity enrichment debug** — 0 signals filled, path issue
+- [ ] **New signal notifications** — 80+ alerts via ntfy
+- [ ] **Strategy memo** — investor-format summary
 
 ---
 
