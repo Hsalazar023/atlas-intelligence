@@ -5,18 +5,38 @@ Trained on historical signals with filled outcomes, tested out-of-sample.
 """
 import sqlite3
 import logging
+import warnings
 import numpy as np
+import pandas as pd
 from dataclasses import dataclass, field
 from scipy.stats import spearmanr
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, brier_score_loss
 import lightgbm as lgb
 
+# Suppress known harmless warnings
+warnings.filterwarnings('ignore', message='.*invalid value encountered in.*',
+                        category=RuntimeWarning)
+pd.set_option('future.no_silent_downcasting', True)
+warnings.filterwarnings('ignore', message='.*Downcasting object dtype arrays.*',
+                        category=FutureWarning)
+
 log = logging.getLogger(__name__)
 
 # CAR winsorization bounds — clip extreme outliers before ML training
 CAR_ABSOLUTE_MIN = -1.0   # -100%
 CAR_ABSOLUTE_MAX = 3.0    # +300%
+
+def _filter_zero_variance(X: pd.DataFrame, label: str = "") -> pd.DataFrame:
+    """Drop columns with zero variance (all identical values after fillna)."""
+    variances = X.var()
+    zero_var = variances[variances == 0].index.tolist()
+    if zero_var:
+        log.debug(f"Dropping {len(zero_var)} zero-variance features"
+                  f"{' (' + label + ')' if label else ''}: {zero_var[:5]}")
+        X = X.drop(columns=zero_var)
+    return X
+
 
 # Multi-horizon training
 HORIZONS = ['30d', '90d', '180d']
@@ -38,20 +58,101 @@ FEATURE_COLUMNS = [
     'vix_regime_interaction',
     # v4: person magnitude + sector momentum + repeat buyer signal
     'person_avg_car_30d', 'sector_momentum', 'days_since_last_buy',
-    # v5: volume + analyst features
-    'volume_dry_up', 'analyst_revision_30d', 'analyst_consensus',
-    'analyst_insider_confluence',
-    # v6: committee overlap + earnings surprise + news sentiment
-    'committee_overlap', 'earnings_surprise', 'news_sentiment_30d',
 ]
 # Pruned in v4: 'source' (0.16%), 'trade_pattern' (0.40%, 31% fill)
 # Pruned in v5: 'convergence_tier' (<1%), 'has_convergence' (<1%),
 #   'days_to_catalyst' (<1%), 'relative_position_size' (<1%),
 #   'cluster_velocity' (<1%) — all <1% importance for 3+ runs
+# Pruned in v8: 'analyst_insider_confluence' (0% importance all runs),
+#   'analyst_revision_30d' (0% importance all runs, sparse yfinance data)
+# Pruned in v10: 'volume_dry_up' (0.0018 avg, 12 runs, 51% fill),
+#   'analyst_consensus' (0.0066 avg but 93.5% NULL — model barely sees it)
+# Pruned in v11: 'earnings_surprise' (0.001, 3 clean runs below 1%),
+#   'committee_overlap' (0.002, 3 clean runs below 1%)
+
+# Features with strong theoretical basis — monitor longer (need 3+ more runs)
+MONITOR_EXTENDED = [
+    'market_regime',        # 0.003 — regime logic sound (VIX-based), 100% fill
+    'sect_ticker_momentum', # 0.006 — hypothesis engine predicted this feature, 100% fill
+]
+# Pruned Session 11: 'committee_overlap' (0.002, 3 clean runs), 'earnings_surprise' (0.001, 3 clean runs)
+
+# Candidate features: auto-promoted when fill rate ≥ FILL_GATE_THRESHOLD
+CANDIDATE_FEATURES = [
+    'news_sentiment_30d',       # v6
+    'market_regime',            # v7 (categorical)
+    'sect_ticker_momentum',     # v8 (interaction: sector_momentum × same_ticker_signals)
+    'volume_cluster_signal',    # v8 (interaction: volume_spike × same_ticker_signals)
+    'short_interest_pct',       # v9 (short % of float)
+    'short_interest_change',    # v9 (short interest change vs prior month)
+    'institutional_holders',    # v10 (count of institutional holders from 13F)
+    'institutional_pct_held',   # v10 (total institutional ownership %)
+    'options_bullish',          # v10 (low put/call ratio)
+    'options_unusual_calls',    # v10 (unusual OTM call volume)
+    'options_insider_confluence',  # v10 (unusual calls + insider buy)
+    'options_bearish_divergence',  # v10 (bearish flow + insider buy = contrarian)
+    # Removed in v10: 'short_squeeze_signal' (0% importance, 6% fill),
+    #   'institutional_insider_confluence' (0% importance, 4% fill)
+]
+
+CANDIDATE_CATEGORICAL = ['market_regime']
+
+FILL_GATE_THRESHOLD = 0.60  # Promote when ≥60% non-NULL
 
 CATEGORICAL_FEATURES = [
     'insider_role', 'sector', 'market_cap_bucket',
 ]
+
+
+def get_active_features(conn: sqlite3.Connection) -> tuple[list[str], list[str], dict]:
+    """Check fill rates for candidate features and return active lists.
+
+    Returns:
+        (active_features, active_categoricals, fill_report)
+        where fill_report = {col: {'fill_rate': float, 'status': 'active'|'candidate'}}
+    """
+    active = FEATURE_COLUMNS.copy()
+    active_cat = CATEGORICAL_FEATURES.copy()
+    fill_report = {}
+
+    # Get total signal count with outcomes (training set)
+    total = conn.execute(
+        "SELECT COUNT(*) FROM signals WHERE outcome_30d_filled = 1 AND car_30d IS NOT NULL"
+    ).fetchone()[0]
+
+    if total == 0:
+        for col in CANDIDATE_FEATURES:
+            fill_report[col] = {'fill_rate': 0.0, 'status': 'candidate'}
+        return active, active_cat, fill_report
+
+    promoted = []
+    for col in CANDIDATE_FEATURES:
+        try:
+            filled = conn.execute(
+                f"SELECT COUNT(*) FROM signals "
+                f"WHERE outcome_30d_filled = 1 AND car_30d IS NOT NULL AND {col} IS NOT NULL"
+            ).fetchone()[0]
+        except Exception:
+            filled = 0
+        rate = filled / total
+        if rate >= FILL_GATE_THRESHOLD:
+            if col not in active:
+                active.append(col)
+            if col in CANDIDATE_CATEGORICAL and col not in active_cat:
+                active_cat.append(col)
+            fill_report[col] = {'fill_rate': round(rate, 3), 'status': 'active'}
+            promoted.append(col)
+        else:
+            fill_report[col] = {'fill_rate': round(rate, 3), 'status': 'candidate'}
+
+    # Deduplicate while preserving order
+    active = list(dict.fromkeys(active))
+    active_cat = list(dict.fromkeys(active_cat))
+
+    if promoted:
+        log.info(f"Fill-rate gate promoted {len(promoted)} features: {promoted}")
+
+    return active, active_cat, fill_report
 
 
 METRIC_BENCHMARKS = {
@@ -112,9 +213,11 @@ class WalkForwardResult:
     # Stability metrics
     ic_std: float = 0.0
     ic_t_stat: float = 0.0
+    ic_p_value: float = 1.0
     # Risk-adjusted metrics
     information_ratio: float = 0.0
     sortino_ratio: float = 0.0
+    sharpe_annual: float = 0.0
     # Calibration
     brier_skill_score: float = 0.0
     # Signal discrimination
@@ -124,22 +227,30 @@ class WalkForwardResult:
     beta: float = 0.0
     # Aggregate profit
     profit_factor: float = 0.0
+    # Per-signal OOS predictions: list of (signal_id, oos_prob, actual_car)
+    oos_predictions: list = field(default_factory=list)
 
 
-def prepare_features(conn: sqlite3.Connection, horizon: str = '30d'):
+def prepare_features(conn: sqlite3.Connection, horizon: str = '30d',
+                     features: list = None, categoricals: list = None):
     """Extract feature matrix X, target y, signal IDs, dates, and winsorized CARs.
 
     Args:
         horizon: '30d', '90d', or '180d' — selects car_{horizon} and outcome_{horizon}_filled.
+        features: Override feature list (default: FEATURE_COLUMNS).
+        categoricals: Override categorical list (default: CATEGORICAL_FEATURES).
 
     Returns (X, y, ids, dates, car_winsorized) or 5 empty arrays if no data.
     CAR winsorization applies percentile clipping (1st/99th) with hard bounds ±300%.
     """
     import pandas as pd
 
+    feat_cols = features or FEATURE_COLUMNS
+    cat_cols = categoricals or CATEGORICAL_FEATURES
+
     car_col = f'car_{horizon}'
     outcome_col = f'outcome_{horizon}_filled'
-    cols = ', '.join(FEATURE_COLUMNS)
+    cols = ', '.join(feat_cols)
     rows = conn.execute(
         f"SELECT id, signal_date, {car_col}, {cols} "
         f"FROM signals WHERE {outcome_col} = 1 AND {car_col} IS NOT NULL"
@@ -162,35 +273,42 @@ def prepare_features(conn: sqlite3.Connection, horizon: str = '30d'):
 
     y = (car_clipped > 0).astype(int).values
 
-    X = df[FEATURE_COLUMNS].copy()
+    X = df[feat_cols].copy()
 
     # Convert categoricals to numeric codes.
     # We use pandas category codes (deterministic mapping based on sorted unique values).
     # LightGBM and RF handle these natively. Encoding is done on full dataset for
     # consistent mapping — this is safe for tree models (no information leakage since
     # encoding is just a label mapping, not derived from the target variable).
-    for col in CATEGORICAL_FEATURES:
+    for col in cat_cols:
         if col in X.columns:
             X[col] = X[col].fillna('unknown').astype(str)
-            X[col] = X[col].astype('category').cat.codes
+            X[col] = pd.Categorical(X[col]).codes
 
     X = X.fillna(0).infer_objects(copy=False)
+    X = _filter_zero_variance(X, label='train')
     return X, y, ids, dates, car_clipped.values
 
 
-def prepare_features_all(conn: sqlite3.Connection, horizon: str = '30d'):
+def prepare_features_all(conn: sqlite3.Connection, horizon: str = '30d',
+                         features: list = None, categoricals: list = None):
     """Extract features for ALL signals (including those without outcomes).
 
     Used for scoring — no outcome filter so recent/actionable signals are included.
     Args:
         horizon: '30d', '90d', or '180d' — selects car_{horizon} for CARs.
+        features: Override feature list (default: FEATURE_COLUMNS).
+        categoricals: Override categorical list (default: CATEGORICAL_FEATURES).
     Returns (X, ids, dates, tickers, cars, X_raw) where cars may be NaN for pending
     signals and X_raw is the pre-encoded feature DataFrame for factor attribution.
     """
     import pandas as pd
 
+    feat_cols = features or FEATURE_COLUMNS
+    cat_cols = categoricals or CATEGORICAL_FEATURES
+
     car_col = f'car_{horizon}'
-    cols = ', '.join(FEATURE_COLUMNS)
+    cols = ', '.join(feat_cols)
     rows = conn.execute(
         f"SELECT id, signal_date, ticker, {car_col}, {cols} FROM signals"
     ).fetchall()
@@ -206,15 +324,16 @@ def prepare_features_all(conn: sqlite3.Connection, horizon: str = '30d'):
     tickers = df['ticker'].values
     cars = df[car_col].values.astype(float)
 
-    X_raw = df[FEATURE_COLUMNS].copy().fillna(0).infer_objects(copy=False)
+    X_raw = df[feat_cols].copy().fillna(0).infer_objects(copy=False)
 
-    X = df[FEATURE_COLUMNS].copy()
-    for col in CATEGORICAL_FEATURES:
+    X = df[feat_cols].copy()
+    for col in cat_cols:
         if col in X.columns:
             X[col] = X[col].fillna('unknown').astype(str)
-            X[col] = X[col].astype('category').cat.codes
+            X[col] = pd.Categorical(X[col]).codes
 
     X = X.fillna(0).infer_objects(copy=False)
+    X = _filter_zero_variance(X, label='score')
     return X, ids, dates, tickers, cars, X_raw
 
 
@@ -228,7 +347,8 @@ def _compute_time_weights(dates, half_life_months: int = 12) -> np.ndarray:
     import pandas as pd
     date_series = pd.to_datetime(dates)
     max_date = date_series.max()
-    age_days = (max_date - date_series).dt.days.values.astype(float)
+    delta = max_date - date_series
+    age_days = np.array([d.days for d in delta], dtype=float)
     age_months = age_days / 30.44  # average days per month
     weights = np.power(0.5, age_months / half_life_months)
     return np.clip(weights, 0.1, 1.0)
@@ -273,7 +393,12 @@ def train_full_sample(conn: sqlite3.Connection, horizon: str = '30d'):
 
 def compute_information_coefficient(predicted, actual) -> float:
     """Spearman rank correlation between predictions and actual returns."""
+    predicted = np.asarray(predicted, dtype=float)
+    actual = np.asarray(actual, dtype=float)
     if len(predicted) < 3 or len(actual) < 3:
+        return 0.0
+    # Guard: zero-variance arrays produce NaN correlation
+    if np.std(predicted) == 0 or np.std(actual) == 0:
         return 0.0
     corr, _ = spearmanr(predicted, actual)
     return round(corr, 6) if not np.isnan(corr) else 0.0
@@ -332,12 +457,14 @@ def compute_aggregate_metrics(all_preds, all_actual_cars, fold_ics, is_clf=True)
         fold_ics: list of per-fold IC values
         is_clf: True for classification, False for regression
 
-    Returns dict with ic_std, ic_t_stat, information_ratio, sortino_ratio,
-    brier_skill_score (clf only), q5_q1_spread, top_decile_car, beta, profit_factor.
+    Returns dict with ic_std, ic_t_stat, ic_p_value, information_ratio, sortino_ratio,
+    sharpe_annual, brier_skill_score (clf only), q5_q1_spread, top_decile_car, beta,
+    profit_factor.
     """
     result = {
-        'ic_std': 0.0, 'ic_t_stat': 0.0,
+        'ic_std': 0.0, 'ic_t_stat': 0.0, 'ic_p_value': 1.0,
         'information_ratio': 0.0, 'sortino_ratio': 0.0,
+        'sharpe_annual': 0.0,
         'brier_skill_score': 0.0,
         'q5_q1_spread': 0.0, 'top_decile_car': 0.0,
         'beta': 0.0, 'profit_factor': 0.0,
@@ -349,12 +476,28 @@ def compute_aggregate_metrics(all_preds, all_actual_cars, fold_ics, is_clf=True)
     if len(preds) < 5 or len(actuals) < 5:
         return result
 
-    # IC stability
+    # IC stability + significance
     ic_arr = np.array(fold_ics)
     if len(ic_arr) > 1:
         result['ic_std'] = round(float(np.std(ic_arr, ddof=1)), 6)
         if result['ic_std'] > 0:
-            result['ic_t_stat'] = round(float(np.mean(ic_arr) / (result['ic_std'] / np.sqrt(len(ic_arr)))), 4)
+            t_stat = float(np.mean(ic_arr) / (result['ic_std'] / np.sqrt(len(ic_arr))))
+            result['ic_t_stat'] = round(t_stat, 4)
+            # Two-sided p-value from t distribution
+            try:
+                from scipy.stats import t as t_dist
+                result['ic_p_value'] = round(float(2 * t_dist.sf(abs(t_stat), df=len(ic_arr) - 1)), 6)
+            except ImportError:
+                # Approximate p-value without scipy using normal approximation
+                import math
+                z = abs(t_stat)
+                result['ic_p_value'] = round(max(0.0, 2 * (1 - 0.5 * (1 + math.erf(z / math.sqrt(2))))), 6)
+
+    # Annualized Sharpe ratio
+    # Assumes each signal is ~30d horizon → ~12 "periods" per year
+    if np.std(actuals) > 0:
+        sharpe_per_period = float(np.mean(actuals) / np.std(actuals))
+        result['sharpe_annual'] = round(sharpe_per_period * np.sqrt(12), 4)
 
     # Information ratio: mean(CARs) / std(CARs)
     if np.std(actuals) > 0:
@@ -455,6 +598,7 @@ def walk_forward_train(conn: sqlite3.Connection,
     folds = []
     all_oos_preds = []
     all_oos_actual = []
+    all_oos_signal_preds = []  # (signal_id, oos_prob, actual_car) per signal
     all_fold_importances = []
     rf = None
     lgb_model = None
@@ -525,6 +669,10 @@ def walk_forward_train(conn: sqlite3.Connection,
         folds.append(fold)
         all_oos_preds.extend(ensemble_probs.tolist())
         all_oos_actual.extend(test_cars)
+        # Track per-signal OOS predictions
+        test_ids = ids[test_mask]
+        for sid, prob, car in zip(test_ids, ensemble_probs.tolist(), test_cars):
+            all_oos_signal_preds.append((int(sid), round(prob, 6), round(car, 6)))
 
         train_end += pd.DateOffset(months=1)
 
@@ -553,8 +701,10 @@ def walk_forward_train(conn: sqlite3.Connection,
 
     # Log key metrics with benchmark labels
     ic_label = _benchmark_label('ic', abs(oos_ic))
+    sig_str = f"p={agg['ic_p_value']:.4f}" if agg['ic_p_value'] < 0.05 else f"p={agg['ic_p_value']:.3f} (ns)"
     log.info(f"Walk-forward CLF [{horizon}]: IC={oos_ic:.4f} [{ic_label}], "
-             f"t={agg['ic_t_stat']:.2f}, hit={oos_hit:.1%}, "
+             f"t={agg['ic_t_stat']:.2f} ({sig_str}), hit={oos_hit:.1%}, "
+             f"Sharpe={agg['sharpe_annual']:.2f}, "
              f"Q5-Q1={agg['q5_q1_spread']:.4f}, PF={agg['profit_factor']:.2f}")
 
     return WalkForwardResult(
@@ -575,13 +725,16 @@ def walk_forward_train(conn: sqlite3.Connection,
         horizon=horizon,
         ic_std=agg['ic_std'],
         ic_t_stat=agg['ic_t_stat'],
+        ic_p_value=agg['ic_p_value'],
         information_ratio=agg['information_ratio'],
         sortino_ratio=agg['sortino_ratio'],
+        sharpe_annual=agg['sharpe_annual'],
         brier_skill_score=agg['brier_skill_score'],
         q5_q1_spread=agg['q5_q1_spread'],
         top_decile_car=agg['top_decile_car'],
         beta=agg['beta'],
         profit_factor=agg['profit_factor'],
+        oos_predictions=all_oos_signal_preds,
     )
 
 
@@ -599,9 +752,11 @@ class RegressionResult:
     # Stability metrics
     ic_std: float = 0.0
     ic_t_stat: float = 0.0
+    ic_p_value: float = 1.0
     # Risk-adjusted metrics
     information_ratio: float = 0.0
     sortino_ratio: float = 0.0
+    sharpe_annual: float = 0.0
     # Signal discrimination
     q5_q1_spread: float = 0.0
     top_decile_car: float = 0.0
@@ -741,8 +896,10 @@ def walk_forward_regression(conn: sqlite3.Connection,
 
     # Log key metrics with benchmark labels
     ic_label = _benchmark_label('ic', abs(oos_ic))
+    sig_str = f"p={agg['ic_p_value']:.4f}" if agg['ic_p_value'] < 0.05 else f"p={agg['ic_p_value']:.3f} (ns)"
     log.info(f"Walk-forward REG [{horizon}]: IC={oos_ic:.4f} [{ic_label}], "
-             f"t={agg['ic_t_stat']:.2f}, RMSE={oos_rmse:.4f}, "
+             f"t={agg['ic_t_stat']:.2f} ({sig_str}), RMSE={oos_rmse:.4f}, "
+             f"Sharpe={agg['sharpe_annual']:.2f}, "
              f"Q5-Q1={agg['q5_q1_spread']:.4f}, PF={agg['profit_factor']:.2f}")
 
     return RegressionResult(
@@ -762,8 +919,10 @@ def walk_forward_regression(conn: sqlite3.Connection,
         horizon=horizon,
         ic_std=agg['ic_std'],
         ic_t_stat=agg['ic_t_stat'],
+        ic_p_value=agg['ic_p_value'],
         information_ratio=agg['information_ratio'],
         sortino_ratio=agg['sortino_ratio'],
+        sharpe_annual=agg['sharpe_annual'],
         q5_q1_spread=agg['q5_q1_spread'],
         top_decile_car=agg['top_decile_car'],
         profit_factor=agg['profit_factor'],

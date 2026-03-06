@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS Signal Dashboard</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-border: #2a2d37;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --green: #00ff88;
+  --red: #ff4466;
+  --amber: #ffaa00;
+  --blue: #4488ff;
+  --cyan: #00ddff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  padding: 16px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.mono { font-family: 'SF Mono', 'Courier New', monospace; }
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; }
+.header h1 span { color: var(--blue); }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  padding: 4px 10px; border-radius: 4px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px;
+}
+.badge-ok { background: #0a3020; color: var(--green); border: 1px solid #1a5030; }
+.badge-warn { background: #332800; color: var(--amber); border: 1px solid #554400; }
+.badge-critical { background: #331010; color: var(--red); border: 1px solid #552020; }
+.badge-info { background: #0a2040; color: var(--blue); border: 1px solid #1a3060; }
+
+/* Regime Banner */
+.regime-banner {
+  padding: 10px 16px; border-radius: 6px; margin-bottom: 12px;
+  font-weight: 600; display: flex; align-items: center; gap: 12px;
+}
+.regime-optimal { background: #0a3020; border: 1px solid #1a5030; color: var(--green); }
+.regime-elevated, .regime-low_vol { background: #332800; border: 1px solid #554400; color: var(--amber); }
+.regime-high_vol { background: #331a00; border: 1px solid #553300; color: #ff8800; }
+.regime-crisis { background: #331010; border: 1px solid #552020; color: var(--red); }
+.regime-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block; flex-shrink: 0;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex; gap: 0; margin-bottom: 16px;
+  border-bottom: 2px solid var(--card-border);
+}
+.tab-btn {
+  padding: 10px 20px; background: none; border: none;
+  color: var(--text-dim); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Stats Row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 6px; padding: 12px; text-align: center;
+}
+.stat-card .label { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.stat-card .value { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
+.stat-card .sub { font-size: 0.62rem; color: var(--text-dim); margin-top: 2px; }
+
+/* Section */
+.section {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 6px; margin-bottom: 16px; overflow: hidden;
+}
+.section-header {
+  padding: 10px 16px; border-bottom: 1px solid var(--card-border);
+  font-weight: 600; font-size: 0.85rem; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--blue);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.section-header .count {
+  background: #1a3060; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;
+}
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th {
+  text-align: left; padding: 8px 10px; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim);
+  border-bottom: 1px solid var(--card-border); white-space: nowrap;
+  cursor: pointer; user-select: none;
+}
+th:hover { color: var(--blue); }
+th.sorted-asc::after { content: ' \u25B2'; color: var(--blue); }
+th.sorted-desc::after { content: ' \u25BC'; color: var(--blue); }
+td {
+  padding: 7px 10px; border-bottom: 1px solid #1e2130; white-space: nowrap;
+}
+tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+tr:hover td { background: rgba(68,136,255,0.06); }
+.ticker { font-weight: 700; color: var(--cyan); }
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+.warn { color: var(--amber); }
+.dim { color: var(--text-dim); }
+.tag {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 0.7rem; font-weight: 600;
+}
+.tag-win { background: #0a3020; color: var(--green); }
+.tag-loss { background: #331010; color: var(--red); }
+.tag-stop { background: #331010; color: var(--red); }
+.tag-active { background: #0a2040; color: var(--blue); }
+.tag-edgar { background: #1a1a30; color: #8888ff; }
+.tag-congress { background: #1a3020; color: #88cc88; }
+.tag-elite { background: #2a1a00; color: var(--amber); }
+
+/* Expandable rows */
+.expand-toggle { cursor: pointer; }
+.expand-toggle:hover td { background: rgba(68,136,255,0.08); }
+.expand-toggle td:first-child::before { content: '\u25B8 '; color: var(--text-dim); font-size: 0.7rem; }
+.expand-toggle.open td:first-child::before { content: '\u25BE '; }
+.detail-row { display: none; }
+.detail-row.open { display: table-row; }
+.detail-panel {
+  background: #12141e; padding: 12px 16px;
+  border-left: 3px solid var(--card-border);
+}
+.detail-panel.pnl-pos { border-left-color: var(--green); }
+.detail-panel.pnl-neg { border-left-color: var(--red); }
+.detail-panel.pnl-stop { border-left-color: var(--amber); }
+.detail-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+}
+.detail-block { font-size: 0.78rem; }
+.detail-block h4 {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-dim); margin-bottom: 4px;
+}
+.detail-block .dl { display: flex; justify-content: space-between; padding: 1px 0; }
+.detail-block .dl .dk { color: var(--text-dim); }
+.cluster-badge {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 0.68rem; font-weight: 600;
+  background: #2a1a00; color: var(--amber); border: 1px solid #554400;
+}
+.tier-elite { color: var(--amber); font-weight: 700; }
+.tier-good { color: var(--green); }
+.tier-fade { color: var(--red); }
+.tier-neutral { color: var(--text-dim); }
+
+/* Kelly bar */
+.kelly-bar-wrap {
+  width: 60px; height: 6px; background: #2a2d37;
+  border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 4px;
+}
+.kelly-bar { height: 100%; border-radius: 3px; background: var(--blue); }
+
+/* Score bar */
+.score-wrap { display: flex; align-items: center; gap: 6px; }
+.score-bar-bg { width: 40px; height: 5px; background: #2a2d37; border-radius: 2px; }
+.score-bar { height: 100%; border-radius: 2px; }
+
+/* CSS bar chart for monthly */
+.bar-chart-row { display: flex; align-items: center; gap: 8px; }
+.bar-pos { background: var(--green); height: 8px; border-radius: 2px; opacity: 0.7; }
+.bar-neg { background: var(--red); height: 8px; border-radius: 2px; opacity: 0.7; }
+
+/* Toggle button */
+.toggle-group { display: inline-flex; border: 1px solid var(--card-border); border-radius: 4px; overflow: hidden; }
+.toggle-btn {
+  padding: 3px 10px; background: none; border: none; color: var(--text-dim);
+  font-size: 0.7rem; cursor: pointer; font-weight: 600;
+}
+.toggle-btn.active { background: var(--blue); color: #fff; }
+
+/* Interpretation boxes */
+.interp-box {
+  background: #12141e; border-left: 3px solid var(--blue);
+  padding: 8px 12px; margin: 4px 0; font-size: 0.78rem; color: var(--text-dim);
+}
+
+/* Health panel */
+.health-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px; padding: 12px 16px;
+}
+.health-item { display: flex; justify-content: space-between; font-size: 0.8rem; }
+.health-item .hl { color: var(--text-dim); }
+
+/* Feature table */
+.feat-table td, .feat-table th { font-size: 0.75rem; padding: 4px 10px; }
+
+/* Loading / Error */
+.loading { text-align: center; padding: 60px; color: var(--text-dim); }
+.spinner {
+  width: 32px; height: 32px; border: 3px solid var(--card-border);
+  border-top-color: var(--blue); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-msg { text-align: center; padding: 40px; color: var(--red); }
+.empty-msg { padding: 20px; text-align: center; color: var(--text-dim); font-size: 0.85rem; }
+
+/* Report sections */
+.report-section { padding: 12px 16px; }
+.report-section h3 {
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--blue); margin-bottom: 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--card-border);
+}
+.report-kv { display: flex; justify-content: space-between; padding: 2px 0; font-size: 0.8rem; }
+.report-kv .rk { color: var(--text-dim); }
+
+@media (max-width: 768px) {
+  body { padding: 8px; }
+  .header h1 { font-size: 1.1rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  table { font-size: 0.75rem; }
+  td, th { padding: 5px 6px; }
+  .tab-btn { padding: 8px 12px; font-size: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading">
+    <div class="spinner"></div>
+    Loading ATLAS data...
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Helpers ──
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  const pct = (v, d = 1) => {
+    if (v == null || isNaN(v)) return '\u2014';
+    return (v >= 0 ? '+' : '') + (v * 100).toFixed(d) + '%';
+  };
+  const pctClass = v => v == null ? 'dim' : v >= 0 ? 'pos' : 'neg';
+  const fmt = (v, d = 2) => v == null || isNaN(v) ? '\u2014' : Number(v).toFixed(d);
+  const fmtDate = d => d || '\u2014';
+  const scoreColor = s => {
+    if (s == null) return '#555';
+    if (s >= 80) return '#00ff88';
+    if (s >= 60) return '#4488ff';
+    if (s >= 40) return '#ffaa00';
+    return '#ff4466';
+  };
+  const SECTOR_ABBR = {
+    'Financial Services': 'Fin Svcs', 'Consumer Cyclical': 'Cons Cyc',
+    'Consumer Defensive': 'Cons Def', 'Communication Services': 'Comm Svcs',
+    'Basic Materials': 'Materials', 'Real Estate': 'Real Est',
+    'Healthcare': 'Health', 'Technology': 'Tech', 'Industrials': 'Indust',
+    'Energy': 'Energy', 'Utilities': 'Utilities',
+  };
+  const sectorShort = s => SECTOR_ABBR[s] || (s || '\u2014');
+  const oosCell = (signal) => {
+    const oos = typeof signal === 'object' ? signal.oos_score : signal;
+    const total = typeof signal === 'object' ? signal.total_score : null;
+    if (oos != null) return `<span class="mono" style="color:${scoreColor(oos)}">${fmt(oos, 0)}</span>`;
+    if (total != null) return `<span class="mono" style="color:var(--blue)">${fmt(total, 0)}<span class="dim" style="font-size:0.65rem"> est</span></span>`;
+    return '<span class="dim">\u2014</span>';
+  };
+
+  function scoreBar(score) {
+    const w = Math.min(100, Math.max(0, score || 0));
+    return `<div class="score-wrap">
+      <span class="mono" style="color:${scoreColor(score)}">${fmt(score, 0)}</span>
+      <div class="score-bar-bg"><div class="score-bar" style="width:${w}%;background:${scoreColor(score)}"></div></div>
+    </div>`;
+  }
+
+  function kellyBar(size) {
+    if (size == null) return '\u2014';
+    const pctVal = (size * 100).toFixed(1);
+    const w = Math.min(100, (size / 0.15) * 100);
+    return `<div class="kelly-bar-wrap"><div class="kelly-bar" style="width:${w}%"></div></div><span class="mono">${pctVal}%</span>`;
+  }
+
+  function sourceTag(src) {
+    if (src === 'edgar') return '<span class="tag tag-edgar">EDGAR</span>';
+    if (src === 'congress') return '<span class="tag tag-congress">CONG</span>';
+    return `<span class="tag">${src || ''}</span>`;
+  }
+
+  function tierClass(tier) {
+    if (!tier) return 'tier-neutral';
+    const t = tier.toLowerCase();
+    if (t === 'elite') return 'tier-elite';
+    if (t === 'good') return 'tier-good';
+    if (t === 'fade') return 'tier-fade';
+    return 'tier-neutral';
+  }
+
+  function tierTag(tier) {
+    if (!tier || tier === 'neutral') return '';
+    const cls = tierClass(tier);
+    return ` <span class="${cls}" style="font-size:0.65rem;text-transform:uppercase">${tier}</span>`;
+  }
+
+  // Parse factors: array of {feature, importance, label, ...}
+  function topFactors(factors, n = 3) {
+    if (!factors) return [];
+    if (Array.isArray(factors)) {
+      return factors
+        .sort((a, b) => (b.importance || 0) - (a.importance || 0))
+        .slice(0, n)
+        .map(f => ({
+          name: f.feature || f.name || 'unknown',
+          importance: f.importance || 0,
+          label: f.label || '',
+          direction: f.direction || '',
+        }));
+    }
+    if (typeof factors === 'object') {
+      return Object.entries(factors)
+        .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+        .slice(0, n)
+        .map(([k, v]) => ({ name: k, importance: typeof v === 'number' ? v : 0 }));
+    }
+    return [];
+  }
+
+  function computeUpside(s) {
+    if (s.entry_lo == null || s.entry_hi == null || s.target2 == null) return null;
+    const mid = (s.entry_lo + s.entry_hi) / 2;
+    if (mid <= 0) return null;
+    return (s.target2 - mid) / mid;
+  }
+
+  // Build expandable detail panel HTML for a ticker group
+  function detailPanelHTML(g, nCols) {
+    const s = g.best;
+    const pnlClass = (s.unrealized_pnl_pct || 0) >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const stopNear = s.current_price && s.stop_loss_price && ((s.current_price - s.stop_loss_price) / s.current_price < 0.05);
+    const borderClass = stopNear ? 'pnl-stop' : pnlClass;
+
+    let html = `<td colspan="${nCols}"><div class="detail-panel ${borderClass}"><div class="detail-grid">`;
+
+    // Block 1: Insiders
+    html += '<div class="detail-block"><h4>Insiders</h4>';
+    g.signals.forEach(sig => {
+      html += `<div class="dl"><span>${(sig.person || '\u2014').substring(0, 24)} <span class="dim">${sig.insider_role || ''}</span>${tierTag(sig.trader_tier)}</span></div>`;
+      html += `<div class="dl"><span class="dk">Date</span><span>${sig.signal_date || '\u2014'}</span></div>`;
+      if (sig.context) {
+        if (sig.context.trade_size_range) {
+          html += `<div class="dl"><span class="dk">Size</span><span>${sig.context.trade_size_range}</span></div>`;
+        }
+      }
+    });
+    if (g.signals.length >= 2) {
+      html += `<div class="dl" style="margin-top:4px"><span class="dk">Cluster</span><span class="warn">${g.signals.length} insiders in recent window</span></div>`;
+    }
+    html += '</div>';
+
+    // Block 2: Signal Strength
+    html += '<div class="detail-block"><h4>Signal Strength</h4>';
+    html += `<div class="dl"><span class="dk">ML Confidence</span><span class="mono">${s.ml_confidence != null ? (s.ml_confidence * 100).toFixed(0) + '%' : '\u2014'}</span></div>`;
+    // win_probability is ALREADY in percentage (e.g. 71.4)
+    html += `<div class="dl"><span class="dk">Win Probability</span><span class="mono">${s.win_probability != null ? Math.round(s.win_probability) + '%' : '\u2014'}</span></div>`;
+    html += `<div class="dl"><span class="dk">OOS / Total</span><span class="mono">${s.oos_score != null ? fmt(s.oos_score, 0) : '\u2014'} / ${fmt(s.total_score, 0)}</span></div>`;
+    html += `<div class="dl"><span class="dk">Regime</span><span>${s.regime_label || '\u2014'} (${s.regime_multiplier != null ? s.regime_multiplier.toFixed(2) + 'x' : '\u2014'})</span></div>`;
+    // Top factors (parsed from array)
+    const factors = topFactors(s.factors, 3);
+    if (factors.length > 0) {
+      html += '<div style="margin-top:4px">';
+      factors.forEach(f => {
+        const barW = Math.min(100, f.importance * 700);
+        html += `<div class="dl"><span class="dk">${f.name}</span><span class="mono">${(f.importance * 100).toFixed(1)}%</span></div>`;
+      });
+      html += '</div>';
+    }
+    if (g.signals.length >= 3) {
+      html += `<div class="dl" style="margin-top:4px"><span class="dk">Cluster Boost</span><span class="warn">1.25x (${g.signals.length} insiders)</span></div>`;
+    } else if (g.signals.length === 2) {
+      html += `<div class="dl" style="margin-top:4px"><span class="dk">Cluster Boost</span><span class="warn">1.10x (2 insiders)</span></div>`;
+    }
+    html += '</div>';
+
+    // Block 3: Trade Parameters
+    html += '<div class="detail-block"><h4>Trade Parameters</h4>';
+    const entryMid = (s.entry_lo != null && s.entry_hi != null) ? (s.entry_lo + s.entry_hi) / 2 : null;
+    html += `<div class="dl"><span class="dk">Current Price</span><span class="mono">${s.current_price != null ? '$' + fmt(s.current_price) : '\u2014'}</span></div>`;
+    html += `<div class="dl"><span class="dk">Entry Zone</span><span class="mono">$${fmt(s.entry_lo)}\u2013$${fmt(s.entry_hi)}</span></div>`;
+    if (s.target1 && entryMid) {
+      const t1Pct = ((s.target1 - entryMid) / entryMid * 100).toFixed(1);
+      html += `<div class="dl"><span class="dk">Target 1</span><span class="mono">$${fmt(s.target1)} <span class="pos">(+${t1Pct}%)</span></span></div>`;
+    }
+    if (s.target2 && entryMid) {
+      const t2Pct = ((s.target2 - entryMid) / entryMid * 100).toFixed(1);
+      html += `<div class="dl"><span class="dk">Target 2</span><span class="mono">$${fmt(s.target2)} <span class="pos">(+${t2Pct}%)</span></span></div>`;
+    }
+    const stopPctVal = (s.stop != null && entryMid) ? ((s.stop - entryMid) / entryMid * 100).toFixed(1) : null;
+    html += `<div class="dl"><span class="dk">Stop Loss</span><span class="mono">${s.stop != null ? '$' + fmt(s.stop) + (stopPctVal != null ? ' (' + stopPctVal + '%)' : '') : '\u2014'}</span></div>`;
+    html += `<div class="dl"><span class="dk">Horizon</span><span>${s.time_horizon || '30d'}</span></div>`;
+    html += `<div class="dl"><span class="dk">Days Remaining</span><span>${s.days_remaining != null ? s.days_remaining + 'd' : '\u2014'}</span></div>`;
+    html += '</div>';
+
+    html += '</div></div></td>';
+    return html;
+  }
+
+  // ── Sorting ──
+  let sortState = {};
+  function sortTable(tableId, data, col, renderFn) {
+    const key = tableId + col;
+    const dir = sortState[key] === 'asc' ? 'desc' : 'asc';
+    Object.keys(sortState).forEach(k => { if (k.startsWith(tableId)) delete sortState[k]; });
+    sortState[key] = dir;
+    data.sort((a, b) => {
+      let va = a[col], vb = b[col];
+      if (va == null) va = dir === 'asc' ? Infinity : -Infinity;
+      if (vb == null) vb = dir === 'asc' ? Infinity : -Infinity;
+      if (typeof va === 'string') return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      return dir === 'asc' ? va - vb : vb - va;
+    });
+    renderFn();
+    $$(`#${tableId} th`).forEach(th => {
+      th.classList.remove('sorted-asc', 'sorted-desc');
+      if (th.dataset.col === col) th.classList.add(dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+    });
+  }
+
+  function bindExpand(tableId) {
+    $$(`#${tableId} .expand-toggle`).forEach(tr => {
+      tr.addEventListener('click', () => {
+        const idx = tr.dataset.idx;
+        tr.classList.toggle('open');
+        const detail = document.querySelector(`#${tableId} .detail-row[data-idx="${idx}"]`);
+        if (detail) detail.classList.toggle('open');
+      });
+    });
+  }
+
+  // ── Tab switching ──
+  function switchTab(tabId) {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const panel = $(`#${tabId}`);
+    if (btn) btn.classList.add('active');
+    if (panel) panel.classList.add('active');
+  }
+
+  function initTabs() {
+    $$('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+    // Hash-based tab navigation
+    const hash = window.location.hash.replace('#', '');
+    if (hash && $(`#${hash}`)) switchTab(hash);
+  }
+
+  // ── Load Data ──
+  async function loadData() {
+    const bases = ['./', '', window.location.href.replace(/[^/]*$/, '')];
+    let sigData = null, statsData = null, healthData = null, intelData = null, portfolioData = null, reportData = null;
+    let lastErr = '';
+
+    for (const base of bases) {
+      try {
+        const url = base + 'brain_signals.json';
+        const r = await fetch(url);
+        if (r.ok) { sigData = await r.json(); break; }
+        else { lastErr = `HTTP ${r.status}`; }
+      } catch(e) { lastErr = e.message; }
+    }
+    if (!sigData) {
+      $('#app').innerHTML = `<div class="error-msg">Failed to load brain_signals.json (${lastErr}).<br><br>Run from the <code>data/</code> directory:<br><code>cd data && python3 -m http.server 8081</code><br>Then open <a href="http://localhost:8081/dashboard.html" style="color:var(--blue)">http://localhost:8081/dashboard.html</a></div>`;
+      return;
+    }
+
+    // Load supplementary data in parallel
+    const fetches = [
+      fetch('brain_stats.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('brain_health.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('signal_intelligence.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('portfolio_stats.json').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('analyst_report.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    ];
+    [statsData, healthData, intelData, portfolioData, reportData] = await Promise.all(fetches);
+
+    render(sigData, statsData, healthData, intelData, portfolioData, reportData);
+  }
+
+  // ── Render ──
+  function render(data, stats, health, intel, portfolio, report) {
+    const signals = data.signals || [];
+    const regime = data.regime_context || {};
+    const kelly = data.kelly_params || {};
+    const generated = data.generated || '';
+    const genDate = generated ? generated.slice(0, 10) : '\u2014';
+
+    const active = signals.filter(s => s.position_status === 'ACTIVE')
+                          .sort((a, b) => (b.unrealized_pnl_pct || 0) - (a.unrealized_pnl_pct || 0));
+    const recent = signals.filter(s => {
+      if (!s.signal_date) return false;
+      return (new Date() - new Date(s.signal_date)) / 86400000 <= 14;
+    }).sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+    const new7d = signals.filter(s => {
+      if (!s.signal_date) return false;
+      return (new Date() - new Date(s.signal_date)) / 86400000 <= 7;
+    }).length;
+
+    // ML stats
+    const ml = stats?.ml || {};
+    const ic = ml.oos_ic != null ? ml.oos_ic.toFixed(4) : '\u2014';
+    const folds = ml.n_folds || '\u2014';
+    const posFolds = ml.pos_folds || '\u2014';
+    const hitRate = ml.oos_hit_rate != null ? (ml.oos_hit_rate * 100).toFixed(1) + '%' : '\u2014';
+
+    // Health
+    const overallStatus = health?.overall_status || 'unknown';
+    const checks = health?.checks || {};
+    const icHistory = health?.ic_history || [];
+    const latestIC = icHistory.length > 0 ? icHistory[0].ic : null;
+    const prevIC = icHistory.length > 1 ? icHistory[1].ic : null;
+    const icTrend = latestIC && prevIC ? (latestIC >= prevIC ? '\u2191' : '\u2193') : '\u2014';
+
+    // Regime
+    const regimeKey = (regime.regime || 'optimal').toLowerCase();
+    const regimeClass = `regime-${regimeKey}`;
+
+    // Health badge
+    let healthBadge;
+    if (overallStatus === 'healthy') healthBadge = '<span class="badge badge-ok">HEALTHY</span>';
+    else if (overallStatus === 'degraded') healthBadge = '<span class="badge badge-warn">DEGRADED</span>';
+    else healthBadge = '<span class="badge badge-critical">CRITICAL</span>';
+
+    // Active portfolio stats
+    const activeWithPnl = active.filter(s => s.unrealized_pnl_pct != null);
+    const avgPnl = activeWithPnl.length > 0 ? activeWithPnl.reduce((a, s) => a + s.unrealized_pnl_pct, 0) / activeWithPnl.length : null;
+    const bestActive = activeWithPnl.length > 0 ? activeWithPnl.reduce((a, b) => (a.unrealized_pnl_pct || 0) > (b.unrealized_pnl_pct || 0) ? a : b) : null;
+    const worstActive = activeWithPnl.length > 0 ? activeWithPnl.reduce((a, b) => (a.unrealized_pnl_pct || 0) < (b.unrealized_pnl_pct || 0) ? a : b) : null;
+    const activePosCount = activeWithPnl.filter(s => (s.unrealized_pnl_pct || 0) > 0).length;
+
+    $('#app').innerHTML = `
+      <!-- Header -->
+      <div class="header">
+        <h1><span>ATLAS</span> Signal Dashboard</h1>
+        <div class="badges">
+          <span class="badge badge-info">IC ${ic} ${icTrend}</span>
+          ${healthBadge}
+          <span class="badge badge-info dim">${genDate}</span>
+        </div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="tab-positions">Positions</button>
+        <button class="tab-btn" data-tab="tab-performance">Performance</button>
+        <button class="tab-btn" data-tab="tab-intelligence">Intelligence</button>
+        <button class="tab-btn" data-tab="tab-model">Model</button>
+      </div>
+
+      <!-- ═══════════ TAB 1: POSITIONS ═══════════ -->
+      <div id="tab-positions" class="tab-panel active">
+        <!-- Regime Banner -->
+        <div class="regime-banner ${regimeClass}">
+          <span class="regime-dot" style="background:currentColor"></span>
+          VIX ${fmt(regime.current_vix, 1)} &mdash; ${regime.regime || '\u2014'} &mdash; ${regime.note || ''}
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="label">Active</div>
+            <div class="value mono" style="color:var(--cyan)">${active.length}</div>
+            <div class="sub">${activePosCount} winning</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Avg P&L</div>
+            <div class="value mono ${avgPnl != null ? (avgPnl >= 0 ? 'pos' : 'neg') : ''}">${avgPnl != null ? pct(avgPnl) : '\u2014'}</div>
+            <div class="sub">equal-weight</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Best Active</div>
+            <div class="value mono pos" style="font-size:0.95rem">${bestActive ? bestActive.ticker + ' ' + pct(bestActive.unrealized_pnl_pct) : '\u2014'}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Worst Active</div>
+            <div class="value mono neg" style="font-size:0.95rem">${worstActive ? worstActive.ticker + ' ' + pct(worstActive.unrealized_pnl_pct) : '\u2014'}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">New (7d)</div>
+            <div class="value mono">${new7d}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Folds</div>
+            <div class="value mono">${posFolds}/${folds}</div>
+          </div>
+        </div>
+
+        <!-- Active Positions -->
+        <div class="section">
+          <div class="section-header">
+            Active Positions
+            <span class="count">${active.length}</span>
+          </div>
+          <div class="table-wrap" id="active-table-wrap"></div>
+        </div>
+
+        <!-- New Signals -->
+        <div class="section">
+          <div class="section-header">
+            New Signals (14d)
+            <span class="count">${recent.length}</span>
+          </div>
+          <div class="table-wrap" id="new-table-wrap"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ TAB 2: PERFORMANCE ═══════════ -->
+      <div id="tab-performance" class="tab-panel">
+        <div id="perf-content"></div>
+      </div>
+
+      <!-- ═══════════ TAB 3: INTELLIGENCE ═══════════ -->
+      <div id="tab-intelligence" class="tab-panel">
+        <div id="intel-content"></div>
+      </div>
+
+      <!-- ═══════════ TAB 4: MODEL ═══════════ -->
+      <div id="tab-model" class="tab-panel">
+        <div id="model-content"></div>
+      </div>
+    `;
+
+    initTabs();
+
+    // ═══════════════════════════════════════════════
+    //  ACTIVE POSITIONS TABLE (grouped by ticker)
+    // ═══════════════════════════════════════════════
+
+    const activeCols = [
+      { key: 'ticker', label: 'Ticker' },
+      { key: 'total_score', label: 'Score' },
+      { key: 'oos_score', label: 'OOS' },
+      { key: '_cluster', label: 'Cluster' },
+      { key: 'signal_date', label: 'Date' },
+      { key: 'price_at_signal', label: 'Entry' },
+      { key: 'current_price', label: 'Current' },
+      { key: 'unrealized_pnl_pct', label: 'P&L' },
+      { key: 'days_remaining', label: 'Days Left' },
+      { key: 'kelly_size', label: 'Kelly' },
+      { key: 'stop_loss_triggered', label: 'Stop' },
+      { key: 'sector', label: 'Sector' },
+    ];
+    const nActiveCols = activeCols.length;
+
+    // Group by ticker
+    const tickerGroups = {};
+    active.forEach(s => {
+      const t = s.ticker || '\u2014';
+      if (!tickerGroups[t]) tickerGroups[t] = [];
+      tickerGroups[t].push(s);
+    });
+    const groupedTickers = Object.entries(tickerGroups)
+      .map(([ticker, sigs]) => {
+        sigs.sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+        return { ticker, signals: sigs, best: sigs[0] };
+      })
+      .sort((a, b) => (b.best.unrealized_pnl_pct || 0) - (a.best.unrealized_pnl_pct || 0));
+
+    function renderActive() {
+      if (groupedTickers.length === 0) {
+        $('#active-table-wrap').innerHTML = '<div class="empty-msg">No active positions</div>';
+        return;
+      }
+      let html = '<table id="tbl-active"><thead><tr>';
+      activeCols.forEach(c => { html += `<th data-col="${c.key}">${c.label}</th>`; });
+      html += '</tr></thead><tbody>';
+      groupedTickers.forEach((g, gi) => {
+        const s = g.best;
+        const n = g.signals.length;
+        const daysWarn = s.days_remaining != null && s.days_remaining <= 7;
+        const clusterBadge = n >= 2 ? `<span class="cluster-badge">${n} insiders</span>` : '<span class="dim">1</span>';
+        html += `<tr class="expand-toggle" data-idx="a${gi}">`;
+        html += `<td class="ticker">${s.ticker} ${sourceTag(s.source)}</td>`;
+        html += `<td>${scoreBar(s.total_score)}</td>`;
+        html += `<td>${oosCell(s)}</td>`;
+        html += `<td>${clusterBadge}</td>`;
+        html += `<td class="dim">${fmtDate(s.signal_date)}</td>`;
+        html += `<td class="mono">$${fmt(s.price_at_signal)}</td>`;
+        html += `<td class="mono">$${fmt(s.current_price)}</td>`;
+        html += `<td class="mono ${pctClass(s.unrealized_pnl_pct)}">${pct(s.unrealized_pnl_pct)}</td>`;
+        html += `<td class="mono ${daysWarn ? 'warn' : ''}">${s.days_remaining != null ? s.days_remaining + 'd' : '\u2014'}</td>`;
+        html += `<td>${kellyBar(s.kelly_size)}</td>`;
+        html += `<td>${s.stop_loss_triggered ? '<span class="tag tag-stop">TRIGGERED</span>' : '<span class="dim">OK</span>'}</td>`;
+        html += `<td class="dim">${sectorShort(s.sector)}</td>`;
+        html += '</tr>';
+        html += `<tr class="detail-row" data-idx="a${gi}">${detailPanelHTML(g, nActiveCols)}</tr>`;
+      });
+      html += '</tbody></table>';
+      $('#active-table-wrap').innerHTML = html;
+      bindExpand('tbl-active');
+    }
+    renderActive();
+
+    // ═══════════════════════════════════════════════
+    //  NEW SIGNALS TABLE (expandable like active)
+    // ═══════════════════════════════════════════════
+
+    // Group new signals by ticker too
+    const newTickerGroups = {};
+    recent.forEach(s => {
+      const t = s.ticker || '\u2014';
+      if (!newTickerGroups[t]) newTickerGroups[t] = [];
+      newTickerGroups[t].push(s);
+    });
+    const groupedNew = Object.entries(newTickerGroups)
+      .map(([ticker, sigs]) => {
+        sigs.sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+        return { ticker, signals: sigs, best: sigs[0] };
+      })
+      .sort((a, b) => (b.best.total_score || 0) - (a.best.total_score || 0));
+
+    const newCols = [
+      { key: 'ticker', label: 'Ticker' },
+      { key: 'total_score', label: 'Score' },
+      { key: 'oos_score', label: 'OOS' },
+      { key: 'signal_date', label: 'Date' },
+      { key: 'current_price', label: 'Price' },
+      { key: '_upside', label: 'Upside' },
+      { key: 'stop', label: 'Stop' },
+      { key: 'kelly_size', label: 'Kelly' },
+      { key: 'sector', label: 'Sector' },
+    ];
+    const nNewCols = newCols.length;
+
+    function renderNew() {
+      if (groupedNew.length === 0) {
+        $('#new-table-wrap').innerHTML = '<div class="empty-msg">No new signals in the last 14 days</div>';
+        return;
+      }
+      let html = '<table id="tbl-new"><thead><tr>';
+      newCols.forEach(c => { html += `<th data-col="${c.key}">${c.label}</th>`; });
+      html += '</tr></thead><tbody>';
+      groupedNew.forEach((g, gi) => {
+        const s = g.best;
+        const n = g.signals.length;
+        const upside = computeUpside(s);
+        const entryMid = (s.entry_lo != null && s.entry_hi != null) ? (s.entry_lo + s.entry_hi) / 2 : null;
+        const stopPctVal = (s.stop != null && entryMid) ? ((s.stop - entryMid) / entryMid * 100) : null;
+        const clusterMark = n >= 2 ? ` <span class="cluster-badge">${n}</span>` : '';
+        html += `<tr class="expand-toggle" data-idx="n${gi}">`;
+        html += `<td class="ticker">${s.ticker}${clusterMark} ${sourceTag(s.source)}</td>`;
+        html += `<td>${scoreBar(s.total_score)}</td>`;
+        html += `<td>${oosCell(s)}</td>`;
+        html += `<td class="dim">${fmtDate(s.signal_date)}</td>`;
+        html += `<td class="mono">${s.current_price != null ? '$' + fmt(s.current_price) : '\u2014'}</td>`;
+        html += `<td class="mono pos">${upside != null ? '+' + (upside * 100).toFixed(1) + '%' : '\u2014'}</td>`;
+        html += `<td class="mono">${s.stop != null ? '$' + fmt(s.stop) + (stopPctVal != null ? ' <span class="dim" style="font-size:0.65rem">(' + stopPctVal.toFixed(1) + '%)</span>' : '') : '\u2014'}</td>`;
+        html += `<td>${kellyBar(s.kelly_size)}</td>`;
+        html += `<td class="dim">${sectorShort(s.sector)}</td>`;
+        html += '</tr>';
+        html += `<tr class="detail-row" data-idx="n${gi}">${detailPanelHTML(g, nNewCols)}</tr>`;
+      });
+      html += '</tbody></table>';
+      $('#new-table-wrap').innerHTML = html;
+      bindExpand('tbl-new');
+    }
+    renderNew();
+
+    // ═══════════════════════════════════════════════
+    //  TAB 2: PERFORMANCE
+    // ═══════════════════════════════════════════════
+
+    (function renderPerformance() {
+      const ps = portfolio?.summary || {};
+      let ph = '';
+
+      // Active portfolio card
+      const HAIRCUT = 0.97;
+      const rawPnl = avgPnl;
+      const adjPnl = rawPnl != null ? rawPnl * HAIRCUT : null;
+
+      ph += '<div class="section"><div class="section-header">Active Portfolio</div><div style="padding:12px 16px">';
+      ph += '<div class="stats-row">';
+      ph += `<div class="stat-card"><div class="label">Raw Avg P&L</div><div class="value mono ${rawPnl != null ? (rawPnl >= 0 ? 'pos' : 'neg') : ''}">${rawPnl != null ? pct(rawPnl) : '\u2014'}</div></div>`;
+      ph += `<div class="stat-card"><div class="label">Adj. P&L</div><div class="value mono ${adjPnl != null ? (adjPnl >= 0 ? 'pos' : 'neg') : ''}">${adjPnl != null ? pct(adjPnl) : '\u2014'}</div><div class="sub">3% timing adjustment</div></div>`;
+      ph += `<div class="stat-card"><div class="label">Active Count</div><div class="value mono">${active.length}</div></div>`;
+      ph += `<div class="stat-card"><div class="label">Best Active</div><div class="value mono pos" style="font-size:0.9rem">${bestActive ? bestActive.ticker + ' ' + pct(bestActive.unrealized_pnl_pct) : '\u2014'}</div></div>`;
+      ph += `<div class="stat-card"><div class="label">Worst Active</div><div class="value mono neg" style="font-size:0.9rem">${worstActive ? worstActive.ticker + ' ' + pct(worstActive.unrealized_pnl_pct) : '\u2014'}</div></div>`;
+      ph += `<div class="stat-card"><div class="label">P&L > 0</div><div class="value mono">${activePosCount} / ${activeWithPnl.length}</div></div>`;
+      ph += '</div>';
+      ph += '<div class="dim" style="font-size:0.68rem;margin-top:4px">3% entry timing adjustment applied (disclosure-to-execution lag)</div>';
+      ph += '</div></div>';
+
+      // Closed signals summary (from portfolio_stats.json — honest full DB)
+      ph += '<div class="section"><div class="section-header">Closed Signal Performance (Full History)</div><div style="padding:12px 16px">';
+      if (ps.total_closed) {
+        ph += '<div class="stats-row">';
+        ph += `<div class="stat-card"><div class="label">Total Closed</div><div class="value mono">${ps.total_closed.toLocaleString()}</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Win Rate</div><div class="value mono">${(ps.win_rate * 100).toFixed(1)}%</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Avg Win</div><div class="value mono pos">+${(ps.avg_win * 100).toFixed(1)}%</div></div>`;
+        ph += `<div class="stat-card"><div class="label">Avg Loss</div><div class="value mono neg">${(ps.avg_loss * 100).toFixed(1)}%</div></div>`;
+        if (ps.best) ph += `<div class="stat-card"><div class="label">Best</div><div class="value mono pos" style="font-size:0.9rem">${ps.best.ticker} +${(ps.best.car_30d * 100).toFixed(1)}%</div></div>`;
+        if (ps.worst) ph += `<div class="stat-card"><div class="label">Worst</div><div class="value mono neg" style="font-size:0.9rem">${ps.worst.ticker} ${(ps.worst.car_30d * 100).toFixed(1)}%</div></div>`;
+        ph += '</div>';
+      } else {
+        ph += '<div class="dim">Run --export to generate portfolio_stats.json</div>';
+      }
+      ph += '</div></div>';
+
+      // Monthly performance
+      const monthly = ps.monthly || [];
+      if (monthly.length > 0) {
+        const maxAbs = Math.max(...monthly.map(m => Math.abs(m.avg_return)), 0.01);
+        ph += '<div class="section"><div class="section-header">Monthly Performance (last 12)</div>';
+        ph += '<div class="table-wrap"><table><thead><tr><th>Month</th><th>Signals</th><th>Win Rate</th><th>Avg Return</th><th></th></tr></thead><tbody>';
+        monthly.slice(0, 12).forEach(m => {
+          const wr = (m.win_rate * 100).toFixed(0);
+          const ar = (m.avg_return * 100).toFixed(1);
+          const barW = Math.min(100, Math.abs(m.avg_return) / maxAbs * 100);
+          const barCls = m.avg_return >= 0 ? 'bar-pos' : 'bar-neg';
+          ph += `<tr><td class="dim">${m.month}</td><td class="mono">${m.n}</td><td class="mono">${wr}%</td>`;
+          ph += `<td class="mono ${m.avg_return >= 0 ? 'pos' : 'neg'}">${m.avg_return >= 0 ? '+' : ''}${ar}%</td>`;
+          ph += `<td><div class="${barCls}" style="width:${barW}%"></div></td></tr>`;
+        });
+        ph += '</tbody></table></div></div>';
+      }
+
+      // Closed positions log (paginated — first 50 from portfolio_stats)
+      const closedList = portfolio?.closed_signals || [];
+      if (closedList.length > 0) {
+        ph += '<div class="section"><div class="section-header">Recent Closed Positions<span class="count">' + closedList.length + '</span></div>';
+        ph += '<div class="table-wrap"><table><thead><tr><th>Ticker</th><th>Date</th><th>Score</th><th>OOS</th><th>P&L (30d)</th><th>Result</th><th>Source</th><th>Sector</th></tr></thead><tbody>';
+        closedList.slice(0, 50).forEach(s => {
+          const car = s.car_30d;
+          const win = car != null && car > 0;
+          ph += '<tr>';
+          ph += `<td class="ticker">${s.ticker}</td>`;
+          ph += `<td class="dim">${fmtDate(s.signal_date)}</td>`;
+          ph += `<td>${scoreBar(s.total_score)}</td>`;
+          ph += `<td>${oosCell(s)}</td>`;
+          ph += `<td class="mono ${pctClass(car)}">${pct(car)}</td>`;
+          ph += `<td>${car != null ? (win ? '<span class="tag tag-win">WIN</span>' : '<span class="tag tag-loss">LOSS</span>') : '<span class="dim">pending</span>'}</td>`;
+          ph += `<td>${sourceTag(s.source)}</td>`;
+          ph += `<td class="dim">${sectorShort(s.sector)}</td>`;
+          ph += '</tr>';
+        });
+        ph += '</tbody></table></div></div>';
+      }
+
+      $('#perf-content').innerHTML = ph;
+    })();
+
+    // ═══════════════════════════════════════════════
+    //  TAB 3: INTELLIGENCE
+    // ═══════════════════════════════════════════════
+
+    (function renderIntelligence() {
+      let ih = '';
+
+      // Signal Intelligence
+      if (intel) {
+        const b = intel.best_50 || {};
+        const w = intel.worst_50 || {};
+        const d = intel.divergence || {};
+
+        ih += '<div class="section"><div class="section-header">Signal Intelligence</div><div style="padding:12px 16px">';
+        ih += '<div class="stats-row" style="margin-bottom:12px">';
+        ih += `<div class="stat-card"><div class="label">Score Gap</div><div class="value mono ${(d.score_gap||0) > 5 ? 'pos' : 'warn'}">${d.score_gap || '\u2014'}</div><div class="sub">best - worst avg</div></div>`;
+        ih += `<div class="stat-card"><div class="label">OOS Gap</div><div class="value mono ${(d.oos_gap||0) > 5 ? 'pos' : 'warn'}">${d.oos_gap || '\u2014'}</div></div>`;
+        ih += `<div class="stat-card"><div class="label">VIX Gap</div><div class="value mono">${d.vix_gap || '\u2014'}</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Earnings Gap</div><div class="value mono">${d.earnings_gap || '\u2014'}</div></div>`;
+        ih += '</div>';
+
+        // Interpretations
+        ih += '<div style="margin-bottom:12px">';
+        if (d.score_gap) ih += `<div class="interp-box"><strong>Score gap ${d.score_gap}:</strong> Model discriminates strongly \u2014 high scores do identify better signals</div>`;
+        if (d.oos_gap) ih += `<div class="interp-box"><strong>OOS gap ${d.oos_gap}:</strong> OOS score does not predict extreme tails \u2014 investigate in next session</div>`;
+        if (d.vix_gap != null) ih += `<div class="interp-box"><strong>VIX gap ${d.vix_gap}:</strong> Best/worst signals occur in same regime \u2014 regime is not the differentiator for extremes</div>`;
+        if (d.earnings_gap) ih += `<div class="interp-box"><strong>Earnings gap ${d.earnings_gap}:</strong> Best signals average ${Math.abs(Math.round(d.earnings_gap))} days closer to earnings \u2014 timing relative to catalysts matters</div>`;
+        ih += '</div>';
+
+        // Best vs Worst table
+        ih += '<table style="width:100%;font-size:0.78rem"><thead><tr><th></th><th>Best 50</th><th>Worst 50</th></tr></thead><tbody>';
+        ih += `<tr><td class="dim">Avg CAR</td><td class="mono pos">${b.avg_car != null ? '+' + b.avg_car + '%' : '\u2014'}</td><td class="mono neg">${w.avg_car != null ? w.avg_car + '%' : '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Avg Score</td><td class="mono">${b.avg_score || '\u2014'}</td><td class="mono">${w.avg_score || '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Avg OOS</td><td class="mono">${b.avg_oos || '\u2014'}</td><td class="mono">${w.avg_oos || '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Avg VIX</td><td class="mono">${b.avg_vix || '\u2014'}</td><td class="mono">${w.avg_vix || '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Days to Earnings</td><td class="mono">${b.avg_days_to_earnings || '\u2014'}</td><td class="mono">${w.avg_days_to_earnings || '\u2014'}</td></tr>`;
+        const bRoles = Object.entries(b.top_roles || {}).map(([k,v]) => `${k}(${v})`).join(', ');
+        const wRoles = Object.entries(w.top_roles || {}).map(([k,v]) => `${k}(${v})`).join(', ');
+        ih += `<tr><td class="dim">Top Roles</td><td class="dim" style="font-size:0.7rem;white-space:normal">${bRoles || '\u2014'}</td><td class="dim" style="font-size:0.7rem;white-space:normal">${wRoles || '\u2014'}</td></tr>`;
+        ih += '</tbody></table>';
+        ih += '</div></div>';
+      } else {
+        ih += '<div class="section"><div class="section-header">Signal Intelligence</div><div class="empty-msg">Run --analyze to generate signal intelligence</div></div>';
+      }
+
+      // Factor Analysis
+      const fa = report?.factor_analysis;
+      if (fa) {
+        ih += '<div class="section"><div class="section-header">Factor Analysis (Fama-French 6-Factor)</div><div style="padding:12px 16px">';
+        ih += '<div class="stats-row" style="margin-bottom:12px">';
+        ih += `<div class="stat-card"><div class="label">Monthly Alpha</div><div class="value mono pos">+${(fa.monthly_alpha * 100).toFixed(1)}%</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Annualized</div><div class="value mono pos">+${(fa.annualized_alpha * 100).toFixed(0)}%</div></div>`;
+        ih += `<div class="stat-card"><div class="label">R\u00B2</div><div class="value mono">${(fa.r_squared * 100).toFixed(1)}%</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Months</div><div class="value mono">${fa.n_months}</div></div>`;
+        ih += '</div>';
+        ih += '<div class="interp-box"><strong>Verdict:</strong> ' + (fa.verdict || 'N/A') + '</div>';
+        if (fa.loadings) {
+          ih += '<table style="width:100%;font-size:0.78rem;margin-top:8px"><thead><tr><th>Factor</th><th>Loading</th><th>Significant?</th></tr></thead><tbody>';
+          Object.entries(fa.loadings).forEach(([factor, loading]) => {
+            ih += `<tr><td class="dim">${factor}</td><td class="mono">${loading >= 0 ? '+' : ''}${loading.toFixed(3)}</td><td class="dim">ns</td></tr>`;
+          });
+          ih += '</tbody></table>';
+        }
+        ih += '</div></div>';
+      }
+
+      // Model Health
+      ih += '<div class="section"><div class="section-header">Model Health</div>';
+      const freshness = checks.data_freshness || {};
+      const edgarHrs = freshness.details?.edgar_hours;
+      const congressHrs = freshness.details?.congress_hours;
+      const edgarFresh = edgarHrs != null ? (edgarHrs < 24 ? Math.round(edgarHrs) + 'h' : Math.round(edgarHrs / 24) + 'd') : '\u2014';
+      const congressFresh = congressHrs != null ? Math.round(congressHrs / 24) + 'd' : '\u2014';
+      const congressWarn = congressHrs != null && congressHrs > 336; // > 14d
+
+      const healthItems = [
+        ['IC (latest)', latestIC != null ? latestIC.toFixed(4) + ' ' + icTrend : '\u2014'],
+        ['IC Trend', checks.ic_trend?.status?.toUpperCase() || '\u2014'],
+        ['Hit Rate', hitRate],
+        ['Positive Folds', `${posFolds}/${folds}`],
+        ['EDGAR Fresh', edgarFresh],
+        ['Congress Fresh', congressWarn ? `<span class="warn">${congressFresh} stale</span>` : congressFresh],
+        ['Data Freshness', checks.data_freshness?.status?.toUpperCase() || '\u2014'],
+        ['Feature Drift', checks.feature_drift?.status?.toUpperCase() || '\u2014'],
+        ['Score Conc.', checks.score_concentration?.status?.toUpperCase() || '\u2014'],
+        ['Overall', overallStatus.toUpperCase()],
+      ];
+
+      ih += '<div class="health-grid">';
+      healthItems.forEach(([label, val]) => {
+        let cls = '';
+        const valStr = typeof val === 'string' ? val.replace(/<[^>]*>/g, '') : String(val);
+        if (valStr === 'OK' || valStr === 'HEALTHY') cls = 'pos';
+        else if (valStr.includes('WARN') || valStr === 'DEGRADED') cls = 'warn';
+        else if (valStr === 'CRITICAL' || valStr === 'FAIL') cls = 'neg';
+        ih += `<div class="health-item"><span class="hl">${label}</span><span class="mono ${cls}">${val}</span></div>`;
+      });
+      ih += '</div>';
+
+      // Feature importance table
+      const featList = report?.features?.active || [];
+      if (featList.length > 0) {
+        ih += '<div style="padding:0 16px 12px"><h4 style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin:8px 0">Feature Importance (Top 15)</h4>';
+        ih += '<table class="feat-table"><thead><tr><th>Rank</th><th>Feature</th><th>Importance</th><th></th></tr></thead><tbody>';
+        const maxImp = featList.length > 0 ? featList[0].importance : 1;
+        featList.slice(0, 15).forEach(f => {
+          const barW = (f.importance / maxImp * 100).toFixed(0);
+          ih += `<tr><td class="dim">#${f.rank}</td><td>${f.name}</td><td class="mono">${(f.importance * 100).toFixed(1)}%</td>`;
+          ih += `<td><div style="width:${barW}%;height:6px;background:var(--blue);border-radius:2px;opacity:0.5"></div></td></tr>`;
+        });
+        ih += '</tbody></table></div>';
+      }
+
+      ih += '</div>';
+
+      $('#intel-content').innerHTML = ih;
+    })();
+
+    // ═══════════════════════════════════════════════
+    //  TAB 4: MODEL (Analyst Report)
+    // ═══════════════════════════════════════════════
+
+    (function renderModel() {
+      let mh = '';
+      if (!report) {
+        mh = '<div class="empty-msg">Run --report to generate analyst_report.json</div>';
+        $('#model-content').innerHTML = mh;
+        return;
+      }
+
+      // Data Inventory
+      const inv = report.inventory || {};
+      mh += '<div class="section"><div class="section-header">Data Inventory</div><div class="report-section">';
+      mh += `<div class="report-kv"><span class="rk">Total Signals</span><span class="mono">${(inv.total_signals || 0).toLocaleString()}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">EDGAR</span><span class="mono">${(inv.edgar || 0).toLocaleString()}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Congress</span><span class="mono">${(inv.congress || 0).toLocaleString()}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Date Range</span><span class="mono">${inv.date_range ? inv.date_range[0] + ' \u2192 ' + inv.date_range[1] : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Months</span><span class="mono">${inv.months ? inv.months.toFixed(1) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">With Outcome</span><span class="mono">${(inv.with_outcome || 0).toLocaleString()}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Outcome Fill</span><span class="mono">${inv.with_outcome && inv.total_signals ? ((inv.with_outcome / inv.total_signals) * 100).toFixed(1) + '%' : '\u2014'}</span></div>`;
+      if (inv.freshness_days) {
+        mh += `<div class="report-kv"><span class="rk">EDGAR Freshness</span><span class="mono">${inv.freshness_days.edgar}d</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Congress Freshness</span><span class="mono ${inv.freshness_days.congress > 14 ? 'warn' : ''}">${inv.freshness_days.congress}d</span></div>`;
+      }
+      mh += '</div></div>';
+
+      // Model Performance
+      const mp = report.model_performance || {};
+      mh += '<div class="section"><div class="section-header">Model Performance</div><div class="report-section">';
+      mh += `<div class="report-kv"><span class="rk">IC (walk-forward)</span><span class="mono ${mp.ic > 0.10 ? 'pos' : mp.ic > 0.05 ? '' : 'warn'}">${mp.ic ? mp.ic.toFixed(4) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">p-value</span><span class="mono">${mp.ic_p_value ? mp.ic_p_value.toFixed(6) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">t-statistic</span><span class="mono">${mp.ic_t_stat ? mp.ic_t_stat.toFixed(2) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">95% CI</span><span class="mono">[${mp.ic_95_ci ? mp.ic_95_ci[0].toFixed(4) + ', ' + mp.ic_95_ci[1].toFixed(4) : '\u2014'}]</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Folds</span><span class="mono">${mp.pos_folds || '\u2014'}/${mp.n_folds || '\u2014'} positive</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Hit Rate (OOS)</span><span class="mono">${mp.hit_rate ? (mp.hit_rate * 100).toFixed(1) + '%' : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Sharpe (annual)</span><span class="mono">${mp.sharpe_annual ? mp.sharpe_annual.toFixed(3) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Profit Factor</span><span class="mono">${mp.profit_factor ? mp.profit_factor.toFixed(3) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Alpha (80+)</span><span class="mono pos">${mp.alpha_80plus ? '+' + (mp.alpha_80plus * 100).toFixed(1) + '%' : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Beta vs SPY</span><span class="mono">${mp.beta_vs_spy ? mp.beta_vs_spy.toFixed(3) : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Sharpe (mkt-adj 80+)</span><span class="mono">${mp.sharpe_market_adjusted_80plus ? mp.sharpe_market_adjusted_80plus.toFixed(3) : '\u2014'}</span></div>`;
+      mh += '</div></div>';
+
+      // Signal Quality
+      const sq = report.signal_quality || {};
+      const sd = sq.score_distribution || [];
+      if (sd.length > 0) {
+        mh += '<div class="section"><div class="section-header">Signal Quality by Score Band</div>';
+        mh += '<div class="table-wrap"><table><thead><tr><th>Band</th><th>n</th><th>Avg CAR</th><th>Adj CAR</th><th>Hit Rate</th></tr></thead><tbody>';
+        sd.forEach(row => {
+          const car = row.avg_car != null ? (row.avg_car * 100).toFixed(1) : '\u2014';
+          const adjCar = row.avg_adj_car != null ? (row.avg_adj_car * 100).toFixed(1) : '\u2014';
+          mh += `<tr><td class="mono">${row.band}</td><td class="mono">${row.n.toLocaleString()}</td>`;
+          mh += `<td class="mono ${row.avg_car >= 0 ? 'pos' : 'neg'}">${row.avg_car >= 0 ? '+' : ''}${car}%</td>`;
+          mh += `<td class="mono ${row.avg_adj_car >= 0 ? 'pos' : 'neg'}">${row.avg_adj_car >= 0 ? '+' : ''}${adjCar}%</td>`;
+          mh += `<td class="mono">${row.hit_rate}%</td></tr>`;
+        });
+        mh += '</tbody></table></div></div>';
+      }
+
+      // Regime Robustness
+      const rr = report.regime_robustness || [];
+      if (rr.length > 0) {
+        mh += '<div class="section"><div class="section-header">Regime Robustness (OOS)</div>';
+        mh += '<div class="table-wrap"><table><thead><tr><th>Regime</th><th>n</th><th>IC</th><th>p-value</th><th>Hit Rate</th><th>Status</th></tr></thead><tbody>';
+        rr.forEach(row => {
+          const statusCls = row.status === 'PASS' ? 'pos' : row.status === 'WARN' ? 'warn' : 'neg';
+          mh += `<tr><td>${row.regime}</td><td class="mono">${row.n}</td>`;
+          mh += `<td class="mono">${row.ic != null ? row.ic.toFixed(4) : '\u2014'}</td>`;
+          mh += `<td class="mono">${row.p_value != null ? row.p_value.toFixed(4) : '\u2014'}</td>`;
+          mh += `<td class="mono">${row.hit_rate != null ? (row.hit_rate * 100).toFixed(1) + '%' : '\u2014'}</td>`;
+          mh += `<td class="mono ${statusCls}">${row.status}</td></tr>`;
+        });
+        mh += '</tbody></table></div></div>';
+      }
+
+      // Kelly Sizing
+      const ks = report.kelly_sizing;
+      if (ks) {
+        mh += '<div class="section"><div class="section-header">Kelly Position Sizing (1/4 Kelly, OOS 75+)</div><div class="report-section">';
+        mh += `<div class="report-kv"><span class="rk">Hit Rate</span><span class="mono">${(ks.hit_rate * 100).toFixed(1)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Avg Win</span><span class="mono pos">+${(ks.avg_win * 100).toFixed(1)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Avg Loss</span><span class="mono neg">${(ks.avg_loss * 100).toFixed(1)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Win/Loss Ratio</span><span class="mono">${ks.win_loss_ratio?.toFixed(2) || '\u2014'}x</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Full Kelly</span><span class="mono">${(ks.full_kelly * 100).toFixed(1)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">1/4 Kelly (used)</span><span class="mono" style="color:var(--blue)">${(ks.quarter_kelly * 100).toFixed(1)}%</span></div>`;
+        mh += '</div></div>';
+      }
+
+      // Factor Analysis (full detail)
+      const fa2 = report.factor_analysis;
+      if (fa2) {
+        mh += '<div class="section"><div class="section-header">Factor Analysis (Fama-French)</div><div class="report-section">';
+        mh += `<div class="report-kv"><span class="rk">Monthly Alpha</span><span class="mono pos">+${(fa2.monthly_alpha * 100).toFixed(2)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Annualized Alpha</span><span class="mono pos">+${(fa2.annualized_alpha * 100).toFixed(0)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">R\u00B2</span><span class="mono">${(fa2.r_squared * 100).toFixed(1)}%</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Months Analyzed</span><span class="mono">${fa2.n_months}</span></div>`;
+        mh += `<div class="report-kv"><span class="rk">Verdict</span><span class="mono pos">${fa2.verdict || '\u2014'}</span></div>`;
+        if (fa2.loadings) {
+          mh += '<table style="width:100%;font-size:0.78rem;margin-top:8px"><thead><tr><th>Factor</th><th>Loading</th></tr></thead><tbody>';
+          Object.entries(fa2.loadings).forEach(([factor, loading]) => {
+            mh += `<tr><td class="dim">${factor}</td><td class="mono">${loading >= 0 ? '+' : ''}${loading.toFixed(4)}</td></tr>`;
+          });
+          mh += '</tbody></table>';
+        }
+        mh += '</div></div>';
+      }
+
+      // IC Trend
+      mh += '<div class="section"><div class="section-header">IC Trend (Recent Sessions)</div><div class="report-section">';
+      const icSessions = [
+        { s: 'S12', ic: 0.0996 }, { s: 'S13', ic: 0.1000 }, { s: 'S14', ic: 0.1027 },
+        { s: 'S15', ic: 0.1027 }, { s: 'S16', ic: 0.1027 },
+      ];
+      const icMin = Math.min(...icSessions.map(x => x.ic));
+      const icMax = Math.max(...icSessions.map(x => x.ic));
+      const icRange = icMax - icMin || 0.01;
+      mh += '<div style="display:flex;align-items:flex-end;gap:12px;height:80px;margin:8px 0">';
+      icSessions.forEach(x => {
+        const h = Math.max(10, ((x.ic - icMin) / icRange) * 60 + 10);
+        const color = x.ic >= 0.10 ? 'var(--green)' : x.ic >= 0.05 ? 'var(--amber)' : 'var(--red)';
+        mh += `<div style="text-align:center;flex:1">
+          <div class="mono" style="font-size:0.65rem;margin-bottom:2px">${x.ic.toFixed(4)}</div>
+          <div style="height:${h}px;background:${color};border-radius:2px;opacity:0.6"></div>
+          <div class="dim" style="font-size:0.6rem;margin-top:2px">${x.s}</div>
+        </div>`;
+      });
+      mh += '</div>';
+      mh += '<div class="dim" style="font-size:0.68rem">IC stable at ~0.1027 across last 3 sessions. Target: > 0.10 (GOOD)</div>';
+      mh += '</div></div>';
+
+      // Pipeline Health
+      const pipe = report.pipeline || {};
+      mh += '<div class="section"><div class="section-header">Pipeline Health</div><div class="report-section">';
+      mh += `<div class="report-kv"><span class="rk">DB Size</span><span class="mono">${pipe.db_size_mb ? pipe.db_size_mb.toFixed(1) + ' MB' : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Total Rows</span><span class="mono">${pipe.db_total_rows ? pipe.db_total_rows.toLocaleString() : '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Integrity</span><span class="mono ${pipe.integrity === 'ok' ? 'pos' : 'neg'}">${(pipe.integrity || '\u2014').toUpperCase()}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Indexes</span><span class="mono">${pipe.index_count || '\u2014'}</span></div>`;
+      mh += `<div class="report-kv"><span class="rk">Outcome Fill</span><span class="mono">${pipe.outcome_fill_rate ? (pipe.outcome_fill_rate * 100).toFixed(1) + '%' : '\u2014'}</span></div>`;
+      if (pipe.null_rates) {
+        Object.entries(pipe.null_rates).forEach(([k, v]) => {
+          mh += `<div class="report-kv"><span class="rk">Null: ${k}</span><span class="mono">${(v * 100).toFixed(1)}%</span></div>`;
+        });
+      }
+      mh += '</div></div>';
+
+      // Recommendations
+      const recs = report.recommendations || [];
+      if (recs.length > 0) {
+        mh += '<div class="section"><div class="section-header">Recommendations</div><div style="padding:12px 16px">';
+        recs.forEach(r => {
+          mh += `<div class="interp-box">${r}</div>`;
+        });
+        mh += '</div></div>';
+      }
+
+      $('#model-content').innerHTML = mh;
+    })();
+  }
+
+  // ── Init ──
+  loadData();
+})();
+</script>
+</body>
+</html>

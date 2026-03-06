@@ -39,7 +39,7 @@ from backtest.sector_map import get_sector, build_sector_map, get_market_cap_buc
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger(__name__)
 
-SEC_DELAY = 0.5  # seconds between SEC requests
+SEC_DELAY = 0.12  # seconds between SEC requests (SEC allows 10 req/s)
 
 
 def _parse_efts_hits(hits: list) -> list:
@@ -110,10 +110,12 @@ def fetch_edgar_historical(days: int = 635, raw_per_month: int = 1500,
         raw_per_month: Raw filings to fetch per month before filtering (default 1500)
         keep_per_month: Max ticker-matched filings to keep per month (default 500)
     """
-    headers = {
+    # Reusable session for connection pooling (TCP keep-alive)
+    session = requests.Session()
+    session.headers.update({
         'User-Agent': SEC_USER_AGENT,
         'Accept': 'application/json',
-    }
+    })
 
     # Build monthly date windows going backwards
     now = datetime.utcnow()
@@ -150,7 +152,7 @@ def fetch_edgar_historical(days: int = 635, raw_per_month: int = 1500,
                 f'&from={from_idx}'
             )
             try:
-                r = requests.get(url, headers=headers, timeout=20)
+                r = session.get(url, timeout=20)
                 r.raise_for_status()
                 data = r.json()
             except Exception as e:
@@ -190,6 +192,7 @@ def fetch_edgar_historical(days: int = 635, raw_per_month: int = 1500,
                  f"{len(month_kept)} kept")
         all_filings.extend(month_kept)
 
+    session.close()
     log.info(f"Fetched {len(all_filings)} ticker-matched EDGAR filings "
              f"across {len(month_windows)} months")
     return all_filings
@@ -204,14 +207,15 @@ def fetch_congress_trades() -> list:
     trades = []
     sources = []
 
-    # 1. FMP API — primary source (30 pages/chamber = ~3000 trades back to ~2022)
+    # 1. FMP API — primary source (50 pages/chamber to try reaching 2021+)
+    # FMP congress data typically goes back to ~2021-2022 at most
     fmp_key = os.environ.get('FMP_API_KEY', 'UefVEEvF1XXtpgWcsidPCGxcDJ6N0kXv')
     if fmp_key:
         try:
             sys.path.insert(0, str(Path(__file__).parent.parent))
             from scripts.fetch_data import fetch_fmp_congress
-            log.info("Fetching congressional trades from FMP (30 pages/chamber)...")
-            fmp_trades = fetch_fmp_congress(fmp_key, pages=30)
+            log.info("Fetching congressional trades from FMP (50 pages/chamber)...")
+            fmp_trades = fetch_fmp_congress(fmp_key, pages=50)
             if fmp_trades:
                 trades.extend(fmp_trades)
                 sources.append('FMP')
@@ -500,12 +504,13 @@ def _print_data_quality_report(conn) -> None:
     print(f"\n{'='*70}\n")
 
 
-def bootstrap(conn=None, edgar_days: int = 900):
+def bootstrap(conn=None, edgar_days: int = 2555, incremental: bool = False):
     """Main bootstrap pipeline.
 
     Args:
         conn: SQLite connection (created if None)
-        edgar_days: How far back to fetch EDGAR filings (default 900 = ~30 months)
+        edgar_days: How far back to fetch EDGAR filings (default 2555 = ~7 years)
+        incremental: If True, only fetch signals older than existing data (avoids re-fetching)
     """
     log.info("=" * 60)
     log.info("  ATLAS Adaptive Learning Engine — Historical Bootstrap")
@@ -516,6 +521,28 @@ def bootstrap(conn=None, edgar_days: int = 900):
     if conn is None:
         conn = init_db()
 
+    # Incremental mode: determine how far back we already have data
+    if incremental:
+        oldest = conn.execute(
+            "SELECT MIN(signal_date) as oldest FROM signals WHERE signal_date IS NOT NULL"
+        ).fetchone()
+        if oldest and oldest['oldest']:
+            oldest_date = datetime.strptime(oldest['oldest'], '%Y-%m-%d')
+            target_start = datetime(2019, 1, 1)
+            overlap_end = oldest_date + timedelta(days=90)
+            if oldest_date <= target_start + timedelta(days=30):
+                log.info(f"Incremental mode: data already starts at {oldest['oldest']} "
+                         f"(target: 2019-01-01). Nothing to expand.")
+                edgar_days = 0
+            else:
+                edgar_days = (datetime.now() - target_start).days
+                log.info(f"Incremental mode: existing data starts {oldest['oldest']}, "
+                         f"target: {target_start.strftime('%Y-%m-%d')}. "
+                         f"Fetching {edgar_days} days back with 90d overlap. "
+                         f"Dedup will skip {conn.execute('SELECT COUNT(*) FROM signals').fetchone()[0]} existing signals.")
+        else:
+            log.info("Incremental mode: no existing data — running full bootstrap")
+
     months_approx = edgar_days // 30
     # ── 1. Fetch historical EDGAR filings ────────────────────────────────
     log.info(f"\n[1/11] Fetching historical EDGAR Form 4 filings (~{months_approx} months)...")
@@ -524,40 +551,152 @@ def bootstrap(conn=None, edgar_days: int = 900):
 
     # ── 1b. Enrich via Form 4 XML — extract role, direction, buy value ────
     # Without this, we'd ingest grants/sales/exercises as buy signals (noise).
+    # Uses concurrent requests with rate limiting (SEC allows 10 req/s).
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import threading
+    import xml.etree.ElementTree as ET
+    from backtest.backfill_edgar_xml import _normalize_role, _buy_value_to_points
+
+    # Rate limiter: max 8 req/s (conservative vs SEC's 10/s limit)
+    MAX_RPS = 8
+    est_minutes = len(edgar_filings) / MAX_RPS / 60
     log.info(f"\n[1b/11] Enriching {len(edgar_filings)} filings from Form 4 XML "
-             f"(~{len(edgar_filings) * 0.12 / 60:.0f} min at SEC rate limit)...")
-    from backtest.backfill_edgar_xml import parse_form4_xml
-    headers = {'User-Agent': SEC_USER_AGENT, 'Accept': 'application/json'}
+             f"(~{est_minutes:.0f} min with {MAX_RPS} req/s concurrent)...")
+
+    # Reusable session for connection pooling (TCP keep-alive)
+    xml_session = requests.Session()
+    xml_session.headers.update({'User-Agent': SEC_USER_AGENT, 'Accept': 'application/json'})
+
+    rate_lock = threading.Lock()
+    last_request_times = []
+
+    def _rate_limited_parse(xml_url):
+        """Fetch and parse Form 4 XML with rate limiting and session reuse."""
+        with rate_lock:
+            now = time.monotonic()
+            while last_request_times and now - last_request_times[0] > 1.0:
+                last_request_times.pop(0)
+            if len(last_request_times) >= MAX_RPS:
+                sleep_until = last_request_times[0] + 1.0
+                wait = sleep_until - now
+                if wait > 0:
+                    time.sleep(wait)
+                    now = time.monotonic()
+                    while last_request_times and now - last_request_times[0] > 1.0:
+                        last_request_times.pop(0)
+            last_request_times.append(time.monotonic())
+
+        try:
+            r = xml_session.get(xml_url, timeout=10)
+            if r.status_code != 200:
+                return None
+            root = ET.fromstring(r.content)
+        except Exception:
+            return None
+
+        # Parse Form 4 XML inline (avoids double HTTP fetch from parse_form4_xml)
+        ticker = (root.findtext('.//issuerTradingSymbol') or '').strip().upper()
+        title = (root.findtext('.//officerTitle') or '').strip()
+        is_officer = root.findtext('.//isOfficer', '0')
+        is_director = root.findtext('.//isDirector', '0')
+        is_10pct = root.findtext('.//isTenPercentOwner', '0')
+        roles = []
+        if is_officer in ('1', 'true'):   roles.append('Officer')
+        if is_director in ('1', 'true'):  roles.append('Director')
+        if is_10pct in ('1', 'true'):     roles.append('10% Owner')
+
+        txn_dates, total_buy_value, total_sell_value, total_buy_shares = [], 0, 0, 0
+        txn_codes = set()
+        for txn in root.findall('.//nonDerivativeTransaction'):
+            code = txn.findtext('.//transactionCode', '')
+            txn_codes.add(code)
+            try:
+                shares = float(txn.findtext('.//transactionShares/value', '0'))
+                price_str = txn.findtext('.//transactionPricePerShare/value', '0')
+                price = float(price_str) if price_str else 0
+            except ValueError:
+                shares, price = 0, 0
+            value = shares * price
+            if code == 'P':
+                total_buy_value += value
+                total_buy_shares += shares
+            elif code == 'S':
+                total_sell_value += value
+            td = txn.findtext('.//transactionDate/value', '')
+            if td:
+                txn_dates.append(td)
+
+        if total_buy_value > 0 and total_sell_value == 0:
+            direction = 'buy'
+        elif total_sell_value > 0 and total_buy_value == 0:
+            direction = 'sell'
+        elif total_buy_value > 0 and total_sell_value > 0:
+            direction = 'mixed'
+        elif 'M' in txn_codes:
+            direction = 'exercise'
+        elif 'A' in txn_codes or 'G' in txn_codes:
+            direction = 'grant'
+        else:
+            direction = 'other'
+
+        disclosure_delay = None
+        sig_date = root.findtext('.//signatureDate', '')
+        earliest_txn = min(txn_dates) if txn_dates else ''
+        if sig_date and earliest_txn:
+            try:
+                from datetime import datetime as dt_cls
+                sig_dt = dt_cls.strptime(sig_date, '%Y-%m-%d')
+                txn_dt = dt_cls.strptime(earliest_txn, '%Y-%m-%d')
+                disclosure_delay = (sig_dt - txn_dt).days
+            except ValueError:
+                pass
+
+        return {
+            'ticker': ticker,
+            'insider_role': _normalize_role(title, roles),
+            'direction': direction,
+            'buy_value': round(total_buy_value, 2),
+            'buy_shares': int(total_buy_shares),
+            'disclosure_delay': disclosure_delay,
+            'trade_size_points': _buy_value_to_points(total_buy_value) if total_buy_value > 0 else None,
+        }
+
     enriched_count = 0
     skipped_non_buy = 0
     xml_errors = 0
-
     enriched_filings = []
-    for i, f in enumerate(edgar_filings):
-        xml_url = f.get('xml_url', '')
-        if not xml_url:
-            continue
 
-        xml_data = parse_form4_xml(xml_url, headers)
-        time.sleep(SEC_DELAY)
+    filings_with_url = [(i, f) for i, f in enumerate(edgar_filings) if f.get('xml_url')]
 
-        if not xml_data:
-            xml_errors += 1
-            continue
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_filing = {}
+        for idx, f in filings_with_url:
+            future = executor.submit(_rate_limited_parse, f['xml_url'])
+            future_to_filing[future] = (idx, f)
 
-        # Only keep genuine purchases
-        if xml_data['direction'] != 'buy':
-            skipped_non_buy += 1
-            continue
+        processed = 0
+        for future in as_completed(future_to_filing):
+            idx, f = future_to_filing[future]
+            processed += 1
 
-        f['_xml'] = xml_data
-        enriched_filings.append(f)
-        enriched_count += 1
+            xml_data = future.result()
+            if not xml_data:
+                xml_errors += 1
+                continue
 
-        if (i + 1) % 200 == 0:
-            log.info(f"  XML enrichment: {i+1}/{len(edgar_filings)} processed, "
-                     f"{enriched_count} buys, {skipped_non_buy} non-buy skipped")
+            if xml_data['direction'] != 'buy':
+                skipped_non_buy += 1
+                continue
 
+            f['_xml'] = xml_data
+            enriched_filings.append(f)
+            enriched_count += 1
+
+            if processed % 500 == 0:
+                log.info(f"  XML enrichment: {processed}/{len(filings_with_url)} processed, "
+                         f"{enriched_count} buys, {skipped_non_buy} non-buy skipped")
+
+    xml_session.close()
     log.info(f"  XML enrichment complete: {enriched_count} buys / "
              f"{len(edgar_filings)} total ({skipped_non_buy} non-buy, {xml_errors} errors)")
 
@@ -847,4 +986,11 @@ def bootstrap(conn=None, edgar_days: int = 900):
 
 
 if __name__ == '__main__':
-    bootstrap()
+    import argparse
+    parser = argparse.ArgumentParser(description='ATLAS Historical Bootstrap')
+    parser.add_argument('--edgar-days', type=int, default=2555,
+                        help='EDGAR lookback days (default 2555 = ~7 years)')
+    parser.add_argument('--incremental', action='store_true',
+                        help='Only fetch signals older than existing data (90d overlap)')
+    args = parser.parse_args()
+    bootstrap(edgar_days=args.edgar_days, incremental=args.incremental)

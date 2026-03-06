@@ -15,6 +15,7 @@ name: Refresh ATLAS Data
 #   QUIVER_KEY   — QuiverQuant API token  (quiverquant.com/quiverapi)
 #   FRED_KEY     — FRED API key           (fred.stlouisfed.org/docs/api/api_key.html)
 #   FINNHUB_KEY  — Finnhub API key        (finnhub.io)
+#   FMP_API_KEY  — Financial Modeling Prep (financialmodelingprep.com) — congress + insider trades
 
 on:
   schedule:
@@ -40,14 +41,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests yfinance pyyaml
+        run: pip install requests yfinance pyyaml vaderSentiment
 
-      - name: Run data fetcher
+      - name: Run data fetcher (includes VADER news sentiment)
         env:
           QUIVER_KEY:  ${{ secrets.QUIVER_KEY }}
           FRED_KEY:    ${{ secrets.FRED_KEY }}
           FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
         run: python3 scripts/fetch_data.py
+
+      - name: Run FinBERT news sentiment (optional upgrade)
+        run: |
+          pip install transformers torch 2>/dev/null && \
+          python3 scripts/fetch_news_sentiment.py || echo "FinBERT not installed — using VADER scores"
 
       - name: Commit updated data files
         run: |

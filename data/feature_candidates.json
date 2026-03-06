@@ -1,0 +1,37 @@
+{
+  "baseline_ic": 0.074539,
+  "baseline_features": 32,
+  "horizon": "30d",
+  "candidates": {
+    "committee_overlap": {
+      "status": "skip",
+      "reason": "fill rate too low (0.0%)",
+      "fill_rate": 0.0
+    },
+    "earnings_surprise": {
+      "status": "skip",
+      "reason": "fill rate too low (0.0%)",
+      "fill_rate": 0.0
+    },
+    "news_sentiment_30d": {
+      "status": "skip",
+      "reason": "fill rate too low (0.0%)",
+      "fill_rate": 0.0
+    },
+    "news_sentiment_score": {
+      "status": "skip",
+      "reason": "fill rate too low (0.0%)",
+      "fill_rate": 0.0
+    },
+    "sentiment_divergence": {
+      "status": "skip",
+      "reason": "fill rate too low (0.0%)",
+      "fill_rate": 0.0
+    },
+    "market_regime": {
+      "status": "error",
+      "reason": "'DataFrame' object has no attribute 'cat'"
+    }
+  },
+  "evaluated_at": "2026-03-02T20:42:55.573783+00:00"
+}

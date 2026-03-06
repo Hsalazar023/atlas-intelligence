@@ -1,69 +1,385 @@
-# ATLAS — Active Todo
-*Updated Mar 1, 2026. Move completed items to docs/archive/completed-milestones.md.*
+# ATLAS Todo
+_Last updated: Session 18 — March 5, 2026_
 
 ---
 
-## Current System Health
-
-| Metric | Value | Status |
-|---|---|---|
-| Total signals | 3,212 (2,207 congress + 1,005 EDGAR) | OK |
-| Date range | Nov 2022 – Feb 2026 (39 months) | OK |
-| OOS IC | +0.0766 (walk_forward_ensemble) | OK |
-| OOS Hit Rate | 54.8% (22 folds) | OK |
-| insider_role fill | 100% EDGAR | OK |
-| Feature fills ≥80% | 5/8 | OK |
-| Score bands | 80+ = +61.7% CAR, 65-79 = +25.3% | OK |
-| Brain export live on Vercel | Yes | OK |
-
----
-
-## Session 2 Checkpoint (Mar 1, 2026 — Data Freshness & Signal Quality)
+## Session 18 — Dashboard Accuracy, Architecture, Trader-Focused Design
 
 ### Completed
-- [x] **Task 0 — House XML Scraper.** Added `fetch_house_disclosures()` to fetch_data.py. Fetches PTR XML index from disclosures-clerk.house.gov, parses filing pages for trades, normalizes to congress_feed.json schema. Wired into pipeline after FMP with clean fallback. Dedup uses 4-field key (Ticker+Rep+Date+Transaction), prefers House records. No API key needed. Senate deferred (Phase 3).
-- [x] **Task 1 — Feature pruning + role_quality_bonus.** Pruned 5 dead-weight features from FEATURE_COLUMNS (convergence_tier, has_convergence, days_to_catalyst, relative_position_size, cluster_velocity). Kept insider_role — role VALUES are predictive. Added `_compute_role_quality()` to --analyze: learns multipliers by role from historical CAR. Applied multiplicatively in `score_all_signals()` after source_mult. Added `features_pruned_history` to brain_stats.json. Feature count: 28→23.
-- [x] **Task 2 — Trader quality tiers + fade signals.** Added `_compute_trader_tiers()`: classifies traders as elite/good/neutral/fade based on hit_rate + avg_car. Fade-tier traders get ×0.35 score multiplier (contra-signal). Added trader_tier to brain_signals.json per signal. Added leaderboard to brain_stats.json. Updated scoring-logic.md with tier rules and fade formula.
-- [x] **Task 3 — Volume + Analyst features.** volume_spike already is relative volume (signal vol / 20d avg). Added `volume_dry_up` (bool: rel_vol < 0.4 = accumulation signal). Added `fetch_volume_data()` + `fetch_analyst_data()` to fetch_data.py using yfinance. New ML features: `volume_dry_up`, `analyst_revision_30d`, `analyst_consensus`, `analyst_insider_confluence`. Enrichment reads from data/analyst_data.json. Added yfinance to fetch-data.yml. Feature count: 23→27.
-- [x] **Task 4 — Sector diversification.** Added MAX_PER_SECTOR=8 cap in export. After ticker cap, sector cap applied. Overflow signals backfill if export < 50. Added sector rank-normalization: `final = 0.75 × absolute + 0.25 × sector_percentile` — prevents one sector from monopolizing. Added `sector_distribution` to brain_stats.json.
+- [x] **Task 0a: Win probability fix** — Raw value 71.4 (already %) was multiplied by 100 → 7140%. Fixed to display raw value directly.
+- [x] **Task 0b: Factors fix** — Array of objects treated as dict → [object Object]. Added topFactors() parser. Shows "feature: X.X%" properly.
+- [x] **Task 0c: pos_folds verified** — Already exists at ml.pos_folds = 52. No fix needed.
+- [x] **Task 0d: portfolio_stats.json** — New export in learning_engine.py. Queries ALL signals with car_30d (thousands, not biased top-50). Includes summary, monthly breakdown.
+- [x] **Task 1: 4-tab architecture** — POSITIONS (default), PERFORMANCE, INTELLIGENCE, MODEL. Pure JS tabs with hash navigation.
+- [x] **Task 2: Active positions detail fix** — Factors parsed correctly, win_prob fixed, trade_size_range shown, target1/target2 with %, cluster boost info.
+- [x] **Task 3: New signals expandable** — Same detail panels as active positions, grouped by ticker.
+- [x] **Task 4: Portfolio performance tab** — Active card (raw + 3% adjusted), closed summary from portfolio_stats.json, monthly CSS bar chart, paginated closed log.
+- [x] **Task 5: Signal intelligence tab** — Interpretations for each gap. Fama-French section. Feature importance table (top 15).
+- [x] **Task 6: Model health panel** — Freshness with amber stale warning, feature importance from analyst_report.json.
+- [x] **Task 7: Analyst report tab** — Full report: inventory, performance, quality, regime, Kelly, factors, IC trend chart, pipeline health.
+- [x] **Task 8: Regime label suppressed** — Removed from individual rows. Only in banner + expanded detail + model health.
+
+### To Run (user)
+- [ ] `python backtest/learning_engine.py --export` — generates portfolio_stats.json + brain_signals.json
+- [ ] Refresh dashboard — verify all 4 tabs, expandable detail panels, portfolio stats
+- [ ] `python backtest/learning_engine.py --report` — regenerate analyst_report.json
+
+### Open Items (carry to Session 19)
+- [ ] **Dashboard polish** — review live dashboard, fix remaining display/layout issues
+- [ ] **GitHub Actions workflows failing** — debug backtest.yml and fetch-data.yml, fix broken runs
+- [ ] **Investigate OOS gap (-3.4)** — why does OOS not discriminate best/worst?
+- [ ] **Liquidity enrichment debug** — 0 signals filled, path issue
+- [ ] **IC trend chart from live data** — replace hardcoded sessions
+- [ ] **New signal notifications** — 80+ alerts via ntfy
+- [ ] **Strategy memo** — investor-format summary with factor alpha results
 
 ---
 
-## Session 1 Checkpoint (Mar 1, 2026 — Brain Improvement)
+## Session 17 — Dashboard Overhaul, Signal Intelligence, Portfolio Performance
 
-### Completed — All 6 Tasks
-- [x] **Task 1 — Harmful feature value detection + pruning visibility.** Added harmful value detection to `run_self_check` (CAR<-2%, n≥30). Added `pruning_log` + `ticker_distribution` to brain_stats.json. Confirmed ML trees handle cluster_velocity=fast via categorical encoding. Pruning is advisory — surfaces harmful values as warnings.
-- [x] **Task 2 — Restructured --self-check / brain_health.json.** Refactored output to structured format with named checks (`ic_trend`, `hit_rate`, `data_freshness`, `feature_drift`, `score_concentration`, `harmful_features`), `overall_status` (critical/degraded/healthy), and `recommendations[]`. Added `--self-check` step to backtest.yml after `--daily`.
-- [x] **Task 3 — Source-aware scoring.** Added `_compute_source_quality()` to `run_analyze` — computes EDGAR/Congress/convergence multipliers from historical CAR. Stored in `optimal_weights.json → _source_quality`. Applied in `score_all_signals` as `total = clamp(raw × source_mult, 0, 100)`. Multipliers auto-update each analyze run.
-- [x] **Task 4 — Ticker diversification cap.** Already existed (MAX_PER_TICKER=3, EXPORT_LIMIT=50). Added `ticker_distribution` stats to brain_stats.json (unique_tickers, max_per_ticker, top_5).
-- [x] **Task 5 — Signal expansion roadmap.** Added `Phase 4B — Signal Expansion Roadmap` to docs/roadmap.md. 10 ranked signals with data source, difficulty, ML/convergence role. Tier A (free, now): relative volume, analyst revisions, committee membership, earnings surprise. Tier B (medium): SI change, lobbying, P/C ratio. Tier C (paid): options flow, FinBERT, dark pool.
-- [x] **Task 6 — Failure alerting.** Added ntfy.sh notifications to both workflows: success (brain health status) + failure alerts. Added NTFY_CHANNEL to docs/architecture.md API Keys section.
+### Completed
+- [x] **Task 0: CAR Measurement Note** — Added to STANDARDS.md documenting disclosure timing haircut (3-8%).
+- [x] **Task 1: Ticker grouping** — Active positions grouped by ticker with expandable detail panels (insiders, signal strength, trade parameters). CSS transitions, color-coded borders, cluster badges.
+- [x] **Task 2a: New signals table** — Replaced Entry Zone + Target with Est. Upside (%), Stop ($+%), Horizon columns.
+- [x] **Task 2e: Signal count badge** — Stats row shows "50 | 22 active | X new" format.
+- [x] **Task 3: Portfolio performance** — Active return card (EW avg with 7% timing haircut), closed signal stats (win rate, avg win/loss, best/worst), monthly performance log.
+- [x] **Task 3d: Closed signals export** — learning_engine.py exports last 50 expired signals (30-90 days old) as `closed_signals` array in brain_signals.json.
+- [x] **Task 4: Signal intelligence** — `compute_signal_intelligence()` wired into --analyze. Profiles best/worst 50 signals. Dashboard panel shows divergence stats + comparison table. Score gap=43.9, OOS gap=-3.7, earnings gap=-98.9.
+- [x] **Task 6a: OOS display fix** — Shows total_score in blue with "est" label when oos_score is null, instead of "new".
 
----
+### To Run (user)
+- [ ] `python backtest/learning_engine.py --analyze` — generates signal_intelligence.json
+- [ ] `python backtest/learning_engine.py --export` — regenerate brain_signals.json with closed_signals + pos_folds
+- [ ] `python backtest/learning_engine.py --report` — see Fama-French factor analysis section
+- [ ] Refresh dashboard — verify ticker grouping, portfolio perf, signal intel panels
+- [ ] Run `python scripts/fetch_data.py` — verify clean output format (~15 lines)
 
-## Session 3 Checkpoint (Mar 1, 2026 — Pipeline Fixes & Signal Expansion)
-
-### Completed — All Tasks
-- [x] **Task 0A — Fix FMP Insider Trades 404.** Rewrote `fetch_fmp_insiders()` with multi-endpoint fallback: stable → v4-rss → v4. Auto-detects working endpoint, filters purchases from RSS feed.
-- [x] **Task 0B — Fix House XML Scraper URL.** Correct URL `financial-pdfs/{YEAR}FD.xml`. PTR PDFs are encrypted — metadata-only approach.
-- [x] **Task 0C — Fix --self-check KeyError.** Fixed dict iteration, missing keys (`recommendations`).
-- [x] **Task 1 — Feature backfill.** Added `backfill_features()` + `--backfill` CLI flag. Resets v5/v6 columns to NULL, re-enriches, reports before/after counts.
-- [x] **Task 2 — Committee membership.** Added `fetch_committee_data()` (GitHub unitedstates/congress-legislators, free). Maps committees to sectors. Added `committee_overlap` ML feature — 1 if congress member sits on oversight committee for traded sector. Added pyyaml to fetch-data.yml.
-- [x] **Task 3 — Earnings surprise.** Added `fetch_earnings_surprise()` (yfinance EPS data). Added `earnings_surprise` ML feature — EPS surprise % for most recent quarter.
-- [x] **Task 4 — News sentiment.** Added `fetch_news_sentiment()` (Finnhub headlines + VADER/keyword scoring). Added `news_sentiment_30d` ML feature. Falls back to keyword heuristic if nltk not installed.
-- [x] **Task 5 — Time-weighted learning.** Added `_compute_time_weights()` with 12-month half-life. Applied to `walk_forward_train`, `walk_forward_regression`, and `train_full_sample` via `sample_weight`. Recent signals weighted higher.
-- [x] **Task 6 — Feature candidate evaluation.** Added `evaluate_feature_candidates()` to ml_engine.py. Tests candidate columns against baseline IC via walk-forward. Added `--eval-features COL [COL...]` CLI flag. Reports IC delta + recommendation (ADD/NEUTRAL/SKIP).
-- [x] **Task 7 — Historical data expansion.** Increased EDGAR bootstrap default from 635 days (~21 months) to 900 days (~30 months). Made configurable via `--edgar-days N` CLI parameter.
-
-Feature count: 27 → 30 (v6). New: `committee_overlap`, `earnings_surprise`, `news_sentiment_30d`.
+### Open Items (carry to Session 18)
+- [ ] **New signal notifications** — 80+ alerts via ntfy
+- [ ] **Strategy memo** — investor-format summary with factor alpha results
+- [ ] **Liquidity enrichment debug** — 0 signals filled, path issue
+- [ ] **Investigate OOS gap (-3.7)** — why does OOS not discriminate best/worst?
+- [ ] **Dashboard mobile polish** — responsive layout improvements
 
 ---
 
-## Frontend & UX
+## Session 16 — Dashboard Fixes, NONE Cleanup, Fama-French, Output Standards
 
-- [ ] "Why this signal" context on trade idea cards (role, convergence, person record, trader tier)
-- [ ] Score explanation tooltip: ML confidence + magnitude + convergence breakdown
-- [ ] Brain performance dashboard: historical accuracy, IC trend, feature importance
-- [ ] Remove remaining hardcoded demo data (BILLS array, institutional cards, options flow)
-- [ ] Mobile-responsive improvements
-- [ ] Trader tier badges (elite/good/fade) on signal cards
+### Completed
+- [x] **Task 1: Dashboard fixes** — OOS column: shows "new" for recent signals (expected null oos_score). Folds: reads `ml.pos_folds` (was `positive_folds`). Sector: abbreviation map. Closed table: added OOS + Sector columns, limit increased to 30.
+- [x] **Task 2: NONE ticker cleanup** — 23 NONE records deleted from DB. 7,655 signals remaining.
+- [x] **Task 3: Fama-French 6-factor regression** — Monthly alpha +7.14%/mo (t=3.27**, significant). Annualized +128.9%. R²=0.082. No significant factor loadings. Verdict: STRONG genuine insider edge.
+- [x] **Task 4: Output standards** — fetch_data.py: `_quiet_run()` captures verbose output to `data/logs/fetch_verbose.log`, `main()` prints one clean line per source. SUPPRESSED_TICKERS set added. learning_engine.py: 12 verbose `log.info`→`log.debug` for fill-rate, roles, tiers, regime stats, hypotheses.
+- [x] **Task 5: Congress investigation** — Confirmed FMP upstream delay. Latest purchase 2026-02-13 (20 days stale). Not our code. Documented, closed.
+
+---
+
+## Session 14 — Regime Guardrails, Kelly Sizing & Dashboard
+
+### Completed
+- [x] **Task 0: Regime-aware scoring guardrails** — `get_regime_context()` reads VIX from `market_data.json`. Multipliers: OPTIMAL (VIX 15-25) 1.00x, LOW_VOL (<15) 0.75x, ELEVATED (25-30) 0.85x, HIGH_VOL (30-40) 0.90x, CRISIS (>40) 0.60x. Added `regime_context` to `brain_signals.json` top-level + per-signal `regime_multiplier`/`regime_label`. Congress staleness thresholds relaxed (14d warn, 30d critical). Regime context section added to `--report`.
+- [x] **Task 3: Kelly position sizing** — `compute_kelly_size()` uses 1/4 Kelly formula with OOS 75+ hit rate/avg win/loss. Scaled by signal confidence (oos_score/100) and regime multiplier. Capped 2-15%. Added `kelly_size` per signal in `brain_signals.json` and `kelly_params` top-level. Kelly sizing section in `--report`.
+- [x] **Task 4: Dashboard scaffold** — `dashboard.html` created. Vanilla JS + CSS, reads `brain_signals.json`. Sections: regime banner, stats row, active positions (P&L, stop loss, Kelly), new signals (entry zone, spread), expired/closed, health bar.
+
+### To Run (user)
+- [ ] `python scripts/fetch_data.py` — refresh data (updates market_data.json with current VIX)
+- [ ] `python backtest/learning_engine.py --backfill` — enriches liquidity features
+- [ ] `python backtest/learning_engine.py --analyze` — trains model + stores OOS predictions
+- [ ] `python backtest/learning_engine.py --export` — generates brain_signals.json with regime, Kelly, live prices
+- [ ] `python backtest/learning_engine.py --report` — see regime context + Kelly sizing + honest regime robustness
+- [ ] Open dashboard: `python3 -m http.server 8080` then go to `localhost:8080/dashboard.html`
+- [ ] **Task 1: Honest OOS drawdown simulation** — Run this script:
+  ```
+python3 -c "
+import sqlite3, pandas as pd, numpy as np
+conn = sqlite3.connect('data/atlas_signals.db')
+df = pd.read_sql('''SELECT ticker, signal_date, oos_score, car_30d, market_adj_car_30d, vix_at_signal
+    FROM signals WHERE oos_score IS NOT NULL AND car_30d IS NOT NULL AND signal_date < '2026-01-01' ORDER BY signal_date''', conn)
+conn.close()
+print(f'Total OOS signals with outcomes: {len(df)}')
+for threshold in [80, 75, 70]:
+    sub = df[df.oos_score >= threshold].copy()
+    if len(sub) < 50: print(f'OOS {threshold}+: only {len(sub)} signals, skipping'); continue
+    sub['signal_date'] = pd.to_datetime(sub['signal_date'])
+    sub['month'] = sub['signal_date'].dt.to_period('M')
+    monthly = sub.groupby('month').agg(n=('car_30d','count'), ret=('car_30d','mean'), hit=('car_30d',lambda x:(x>0).mean()), mkt_adj=('market_adj_car_30d','mean')).reset_index()
+    monthly['cum'] = (1+monthly['ret']).cumprod()
+    peak = monthly['cum'].expanding().max()
+    dd = (monthly['cum']-peak)/peak; max_dd = dd.min(); worst = str(monthly.loc[dd.idxmin(),'month'])
+    n_m = len(monthly); tot_ret = monthly['cum'].iloc[-1]-1; ann = (1+tot_ret)**(12/n_m)-1
+    calmar = ann/abs(max_dd) if max_dd != 0 else 0
+    sharpe = monthly.ret.mean()/monthly.ret.std()*np.sqrt(12)
+    print(f'=== OOS {threshold}+ === Signals:{len(sub)} Months:{n_m}')
+    print(f'  Ann return: {ann:+.1%} | Max DD: {max_dd:.1%} ({worst}) | Calmar: {calmar:.2f} | Sharpe: {sharpe:.2f}')
+    print(f'  Win months: {(monthly.ret>0).sum()}/{n_m} ({100*(monthly.ret>0).mean():.0f}%)')
+    for name,(s,e) in {'2020 COVID':('2020-01','2020-06'),'2022 Bear':('2022-01','2022-12'),'2024 Low':('2024-01','2024-12')}.items():
+        p = monthly[(monthly['month'].astype(str)>=s)&(monthly['month'].astype(str)<=e)]
+        if len(p)==0: continue
+        print(f'  {name}: avg={p.ret.mean():+.2%} hit={p.hit.mean():.1%} n={len(p)}mo')
+    print()
+"
+  ```
+- [ ] **Task 2: 2024 weakness investigation** — Run this script:
+  ```
+python3 -c "
+import sqlite3, pandas as pd
+from scipy import stats
+conn = sqlite3.connect('data/atlas_signals.db')
+df = pd.read_sql('''SELECT oos_score, car_30d, source, insider_role, vix_at_signal
+    FROM signals WHERE oos_score IS NOT NULL AND car_30d IS NOT NULL
+    AND signal_date >= '2024-01-01' AND signal_date < '2025-01-01' ''', conn)
+print(f'2024 signals: {len(df)}, Avg VIX: {df.vix_at_signal.mean():.1f}')
+print('=== IC BY SOURCE ===')
+for src in ['edgar','congress']:
+    sub = df[df.source==src].dropna(subset=['oos_score','car_30d'])
+    if len(sub)<20: continue
+    ic,p = stats.spearmanr(sub.oos_score, sub.car_30d)
+    sig = '***' if p<0.001 else '**' if p<0.01 else '*' if p<0.05 else 'ns'
+    print(f'  {src}: IC={ic:.4f} {sig} n={len(sub)}')
+print('=== IC BY ROLE ===')
+for role in ['CFO','CEO','Director','Officer','10% Owner']:
+    sub = df[df.insider_role==role].dropna(subset=['oos_score','car_30d'])
+    if len(sub)<20: continue
+    ic,p = stats.spearmanr(sub.oos_score, sub.car_30d)
+    sig = '***' if p<0.001 else '**' if p<0.01 else '*' if p<0.05 else 'ns'
+    print(f'  {role}: IC={ic:.4f} {sig} n={len(sub)}')
+print('=== IC BY VIX IN 2024 ===')
+for name,mask in [('VIX<15',df.vix_at_signal<15),('VIX 15-20',(df.vix_at_signal>=15)&(df.vix_at_signal<20)),('VIX 20-25',(df.vix_at_signal>=20)&(df.vix_at_signal<25))]:
+    sub = df[mask].dropna(subset=['oos_score','car_30d'])
+    if len(sub)<20: continue
+    ic,p = stats.spearmanr(sub.oos_score, sub.car_30d)
+    sig = '***' if p<0.001 else '**' if p<0.01 else '*' if p<0.05 else 'ns'
+    print(f'  {name}: IC={ic:.4f} {sig} n={len(sub)}')
+"
+  ```
+
+### Fixes Applied
+- [x] **Report JSON save order** — `save_json(ANALYST_REPORT, report)` was called before regime/Kelly data was added. Fixed: re-save at end of `generate_analyst_report()`.
+- [x] **Regime sections error handling** — Wrapped regime robustness and Kelly sections in try/except to prevent report failure.
+
+### Open Items → Session 15
+All carried to Session 15 (now complete — see above).
+
+---
+
+## Session 13 — OOS Predictions, Transaction Costs, Live Price Feed
+
+### Completed
+- [x] **Task 0: Congress ingestion** — Already fixed (Session 12 applied capitalized field names). `ingest_congress_feed()` uses `Transaction`, `Ticker`, `TransactionDate`, `Representative` etc.
+- [x] **Task 1: Store OOS predictions in DB** — Added `oos_score REAL` and `oos_fold INTEGER` columns. After `walk_forward_train()`, OOS classifier probabilities (0-100 scale) are persisted per signal. Each signal appears in exactly one fold's holdout.
+- [x] **Task 2: Regime robustness (honest OOS)** — `--report` now uses `oos_score` when available, with fallback to `total_score`. Adds significance markers and p-values. Labels clearly: "OOS (walk-forward holdout)" vs "IN-SAMPLE".
+- [x] **Task 3: Drawdown simulation (honest OOS)** — Stop-loss fields added to `brain_signals.json` export: `stop_loss_price` (-12%), `stop_loss_triggered`, `position_status`.
+- [x] **Task 4: Transaction cost modeling** — Added `enrich_liquidity_features()`: ADV from price cache, spread estimate by market cap proxy (large 0.05%, mid 0.20%, small 0.50%). Columns: `avg_daily_volume`, `estimated_spread`, `liquidity_flag`, `net_expected_return`. Wired into `--backfill`.
+- [x] **Task 5: Live price feed** — `export_brain_data()` now batch-fetches live prices via yfinance. Added to `brain_signals.json`: `current_price`, `unrealized_pnl_pct`, `days_held`, `days_remaining`, `position_status`, `estimated_spread_pct`, `avg_daily_volume`, `liquidity_flag`, `oos_score`.
+
+### To Run (user)
+- [ ] `python scripts/fetch_data.py` — refresh congress + EDGAR data
+- [ ] `python backtest/learning_engine.py --backfill` — adds new schema columns, enriches liquidity
+- [ ] `python backtest/learning_engine.py --analyze` — trains model + stores OOS predictions
+- [ ] Verify OOS predictions stored:
+  ```
+python3 -c "
+import sqlite3
+conn = sqlite3.connect('data/atlas_signals.db')
+total = conn.execute('SELECT COUNT(*) FROM signals').fetchone()[0]
+has_oos = conn.execute('SELECT COUNT(*) FROM signals WHERE oos_score IS NOT NULL').fetchone()[0]
+print(f'OOS scores: {has_oos}/{total} ({100*has_oos/total:.1f}%)')
+"
+  ```
+- [ ] Verify OOS IC matches walk-forward IC:
+  ```
+python3 -c "
+import sqlite3, pandas as pd
+from scipy import stats
+conn = sqlite3.connect('data/atlas_signals.db')
+df = pd.read_sql('SELECT oos_score, car_30d FROM signals WHERE oos_score IS NOT NULL AND car_30d IS NOT NULL', conn)
+ic, p = stats.spearmanr(df.oos_score, df.car_30d)
+print(f'OOS IC (stored): {ic:.4f} [p={p:.6f}] n={len(df)}')
+print('Should match walk-forward IC ~0.0996')
+"
+  ```
+- [ ] Honest OOS score distribution:
+  ```
+  python3 -c "
+  import sqlite3, pandas as pd
+  conn = sqlite3.connect('data/atlas_signals.db')
+  print(pd.read_sql('''
+      SELECT
+      CASE WHEN oos_score >= 80 THEN '80+' WHEN oos_score >= 60 THEN '60-79'
+           WHEN oos_score >= 40 THEN '40-59' ELSE '<40' END as bucket,
+      COUNT(*) as n,
+      ROUND(AVG(car_30d)*100,2) as avg_car,
+      ROUND(AVG(CASE WHEN car_30d>0 THEN 1.0 ELSE 0 END)*100,1) as hit_rate
+      FROM signals WHERE oos_score IS NOT NULL AND car_30d IS NOT NULL
+      GROUP BY bucket ORDER BY bucket DESC
+  ''', conn).to_string())
+  "
+  ```
+- [ ] Honest regime robustness (OOS):
+  ```
+  python3 -c "
+  import sqlite3, pandas as pd
+  from scipy import stats
+  conn = sqlite3.connect('data/atlas_signals.db')
+  df = pd.read_sql('SELECT oos_score, car_30d, vix_at_signal, signal_date FROM signals WHERE oos_score IS NOT NULL AND car_30d IS NOT NULL AND vix_at_signal IS NOT NULL', conn)
+  print(f'n={len(df)}')
+  for name, mask in [('Low VIX<15', df.vix_at_signal<15), ('Normal 15-25', (df.vix_at_signal>=15)&(df.vix_at_signal<25)), ('Elevated 25-35', (df.vix_at_signal>=25)&(df.vix_at_signal<35)), ('Crisis VIX>35', df.vix_at_signal>=35)]:
+      sub = df[mask].dropna(subset=['oos_score','car_30d'])
+      if len(sub)<30: print(f'{name}: n={len(sub)} insufficient'); continue
+      ic,p = stats.spearmanr(sub.oos_score, sub.car_30d)
+      print(f'{name}: IC={ic:.4f} p={p:.4f} n={len(sub)}')
+  for yr in range(2019,2027):
+      sub = df[df.signal_date.str.startswith(str(yr))].dropna(subset=['oos_score','car_30d'])
+      if len(sub)<20: continue
+      ic,p = stats.spearmanr(sub.oos_score, sub.car_30d)
+      print(f'{yr}: IC={ic:.4f} n={len(sub)}')
+  "
+  ```
+- [ ] Honest drawdown simulation (OOS 80+):
+  ```
+  python3 -c "
+  import sqlite3, pandas as pd, numpy as np
+  conn = sqlite3.connect('data/atlas_signals.db')
+  df = pd.read_sql(\"SELECT ticker, signal_date, oos_score, car_30d, market_adj_car_30d FROM signals WHERE oos_score >= 80 AND car_30d IS NOT NULL AND signal_date < '2026-01-01' ORDER BY signal_date\", conn)
+  if len(df) < 50:
+      print(f'WARNING: Only {len(df)} OOS 80+ signals. Trying 70+...')
+      df = pd.read_sql(\"SELECT ticker, signal_date, oos_score, car_30d, market_adj_car_30d FROM signals WHERE oos_score >= 70 AND car_30d IS NOT NULL AND signal_date < '2026-01-01' ORDER BY signal_date\", conn)
+  df['signal_date'] = pd.to_datetime(df['signal_date'])
+  df['month'] = df['signal_date'].dt.to_period('M')
+  monthly = df.groupby('month').agg(n=('car_30d','count'), avg_ret=('car_30d','mean'), hit=('car_30d',lambda x:(x>0).mean())).reset_index()
+  monthly['cum'] = (1+monthly['avg_ret']).cumprod()
+  peak = monthly['cum'].expanding().max()
+  dd = (monthly['cum']-peak)/peak
+  max_dd = dd.min()
+  total_m = len(monthly); total_ret = monthly['cum'].iloc[-1]-1
+  ann_ret = (1+total_ret)**(12/total_m)-1
+  sharpe = monthly['avg_ret'].mean()/monthly['avg_ret'].std()*np.sqrt(12)
+  print(f'OOS 80+ signals: {len(df)}')
+  print(f'Ann return: {ann_ret:+.1%} | Max DD: {max_dd:.1%} | Sharpe: {sharpe:.2f}')
+  print(f'Win months: {(monthly.avg_ret>0).sum()}/{total_m}')
+  "
+  ```
+- [ ] Liquidity breakdown for 80+ signals:
+  ```
+  python3 -c "
+  import sqlite3, pandas as pd
+  conn = sqlite3.connect('data/atlas_signals.db')
+  print(pd.read_sql('''
+      SELECT liquidity_flag, COUNT(*) as n,
+      ROUND(AVG(car_30d)*100,2) as avg_car,
+      ROUND(AVG(estimated_spread)*100,3) as avg_spread,
+      ROUND(AVG(net_expected_return)*100,2) as avg_net
+      FROM signals WHERE total_score >= 80 AND liquidity_flag IS NOT NULL
+      GROUP BY liquidity_flag
+  ''', conn).to_string())
+  "
+  ```
+- [ ] `python backtest/learning_engine.py --export` — verify new fields in brain_signals.json
+- [ ] `python backtest/learning_engine.py --report` — see honest OOS regime robustness
+- [ ] Verify brain_signals.json sample:
+  ```
+  python3 -c "
+  import json
+  with open('data/brain_signals.json') as f:
+      data = json.load(f)
+  s = data['signals'][0] if data.get('signals') else {}
+  for k in ['ticker','total_score','current_price','unrealized_pnl_pct','days_held','days_remaining','position_status','stop_loss_price','stop_loss_triggered','estimated_spread_pct','liquidity_flag','oos_score']:
+      print(f'  {k}: {s.get(k, \"MISSING\")}')
+  "
+  ```
+
+### Open Items (carry to Session 14)
+- [ ] **Kelly position sizing** — size each signal by confidence + variance
+- [ ] **Congress scrapers:** House PTR PDFs encrypted, Senate blocked by Cloudflare
+- [ ] **Fama-French factor regression** — factor-adjusted alpha
+- [ ] **If IC < 0.09:** root cause investigation
+
+---
+
+## Session 12 — Congress Debug, Decay, Regime, Fetch Optimization
+
+### Completed
+- [x] **Task 0: Congress ingestion debug** — No bug found. All 664 feed purchases already in DB. Staleness (2026-02-13) is upstream: FMP API has no newer data, House/Senate scrapers extract 0 trades (PDFs encrypted, Cloudflare blocks). Added debug logging to `ingest_congress_feed()`.
+- [x] **Task 2: Signal decay analysis** — IC by horizon (in-sample total_score): 5d=0.2355, 30d=0.4016, 90d=0.2686, 180d=0.1992, 365d=0.1906. 30d confirmed as optimal training horizon. For 80+ signals: 30d avg +19.76%, hit 90.9%; 365d avg +35.74%, hit 67.2%.
+- [x] **Task 3: Regime robustness** — 3/3 regimes PASS (crisis insufficient n=12). Low vol IC=0.3619, Normal IC=0.4567, Elevated IC=0.3611. Year-by-year: 2022 bear IC=0.3975***, 2025 IC=0.5586***. All in-sample but pattern shows consistency.
+- [x] **Task 4: Fetch optimization** — `enrich_form4_xml()` now reuses prior enrichments from `edgar_feed.json`. Only fetches XML for truly new filings. Added `accession_number` column to signals schema + EDGAR ingestion. Expected speedup: ~1,400 XML fetches skipped per run.
+- [x] **Task 5: Drawdown simulation (in-sample)** — 80+ signals: 473 signals, 67 months, 99% win months. Max drawdown -2.8%. COVID +9.20%/month, 2022 bear +13.57%/month. CAVEAT: all in-sample (total_score trained on car_30d).
+- [x] **Regime robustness added to --report** — New REGIME ROBUSTNESS section in analyst report console output + JSON.
+
+### In-Sample Caveat (Critical)
+All decay/regime/drawdown analyses used `total_score` which is IN-SAMPLE (trained on car_30d). The absolute numbers are inflated. Walk-forward OOS IC (0.1028) is the authoritative metric. The walk-forward function stores `oos_predictions` per fold but these aren't persisted in the DB — needed for proper OOS backtest.
+
+### To Run (user)
+- [ ] `python scripts/fetch_data.py` — test fetch optimization (should show "X reused, Y new XML")
+- [ ] `python backtest/learning_engine.py --backfill` — will add accession_number column
+- [ ] `python backtest/learning_engine.py --analyze` — verify IC stable
+- [ ] `python backtest/learning_engine.py --report` — see new REGIME ROBUSTNESS section
+
+### Open Items (carry to Session 13)
+- [ ] **OOS backtest:** Store walk-forward OOS predictions in DB for proper portfolio simulation
+- [ ] **Congress scrapers:** House PTR PDFs encrypted, Senate blocked by Cloudflare. Fix or find alternative source.
+- [ ] **Transaction cost modeling** — bid-ask spread by market cap
+- [ ] **Kelly position sizing** — add to brain_signals.json
+- [ ] **Current price feed** — foundation for live dashboard
+
+---
+
+---
+
+## Backlog (Future Sessions)
+
+### Phase 3 Remaining
+- [ ] New signal notifications (80+ alerts)
+- [ ] Model health monitor chart
+- [ ] Portfolio tracker (manual position entry)
+
+### Phase 4 (Refinement)
+- [ ] earnings_catalyst binary feature (8-30d pre-earnings flag)
+- [ ] FinBERT upgrade (replace VADER)
+- [ ] Congressional individual quality scores
+- [ ] Short side exploration (insider sells + low scores)
+- [ ] Sector-specific models
+- [ ] Multi-horizon model blending (5d + 30d + 90d)
+- [ ] Multiple hypothesis testing correction (Benjamini-Hochberg)
+
+---
+
+## Completed (Archive)
+
+### Session 10
+- [x] FMP API fix — /stable/ endpoints working, v3/v4 removed
+- [x] person_hr/person_car regression fixed (update_person_track_records missing from backfill)
+- [x] OOS validation — confirmed walk-forward IC=0.1092 is authoritative; 93.4% hit rate is in-sample
+- [x] Feature pruning — volume_dry_up, analyst_consensus removed; short_squeeze_signal, institutional_insider_confluence removed from candidates
+- [x] Days-to-earnings deep dive — 8-30d pre-earnings optimal window (+3.28% CAR)
+- [x] Pipeline audit — GitHub Actions verified, FMP_API_KEY added to fetch-data.yml
+
+### Session 9
+- [x] Beta=0.828 investigated — real long equity characteristic, documented
+- [x] sector_avg_car + person_avg_car look-ahead bias found and fixed (45-day buffer)
+- [x] Options flow JSON parse error fixed (atomic writes)
+- [x] Outcome backfill wired into --backfill permanently
+- [x] Diversification cap (3/ticker, 8/sector) with stats
+
+### Session 8
+- [x] Outcome backfill for 2019-2023 (3,817 signals filled)
+- [x] Price cache extended to 2018 (LOOKBACK=2920)
+- [x] Walk-forward folds 22 → 74, p-value 0.490 → 0.0003
+
+### Sessions 1-7
+- [x] EDGAR Form 4 + congressional disclosure ingestion
+- [x] LightGBM walk-forward model + historical expansion to 2019
+- [x] Checkpoint/rollback, DB indexes, health monitoring
+- [x] Short interest, institutional, options candidate features
+- [x] Analyst report dashboard, self-check system
+- [x] Fill-rate gate, hypothesis generation, regime features
+
+pip install pandas-datareader --break-system-packages
+python3 -c "
+import pandas_datareader.data as web
+ff=web.DataReader('F-F_Research_Data_5_Factors_2x3','famafrench',start='2019-01-01')[0]
+mom=web.DataReader('F-F_Momentum_Factor','famafrench',start='2019-01-01')[0]
+ff=ff/100; mom=mom/100; mom.columns=['MOM']
+ff.join(mom,how='inner').to_csv('data/ff5_factors.csv')
+print(f'Saved {len(ff)} months of FF5+MOM factors')
+"

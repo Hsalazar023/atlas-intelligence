@@ -36,6 +36,7 @@
 | `data/brain_signals.json` | Top 50 ML-scored signals (committed to git) |
 | `data/brain_stats.json` | Alpha KPIs, score tiers, sectors (committed to git) |
 | `data/optimal_weights.json` | Frontend scoring weights (gitignored) |
+| `scripts/fetch_news_sentiment.py` | FinBERT news sentiment pipeline (standalone) |
 | `data/atlas_signals.db` | SQLite DB (gitignored) |
 
 ---
@@ -70,7 +71,12 @@
 |---|---|---|
 | Finnhub | finnhub.io | HTML (frontend) |
 | Congress.gov | api.congress.gov | HTML (frontend) |
-| FMP | financialmodelingprep.com | GitHub Secrets (backend) |
+| FMP | financialmodelingprep.com | GitHub Secrets (backend). **Insider endpoints 404/403 since Mar 2026** — EDGAR direct is primary insider source. Congress endpoint uses `/stable/senate-latest` + `/stable/house-latest`. Error handling now prints clear diagnostics on 401/403. Renew key at financialmodelingprep.com/developer/docs. |
 | FRED | fred.stlouisfed.org | GitHub Secrets (backend) |
 | NTFY_CHANNEL | ntfy.sh (free, no account) | GitHub Secrets (backend) — any string like `atlas-henry-abc123`. Subscribe at ntfy.sh/atlas-{your-string} to receive push notifications on pipeline success/failure. |
-| House Disclosures | disclosures-clerk.house.gov | No auth needed. Rate limit 1 req/sec. Senate scraper deferred (CSRF + HTML complexity — Phase 3). |
+| House Disclosures | disclosures-clerk.house.gov | No auth needed. Rate limit 1 req/sec. Metadata only (PDFs encrypted). |
+| Senate Disclosures | efdsearch.senate.gov | CSRF-protected, no API key. Rate limit 2 sec. May be Cloudflare-blocked (graceful fallback to []). Extracts trade data from PTR detail pages when accessible. |
+| QuiverQuant | quiverquant.com | QUIVER_KEY in GitHub Secrets. Free tier 100 req/day. Lobbying spend + committee data. Weekly fetch (Mondays). |
+| Yahoo RSS | feeds.finance.yahoo.com | No auth needed. Primary headline source for VADER sentiment. Rate limit 0.25s/ticker. |
+| VADER Sentiment | vaderSentiment (pip) | Local scorer, no API key. ~1MB. Primary sentiment method in `fetch_news_sentiment()`. |
+| FinBERT | ProsusAI/finbert (HuggingFace) | Local model, no API key. ~400MB first download. Optional upgrade via `scripts/fetch_news_sentiment.py`. |

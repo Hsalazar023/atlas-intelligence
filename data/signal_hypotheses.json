@@ -1,0 +1,151 @@
+{
+  "generated_at": "2026-03-05T22:31:37.952261+00:00",
+  "high_residual_tickers": [
+    {
+      "ticker": "UMAC",
+      "sector": "Financial Services",
+      "n_signals": 3,
+      "avg_residual": 2.6652,
+      "actual_car": 3.0,
+      "predicted_car": 0.3348,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "WBHC",
+      "sector": "Financial Services",
+      "n_signals": 3,
+      "avg_residual": 1.0073,
+      "actual_car": 1.0,
+      "predicted_car": 0.0056,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "FULC",
+      "sector": "Healthcare",
+      "n_signals": 3,
+      "avg_residual": 0.9337,
+      "actual_car": 0.9948,
+      "predicted_car": 0.0611,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "TLRY",
+      "sector": "Healthcare",
+      "n_signals": 3,
+      "avg_residual": 0.9265,
+      "actual_car": 1.296,
+      "predicted_car": 0.3695,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "BRN",
+      "sector": "Energy",
+      "n_signals": 3,
+      "avg_residual": 0.664,
+      "actual_car": 0.6031,
+      "predicted_car": 0.0164,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "NIHK",
+      "sector": "Real Estate",
+      "n_signals": 4,
+      "avg_residual": 0.6223,
+      "actual_car": 0.0342,
+      "predicted_car": 0.0006,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "SEZL",
+      "sector": "Financial Services",
+      "n_signals": 5,
+      "avg_residual": 0.6095,
+      "actual_car": -0.2186,
+      "predicted_car": -0.0094,
+      "hypothesis": "Model overestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "PRPL",
+      "sector": "Consumer Cyclical",
+      "n_signals": 8,
+      "avg_residual": 0.6062,
+      "actual_car": 0.3495,
+      "predicted_car": 0.0089,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "PAPL",
+      "sector": "Financial Services",
+      "n_signals": 3,
+      "avg_residual": 0.5629,
+      "actual_car": 0.6621,
+      "predicted_car": 0.1965,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "RMESF",
+      "sector": "Basic Materials",
+      "n_signals": 4,
+      "avg_residual": 0.5465,
+      "actual_car": 0.5693,
+      "predicted_car": 0.0228,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "OCUL",
+      "sector": "Healthcare",
+      "n_signals": 3,
+      "avg_residual": 0.521,
+      "actual_car": 0.199,
+      "predicted_car": -0.0051,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "GLSI",
+      "sector": "Healthcare",
+      "n_signals": 12,
+      "avg_residual": 0.5083,
+      "actual_car": 0.3485,
+      "predicted_car": 0.0363,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "ETST",
+      "sector": "Healthcare",
+      "n_signals": 6,
+      "avg_residual": 0.4962,
+      "actual_car": 0.4271,
+      "predicted_car": 0.0119,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "ASPI",
+      "sector": "Basic Materials",
+      "n_signals": 3,
+      "avg_residual": 0.459,
+      "actual_car": 0.599,
+      "predicted_car": 0.14,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    },
+    {
+      "ticker": "MYO",
+      "sector": "Healthcare",
+      "n_signals": 3,
+      "avg_residual": 0.4555,
+      "actual_car": 0.4699,
+      "predicted_car": 0.0143,
+      "hypothesis": "Model underestimating \u2014 possible missing signal (M&A, sector catalyst, or unusual activity)"
+    }
+  ],
+  "feature_interactions": [],
+  "regime_gaps": [
+    {
+      "regime": "low_vol",
+      "n_signals": 1249,
+      "current_hit_rate": 0.419,
+      "avg_car": -0.0036,
+      "most_predictive_feature": "momentum_6m",
+      "hypothesis": "Model underperforms in low_vol regime \u2014 best signal: momentum_6m. Consider regime-specific features."
+    }
+  ]
+}

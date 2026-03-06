@@ -59,6 +59,11 @@ jobs:
       - name: Collect prices for signal tickers
         run: python -m backtest.collect_prices || echo "Price collection had errors (non-fatal)"
 
+      - name: Backfill features (enrich new signals before scoring)
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+        run: python -m backtest.learning_engine --backfill || echo "Backfill had errors (non-fatal)"
+
       - name: Run daily pipeline (ingest + enrich + score + export)
         env:
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
@@ -78,6 +83,30 @@ jobs:
             echo "Skipping analysis (not Monday, not manual)"
           fi
 
+      - name: Evaluate candidate features (Mondays + manual triggers)
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          FRED_KEY: ${{ secrets.FRED_KEY }}
+        run: |
+          DAY=$(date -u +%u)
+          if [ "$DAY" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Evaluating candidate features..."
+            python -m backtest.learning_engine --eval-features \
+              committee_overlap earnings_surprise news_sentiment_30d || echo "Feature eval had errors (non-fatal)"
+          else
+            echo "Skipping feature eval (not Monday, not manual)"
+          fi
+
+      - name: Generate analyst report (Mondays + manual triggers)
+        run: |
+          DAY=$(date -u +%u)
+          if [ "$DAY" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Generating analyst report..."
+            python -m backtest.learning_engine --report || echo "Report generation had errors (non-fatal)"
+          else
+            echo "Skipping report (not Monday, not manual)"
+          fi
+
       - name: Run self-check
         run: python -m backtest.learning_engine --self-check
 
@@ -92,6 +121,12 @@ jobs:
           git add data/optimal_weights.json || true
           git add data/congress_feed.json data/edgar_feed.json data/market_data.json || true
           git add data/bills_feed.json data/13f_feed.json || true
+          git add data/feature_candidates.json || true
+          git add data/analyst_report.json || true
+          git add data/signal_hypotheses.json || true
+          git add data/signal_intelligence.json || true
+          git add data/portfolio_stats.json || true
+          git add data/dashboard.html || true
           git diff --staged --quiet || git commit -m "chore(brain): update scores $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           git push
 
@@ -99,7 +134,21 @@ jobs:
         if: success()
         run: |
           STATUS=$(python3 -c "import json; d=json.load(open('data/brain_health.json')); print(d['overall_status'])" 2>/dev/null || echo "unknown")
-          curl -s -d "ATLAS daily complete. Brain: $STATUS" \
+          FEAT_REC=$(python3 -c "
+          import json, os
+          parts = []
+          if os.path.exists('data/feature_candidates.json'):
+              d = json.load(open('data/feature_candidates.json'))
+              recs = [f\"{n} (+{i['ic_delta']:.4f})\" for n, i in d.get('candidates', {}).items()
+                      if i.get('recommendation') == 'ADD' and i.get('ic_delta', 0) > 0.005]
+              if recs: parts.append(f'Recs: {\", \".join(recs)}')
+          if os.path.exists('data/signal_hypotheses.json'):
+              h = json.load(open('data/signal_hypotheses.json'))
+              n = len(h.get('high_residual_tickers',[])) + len(h.get('feature_interactions',[])) + len(h.get('regime_gaps',[]))
+              if n: parts.append(f'{n} hypotheses')
+          print((' | ' + ', '.join(parts)) if parts else '')
+          " 2>/dev/null || echo "")
+          curl -s -d "ATLAS daily complete. Brain: $STATUS$FEAT_REC" \
             https://ntfy.sh/atlas-${{ secrets.NTFY_CHANNEL }} || true
 
       - name: Notify on failure

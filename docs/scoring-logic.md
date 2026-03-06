@@ -121,6 +121,45 @@ Computed client-side when Brain scores aren't available. Overridden by Brain `to
 
 ---
 
+## Regime-Aware Scoring
+
+Market regime assigned per signal from VIX at trade date:
+| Regime | VIX Range | Effect |
+|---|---|---|
+| `low_vol` | < 15 | Momentum boost ×1.05 |
+| `normal` | 15–25 | No adjustment |
+| `elevated` | 25–35 | No adjustment (model learns regime-conditional weights) |
+| `crisis` | > 35 | Score capped at 70 (reduce false confidence) |
+
+`market_regime` is a categorical feature in ML — the model learns regime-conditional signal strength.
+Caps stored in `optimal_weights.json → _regime_caps` (tunable).
+Regime stats (distribution + hit rates) exported to `brain_stats.json → regime`.
+
+---
+
+## Alpha Calculation (Market-Adjusted)
+
+Each signal gets a **date-matched** SPY return:
+```
+spy_return_30d = SPY price 30 calendar days after signal_date / SPY price at signal_date - 1
+market_adj_car_30d = car_30d - spy_return_30d
+```
+
+Alpha metrics computed by score band:
+- `alpha_80plus` = mean(market_adj_car_30d) for signals scored ≥80. **This is the primary edge metric.**
+- `alpha_all_signals` = mean(market_adj_car_30d) across all signals.
+- `beta_vs_spy` = cov(car_30d, spy_return_30d) / var(spy_return_30d). Winsorized at 1st/99th percentile.
+- `beta_vs_spy_raw` = same formula, no winsorization (for comparison).
+- `sharpe_market_adjusted_80plus` = mean(adj_80) / std(adj_80) × √12 (annualized).
+
+Stored in `optimal_weights.json → _strategy_metrics` and `brain_stats.json → strategy_metrics`.
+
+### Beta vs SPY: High Market Exposure
+
+Beta ≈ 0.91 (Session 8). Signals have high market correlation — the strategy is **not market-neutral**. Insider buys and congressional trades are long equity positions that naturally move with SPY. Alpha (80+) is +8.99%/signal above SPY on a matched basis, meaning the strategy generates real excess return but in a sustained bear market, even 80+ signals will likely lose money in absolute terms. The edge is in stock selection (alpha), not market timing.
+
+---
+
 ## Signal Decay
 
 ```

@@ -3,12 +3,27 @@ data/*.json
 !data/brain_signals.json
 !data/brain_stats.json
 !data/brain_health.json
+!data/optimal_weights.json
+!data/congress_feed.json
+!data/edgar_feed.json
+!data/market_data.json
+!data/bills_feed.json
+!data/13f_feed.json
+!data/sec_tickers.json
+!data/signal_intelligence.json
+!data/portfolio_stats.json
+!data/analyst_report.json
+!data/feature_candidates.json
+!data/signal_hypotheses.json
 data/*.db
 data/*.db-journal
 data/*.csv
 data/*.html
+!data/dashboard.html
 data/*.md
 data/price_history/
+data/checkpoints/
+data/logs/*.log
 backtest/ohlc_cache/
 backtest/signals.db
 

@@ -1,177 +1,150 @@
 {
-  "generated": "2026-03-01T21:30:51.581831+00:00",
+  "generated": "2026-03-06T01:55:14.753123+00:00",
   "alpha": {
-    "value": 0.3086,
-    "label": "+30.9%",
+    "value": 0.1476,
+    "label": "+14.8%",
     "horizon": "30d",
-    "n_signals": 145
+    "n_signals": 1056
   },
   "score_tiers": [
     {
       "tier": "90+",
-      "n": 1,
-      "hit_rate": 1.0,
-      "avg_car_30d": 0.2199
+      "n": 255,
+      "hit_rate": 0.95,
+      "avg_car_30d": 0.2122,
+      "note": "in-sample (training data)"
     },
     {
       "tier": "80-89",
-      "n": 17,
-      "hit_rate": 1.0,
-      "avg_car_30d": 0.2454
+      "n": 186,
+      "hit_rate": 0.9,
+      "avg_car_30d": 0.1754,
+      "note": "in-sample (training data)"
     },
     {
       "tier": "65-79",
-      "n": 127,
-      "hit_rate": 1.0,
-      "avg_car_30d": 0.3178
+      "n": 615,
+      "hit_rate": 0.76,
+      "avg_car_30d": 0.1124,
+      "note": "in-sample (training data)"
     },
     {
       "tier": "<65",
-      "n": 2776,
-      "hit_rate": 0.43,
-      "avg_car_30d": -0.0069
+      "n": 6182,
+      "hit_rate": 0.44,
+      "avg_car_30d": -0.0084,
+      "note": "in-sample (training data)"
     }
   ],
   "sectors": [
     {
-      "sector": "Healthcare",
-      "n": 377,
-      "avg_car_30d": 0.0329,
-      "hit_rate": 0.48
-    },
-    {
-      "sector": "Basic Materials",
-      "n": 95,
-      "avg_car_30d": 0.0283,
-      "hit_rate": 0.55
-    },
-    {
-      "sector": "Utilities",
-      "n": 58,
-      "avg_car_30d": 0.0255,
-      "hit_rate": 0.66
-    },
-    {
       "sector": "Energy",
-      "n": 134,
-      "avg_car_30d": 0.0191,
-      "hit_rate": 0.44
-    },
-    {
-      "sector": "Industrials",
-      "n": 245,
-      "avg_car_30d": 0.016,
+      "n": 319,
+      "avg_car_30d": 0.042,
       "hit_rate": 0.51
     },
     {
-      "sector": "Financial Services",
-      "n": 870,
-      "avg_car_30d": 0.0104,
+      "sector": "Healthcare",
+      "n": 1092,
+      "avg_car_30d": 0.0284,
       "hit_rate": 0.45
+    },
+    {
+      "sector": "Basic Materials",
+      "n": 213,
+      "avg_car_30d": 0.0281,
+      "hit_rate": 0.54
+    },
+    {
+      "sector": "Industrials",
+      "n": 536,
+      "avg_car_30d": 0.0277,
+      "hit_rate": 0.53
     },
     {
       "sector": "Consumer Cyclical",
-      "n": 229,
-      "avg_car_30d": -0.0012,
-      "hit_rate": 0.45
+      "n": 553,
+      "avg_car_30d": 0.0212,
+      "hit_rate": 0.52
     },
     {
-      "sector": "Technology",
-      "n": 548,
-      "avg_car_30d": -0.0015,
-      "hit_rate": 0.46
+      "sector": "Utilities",
+      "n": 102,
+      "avg_car_30d": 0.0192,
+      "hit_rate": 0.6
     },
     {
-      "sector": "Communication Services",
-      "n": 98,
-      "avg_car_30d": -0.0114,
-      "hit_rate": 0.41
-    },
-    {
-      "sector": "Consumer Defensive",
-      "n": 138,
-      "avg_car_30d": -0.0188,
-      "hit_rate": 0.36
+      "sector": "Financial Services",
+      "n": 2414,
+      "avg_car_30d": 0.0158,
+      "hit_rate": 0.53
     },
     {
       "sector": "Real Estate",
-      "n": 107,
-      "avg_car_30d": -0.0285,
-      "hit_rate": 0.36
+      "n": 376,
+      "avg_car_30d": 0.0034,
+      "hit_rate": 0.51
+    },
+    {
+      "sector": "Technology",
+      "n": 1026,
+      "avg_car_30d": -0.0007,
+      "hit_rate": 0.45
+    },
+    {
+      "sector": "Consumer Defensive",
+      "n": 318,
+      "avg_car_30d": -0.0159,
+      "hit_rate": 0.39
+    },
+    {
+      "sector": "Communication Services",
+      "n": 238,
+      "avg_car_30d": -0.0296,
+      "hit_rate": 0.41
     }
   ],
   "committees": [
     {
-      "name": "Finance",
-      "n_trades": 265,
-      "match_rate": 0.51
+      "name": "Science & Tech",
+      "n_trades": 366,
+      "match_rate": 0.38
     },
     {
-      "name": "Science & Tech",
-      "n_trades": 245,
-      "match_rate": 0.36
+      "name": "Finance",
+      "n_trades": 297,
+      "match_rate": 0.52
     },
     {
       "name": "Armed Services",
-      "n_trades": 123,
-      "match_rate": 0.37
+      "n_trades": 282,
+      "match_rate": 0.41
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 90,
-      "match_rate": 0.42
+      "n_trades": 94,
+      "match_rate": 0.41
     },
     {
       "name": "Energy/Enviro",
-      "n_trades": 18,
-      "match_rate": 0.17
+      "n_trades": 20,
+      "match_rate": 0.15
     },
     {
       "name": "Judiciary",
       "n_trades": 10,
       "match_rate": 0.5
+    },
+    {
+      "name": "Commerce",
+      "n_trades": 1,
+      "match_rate": 0.0
     }
   ],
   "congress_heatmap": [
     {
-      "ticker": "AMZN",
-      "name": "Amazon",
-      "count": 3,
-      "heat": 3
-    },
-    {
-      "ticker": "MSFT",
-      "name": "Microsoft",
-      "count": 3,
-      "heat": 3
-    },
-    {
-      "ticker": "CRM",
-      "name": "Salesforce",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "MELI",
-      "name": "MercadoLibre",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "META",
-      "name": "Meta",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "NVDA",
-      "name": "NVIDIA",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "PG",
-      "name": "Procter & Gamble",
+      "ticker": "V",
+      "name": "Visa",
       "count": 2,
       "heat": 2
     },
@@ -182,122 +155,770 @@
       "heat": 2
     },
     {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "VMW",
+      "name": "VMW",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "SMPL",
       "name": "SMPL",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "V",
-      "name": "Visa",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "AAPL",
-      "name": "Apple",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "AJINF",
-      "name": "AJINF",
+      "ticker": "MPWR",
+      "name": "MPWR",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "AJINY",
-      "name": "AJINY",
+      "ticker": "MCK",
+      "name": "MCK",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "AMD",
-      "name": "AMD",
+      "ticker": "LRN",
+      "name": "LRN",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "ANET",
-      "name": "Arista Networks",
+      "ticker": "GOOGL",
+      "name": "Google",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "ASML",
-      "name": "ASML",
+      "ticker": "GNPX",
+      "name": "GNPX",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "FCFS",
+      "name": "FCFS",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "DNUT",
+      "name": "DNUT",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "CRS",
+      "name": "CRS",
       "count": 1,
       "heat": 1
     }
   ],
   "kpis": {
-    "top_score": 83,
-    "top_score_tickers": "THM",
-    "exceptional_count": 1,
-    "cluster_count": 2,
-    "congress_flags": 68,
-    "convergence_count": 126
+    "top_score": 93,
+    "top_score_tickers": "RCG",
+    "exceptional_count": 5,
+    "cluster_count": 1,
+    "congress_flags": 29,
+    "convergence_count": 130
   },
   "insider_sectors": [
     {
-      "sector": "Healthcare",
-      "n": 156,
-      "avg_car": 0.0796
-    },
-    {
-      "sector": "Utilities",
-      "n": 16,
-      "avg_car": 0.0567
-    },
-    {
-      "sector": "Basic Materials",
-      "n": 28,
-      "avg_car": 0.0422
+      "sector": "Energy",
+      "n": 219,
+      "avg_car": 0.0597
     },
     {
       "sector": "Industrials",
-      "n": 44,
-      "avg_car": 0.0406
-    },
-    {
-      "sector": "Financial Services",
-      "n": 340,
-      "avg_car": 0.0354
-    },
-    {
-      "sector": "Energy",
-      "n": 70,
-      "avg_car": 0.0345
+      "n": 249,
+      "avg_car": 0.0512
     },
     {
       "sector": "Consumer Cyclical",
-      "n": 53,
-      "avg_car": 0.0226
+      "n": 278,
+      "avg_car": 0.0451
+    },
+    {
+      "sector": "Healthcare",
+      "n": 737,
+      "avg_car": 0.0433
+    },
+    {
+      "sector": "Basic Materials",
+      "n": 106,
+      "avg_car": 0.0429
+    },
+    {
+      "sector": "Utilities",
+      "n": 46,
+      "avg_car": 0.0326
+    },
+    {
+      "sector": "Financial Services",
+      "n": 1584,
+      "avg_car": 0.0279
     },
     {
       "sector": "Technology",
-      "n": 71,
-      "avg_car": 0.0196
-    },
-    {
-      "sector": "Communication Services",
-      "n": 37,
-      "avg_car": 0.0088
+      "n": 318,
+      "avg_car": 0.0186
     },
     {
       "sector": "Real Estate",
-      "n": 51,
-      "avg_car": -0.0261
+      "n": 266,
+      "avg_car": 0.0168
     },
     {
       "sector": "Consumer Defensive",
-      "n": 18,
-      "avg_car": -0.0422
+      "n": 126,
+      "avg_car": -0.0143
+    },
+    {
+      "sector": "Communication Services",
+      "n": 138,
+      "avg_car": -0.0399
     }
   ],
   "ml": {
-    "oos_ic": 0.071202,
-    "oos_hit_rate": 0.5523,
-    "n_folds": 22
+    "oos_ic": 0.100871,
+    "oos_hit_rate": 0.5432,
+    "n_folds": 75,
+    "pos_folds": 52,
+    "ic_t_stat": 3.8724,
+    "ic_p_value": 0.000231,
+    "sharpe_annual": 0.2145,
+    "sortino_ratio": 0.1008,
+    "brier_skill_score": -0.035446,
+    "q5_q1_spread": 0.029658,
+    "profit_factor": 1.203,
+    "strategy_metrics": {
+      "alpha_all_signals": -0.001734,
+      "n_matched_signals": 7238,
+      "spy_avg_30d_return": 0.016112,
+      "alpha_80plus": 0.13772,
+      "n_80plus": 636,
+      "alpha_60_79": 0.057819,
+      "n_60_79": 950,
+      "alpha_below_60": -0.027437,
+      "n_below_60": 5652,
+      "alpha_congress": -0.020324,
+      "beta_vs_spy": 0.8258,
+      "beta_vs_spy_raw": 0.9078,
+      "sharpe_market_adjusted_80plus": 1.558
+    }
+  },
+  "trader_tiers": {
+    "elite": [
+      {
+        "name": "Peterson Adam K",
+        "hit_rate": 1.0,
+        "avg_car": 0.19,
+        "n": 5
+      },
+      {
+        "name": "SHAW THOMAS J",
+        "hit_rate": 0.765,
+        "avg_car": 0.1871,
+        "n": 17
+      },
+      {
+        "name": "Tina Smith",
+        "hit_rate": 0.8,
+        "avg_car": 0.1589,
+        "n": 5
+      },
+      {
+        "name": "Kolchinsky Peter",
+        "hit_rate": 0.667,
+        "avg_car": 0.1581,
+        "n": 9
+      },
+      {
+        "name": "Marino Robert Joseph",
+        "hit_rate": 1.0,
+        "avg_car": 0.0996,
+        "n": 5
+      },
+      {
+        "name": "GHAURI NAJEEB",
+        "hit_rate": 0.8,
+        "avg_car": 0.0805,
+        "n": 5
+      },
+      {
+        "name": "RANDOLPH JEFFREY",
+        "hit_rate": 1.0,
+        "avg_car": 0.0763,
+        "n": 6
+      },
+      {
+        "name": "MARKMAN ADAM SCOTT",
+        "hit_rate": 1.0,
+        "avg_car": 0.0721,
+        "n": 6
+      },
+      {
+        "name": "Craig Kevin W",
+        "hit_rate": 0.8,
+        "avg_car": 0.0606,
+        "n": 5
+      },
+      {
+        "name": "Smith Gerald F JR",
+        "hit_rate": 0.8,
+        "avg_car": 0.0558,
+        "n": 5
+      },
+      {
+        "name": "Dave McCormick",
+        "hit_rate": 0.793,
+        "avg_car": 0.055,
+        "n": 29
+      }
+    ],
+    "good": [
+      {
+        "name": "Stedham Adam H",
+        "hit_rate": 0.571,
+        "avg_car": 0.1262,
+        "n": 7
+      },
+      {
+        "name": "RILEY BRYANT R",
+        "hit_rate": 0.571,
+        "avg_car": 0.1179,
+        "n": 7
+      },
+      {
+        "name": "DAHL JAMES H",
+        "hit_rate": 0.6,
+        "avg_car": 0.0957,
+        "n": 5
+      },
+      {
+        "name": "Billingsley Chester",
+        "hit_rate": 0.6,
+        "avg_car": 0.0854,
+        "n": 5
+      },
+      {
+        "name": "Wild Jason G.",
+        "hit_rate": 0.6,
+        "avg_car": 0.0758,
+        "n": 5
+      },
+      {
+        "name": "Golub Lawrence E",
+        "hit_rate": 0.833,
+        "avg_car": 0.0474,
+        "n": 6
+      },
+      {
+        "name": "GOULD JEFFREY",
+        "hit_rate": 0.8,
+        "avg_car": 0.0469,
+        "n": 5
+      },
+      {
+        "name": "McWilliams Curtis B",
+        "hit_rate": 1.0,
+        "avg_car": 0.0463,
+        "n": 6
+      },
+      {
+        "name": "Sheri Biggs",
+        "hit_rate": 0.833,
+        "avg_car": 0.0441,
+        "n": 6
+      },
+      {
+        "name": "DONDERO JAMES D",
+        "hit_rate": 0.714,
+        "avg_car": 0.044,
+        "n": 7
+      },
+      {
+        "name": "ISTAR INC.  (SAFE)",
+        "hit_rate": 0.615,
+        "avg_car": 0.0435,
+        "n": 13
+      },
+      {
+        "name": "NOLAN THOMAS  H JR",
+        "hit_rate": 1.0,
+        "avg_car": 0.0434,
+        "n": 6
+      },
+      {
+        "name": "GABELLI MARIO J",
+        "hit_rate": 0.692,
+        "avg_car": 0.0432,
+        "n": 13
+      },
+      {
+        "name": "Golub David",
+        "hit_rate": 0.667,
+        "avg_car": 0.0427,
+        "n": 6
+      },
+      {
+        "name": "Haldor Foundation",
+        "hit_rate": 0.75,
+        "avg_car": 0.0403,
+        "n": 12
+      },
+      {
+        "name": "Julie Johnson",
+        "hit_rate": 0.692,
+        "avg_car": 0.0369,
+        "n": 13
+      },
+      {
+        "name": "Ritchie Torres",
+        "hit_rate": 0.559,
+        "avg_car": 0.036,
+        "n": 34
+      },
+      {
+        "name": "HOLDER H RANDOLPH JR",
+        "hit_rate": 0.625,
+        "avg_car": 0.0354,
+        "n": 8
+      },
+      {
+        "name": "Saba Capital Management, L.P.",
+        "hit_rate": 0.714,
+        "avg_car": 0.0337,
+        "n": 7
+      },
+      {
+        "name": "LEIGHTON F THOMSON",
+        "hit_rate": 0.833,
+        "avg_car": 0.0325,
+        "n": 6
+      },
+      {
+        "name": "SEIDMAN LAWRENCE B",
+        "hit_rate": 0.6,
+        "avg_car": 0.0305,
+        "n": 5
+      },
+      {
+        "name": "Weinstein Boaz",
+        "hit_rate": 0.679,
+        "avg_car": 0.0305,
+        "n": 56
+      },
+      {
+        "name": "John Fetterman",
+        "hit_rate": 0.688,
+        "avg_car": 0.0291,
+        "n": 16
+      },
+      {
+        "name": "Fitzgerald John Taylor Maloney",
+        "hit_rate": 0.556,
+        "avg_car": 0.0239,
+        "n": 18
+      },
+      {
+        "name": "Barnes Michael Gene",
+        "hit_rate": 0.636,
+        "avg_car": 0.0228,
+        "n": 11
+      },
+      {
+        "name": "David Taylor",
+        "hit_rate": 0.596,
+        "avg_car": 0.0217,
+        "n": 47
+      },
+      {
+        "name": "Bourland Jill",
+        "hit_rate": 0.8,
+        "avg_car": 0.0217,
+        "n": 5
+      },
+      {
+        "name": "Dan Sullivan",
+        "hit_rate": 0.579,
+        "avg_car": 0.0214,
+        "n": 19
+      },
+      {
+        "name": "LEE SANG YOUNG",
+        "hit_rate": 0.6,
+        "avg_car": 0.0208,
+        "n": 5
+      }
+    ],
+    "fade": [
+      {
+        "name": "Cambrian BioPharma Inc",
+        "hit_rate": 0,
+        "avg_car": -0.3041,
+        "n": 5
+      },
+      {
+        "name": "LEE WILLIS C",
+        "hit_rate": 0,
+        "avg_car": -0.2617,
+        "n": 5
+      },
+      {
+        "name": "Peyer James",
+        "hit_rate": 0,
+        "avg_car": -0.243,
+        "n": 5
+      },
+      {
+        "name": "Purcell Paul Martin",
+        "hit_rate": 0.2,
+        "avg_car": -0.2186,
+        "n": 5
+      },
+      {
+        "name": "CTT PHARMACEUTICAL HOLDINGS, INC.",
+        "hit_rate": 0.2,
+        "avg_car": -0.1989,
+        "n": 5
+      },
+      {
+        "name": "Niihara Yutaka",
+        "hit_rate": 0.111,
+        "avg_car": -0.179,
+        "n": 9
+      },
+      {
+        "name": "Collier Alan Brian",
+        "hit_rate": 0.125,
+        "avg_car": -0.155,
+        "n": 8
+      },
+      {
+        "name": "Johnson Marc",
+        "hit_rate": 0.2,
+        "avg_car": -0.1331,
+        "n": 5
+      },
+      {
+        "name": "Cohn Charles K.",
+        "hit_rate": 0.2,
+        "avg_car": -0.1246,
+        "n": 5
+      },
+      {
+        "name": "Dizon Romeo R",
+        "hit_rate": 0,
+        "avg_car": -0.0989,
+        "n": 5
+      },
+      {
+        "name": "KASS DOUGLAS",
+        "hit_rate": 0,
+        "avg_car": -0.0897,
+        "n": 5
+      },
+      {
+        "name": "Byron Donalds",
+        "hit_rate": 0.231,
+        "avg_car": -0.0739,
+        "n": 13
+      },
+      {
+        "name": "Susan M. Collins",
+        "hit_rate": 0.2,
+        "avg_car": -0.0604,
+        "n": 5
+      },
+      {
+        "name": "Moran Colin T.",
+        "hit_rate": 0.2,
+        "avg_car": -0.0581,
+        "n": 5
+      },
+      {
+        "name": "Tony Wied",
+        "hit_rate": 0.286,
+        "avg_car": -0.0579,
+        "n": 7
+      },
+      {
+        "name": "TANNENBAUM LEONARD M",
+        "hit_rate": 0.2,
+        "avg_car": -0.0572,
+        "n": 5
+      },
+      {
+        "name": "KUBOTA TOM",
+        "hit_rate": 0.333,
+        "avg_car": -0.0534,
+        "n": 9
+      },
+      {
+        "name": "Fraser Craig",
+        "hit_rate": 0.4,
+        "avg_car": -0.0532,
+        "n": 5
+      },
+      {
+        "name": "DEUTSCHE TELEKOM AG  (DTEGF, DTEGY)",
+        "hit_rate": 0.2,
+        "avg_car": -0.0524,
+        "n": 5
+      },
+      {
+        "name": "Richard W. Allen",
+        "hit_rate": 0.4,
+        "avg_car": -0.051,
+        "n": 5
+      },
+      {
+        "name": "WINMILL & CO. INC",
+        "hit_rate": 0,
+        "avg_car": -0.0436,
+        "n": 5
+      },
+      {
+        "name": "Sheldon Whitehouse",
+        "hit_rate": 0.15,
+        "avg_car": -0.0374,
+        "n": 20
+      },
+      {
+        "name": "MALONE PETER GERALD",
+        "hit_rate": 0,
+        "avg_car": -0.0363,
+        "n": 5
+      },
+      {
+        "name": "Nancy Pelosi",
+        "hit_rate": 0.5,
+        "avg_car": -0.0347,
+        "n": 10
+      },
+      {
+        "name": "Virginia Foxx",
+        "hit_rate": 0.286,
+        "avg_car": -0.0342,
+        "n": 7
+      },
+      {
+        "name": "MIHAYLO STEVEN G",
+        "hit_rate": 0.444,
+        "avg_car": -0.0316,
+        "n": 9
+      }
+    ]
+  },
+  "sector_distribution": {
+    "Financial Services": 8,
+    "Healthcare": 8,
+    "Utilities": 8,
+    "Basic Materials": 7,
+    "Technology": 4,
+    "Industrials": 4,
+    "Unknown": 4,
+    "Consumer Cyclical": 3,
+    "Energy": 3,
+    "Consumer Defensive": 1
+  },
+  "ticker_distribution": {
+    "unique_tickers_in_export": 38,
+    "max_signals_per_ticker": 3,
+    "top_5_tickers_by_signal_count": [
+      {
+        "ticker": "RCG",
+        "count": 3
+      },
+      {
+        "ticker": "CABA",
+        "count": 3
+      },
+      {
+        "ticker": "YORW",
+        "count": 3
+      },
+      {
+        "ticker": "RGCO",
+        "count": 3
+      },
+      {
+        "ticker": "WYY",
+        "count": 2
+      }
+    ]
+  },
+  "pruning_log": [
+    {
+      "feature": "sector",
+      "value": "Communication Services",
+      "avg_car_30d": -0.0262,
+      "n": 238
+    }
+  ],
+  "regime": {
+    "current_regime": "normal",
+    "distribution": {
+      "crisis": 12,
+      "elevated": 599,
+      "low_vol": 1249,
+      "normal": 5378
+    },
+    "hit_rates": {
+      "crisis": 0.583,
+      "elevated": 0.508,
+      "low_vol": 0.419,
+      "normal": 0.509
+    }
+  },
+  "features_pruned_history": {
+    "pruned": [
+      {
+        "feature": "source",
+        "date": "2026-02-28",
+        "reason": "0.16% importance",
+        "avg_car": null
+      },
+      {
+        "feature": "trade_pattern",
+        "date": "2026-02-28",
+        "reason": "0.40% importance, 31% fill",
+        "avg_car": null
+      },
+      {
+        "feature": "convergence_tier",
+        "date": "2026-03-01",
+        "reason": "<1% importance, 3+ consecutive runs",
+        "avg_car": null
+      },
+      {
+        "feature": "has_convergence",
+        "date": "2026-03-01",
+        "reason": "<1% importance, 3+ consecutive runs",
+        "avg_car": null
+      },
+      {
+        "feature": "days_to_catalyst",
+        "date": "2026-03-01",
+        "reason": "<1% importance, 3+ consecutive runs",
+        "avg_car": null
+      },
+      {
+        "feature": "relative_position_size",
+        "date": "2026-03-01",
+        "reason": "<1% importance, 3+ consecutive runs",
+        "avg_car": null
+      },
+      {
+        "feature": "cluster_velocity",
+        "date": "2026-03-01",
+        "reason": "<1% importance, 3+ consecutive runs",
+        "avg_car": null
+      }
+    ],
+    "current_feature_count": 23
+  },
+  "feature_fill_gate": {
+    "threshold": 0.6,
+    "candidates": {
+      "news_sentiment_30d": {
+        "fill_rate": 1.0,
+        "status": "active"
+      },
+      "market_regime": {
+        "fill_rate": 1.0,
+        "status": "active"
+      },
+      "sect_ticker_momentum": {
+        "fill_rate": 1.0,
+        "status": "active"
+      },
+      "volume_cluster_signal": {
+        "fill_rate": 1.0,
+        "status": "active"
+      },
+      "short_interest_pct": {
+        "fill_rate": 0.066,
+        "status": "candidate"
+      },
+      "short_interest_change": {
+        "fill_rate": 0.068,
+        "status": "candidate"
+      },
+      "institutional_holders": {
+        "fill_rate": 0.041,
+        "status": "candidate"
+      },
+      "institutional_pct_held": {
+        "fill_rate": 0.041,
+        "status": "candidate"
+      },
+      "options_bullish": {
+        "fill_rate": 0.04,
+        "status": "candidate"
+      },
+      "options_unusual_calls": {
+        "fill_rate": 0.04,
+        "status": "candidate"
+      },
+      "options_insider_confluence": {
+        "fill_rate": 0.04,
+        "status": "candidate"
+      },
+      "options_bearish_divergence": {
+        "fill_rate": 0.04,
+        "status": "candidate"
+      }
+    }
+  },
+  "strategy_metrics": {
+    "alpha_all_signals": -0.001734,
+    "n_matched_signals": 7238,
+    "spy_avg_30d_return": 0.016112,
+    "alpha_80plus": 0.156202,
+    "n_80plus": 441,
+    "alpha_60_79": 0.071908,
+    "n_60_79": 910,
+    "alpha_below_60": -0.024949,
+    "n_below_60": 5887,
+    "alpha_congress": -0.020324,
+    "beta_vs_spy": 0.8258,
+    "beta_vs_spy_raw": 0.9078,
+    "sharpe_market_adjusted_80plus": 1.6393
+  },
+  "signal_concentration": {
+    "top_ticker": "RCG",
+    "top_ticker_pct": 0.06,
+    "top_5_ticker_pct": 0.28,
+    "unique_tickers": 38,
+    "unique_sectors": 10,
+    "max_per_ticker_cap": 3,
+    "max_per_sector_cap": 8
   }
 }

@@ -31,9 +31,16 @@ SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR     = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
 FRED_KEY     = os.environ.get('FRED_KEY',    '71a0b94ed47b56a81f405947f88d08aa')
 FINNHUB_KEY  = os.environ.get('FINNHUB_KEY', 'd6dnud9r01qm89pkai30d6dnud9r01qm89pkai3g')
+QUIVER_KEY   = os.environ.get('QUIVER_KEY', '')
 
 # SEC rate limit: max 10 req/sec, recommend 1 req/sec for pollers
 SEC_DELAY   = 0.5  # seconds between SEC requests
+
+# Tickers known to 404/error — suppress from stdout entirely
+SUPPRESSED_TICKERS = {'BRK/B', 'NONE', 'BHI', 'AZPN', 'BSCP', 'N/A', ''}
+
+LOG_DIR = os.path.join(DATA_DIR, 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 def clean_name(n):
@@ -48,12 +55,38 @@ def is_company(name):
                      ' MANAGEMENT', ' CAPITAL', ' TECHNOLOGIES', ' SYSTEMS', ' PLC']
     return any(w in upper for w in company_words)
 
+def _sanitize_for_json(obj):
+    """Sanitize values for valid JSON output (numpy types, NaN, Infinity)."""
+    import math
+    try:
+        import numpy as np
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            v = float(obj)
+            return None if (math.isnan(v) or math.isinf(v)) else v
+    except ImportError:
+        pass
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
 def save_json(filename, data):
     os.makedirs(DATA_DIR, exist_ok=True)
     path = os.path.join(DATA_DIR, filename)
-    with open(path, 'w', encoding='utf-8') as f:
+    tmp_path = path + '.tmp'
+    data = _sanitize_for_json(data)
+    with open(tmp_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f'  → Saved {path}')
+    os.replace(tmp_path, path)  # atomic on POSIX
 
 # ── EDGAR Form 4 Feed ─────────────────────────────────────────────────────────
 def _fetch_edgar_window(startdt: str, enddt: str, max_per_window: int, headers: dict) -> list:
@@ -180,13 +213,45 @@ def enrich_form4_xml(filings):
     Fetch each Form 4 XML and extract: ticker, role, transaction type,
     shares, price, total value, 10b5-1 plan flag.
     SEC rate limit: 10 req/sec — we use 0.12s delay (~8 req/sec).
+
+    Optimization: reuses enrichment data from previous edgar_feed.json
+    for filings already processed. Only fetches XML for new filings.
     """
     headers = {'User-Agent': USER_AGENT}
     enriched = 0
+    reused = 0
     errors = 0
     total = len(filings)
 
+    # Load previously enriched filings to skip re-fetching XML
+    prev_feed_path = os.path.join(DATA_DIR, 'edgar_feed.json')
+    prev_by_accession = {}
+    if os.path.exists(prev_feed_path):
+        try:
+            with open(prev_feed_path) as pf:
+                prev_data = json.load(pf)
+            for pf_entry in prev_data.get('filings', []):
+                acc = pf_entry.get('accession', '')
+                # Only reuse if it was actually enriched (has ticker)
+                if acc and pf_entry.get('ticker'):
+                    prev_by_accession[acc] = pf_entry
+            print(f'  Loaded {len(prev_by_accession)} previously enriched filings for skip-logic')
+        except Exception as e:
+            print(f'  Could not load previous feed for skip-logic: {e}')
+
     for i, f in enumerate(filings):
+        # Skip XML fetch if this filing was already enriched in previous run
+        acc = f.get('accession', '')
+        if acc and acc in prev_by_accession:
+            prev = prev_by_accession[acc]
+            for key in ('ticker', 'title', 'roles', 'is_10b5_1', 'transactions',
+                        'buy_value', 'sell_value', 'buy_shares', 'sell_shares', 'direction'):
+                if key in prev:
+                    f[key] = prev[key]
+            reused += 1
+            enriched += 1
+            continue
+
         xml_url = f.get('xml_url', '')
         if not xml_url:
             continue
@@ -281,7 +346,7 @@ def enrich_form4_xml(filings):
         if (i + 1) % 50 == 0:
             print(f'  Enriched {enriched}/{i+1} filings ({errors} errors)...')
 
-    print(f'  Enrichment complete: {enriched}/{total} enriched, {errors} errors')
+    print(f'  Enrichment complete: {enriched}/{total} enriched ({reused} reused, {enriched - reused} new XML), {errors} errors')
     # Remove xml_url from output (internal only)
     for f in filings:
         f.pop('xml_url', None)
@@ -375,9 +440,17 @@ def fetch_fmp_congress(api_key, pages=10):
             try:
                 r = requests.get(url, timeout=20)
                 if not r.ok:
-                    print(f'  FMP {chamber} page {page} error: HTTP {r.status_code}')
+                    body = r.text[:200] if r.text else ''
+                    if r.status_code in (401, 403):
+                        print(f'  FMP {chamber}: HTTP {r.status_code} — API key expired or plan lacks congress data')
+                        print(f'  Renew at: https://financialmodelingprep.com/developer/docs')
+                    else:
+                        print(f'  FMP {chamber} page {page} error: HTTP {r.status_code} {body}')
                     break
                 data = r.json()
+                if isinstance(data, dict) and data.get('Error Message'):
+                    print(f'  FMP {chamber}: {data["Error Message"]}')
+                    break
                 if not isinstance(data, list) or len(data) == 0:
                     break
 
@@ -735,28 +808,417 @@ def _parse_date_flex(date_str):
     return None
 
 
+# ── Senate Financial Disclosures ───────────────────────────────────────────
+
+def fetch_senate_disclosures(lookback_days=30):
+    """
+    Fetch recent PTR filings from Senate Electronic Financial Disclosures.
+
+    Uses CSRF-protected search at efdsearch.senate.gov.
+    Returns list of normalized trades matching congress_feed.json schema,
+    or [] on any failure (Cloudflare, CSRF change, etc.)
+    """
+    try:
+        return _fetch_senate_disclosures_inner(lookback_days)
+    except Exception as e:
+        print(f'  Senate scraper error (safe fallback to []): {e}')
+        return []
+
+
+def _fetch_senate_disclosures_inner(lookback_days):
+    """Inner implementation — may raise; caller wraps in try/except."""
+    today = datetime.date.today()
+    start_date = today - datetime.timedelta(days=lookback_days)
+
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': 'ATLAS Research Tool/1.0',
+    })
+
+    # STEP 1 — Acquire CSRF token + session cookie
+    print('  Senate: acquiring CSRF token...')
+    try:
+        r = session.get('https://efdsearch.senate.gov/search/', timeout=15)
+    except Exception as e:
+        print(f'  Senate: connection failed — {e}')
+        return []
+
+    if r.status_code == 403:
+        print('  Senate: Cloudflare blocked (403)')
+        return []
+
+    csrf = re.search(r'csrfmiddlewaretoken.*?value="([^"]+)"', r.text)
+    if not csrf:
+        print('  Senate: CSRF token not found — page structure may have changed')
+        return []
+    csrf_token = csrf.group(1)
+
+    # STEP 2 — POST search for recent PTRs
+    print(f'  Senate: searching PTRs from {start_date} to {today}...')
+    search_url = 'https://efdsearch.senate.gov/search/report/data/'
+    payload = {
+        'start': '0',
+        'length': '100',
+        'report_types': '[11]',  # 11 = Periodic Transaction Report
+        'submitted_start_date': f'{start_date.strftime("%m/%d/%Y")} 00:00:00',
+        'submitted_end_date': f'{today.strftime("%m/%d/%Y")} 23:59:59',
+        'csrfmiddlewaretoken': csrf_token,
+    }
+    search_headers = {
+        'X-CSRFToken': csrf_token,
+        'Referer': 'https://efdsearch.senate.gov/search/',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    try:
+        r = session.post(search_url, data=payload, headers=search_headers, timeout=20)
+    except Exception as e:
+        print(f'  Senate: search POST failed — {e}')
+        return []
+
+    if r.status_code in (403, 429):
+        print(f'  Senate: Cloudflare blocked ({r.status_code})')
+        return []
+
+    try:
+        data = r.json()
+    except (json.JSONDecodeError, ValueError):
+        print('  Senate: search response not JSON — blocked or structure changed')
+        return []
+
+    records = data.get('data', [])
+    total = data.get('recordsTotal', 0)
+    print(f'  Senate: {len(records)} PTR filings found (total: {total})')
+
+    if not records:
+        return []
+
+    # STEP 3 — Parse filing metadata from search results
+    # Each record is a list: [first_name, last_name, office, report_type_link, date_received]
+    all_trades = []
+    filings_metadata = []
+
+    for record in records:
+        try:
+            if not isinstance(record, (list, tuple)) or len(record) < 5:
+                continue
+
+            first_name = _strip_html(str(record[0]))
+            last_name = _strip_html(str(record[1]))
+            # record[3] contains link to the filing detail page
+            link_html = str(record[3])
+            date_received = _strip_html(str(record[4]))
+
+            member_name = _clean_member_name(f'{last_name}, {first_name}')
+
+            # Extract detail URL from link HTML
+            link_match = re.search(r'href="(/search/view/[^"]+)"', link_html)
+            detail_path = link_match.group(1) if link_match else None
+
+            filing_date = _parse_date_flex(date_received)
+            if not filing_date:
+                continue
+
+            filings_metadata.append({
+                'member_name': member_name,
+                'filing_date': filing_date.isoformat(),
+                'detail_path': detail_path,
+            })
+        except Exception:
+            continue
+
+    print(f'  Senate: {len(filings_metadata)} filing metadata records parsed')
+
+    # STEP 4 — Fetch detail pages and parse trade tables
+    trades_found = 0
+    for filing in filings_metadata:
+        if not filing['detail_path']:
+            continue
+
+        detail_url = f"https://efdsearch.senate.gov{filing['detail_path']}"
+        try:
+            time.sleep(2)  # rate limit
+            r = session.get(detail_url, timeout=15)
+            if r.status_code != 200:
+                continue
+
+            page_trades = _parse_senate_ptr_page(
+                r.text, filing['member_name'], filing['filing_date']
+            )
+            all_trades.extend(page_trades)
+            trades_found += len(page_trades)
+        except Exception:
+            continue
+
+    # Save metadata regardless of trade extraction success
+    save_json('senate_filings.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'count': len(filings_metadata),
+        'trades_extracted': trades_found,
+        'source': 'Senate EFD Search',
+        'filings': filings_metadata,
+    })
+
+    print(f'  Senate scraper: {len(filings_metadata)} filings, '
+          f'{trades_found} trades extracted')
+
+    return all_trades
+
+
+def _parse_senate_ptr_page(html, member_name, filing_date):
+    """Parse a Senate PTR detail page for individual trades.
+
+    Senate PTR pages have a table with columns:
+    Transaction Date, Owner, Ticker, Asset Name, Type, Amount
+    Returns list of normalized trade dicts.
+    """
+    trades = []
+
+    # Find table rows — Senate uses standard HTML tables
+    # Look for rows containing transaction data
+    row_pattern = re.compile(
+        r'<tr[^>]*>(.*?)</tr>', re.DOTALL | re.IGNORECASE
+    )
+    cell_pattern = re.compile(
+        r'<td[^>]*>(.*?)</td>', re.DOTALL | re.IGNORECASE
+    )
+
+    for row_match in row_pattern.finditer(html):
+        row_html = row_match.group(1)
+        cells = [_strip_html(c.group(1)).strip() for c in cell_pattern.finditer(row_html)]
+
+        if len(cells) < 4:
+            continue
+
+        # Try to identify transaction rows by looking for ticker-like patterns
+        # and transaction types (Purchase, Sale, Exchange)
+        ticker = None
+        txn_date = None
+        txn_type = None
+        amount = None
+
+        for cell in cells:
+            # Check for ticker (1-5 uppercase letters)
+            if not ticker and re.match(r'^[A-Z]{1,5}$', cell.strip()):
+                ticker = cell.strip()
+            # Check for date
+            if not txn_date:
+                parsed_date = _parse_date_flex(cell)
+                if parsed_date:
+                    txn_date = parsed_date.isoformat()
+            # Check for transaction type
+            cell_lower = cell.lower().strip()
+            if not txn_type and cell_lower in ('purchase', 'sale', 'sale (full)',
+                                                'sale (partial)', 'exchange'):
+                txn_type = 'Purchase' if 'purchase' in cell_lower else 'Sale'
+            # Check for amount range
+            if not amount and '$' in cell:
+                amount = cell.strip()
+
+        if ticker and txn_type:
+            trades.append({
+                'Ticker': ticker,
+                'TransactionDate': txn_date or filing_date,
+                'Representative': member_name,
+                'Transaction': txn_type,
+                'Range': amount or '',
+                'Chamber': 'Senate',
+                'Party': '',
+                'DisclosureDate': filing_date,
+                'DisclosureDelay': 0,
+                'Source': 'Senate',
+            })
+
+    return trades
+
+
+def _strip_html(text):
+    """Remove HTML tags from a string."""
+    return re.sub(r'<[^>]+>', '', text).strip()
+
+
+# ── Quiver Quant — Lobbying + Committee Data ──────────────────────────────
+
+COMMITTEE_SECTOR_MAP = {
+    "Armed Services": ["Aerospace & Defense", "Government"],
+    "Financial Services": ["Financials", "Banking"],
+    "Energy and Commerce": ["Energy", "Utilities", "Healthcare"],
+    "Intelligence": ["Technology", "Defense"],
+    "Agriculture": ["Consumer Staples", "Materials"],
+    "Science, Space, and Technology": ["Technology", "Semiconductors"],
+    "Health, Education, Labor, and Pensions": ["Healthcare", "Biotech"],
+    "Banking, Housing, and Urban Affairs": ["Financials", "Banking"],
+    "Commerce, Science, and Transportation": ["Technology", "Industrials"],
+    "Environment and Public Works": ["Utilities", "Materials"],
+    "Appropriations": [],  # broad — no sector signal
+    "Judiciary": [],
+}
+
+
+def fetch_lobbying_data(tickers):
+    """Fetch lobbying spending data from Quiver Quant for each ticker.
+
+    Computes:
+      lobbying_active: bool (spend in last 2 quarters)
+      lobbying_trend: (recent_spend - older_spend) / older_spend
+    Saves to data/lobbying_data.json.
+    Skips gracefully if QUIVER_KEY not set.
+    """
+    if not QUIVER_KEY:
+        print('  QUIVER_KEY not set — lobbying features will remain NULL')
+        save_json('lobbying_data.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': 0, 'source': 'QuiverQuant', 'tickers': {},
+        })
+        return
+    if not tickers:
+        return
+
+    print(f'  Fetching lobbying data for {len(tickers)} tickers...')
+    lobbying = {}
+    fetched = 0
+    failed = 0
+    headers = {
+        'Authorization': f'Token {QUIVER_KEY}',
+        'Accept': 'application/json',
+    }
+
+    for ticker in tickers:
+        try:
+            url = f'https://api.quiverquant.com/beta/live/lobbying/{ticker}'
+            r = requests.get(url, headers=headers, timeout=10)
+            if r.status_code == 429:
+                print('  Quiver rate limit hit — stopping')
+                break
+            if r.status_code != 200:
+                failed += 1
+                continue
+
+            data = r.json()
+            if not data:
+                continue
+
+            # Get last 4 quarters of spending
+            quarters = sorted(data, key=lambda x: x.get('Date', ''), reverse=True)[:4]
+            if not quarters:
+                continue
+
+            recent = quarters[:2]  # last 2 quarters
+            older = quarters[2:4]  # older 2 quarters
+
+            recent_spend = sum(q.get('Amount', 0) for q in recent)
+            older_spend = sum(q.get('Amount', 0) for q in older)
+
+            lobbying[ticker] = {
+                'lobbying_active': recent_spend > 0,
+                'lobbying_trend': round(
+                    (recent_spend - older_spend) / max(older_spend, 1), 4
+                ) if older_spend > 0 else 0,
+                'recent_spend': recent_spend,
+                'quarters_found': len(quarters),
+            }
+            fetched += 1
+        except Exception:
+            failed += 1
+        time.sleep(1)
+
+    save_json('lobbying_data.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'count': len(lobbying),
+        'source': 'QuiverQuant',
+        'tickers': lobbying,
+    })
+    print(f'  Lobbying data: {fetched} tickers fetched, {failed} failed')
+
+
+def fetch_quiver_committee_data():
+    """Fetch committee membership data from Quiver Quant.
+
+    Builds COMMITTEE_MAP: {rep_name: [committees]}
+    Saves to data/committee_data.json — refresh weekly.
+    Skips gracefully if QUIVER_KEY not set.
+    """
+    if not QUIVER_KEY:
+        print('  QUIVER_KEY not set — skipping Quiver committee data')
+        return
+    print('  Fetching committee membership from Quiver Quant...')
+
+    headers = {
+        'Authorization': f'Token {QUIVER_KEY}',
+        'Accept': 'application/json',
+    }
+
+    # Load existing congress feed to get rep names
+    cong_path = os.path.join(DATA_DIR, 'congress_feed.json')
+    if not os.path.exists(cong_path):
+        print('  No congress_feed.json — skipping Quiver committee data')
+        return
+
+    with open(cong_path) as f:
+        cong_data = json.load(f)
+    reps = list({t.get('Representative', '') for t in cong_data.get('trades', []) if t.get('Representative')})
+
+    committee_map = {}
+    fetched = 0
+    for rep in reps[:50]:  # limit to avoid rate limit
+        try:
+            # URL-encode the rep name
+            encoded = requests.utils.quote(rep)
+            url = f'https://api.quiverquant.com/beta/live/congresstrading/{encoded}'
+            r = requests.get(url, headers=headers, timeout=10)
+            if r.status_code == 429:
+                print('  Quiver rate limit hit — stopping')
+                break
+            if r.status_code != 200:
+                continue
+
+            data = r.json()
+            if not data:
+                continue
+
+            # Extract committees from trading data (Quiver includes committee info)
+            committees = set()
+            for trade in data:
+                comm = trade.get('Committee', '')
+                if comm:
+                    committees.add(comm)
+            if committees:
+                committee_map[rep] = list(committees)
+                fetched += 1
+        except Exception:
+            continue
+        time.sleep(1)
+
+    if committee_map:
+        save_json('committee_data.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': len(committee_map),
+            'source': 'QuiverQuant',
+            'sector_map': COMMITTEE_SECTOR_MAP,
+            'members': committee_map,
+        })
+    print(f'  Quiver committee data: {fetched} reps fetched')
+
+
 # ── FMP Insider Trades ─────────────────────────────────────────────────────
 def fetch_fmp_insiders(api_key, pages=10):
     """
     Fetch recent insider trades from FMP (Financial Modeling Prep).
-    Tries multiple endpoint patterns (stable → v4 RSS → v4 per-page) since
-    FMP periodically updates API paths.
-    Filters to purchases only (P-Purchase) to match Brain's buy-signal focus.
+    NOTE (Mar 2026): FMP deprecated v3/v4 endpoints. No stable insider-trading
+    endpoint exists yet. This function probes for one; if none found, returns []
+    and EDGAR Form 4 (direct SEC) remains the sole insider source.
     """
     all_trades = []
     seen = set()  # (symbol, date, reportingName) for dedup
 
-    # Endpoint priority: try stable first, fall back to v4
+    # FMP killed legacy v3/v4 endpoints (403 "Legacy Endpoint no longer supported").
+    # Stable insider-trading endpoint doesn't exist as of Mar 2026.
+    # Keep probing in case FMP adds one later.
     ENDPOINTS = [
-        # Stable API (current as of late 2025)
         ('stable', 'https://financialmodelingprep.com/stable/insider-trading'
                    '?transactionType=P-Purchase&page={page}&apikey={key}'),
-        # v4 RSS feed — returns recent Form 4 filings, all transaction types
-        ('v4-rss', 'https://financialmodelingprep.com/api/v4/insider-trading-rss-feed'
-                   '?page={page}&apikey={key}'),
-        # v4 paginated (no symbol filter = all recent)
-        ('v4', 'https://financialmodelingprep.com/api/v4/insider-trading'
-               '?transactionType=P-Purchase&page={page}&apikey={key}'),
+        ('stable-latest', 'https://financialmodelingprep.com/stable/insider-latest'
+                          '?page={page}&apikey={key}'),
     ]
 
     working_endpoint = None
@@ -770,16 +1232,13 @@ def fetch_fmp_insiders(api_key, pages=10):
                     print(f'  FMP insider endpoint: {ep_name} working ({len(data)} items on page 0)')
                     working_endpoint = (ep_name, ep_template)
                     break
-                else:
-                    print(f'  FMP insider endpoint {ep_name}: OK but empty response')
-            else:
-                print(f'  FMP insider endpoint {ep_name}: HTTP {r.status_code}')
         except Exception as e:
             print(f'  FMP insider endpoint {ep_name}: {e}')
-        time.sleep(0.5)
+        time.sleep(0.3)
 
     if not working_endpoint:
-        print('  WARNING: All FMP insider endpoints failed — returning 0 trades')
+        print('  FMP insider endpoints: no stable endpoint available (v3/v4 deprecated).')
+        print('  EDGAR Form 4 (direct SEC) remains the primary insider data source.')
         return []
 
     ep_name, ep_template = working_endpoint
@@ -1040,106 +1499,170 @@ def fetch_earnings_surprise(tickers):
             failed += 1
         time.sleep(0.2)
 
-    if surprise_data:
-        save_json('earnings_surprise.json', {
-            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-            'count': len(surprise_data),
-            'tickers': surprise_data,
-        })
+    save_json('earnings_surprise.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'count': len(surprise_data),
+        'tickers': surprise_data,
+    })
     print(f'  Earnings surprise: {fetched} tickers fetched, {failed} failed')
 
 
-# ── News Sentiment (Finnhub + VADER/FinBERT) ─────────────────────────────────
+# ── News Sentiment (Yahoo RSS + VADER, Finnhub optional) ─────────────────────
+
+def _fetch_yahoo_rss_headlines(ticker, max_items=20):
+    """Fetch recent headlines from Yahoo Finance RSS (free, no API key)."""
+    url = f'https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US'
+    try:
+        r = requests.get(url, timeout=10, headers={'User-Agent': USER_AGENT})
+        if r.status_code != 200:
+            return []
+        root = ET.fromstring(r.content)
+        headlines = []
+        for item in root.iter('item'):
+            title = item.findtext('title', '')
+            if title:
+                headlines.append(title)
+            if len(headlines) >= max_items:
+                break
+        return headlines
+    except Exception:
+        return []
+
+
+def _fetch_finnhub_headlines(ticker, finnhub_key, max_items=20):
+    """Fetch recent headlines from Finnhub API (requires API key)."""
+    today = datetime.date.today()
+    from_date = (today - datetime.timedelta(days=30)).strftime('%Y-%m-%d')
+    to_date = today.strftime('%Y-%m-%d')
+    try:
+        url = (f'https://finnhub.io/api/v1/company-news'
+               f'?symbol={ticker}&from={from_date}&to={to_date}'
+               f'&token={finnhub_key}')
+        r = requests.get(url, timeout=10)
+        if r.status_code != 200:
+            return []
+        articles = r.json()
+        return [a.get('headline', '') for a in articles[:max_items] if a.get('headline')]
+    except Exception:
+        return []
+
+
+def _score_headlines_vader(headlines, vader):
+    """Score headlines with VADER. Returns list of compound scores."""
+    return [vader.polarity_scores(h)['compound'] for h in headlines if h]
+
+
+def _score_headlines_keyword(headlines):
+    """Score headlines with keyword heuristic (fallback when VADER unavailable)."""
+    scores = []
+    pos_words = ['beat', 'surge', 'gain', 'profit', 'upgrade',
+                 'growth', 'strong', 'record', 'bullish', 'buy',
+                 'raise', 'exceed', 'outperform', 'rally']
+    neg_words = ['miss', 'fall', 'loss', 'downgrade', 'weak',
+                 'decline', 'bearish', 'sell', 'cut', 'warning',
+                 'layoff', 'recall', 'lawsuit', 'investigation']
+    for h in headlines:
+        if not h:
+            continue
+        hl = h.lower()
+        pos = sum(1 for w in pos_words if w in hl)
+        neg = sum(1 for w in neg_words if w in hl)
+        scores.append((pos - neg) / max(pos + neg, 1))
+    return scores
+
 
 def fetch_news_sentiment(tickers):
     """
-    Fetch recent news headlines via Finnhub and score sentiment.
-    Uses VADER (lightweight) by default; falls back to keyword heuristic.
+    Fetch recent news headlines and score sentiment.
+    Primary source: Yahoo Finance RSS (free, no API key).
+    Upgrade: Finnhub headlines when FINNHUB_KEY is set.
+    Scoring: VADER (vaderSentiment) → keyword heuristic fallback.
     Saves to data/news_sentiment.json.
     """
-    if not FINNHUB_KEY:
-        print('  FINNHUB_KEY not set — skipping news sentiment')
-        return
     if not tickers:
         print('  No tickers for news sentiment')
+        save_json('news_sentiment.json', {
+            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+            'count': 0, 'method': 'none', 'tickers': {},
+        })
         return
 
-    # Try VADER first, then keyword fallback
+    # Load VADER scorer (graceful fallback to keyword heuristic)
     vader = None
     try:
-        from nltk.sentiment.vader import SentimentIntensityAnalyzer
-        import nltk
-        try:
-            vader = SentimentIntensityAnalyzer()
-        except LookupError:
-            nltk.download('vader_lexicon', quiet=True)
-            vader = SentimentIntensityAnalyzer()
+        from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+        vader = SentimentIntensityAnalyzer()
     except ImportError:
-        pass
+        try:
+            from nltk.sentiment.vader import SentimentIntensityAnalyzer
+            import nltk
+            try:
+                vader = SentimentIntensityAnalyzer()
+            except LookupError:
+                nltk.download('vader_lexicon', quiet=True)
+                vader = SentimentIntensityAnalyzer()
+        except ImportError:
+            pass
 
-    print(f'  Fetching news sentiment for {len(tickers)} tickers...')
+    use_finnhub = bool(FINNHUB_KEY)
+    method = 'vader' if vader else 'keyword'
+    source = 'finnhub+yahoo' if use_finnhub else 'yahoo_rss'
+    print(f'  Fetching news sentiment for {len(tickers)} tickers '
+          f'(source: {source}, scorer: {method})...')
+
     sentiment_data = {}
     fetched = 0
     failed = 0
 
-    today = datetime.date.today()
-    from_date = (today - datetime.timedelta(days=30)).strftime('%Y-%m-%d')
-    to_date = today.strftime('%Y-%m-%d')
-
     for ticker in tickers:
         try:
-            url = (f'https://finnhub.io/api/v1/company-news'
-                   f'?symbol={ticker}&from={from_date}&to={to_date}'
-                   f'&token={FINNHUB_KEY}')
-            r = requests.get(url, timeout=10)
-            if r.status_code != 200:
-                failed += 1
-                continue
-            articles = r.json()
-            if not articles:
+            # Primary: Yahoo RSS (always available, no API key)
+            headlines = _fetch_yahoo_rss_headlines(ticker)
+
+            # Upgrade: merge Finnhub headlines if key available
+            if use_finnhub:
+                fh_headlines = _fetch_finnhub_headlines(ticker, FINNHUB_KEY)
+                # Deduplicate by lowercase title
+                seen = {h.lower() for h in headlines}
+                for h in fh_headlines:
+                    if h.lower() not in seen:
+                        headlines.append(h)
+                        seen.add(h.lower())
+
+            if not headlines:
                 continue
 
-            # Score each headline
-            scores = []
-            for art in articles[:20]:  # cap at 20 articles
-                headline = art.get('headline', '')
-                if not headline:
-                    continue
-                if vader:
-                    sc = vader.polarity_scores(headline)
-                    scores.append(sc['compound'])
-                else:
-                    # Simple keyword heuristic
-                    hl = headline.lower()
-                    pos = sum(1 for w in ['beat', 'surge', 'gain', 'profit', 'upgrade',
-                                          'growth', 'strong', 'record', 'bullish', 'buy']
-                              if w in hl)
-                    neg = sum(1 for w in ['miss', 'fall', 'loss', 'downgrade', 'weak',
-                                          'decline', 'bearish', 'sell', 'cut', 'warning']
-                              if w in hl)
-                    scores.append((pos - neg) / max(pos + neg, 1))
+            # Score headlines
+            if vader:
+                scores = _score_headlines_vader(headlines, vader)
+            else:
+                scores = _score_headlines_keyword(headlines)
 
             if scores:
                 avg_score = round(sum(scores) / len(scores), 4)
+                strong_pos = sum(1 for s in scores if s > 0.5)
+                strong_neg = sum(1 for s in scores if s < -0.5)
                 sentiment_data[ticker] = {
                     'sentiment_30d': avg_score,
                     'article_count': len(scores),
                     'positive_pct': round(sum(1 for s in scores if s > 0.05) / len(scores), 3),
+                    'strong_positive_count': strong_pos,
+                    'strong_negative_count': strong_neg,
                 }
                 fetched += 1
         except Exception:
             failed += 1
-        time.sleep(0.3)
+        time.sleep(0.25)  # Rate-limit for RSS
 
-    if sentiment_data:
-        save_json('news_sentiment.json', {
-            'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-            'count': len(sentiment_data),
-            'method': 'vader' if vader else 'keyword',
-            'tickers': sentiment_data,
-        })
-    print(f'  News sentiment: {fetched} tickers fetched, {failed} failed'
-          f' (method: {"vader" if vader else "keyword"})')
+    save_json('news_sentiment.json', {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'count': len(sentiment_data),
+        'method': method,
+        'source': source,
+        'tickers': sentiment_data,
+    })
+    print(f'  News sentiment: {fetched} tickers scored, {failed} failed '
+          f'({method} via {source})')
 
 
 # ── Committee Membership Data (GitHub unitedstates/congress-legislators) ─────
@@ -1290,6 +1813,204 @@ def fetch_committee_data():
     print(f'  Committee data: {len(member_map)} members across {len(committee_info)} committees')
 
 
+# ── Short Interest Data (yfinance) ─────────────────────────────────────────────
+
+def fetch_short_interest(tickers):
+    """Fetch short interest data for tickers via yfinance.
+
+    Collects: shortPercentOfFloat, sharesShort, sharesShortPriorMonth, shortRatio (days to cover).
+    Saves to data/short_interest.json.
+    """
+    if not tickers:
+        print('  No tickers for short interest')
+        return
+
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping short interest')
+        return
+
+    si_data = {}
+    errors = 0
+    for ticker in tickers:
+        try:
+            info = yf.Ticker(ticker).info
+            short_pct = info.get('shortPercentOfFloat')
+            shares_short = info.get('sharesShort')
+            shares_prior = info.get('sharesShortPriorMonth')
+            short_ratio = info.get('shortRatio')
+
+            if short_pct is not None or shares_short is not None:
+                entry = {
+                    'short_pct_float': round(short_pct, 4) if short_pct else None,
+                    'shares_short': shares_short,
+                    'shares_short_prior': shares_prior,
+                    'short_ratio': round(short_ratio, 2) if short_ratio else None,
+                }
+                # Compute change vs prior month
+                if shares_short and shares_prior and shares_prior > 0:
+                    entry['short_change_pct'] = round(
+                        (shares_short - shares_prior) / shares_prior, 4)
+                si_data[ticker] = entry
+            time.sleep(0.15)
+        except Exception as e:
+            errors += 1
+            if errors <= 3:
+                print(f'  Short interest error for {ticker}: {e}')
+
+    result = {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'source': 'yfinance',
+        'tickers': si_data,
+    }
+    save_json('short_interest.json', result)
+    print(f'  Short interest: {len(si_data)} tickers ({errors} errors)')
+
+
+# ── Options Flow Data (yfinance) ───────────────────────────────────────────────
+
+def fetch_options_data(tickers):
+    """Fetch options chain data for tickers via yfinance.
+
+    Computes: put/call ratio, bullish/bearish signal, unusual OTM call activity.
+    Saves to data/options_flow.json.
+    """
+    if not tickers:
+        print('  No tickers for options data')
+        return
+
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping options data')
+        return
+
+    options_data = {}
+    errors = 0
+    for ticker in tickers[:50]:  # limit to top 50 signal tickers
+        try:
+            t = yf.Ticker(ticker)
+            expirations = t.options
+            if not expirations:
+                continue
+
+            # Use nearest 2 expiries for signal
+            near_expiries = expirations[:2]
+            total_call_vol = 0
+            total_put_vol = 0
+            unusual_strikes = []
+
+            for expiry in near_expiries:
+                try:
+                    chain = t.option_chain(expiry)
+                    calls = chain.calls
+                    puts = chain.puts
+
+                    call_vol = calls['volume'].fillna(0).sum()
+                    put_vol = puts['volume'].fillna(0).sum()
+                    total_call_vol += call_vol
+                    total_put_vol += put_vol
+
+                    # Flag unusual volume: OTM calls with high vol
+                    price = t.info.get('currentPrice') or t.info.get('regularMarketPrice', 0)
+                    if price and price > 0:
+                        otm_calls = calls[calls['strike'] > price * 1.05]
+                        if not otm_calls.empty and otm_calls['volume'].mean() > 0:
+                            high_vol_otm = otm_calls[
+                                otm_calls['volume'] > otm_calls['volume'].mean() * 3
+                            ]
+                            if not high_vol_otm.empty:
+                                unusual_strikes.append({
+                                    'expiry': expiry,
+                                    'strike': float(high_vol_otm['strike'].iloc[0]),
+                                    'volume': int(high_vol_otm['volume'].iloc[0]),
+                                    'type': 'OTM_call',
+                                })
+                except Exception:
+                    continue
+
+            if total_call_vol + total_put_vol == 0:
+                continue
+
+            pc_ratio = (total_put_vol / total_call_vol
+                        if total_call_vol > 0 else None)
+
+            options_data[ticker] = {
+                'call_volume': int(total_call_vol),
+                'put_volume': int(total_put_vol),
+                'put_call_ratio': round(pc_ratio, 3) if pc_ratio else None,
+                'bullish_options': pc_ratio < 0.7 if pc_ratio else False,
+                'bearish_options': pc_ratio > 1.5 if pc_ratio else False,
+                'unusual_otm_calls': len(unusual_strikes) > 0,
+                'unusual_strikes': unusual_strikes[:3],
+            }
+            time.sleep(0.3)
+
+        except Exception as e:
+            errors += 1
+            if errors <= 3:
+                print(f'  Options data error for {ticker}: {e}')
+
+    result = {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'source': 'yfinance',
+        'tickers': options_data,
+    }
+    save_json('options_flow.json', result)
+    print(f'  Options data: {len(options_data)} tickers ({errors} errors)')
+
+
+# ── 13F Institutional Ownership (yfinance) ────────────────────────────────────
+
+def fetch_institutional_data(tickers):
+    """Fetch institutional holder data for tickers via yfinance.
+
+    Collects: number of institutional holders, total institutional ownership %,
+    top holder names. Source: yfinance .institutional_holders property.
+    Saves to data/institutional_data.json.
+    """
+    if not tickers:
+        print('  No tickers for institutional data')
+        return
+
+    try:
+        import yfinance as yf
+    except ImportError:
+        print('  yfinance not installed — skipping institutional data')
+        return
+
+    inst_data = {}
+    errors = 0
+    for ticker in tickers[:50]:  # limit to top 50 signal tickers
+        try:
+            t = yf.Ticker(ticker)
+            holders = t.institutional_holders
+            if holders is not None and not holders.empty:
+                n_holders = len(holders)
+                # pctHeld is fractional (0.08 = 8%)
+                total_pct = holders['pctHeld'].sum() if 'pctHeld' in holders.columns else None
+                top_names = holders['Holder'].head(5).tolist() if 'Holder' in holders.columns else []
+                inst_data[ticker] = {
+                    'n_holders': n_holders,
+                    'total_pct_held': round(float(total_pct), 4) if total_pct is not None else None,
+                    'top_holders': top_names,
+                }
+            time.sleep(0.3)
+        except Exception as e:
+            errors += 1
+            if errors <= 3:
+                print(f'  Institutional data error for {ticker}: {e}')
+
+    result = {
+        'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+        'source': 'yfinance',
+        'tickers': inst_data,
+    }
+    save_json('institutional_data.json', result)
+    print(f'  Institutional data: {len(inst_data)} tickers ({errors} errors)')
+
+
 # ── Market Context Data (VIX + 10yr Treasury) ────────────────────────────────
 def fetch_market_data():
     """
@@ -1332,147 +2053,145 @@ def fetch_market_data():
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+def _quiet_run(fn, *args, **kwargs):
+    """Run fn with stdout captured to log file. Returns (result, captured_output)."""
+    import io, contextlib
+    buf = io.StringIO()
+    result = None
+    try:
+        with contextlib.redirect_stdout(buf):
+            result = fn(*args, **kwargs)
+    except Exception as e:
+        buf.write(f'ERROR: {e}\n')
+        raise
+    finally:
+        output = buf.getvalue()
+        if output.strip():
+            log_path = os.path.join(LOG_DIR, 'fetch_verbose.log')
+            with open(log_path, 'a') as f:
+                f.write(f'\n--- {fn.__name__} {datetime.datetime.now(datetime.UTC).isoformat()} ---\n')
+                f.write(output)
+    return result
+
+
 def main():
-    print(f'\n=== ATLAS Data Fetcher — {datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M")} UTC ===\n')
+    t0 = time.time()
+    verbose = '--verbose' in sys.argv
+    now_str = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M")
+    print(f'=== FETCH {now_str} UTC ===')
 
     # ── Market context (VIX + 10yr yield from FRED) ────────────────────────
-    print('Fetching market context data (FRED)...')
-    fetch_market_data()
+    try:
+        _quiet_run(fetch_market_data)
+        # Read back VIX/Treasury from saved file
+        mkt_path = os.path.join(DATA_DIR, 'market_data.json')
+        vix_str = treasury_str = '?'
+        if os.path.exists(mkt_path):
+            with open(mkt_path) as f:
+                mkt = json.load(f)
+            vix_str = str(round(mkt.get('vix', {}).get('value', 0), 2))
+            treasury_str = str(round(mkt.get('treasury_10y', {}).get('value', 0), 2))
+        print(f'[FRED]      VIX: {vix_str}  Treasury: {treasury_str}  ✓')
+    except Exception as e:
+        print(f'[FRED]      ✗ {e}')
 
     # ── EDGAR Form 4 feed ──────────────────────────────────────────────────
-    print('Fetching EDGAR Form 4 filings (last 90 days, weekly windows)...')
     try:
-        filings = fetch_edgar_form4(days=90, max_results=1500, window_days=7)
-        print(f'  {len(filings)} filings from EFTS index (across {90 // 7} windows)')
-
-        # Enrich with Form 4 XML data (ticker, role, amounts, buy/sell)
-        print('  Enriching filings from Form 4 XML (~25s per 200 filings)...')
-        filings = enrich_form4_xml(filings)
-
-        save_json('edgar_feed.json', {
+        filings = _quiet_run(fetch_edgar_form4, days=90, max_results=1500, window_days=7)
+        n_fetched = len(filings) if filings else 0
+        filings = _quiet_run(enrich_form4_xml, filings)
+        n_enriched = len(filings) if filings else 0
+        _quiet_run(save_json, 'edgar_feed.json', {
             'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-            'count': len(filings),
+            'count': n_enriched,
             'source': 'SEC EDGAR EFTS + Form 4 XML',
             'filings': filings,
         })
-        print(f'  {len(filings)} enriched Form 4 filings saved')
+        print(f'[EDGAR]     {n_fetched} fetched  |  {n_enriched} enriched  ✓')
     except Exception as e:
-        import traceback
-        print(f'  EDGAR error: {e}')
-        traceback.print_exc()
+        print(f'[EDGAR]     ✗ {e}')
 
-    # ── Congressional trades (FMP) ────────────────────────────────────────
+    # ── Congressional trades ───────────────────────────────────────────────
     congress_trades = []
     congress_source = []
-
-    # FMP congressional trades (primary source if API key set)
-    # --bootstrap flag fetches 30 pages per chamber (~6000 trades, back to ~2022)
     fmp_pages = 30 if '--bootstrap' in sys.argv else 10
+
     if FMP_API_KEY:
-        print(f'\nFetching congressional trades (FMP, {fmp_pages} pages/chamber)...')
         try:
-            fmp_trades = fetch_fmp_congress(FMP_API_KEY, pages=fmp_pages)
+            fmp_trades = _quiet_run(fetch_fmp_congress, FMP_API_KEY, pages=fmp_pages)
             if fmp_trades:
-                # Save raw FMP data separately
-                save_json('fmp_congress_feed.json', {
+                _quiet_run(save_json, 'fmp_congress_feed.json', {
                     'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-                    'count': len(fmp_trades),
-                    'source': 'FMP',
-                    'trades': fmp_trades,
+                    'count': len(fmp_trades), 'source': 'FMP', 'trades': fmp_trades,
                 })
-                print(f'  {len(fmp_trades)} FMP congressional trades saved')
                 congress_trades.extend(fmp_trades)
                 congress_source.append('FMP')
         except Exception as e:
-            print(f'  FMP congress error: {e}')
-    else:
-        print('\nFMP_API_KEY not set — skipping FMP congressional trades')
+            print(f'[CONGRESS]  FMP error: {e}')
 
-    # House Financial Disclosures (direct scraper — no API key needed)
-    house_trades = []
+    # House scraper
     try:
-        print('\nFetching House financial disclosures (direct scraper)...')
-        house_trades = fetch_house_disclosures()
+        house_trades = _quiet_run(fetch_house_disclosures)
         if house_trades:
             congress_source.append('House')
-            # Count how many are genuinely new (not in FMP data)
-            fmp_keys = set()
-            for t in congress_trades:
-                fmp_keys.add((
-                    t.get('Ticker', ''),
-                    t.get('TransactionDate', ''),
-                    t.get('Representative', ''),
-                    t.get('Transaction', ''),
-                ))
-            house_new = sum(
-                1 for t in house_trades
-                if (t['Ticker'], t['TransactionDate'], t['Representative'], t['Transaction']) not in fmp_keys
-            )
             congress_trades.extend(house_trades)
-            print(f'  House scraper: {len(house_trades)} total, {house_new} new (not in FMP)')
-    except Exception as e:
-        print(f'  House scraper failed, FMP-only fallback: {e}')
+    except Exception:
+        pass
 
-    # ── Insider trades (FMP) ─────────────────────────────────────────────
-    if FMP_API_KEY:
-        insider_pages = 30 if '--bootstrap' in sys.argv else 10
-        print(f'\nFetching insider trades (FMP, {insider_pages} pages, purchases only)...')
-        try:
-            insiders = fetch_fmp_insiders(FMP_API_KEY, pages=insider_pages)
-            if insiders:
-                save_json('insiders_feed.json', {
-                    'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-                    'count': len(insiders),
-                    'source': 'FMP',
-                    'trades': insiders,
-                })
-                print(f'  {len(insiders)} insider purchase trades saved')
-            else:
-                print('  No insider trades returned from FMP')
-        except Exception as e:
-            print(f'  FMP insiders error: {e}')
-    else:
-        print('\nFMP_API_KEY not set — skipping insider trades')
+    # Senate scraper
+    try:
+        senate_trades = _quiet_run(fetch_senate_disclosures)
+        if senate_trades:
+            congress_source.append('Senate')
+            congress_trades.extend(senate_trades)
+    except Exception:
+        pass
 
-    # Merge and deduplicate combined congressional trades
+    # Merge and deduplicate
+    n_purchases = 0
     if congress_trades:
-        # Dedup by (Ticker, TransactionDate, Representative, Transaction)
-        # When duplicate exists in both FMP + House, prefer House record (fresher)
-        seen = {}  # key → trade dict
+        seen = {}
         for t in congress_trades:
-            key = (
-                t.get('Ticker', ''),
-                t.get('TransactionDate', t.get('Date', '')),
-                t.get('Representative', ''),
-                t.get('Transaction', ''),
-            )
+            key = (t.get('Ticker', ''), t.get('TransactionDate', t.get('Date', '')),
+                   t.get('Representative', ''), t.get('Transaction', ''))
             if key not in seen:
                 seen[key] = t
-            elif t.get('Source') == 'House' and seen[key].get('Source') != 'House':
-                seen[key] = t  # prefer House record
-        merged = list(seen.values())
-        # Sort most recent first
-        merged.sort(
-            key=lambda x: x.get('TransactionDate', x.get('Date', '')),
-            reverse=True,
-        )
+            elif t.get('Source') in ('House', 'Senate') and seen[key].get('Source') not in ('House', 'Senate'):
+                seen[key] = t
+        merged = sorted(seen.values(), key=lambda x: x.get('TransactionDate', x.get('Date', '')), reverse=True)
+        n_purchases = sum(1 for t in merged if 'purchase' in str(t.get('Transaction', '')).lower())
         source_label = ' + '.join(congress_source)
-        save_json('congress_feed.json', {
+        _quiet_run(save_json, 'congress_feed.json', {
             'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
-            'count': len(merged),
-            'source': source_label,
-            'trades': merged,
+            'count': len(merged), 'source': source_label, 'trades': merged,
         })
-        print(f'  Combined: {len(merged)} unique congressional trades ({source_label})')
+        status = '✓' if n_purchases > 0 else '⚠'
+        print(f'[CONGRESS]  {len(merged)} fetched  |  {n_purchases} purchases  {status}')
+    else:
+        print('[CONGRESS]  0 fetched  ⚠')
 
-    # ── SEC ticker map (for EDGAR→ticker matching) ────────────────────
-    print('\nFetching SEC company→ticker map...')
+    # ── FMP Insider trades ─────────────────────────────────────────────────
+    if FMP_API_KEY:
+        insider_pages = 30 if '--bootstrap' in sys.argv else 10
+        try:
+            insiders = _quiet_run(fetch_fmp_insiders, FMP_API_KEY, pages=insider_pages)
+            if insiders:
+                _quiet_run(save_json, 'insiders_feed.json', {
+                    'updated': datetime.datetime.now(datetime.UTC).isoformat() + 'Z',
+                    'count': len(insiders), 'source': 'FMP', 'trades': insiders,
+                })
+                print(f'[INSIDERS]  {len(insiders)} purchases  ✓')
+            else:
+                print('[INSIDERS]  0 returned  ⚠')
+        except Exception as e:
+            print(f'[INSIDERS]  ✗ {e}')
+
+    # ── SEC ticker map ─────────────────────────────────────────────────────
     try:
         sec_url = 'https://www.sec.gov/files/company_tickers.json'
         r = requests.get(sec_url, headers={'User-Agent': USER_AGENT}, timeout=15)
         r.raise_for_status()
         raw = r.json()
-        # Build name→ticker (prefer shortest ticker = common stock)
         cik_best = {}
         for entry in raw.values():
             cik = entry['cik_str']
@@ -1481,66 +2200,69 @@ def main():
             if cik not in cik_best or len(ticker) < len(cik_best[cik][1]):
                 cik_best[cik] = (title, ticker)
         sec_map = {name: ticker for name, ticker in cik_best.values()}
-        save_json('sec_tickers.json', sec_map)
-        print(f'  {len(sec_map)} company→ticker mappings saved')
-    except Exception as e:
-        print(f'  SEC ticker map error: {e}')
+        _quiet_run(save_json, 'sec_tickers.json', sec_map)
+    except Exception:
+        pass
 
-    # ── Volume + Analyst data (yfinance) ─────────────────────────────────
-    # Collect unique tickers from recent signals (congress + insiders)
+    # ── Ticker universe for enrichment ─────────────────────────────────────
     signal_tickers = set()
     if congress_trades:
         for t in congress_trades:
             ticker = t.get('Ticker', '')
-            if ticker and len(ticker) <= 5:
+            if ticker and len(ticker) <= 5 and ticker not in SUPPRESSED_TICKERS:
                 signal_tickers.add(ticker)
-    # Also try loading existing brain signals for ticker list
     try:
         brain_path = os.path.join(DATA_DIR, 'brain_signals.json')
         if os.path.exists(brain_path):
             with open(brain_path) as f:
                 brain = json.load(f)
             for s in brain.get('signals', []):
-                if s.get('ticker'):
-                    signal_tickers.add(s['ticker'])
+                t = s.get('ticker', '')
+                if t and t not in SUPPRESSED_TICKERS:
+                    signal_tickers.add(t)
     except Exception:
         pass
 
-    if signal_tickers:
-        tickers_list = sorted(signal_tickers)[:100]  # cap at 100 to limit API calls
+    tickers_list = sorted(signal_tickers)[:100] if signal_tickers else []
+    n_tickers = len(tickers_list)
 
-        print(f'\nFetching volume data ({len(tickers_list)} tickers)...')
-        try:
-            fetch_volume_data(tickers_list)
-        except Exception as e:
-            print(f'  Volume data error (skipped): {e}')
+    if tickers_list:
+        enrichment_sources = [
+            ('VOLUME',    fetch_volume_data,        tickers_list),
+            ('ANALYST',   fetch_analyst_data,        tickers_list),
+            ('EARNINGS',  fetch_earnings_surprise,   tickers_list),
+            ('SENTIMENT', fetch_news_sentiment,      tickers_list),
+            ('SHORT',     fetch_short_interest,      tickers_list),
+            ('INST',      fetch_institutional_data,  tickers_list),
+            ('OPTIONS',   fetch_options_data,        tickers_list),
+        ]
+        for label, fn, args in enrichment_sources:
+            try:
+                _quiet_run(fn, args)
+                print(f'[{label:10s}] {n_tickers} tickers  ✓')
+            except Exception as e:
+                print(f'[{label:10s}] ✗ {e}')
 
-        print(f'\nFetching analyst data ({len(tickers_list)} tickers)...')
-        try:
-            fetch_analyst_data(tickers_list)
-        except Exception as e:
-            print(f'  Analyst data error (skipped): {e}')
-
-        print(f'\nFetching earnings surprise ({len(tickers_list)} tickers)...')
-        try:
-            fetch_earnings_surprise(tickers_list)
-        except Exception as e:
-            print(f'  Earnings surprise error (skipped): {e}')
-
-        print(f'\nFetching news sentiment ({len(tickers_list)} tickers)...')
-        try:
-            fetch_news_sentiment(tickers_list)
-        except Exception as e:
-            print(f'  News sentiment error (skipped): {e}')
-
-    # ── Committee membership (GitHub, no API key) ─────────────────────────
-    print('\nFetching committee membership data...')
+    # ── Committee membership ───────────────────────────────────────────────
     try:
-        fetch_committee_data()
-    except Exception as e:
-        print(f'  Committee data error (skipped): {e}')
+        _quiet_run(fetch_committee_data)
+    except Exception:
+        pass
 
-    print('\nDone.\n')
+    # ── Quiver Quant (Mondays only) ────────────────────────────────────────
+    if datetime.date.today().weekday() == 0 or '--force-quiver' in sys.argv:
+        if tickers_list:
+            try:
+                _quiet_run(fetch_lobbying_data, tickers_list)
+            except Exception:
+                pass
+        try:
+            _quiet_run(fetch_quiver_committee_data)
+        except Exception:
+            pass
+
+    elapsed = time.time() - t0
+    print(f'=== DONE ({elapsed:.0f}s) ===')
 
 
 if __name__ == '__main__':

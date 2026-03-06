@@ -62,7 +62,7 @@ DEFAULT_WEIGHTS = {
 }
 
 BENCHMARK = "SPY"
-LOOKBACK_DAYS = 365
+LOOKBACK_DAYS = 2920
 RATE_LIMIT_SLEEP = 0.5  # seconds between yfinance calls (rate-limit courtesy)
 
 SEC_TICKER_MAP_URL = "https://www.sec.gov/files/company_tickers.json"
@@ -78,10 +78,24 @@ def load_json(path: Path) -> dict:
         return json.load(f)
 
 
+def _sanitize_for_json(obj):
+    """Recursively replace NaN/Infinity with None for valid JSON."""
+    import math
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize_for_json(v) for v in obj]
+    return obj
+
+
 def save_json(path: Path, data) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w') as f:
-        json.dump(data, f, indent=2, default=str)
+        json.dump(_sanitize_for_json(data), f, indent=2, default=str)
 
 
 def load_sec_ticker_map() -> dict:

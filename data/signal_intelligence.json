@@ -1,0 +1,179 @@
+{
+  "generated": "2026-03-05T22:31:38.067527+00:00",
+  "total_signals": 6963,
+  "best_50": {
+    "label": "best_50",
+    "n": 50,
+    "avg_score": 68.7,
+    "avg_oos": 47.4,
+    "avg_car": 140.41,
+    "avg_vix": 20.0,
+    "avg_days_to_earnings": 252.8,
+    "top_roles": {
+      "Director": 17,
+      "CEO": 15,
+      "10% Owner": 7
+    },
+    "top_sectors": {
+      "Healthcare": 24,
+      "Financial Services": 7,
+      "Energy": 5
+    },
+    "source_split": {
+      "edgar": 50
+    },
+    "examples": [
+      {
+        "ticker": "UMAC",
+        "signal_date": "2024-10-31",
+        "car_30d": 3.0,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "UMAC",
+        "signal_date": "2024-10-31",
+        "car_30d": 3.0,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "UMAC",
+        "signal_date": "2024-10-31",
+        "car_30d": 3.0,
+        "insider_role": "CEO"
+      },
+      {
+        "ticker": "WBHC",
+        "signal_date": "2024-01-31",
+        "car_30d": 3.0,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "GLSI",
+        "signal_date": "2020-11-27",
+        "car_30d": 3.0,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "PIII",
+        "signal_date": "2023-04-28",
+        "car_30d": 2.448819,
+        "insider_role": "10% Owner"
+      },
+      {
+        "ticker": "GNLX",
+        "signal_date": "2023-01-31",
+        "car_30d": 2.300157,
+        "insider_role": "VP"
+      },
+      {
+        "ticker": "EVFM",
+        "signal_date": "2022-05-31",
+        "car_30d": 1.972222,
+        "insider_role": "CEO"
+      },
+      {
+        "ticker": "BRN",
+        "signal_date": "2020-12-31",
+        "car_30d": 1.9133,
+        "insider_role": "10% Owner"
+      },
+      {
+        "ticker": "GLSI",
+        "signal_date": "2025-11-28",
+        "car_30d": 1.811775,
+        "insider_role": "CEO"
+      }
+    ]
+  },
+  "worst_50": {
+    "label": "worst_50",
+    "n": 50,
+    "avg_score": 26.0,
+    "avg_oos": 50.8,
+    "avg_car": -57.0,
+    "avg_vix": 19.9,
+    "avg_days_to_earnings": 351.7,
+    "top_roles": {
+      "Director": 20,
+      "10% Owner": 10,
+      "CEO": 9
+    },
+    "top_sectors": {
+      "Healthcare": 22,
+      "Communication Services": 7,
+      "Financial Services": 7
+    },
+    "source_split": {
+      "edgar": 47,
+      "congress": 3
+    },
+    "examples": [
+      {
+        "ticker": "SPRY",
+        "signal_date": "2023-08-31",
+        "car_30d": -0.473907,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "SPRY",
+        "signal_date": "2023-08-31",
+        "car_30d": -0.473907,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "SPRY",
+        "signal_date": "2023-08-31",
+        "car_30d": -0.473907,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "ANGX",
+        "signal_date": "2024-09-30",
+        "car_30d": -0.474615,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "ANGX",
+        "signal_date": "2024-09-30",
+        "car_30d": -0.474615,
+        "insider_role": "President"
+      },
+      {
+        "ticker": "ANGX",
+        "signal_date": "2024-09-30",
+        "car_30d": -0.474615,
+        "insider_role": "Officer"
+      },
+      {
+        "ticker": "ANGX",
+        "signal_date": "2024-09-30",
+        "car_30d": -0.474615,
+        "insider_role": "CEO"
+      },
+      {
+        "ticker": "ANGX",
+        "signal_date": "2024-09-30",
+        "car_30d": -0.474615,
+        "insider_role": "Director"
+      },
+      {
+        "ticker": "BJRI",
+        "signal_date": "2020-02-28",
+        "car_30d": -0.477831,
+        "insider_role": "VP"
+      },
+      {
+        "ticker": "CTTH",
+        "signal_date": "2023-10-31",
+        "car_30d": -0.481481,
+        "insider_role": "CEO"
+      }
+    ]
+  },
+  "divergence": {
+    "score_gap": 42.6,
+    "oos_gap": -3.4,
+    "vix_gap": 0.1,
+    "earnings_gap": -98.9
+  }
+}

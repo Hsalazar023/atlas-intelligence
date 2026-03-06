@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS Signal Dashboard</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
+  --amber: #d29922;
+  --blue: #58a6ff;
+  --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+  background: var(--bg); color: var(--text);
+  font-size: 13px; line-height: 1.5;
+  padding: 16px;
+}
+h1 { font-size: 18px; font-weight: 600; }
+h2 { font-size: 14px; font-weight: 600; color: var(--blue); margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; margin-bottom: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-title { font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+.header-meta { color: var(--text-dim); font-size: 11px; }
+
+.regime-banner {
+  padding: 10px 16px; border-radius: 6px; margin-bottom: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; font-weight: 600;
+}
+.regime-OPTIMAL { background: #0d2818; border: 1px solid var(--green); color: var(--green); }
+.regime-LOW_VOL { background: #2d1f00; border: 1px solid var(--amber); color: var(--amber); }
+.regime-ELEVATED { background: #2d1f00; border: 1px solid var(--amber); color: var(--amber); }
+.regime-HIGH_VOL { background: #2d0d0d; border: 1px solid var(--red); color: var(--red); }
+.regime-CRISIS { background: #2d0d0d; border: 1px solid var(--red); color: var(--red); }
+.regime-UNKNOWN { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); }
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px; margin-bottom: 12px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px 12px;
+}
+.stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 18px; font-weight: 700; margin-top: 2px; }
+
+table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 6px; overflow: hidden; }
+th {
+  background: #1c2128; text-align: left; padding: 8px 10px;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-dim); border-bottom: 1px solid var(--border);
+}
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 12px; }
+tr:hover { background: #1c2128; }
+
+.pnl-pos { color: var(--green); }
+.pnl-neg { color: var(--red); }
+.pnl-flat { color: var(--text-dim); }
+.stop-triggered { color: var(--red); font-weight: 700; }
+.badge {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 10px; font-weight: 600;
+}
+.badge-active { background: #0d2818; color: var(--green); }
+.badge-expired { background: #1c1c1c; color: var(--text-dim); }
+.badge-high-cost { background: #2d1f00; color: var(--amber); }
+.badge-ok { background: #0d2818; color: var(--green); }
+
+.score-bar {
+  width: 50px; height: 6px; background: var(--border); border-radius: 3px;
+  display: inline-block; vertical-align: middle; margin-left: 6px;
+}
+.score-fill { height: 100%; border-radius: 3px; }
+
+.section { margin-bottom: 16px; }
+.section-table { border: 1px solid var(--border); border-radius: 6px; overflow-x: auto; }
+
+.health-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.health-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 12px; font-size: 11px;
+}
+.health-ok { border-left: 3px solid var(--green); }
+.health-warn { border-left: 3px solid var(--amber); }
+.health-critical { border-left: 3px solid var(--red); }
+
+#loading { text-align: center; padding: 60px; color: var(--text-dim); }
+#error { text-align: center; padding: 40px; color: var(--red); display: none; }
+
+.kelly-bar {
+  width: 60px; height: 8px; background: var(--border); border-radius: 4px;
+  display: inline-block; vertical-align: middle;
+}
+.kelly-fill { height: 100%; border-radius: 4px; background: var(--cyan); }
+</style>
+</head>
+<body>
+
+<div id="loading">Loading brain_signals.json...</div>
+<div id="error">Failed to load data. Serve this directory:<br><code>python3 -m http.server 8080</code></div>
+<div id="app" style="display:none">
+
+  <div class="header">
+    <div class="header-left">
+      <span class="header-title">ATLAS SIGNAL DASHBOARD</span>
+      <span class="header-meta" id="last-updated"></span>
+    </div>
+    <div class="header-meta" id="header-ic"></div>
+  </div>
+
+  <div id="regime-banner" class="regime-banner regime-UNKNOWN"></div>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="section">
+    <h2>Active Positions <span id="active-count" style="color:var(--text-dim)"></span></h2>
+    <div class="section-table"><table id="active-table"></table></div>
+  </div>
+
+  <div class="section">
+    <h2>New Signals (last 7 days) <span id="new-count" style="color:var(--text-dim)"></span></h2>
+    <div class="section-table"><table id="new-table"></table></div>
+  </div>
+
+  <div class="section">
+    <h2>Expired / Closed <span id="expired-count" style="color:var(--text-dim)"></span></h2>
+    <div class="section-table"><table id="expired-table"></table></div>
+  </div>
+
+  <div class="section">
+    <h2>Health</h2>
+    <div class="health-row" id="health-row"></div>
+  </div>
+
+</div>
+
+<script>
+const DATA_URL = 'data/brain_signals.json';
+const STATS_URL = 'data/brain_stats.json';
+const HEALTH_URL = 'data/brain_health.json';
+
+async function loadJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: ${r.status}`);
+  return r.json();
+}
+
+function pnlClass(v) {
+  if (v === null || v === undefined) return 'pnl-flat';
+  return v > 0 ? 'pnl-pos' : v < 0 ? 'pnl-neg' : 'pnl-flat';
+}
+
+function fmtPct(v, decimals=1) {
+  if (v === null || v === undefined) return '—';
+  return (v >= 0 ? '+' : '') + (v * 100).toFixed(decimals) + '%';
+}
+
+function fmtPrice(v) {
+  if (v === null || v === undefined) return '—';
+  return '$' + v.toFixed(2);
+}
+
+function fmtScore(v) {
+  if (v === null || v === undefined) return '—';
+  const color = v >= 80 ? 'var(--green)' : v >= 60 ? 'var(--amber)' : 'var(--text-dim)';
+  return `<span style="color:${color};font-weight:600">${v.toFixed(0)}</span>` +
+    `<span class="score-bar"><span class="score-fill" style="width:${Math.min(v,100)}%;background:${color}"></span></span>`;
+}
+
+function fmtKelly(v) {
+  if (!v) return '—';
+  const pct = (v * 100).toFixed(1);
+  const width = Math.min(v / 0.15 * 100, 100);
+  return `${pct}%<span class="kelly-bar"><span class="kelly-fill" style="width:${width}%"></span></span>`;
+}
+
+function daysBadge(days, remaining) {
+  if (remaining > 0) return `<span class="badge badge-active">${remaining}d left</span>`;
+  return `<span class="badge badge-expired">EXPIRED</span>`;
+}
+
+function liquidityBadge(flag) {
+  if (!flag) return '';
+  return flag === 'HIGH_COST'
+    ? '<span class="badge badge-high-cost">HIGH COST</span>'
+    : '<span class="badge badge-ok">OK</span>';
+}
+
+function renderRegime(ctx) {
+  const el = document.getElementById('regime-banner');
+  if (!ctx || !ctx.regime) {
+    el.textContent = 'Regime: Unknown';
+    return;
+  }
+  el.className = `regime-banner regime-${ctx.regime}`;
+  el.innerHTML = `
+    <span>VIX ${ctx.current_vix || '?'} &mdash; ${ctx.regime} ZONE &mdash; Model multiplier: ${ctx.multiplier.toFixed(2)}x</span>
+    <span style="font-weight:400;font-size:11px">${ctx.note || ''}</span>
+  `;
+}
+
+function renderStats(data, stats) {
+  const signals = data.signals || [];
+  const active = signals.filter(s => s.position_status === 'ACTIVE');
+  const avgPnl = active.reduce((s, x) => s + (x.unrealized_pnl_pct || 0), 0) / (active.length || 1);
+  const stopTriggered = active.filter(s => s.stop_loss_triggered).length;
+
+  const ic = stats && stats.oos_ic ? stats.oos_ic.toFixed(4) : '—';
+  const cards = [
+    { label: 'Active Positions', value: active.length },
+    { label: 'Avg Unrealized P&L', value: fmtPct(avgPnl), cls: pnlClass(avgPnl) },
+    { label: 'Stops Triggered', value: stopTriggered, cls: stopTriggered > 0 ? 'pnl-neg' : 'pnl-flat' },
+    { label: 'Walk-Forward IC', value: ic },
+    { label: 'Total Signals', value: signals.length },
+  ];
+
+  const row = document.getElementById('stats-row');
+  row.innerHTML = cards.map(c =>
+    `<div class="stat-card">
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value ${c.cls || ''}">${c.value}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('header-ic').textContent = `IC: ${ic}`;
+}
+
+function renderTable(tableId, signals, columns) {
+  const table = document.getElementById(tableId);
+  if (!signals.length) {
+    table.innerHTML = '<tr><td style="padding:20px;color:var(--text-dim);text-align:center">No signals</td></tr>';
+    return;
+  }
+  const head = '<tr>' + columns.map(c => `<th>${c.label}</th>`).join('') + '</tr>';
+  const rows = signals.map(s => {
+    const cells = columns.map(c => `<td>${c.render(s)}</td>`).join('');
+    return `<tr>${cells}</tr>`;
+  }).join('');
+  table.innerHTML = head + rows;
+}
+
+function renderActive(signals) {
+  const active = signals
+    .filter(s => s.position_status === 'ACTIVE')
+    .sort((a, b) => (b.unrealized_pnl_pct || 0) - (a.unrealized_pnl_pct || 0));
+
+  document.getElementById('active-count').textContent = `(${active.length})`;
+
+  const cols = [
+    { label: 'Ticker', render: s => `<strong>${s.ticker}</strong>` },
+    { label: 'Score', render: s => fmtScore(s.total_score) },
+    { label: 'OOS', render: s => s.oos_score != null ? s.oos_score.toFixed(0) : '—' },
+    { label: 'Entry', render: s => fmtPrice(s.price_at_signal) },
+    { label: 'Current', render: s => fmtPrice(s.current_price) },
+    { label: 'P&L', render: s => `<span class="${pnlClass(s.unrealized_pnl_pct)}">${fmtPct(s.unrealized_pnl_pct)}</span>` },
+    { label: 'Days', render: s => daysBadge(s.days_held, s.days_remaining) },
+    { label: 'Stop', render: s => {
+      if (s.stop_loss_triggered) return `<span class="stop-triggered">TRIGGERED ${fmtPrice(s.stop_loss_price)}</span>`;
+      return fmtPrice(s.stop_loss_price);
+    }},
+    { label: 'Kelly', render: s => fmtKelly(s.kelly_size) },
+    { label: 'Source', render: s => `${s.source} · ${s.insider_role || s.note || ''}` },
+  ];
+  renderTable('active-table', active, cols);
+}
+
+function renderNew(signals) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 7);
+  const recent = signals
+    .filter(s => new Date(s.signal_date) >= cutoff && s.position_status === 'ACTIVE' && (s.days_held || 0) <= 7)
+    .sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
+
+  document.getElementById('new-count').textContent = `(${recent.length})`;
+
+  const cols = [
+    { label: 'Ticker', render: s => `<strong>${s.ticker}</strong>` },
+    { label: 'Score', render: s => fmtScore(s.total_score) },
+    { label: 'OOS', render: s => s.oos_score != null ? s.oos_score.toFixed(0) : '—' },
+    { label: 'Signal Date', render: s => s.signal_date },
+    { label: 'Entry Zone', render: s => `${fmtPrice(s.entry_lo)} — ${fmtPrice(s.entry_hi)}` },
+    { label: 'Target', render: s => fmtPrice(s.target1) },
+    { label: 'Kelly', render: s => fmtKelly(s.kelly_size) },
+    { label: 'Spread', render: s => s.estimated_spread_pct != null ? s.estimated_spread_pct.toFixed(2) + '%' : '—' },
+    { label: 'Liquidity', render: s => liquidityBadge(s.liquidity_flag) },
+    { label: 'Source', render: s => `${s.source} · ${s.person || ''}` },
+  ];
+  renderTable('new-table', recent, cols);
+}
+
+function renderExpired(signals) {
+  const expired = signals
+    .filter(s => s.position_status === 'EXPIRED')
+    .sort((a, b) => (b.signal_date || '').localeCompare(a.signal_date || ''));
+
+  document.getElementById('expired-count').textContent = `(${expired.length})`;
+
+  const cols = [
+    { label: 'Ticker', render: s => `<strong>${s.ticker}</strong>` },
+    { label: 'Score', render: s => fmtScore(s.total_score) },
+    { label: 'Signal Date', render: s => s.signal_date },
+    { label: 'Entry', render: s => fmtPrice(s.price_at_signal) },
+    { label: '30d CAR', render: s => `<span class="${pnlClass(s.car_30d)}">${fmtPct(s.car_30d)}</span>` },
+    { label: 'Result', render: s => {
+      if (s.car_30d == null) return '—';
+      return s.car_30d > 0
+        ? '<span class="pnl-pos">WIN</span>'
+        : '<span class="pnl-neg">LOSS</span>';
+    }},
+    { label: 'Source', render: s => `${s.source} · ${s.person || ''}` },
+  ];
+  renderTable('expired-table', expired.slice(0, 20), cols);
+}
+
+function renderHealth(health) {
+  const row = document.getElementById('health-row');
+  if (!health) { row.innerHTML = '<div class="health-item health-warn">Health data not loaded</div>'; return; }
+
+  const checks = health.checks || {};
+  const items = [];
+  for (const [name, check] of Object.entries(checks)) {
+    const status = check.status || 'ok';
+    const cls = status === 'ok' ? 'health-ok' : status === 'warn' ? 'health-warn' : 'health-critical';
+    const label = name.replace(/_/g, ' ');
+    items.push(`<div class="health-item ${cls}"><strong>${label}</strong>: ${status.toUpperCase()}</div>`);
+  }
+  const overall = health.overall_status || 'unknown';
+  const oCls = overall === 'healthy' ? 'health-ok' : overall === 'degraded' ? 'health-warn' : 'health-critical';
+  items.unshift(`<div class="health-item ${oCls}"><strong>Overall</strong>: ${overall.toUpperCase()}</div>`);
+  row.innerHTML = items.join('');
+}
+
+async function init() {
+  try {
+    const [data, stats, health] = await Promise.all([
+      loadJSON(DATA_URL),
+      loadJSON(STATS_URL).catch(() => null),
+      loadJSON(HEALTH_URL).catch(() => null),
+    ]);
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+    // Header
+    const gen = data.generated ? new Date(data.generated).toLocaleString() : '?';
+    document.getElementById('last-updated').textContent = `Updated: ${gen}`;
+
+    // Regime
+    renderRegime(data.regime_context);
+
+    // Stats
+    renderStats(data, stats);
+
+    // Tables
+    const signals = data.signals || [];
+    renderActive(signals);
+    renderNew(signals);
+    renderExpired(signals);
+
+    // Health
+    renderHealth(health);
+
+  } catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').style.display = 'block';
+    console.error('Dashboard load error:', e);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
