@@ -292,15 +292,15 @@ tr:hover td { background: rgba(68,136,255,0.06); }
   const oosCell = (signal) => {
     const oos = typeof signal === 'object' ? signal.oos_score : signal;
     const total = typeof signal === 'object' ? signal.total_score : null;
-    if (oos != null) return `<span class="mono" style="color:${scoreColor(oos)}">${fmt(oos, 0)}</span>`;
-    if (total != null) return `<span class="mono" style="color:var(--blue)">${fmt(total, 0)}<span class="dim" style="font-size:0.65rem"> est</span></span>`;
+    if (oos != null) return `<span class="mono" title="OOS: Walk-forward score from a model that never saw this signal's data. This is the honest, unbiased prediction." style="color:${scoreColor(oos)};cursor:help">${fmt(oos, 0)}</span>`;
+    if (total != null) return `<span class="mono" title="Estimated: Full-sample score (model trained on all data including this signal). Less reliable than OOS." style="color:var(--blue);cursor:help">${fmt(total, 0)}<span class="dim" style="font-size:0.65rem"> est</span></span>`;
     return '<span class="dim">\u2014</span>';
   };
 
   function scoreBar(score) {
     const w = Math.min(100, Math.max(0, score || 0));
-    return `<div class="score-wrap">
-      <span class="mono" style="color:${scoreColor(score)}">${fmt(score, 0)}</span>
+    return `<div class="score-wrap" title="Score: ML model's full-sample prediction (0-100). Combines P(beat SPY), predicted return magnitude, convergence, and track record. Use OOS score for unbiased evaluation.">
+      <span class="mono" style="color:${scoreColor(score)};cursor:help">${fmt(score, 0)}</span>
       <div class="score-bar-bg"><div class="score-bar" style="width:${w}%;background:${scoreColor(score)}"></div></div>
     </div>`;
   }
@@ -952,6 +952,22 @@ tr:hover td { background: rgba(68,136,255,0.06); }
     (function renderIntelligence() {
       let ih = '';
 
+      // Score vs OOS Explainer
+      ih += '<div class="section"><div class="section-header">Score vs OOS — How to Read</div><div style="padding:12px 16px;font-size:0.78rem;line-height:1.6">';
+      ih += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+      ih += '<div style="padding:10px;border-radius:6px;border:1px solid var(--card-border)">';
+      ih += '<div style="font-weight:600;margin-bottom:4px">Score <span class="dim">(full-sample)</span></div>';
+      ih += '<div class="dim">Model trained on <em>all</em> historical data, then applied to each signal. ';
+      ih += 'Useful for ranking signals against each other, but optimistically biased — the model has already seen each signal\'s outcome during training.</div>';
+      ih += '</div>';
+      ih += '<div style="padding:10px;border-radius:6px;border:1px solid var(--blue)">';
+      ih += '<div style="font-weight:600;margin-bottom:4px;color:var(--blue)">OOS <span class="dim">(walk-forward)</span></div>';
+      ih += '<div class="dim">Each signal is scored by a model trained <em>only on data before it</em>. This is the honest, unbiased prediction. ';
+      ih += 'OOS score is what a live trader would have seen. Recent signals show "est" (estimated) because they haven\'t been through walk-forward yet.</div>';
+      ih += '</div></div>';
+      ih += '<div class="dim" style="font-size:0.7rem;margin-top:8px">IC = 0.1027 (p=0.0003) means OOS scores genuinely predict 30-day returns. Use OOS when available; Score as fallback.</div>';
+      ih += '</div></div>';
+
       // Signal Intelligence
       if (intel) {
         const b = intel.best_50 || {};
@@ -1059,6 +1075,59 @@ tr:hover td { background: rgba(68,136,255,0.06); }
       }
 
       ih += '</div>';
+
+      // Model Mistake Tracker
+      const res = health?.residuals;
+      if (res && res.summary) {
+        const s = res.summary;
+        ih += '<div class="section"><div class="section-header">Model Mistake Tracker</div><div style="padding:12px 16px">';
+
+        // Summary stats
+        ih += '<div class="stats-row" style="margin-bottom:12px">';
+        ih += `<div class="stat-card"><div class="label">False Positives</div><div class="value mono neg">${s.n_false_positives}</div><div class="sub">score≥70, lost&gt;5%</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Avg FP Loss</div><div class="value mono neg">${s.avg_fp_loss ? (s.avg_fp_loss * 100).toFixed(1) + '%' : '\u2014'}</div></div>`;
+        ih += `<div class="stat-card"><div class="label">False Negatives</div><div class="value mono pos">${s.n_false_negatives}</div><div class="sub">score&lt;50, gained&gt;15%</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Missed Gems</div><div class="value mono" style="color:var(--blue)">${s.n_missed_gems}</div><div class="sub">50-65 score, gained&gt;10%</div></div>`;
+        ih += '</div>';
+
+        // Patterns
+        if (res.patterns && res.patterns.length > 0) {
+          ih += '<h4 style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin:8px 0 6px">Detected Patterns</h4>';
+          res.patterns.forEach(p => {
+            const icon = p.severity === 'high' ? '\u26A0\uFE0F' : '\u2139\uFE0F';
+            const cls = p.severity === 'high' ? 'warn' : '';
+            ih += `<div class="interp-box ${cls}" style="margin-bottom:4px"><strong>${icon} ${p.type.replace(/_/g, ' ')}:</strong> ${p.detail}</div>`;
+          });
+        }
+
+        // False positives table (top 10)
+        if (res.false_positives && res.false_positives.length > 0) {
+          ih += '<h4 style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin:12px 0 6px">Worst False Positives (high score, lost money)</h4>';
+          ih += '<table style="width:100%;font-size:0.75rem"><thead><tr><th>Ticker</th><th>Date</th><th>Score</th><th>OOS</th><th>CAR 30d</th><th>Sector</th><th>VIX</th></tr></thead><tbody>';
+          res.false_positives.slice(0, 10).forEach(e => {
+            ih += `<tr><td class="mono">${e.ticker}</td><td class="dim">${(e.date||'').slice(0,10)}</td>`;
+            ih += `<td class="mono">${e.score}</td><td class="mono">${e.oos_score ?? '\u2014'}</td>`;
+            ih += `<td class="mono neg">${(e.car_30d*100).toFixed(1)}%</td>`;
+            ih += `<td class="dim">${e.sector}</td><td class="mono">${e.vix ?? '\u2014'}</td></tr>`;
+          });
+          ih += '</tbody></table>';
+        }
+
+        // Missed gems table (top 10)
+        if (res.missed_gems && res.missed_gems.length > 0) {
+          ih += '<h4 style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);margin:12px 0 6px">Missed Gems (below threshold, gained big)</h4>';
+          ih += '<table style="width:100%;font-size:0.75rem"><thead><tr><th>Ticker</th><th>Date</th><th>Score</th><th>CAR 30d</th><th>Sector</th><th>Cap</th></tr></thead><tbody>';
+          res.missed_gems.slice(0, 10).forEach(e => {
+            ih += `<tr><td class="mono">${e.ticker}</td><td class="dim">${(e.date||'').slice(0,10)}</td>`;
+            ih += `<td class="mono">${e.score}</td>`;
+            ih += `<td class="mono pos">+${(e.car_30d*100).toFixed(1)}%</td>`;
+            ih += `<td class="dim">${e.sector}</td><td class="dim">${e.market_cap}</td></tr>`;
+          });
+          ih += '</tbody></table>';
+        }
+
+        ih += '</div></div>';
+      }
 
       $('#intel-content').innerHTML = ih;
     })();

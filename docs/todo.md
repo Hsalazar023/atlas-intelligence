@@ -3,12 +3,15 @@ _Last updated: Session 19 — March 6, 2026_
 
 ---
 
-## Session 19 — CI Fix + Session 20 Planning
+## Session 19 — CI Fix, Trading Rules, Data Quality Plan
 
 ### Completed
 - [x] **CI pipeline fix** — backtest.yml crashing on `no such column: score_base` + `TimedeltaIndex.dt` error. Moved score columns to `_migrate_columns`, pushed local ml_engine fix.
 - [x] **.gitignore whitelist** — 12 JSON files + `data/dashboard.html` were silently blocked. CI `git add || true` swallowed errors. All dashboard data files now whitelisted.
 - [x] **All 3 dashboards deployed** — `/` (main site), `/dashboard.html` (original), `/data/dashboard.html` (4-tab analysis).
+- [x] **Trading rules engine** — entry threshold (65+), stop-loss (-10%), take-profit (+20%), position sizing by score tier. `simulate_trades()` + `compute_strategy_stats()` wired into portfolio_stats.json.
+- [x] **Entry price backfill** — `backfill_entry_prices()` recovered 3,477 signals missing price_at_signal. Strategy-eligible: 249 → 1,054 trades.
+- [x] **Dashboard Performance tab** — strategy stats, exit reasons bar, score tiers, cumulative equity, expandable closed positions with entry/exit details.
 
 ---
 
@@ -52,6 +55,90 @@ _Last updated: Session 19 — March 6, 2026_
 - [ ] **Liquidity enrichment debug** — 0 signals filled, path issue
 - [ ] **New signal notifications** — 80+ alerts via ntfy
 - [ ] **Strategy memo** — investor-format summary
+
+---
+
+## Data Quality & Guardrails Plan
+
+### Why 3,477 missing prices went undetected
+
+**Root cause:** `price_at_signal` was added as a field after thousands of EDGAR signals were already ingested. No check ever verified that critical fields were populated across the full dataset.
+
+**Current monitoring gaps:**
+- `run_self_check()` checks IC trend, hit rate, freshness, feature fill, concentration, harmful features
+- `db_health_check()` checks NULL rates for `car_30d`, `total_score`, `sector`, `spy_return_30d`
+- **Neither checks `price_at_signal`** or strategy-critical fields
+- No check compares "how many signals SHOULD be strategy-eligible vs ARE"
+- No check runs AFTER enrichment to verify it actually worked
+- `|| true` in CI silently swallowed git add failures — errors were invisible
+- No ntfy alert when data completeness drops below expected levels
+
+### Implementation Plan (add to `run_self_check`)
+
+**Check 10: Data Completeness Audit**
+After every daily run, verify critical fields are populated at expected rates:
+```
+price_at_signal:     expect >95% (signals with outcomes)
+total_score:         expect >90% (scored signals)
+sector:              expect >95%
+market_cap_bucket:   expect >80%
+momentum_1m:         expect >80%
+car_30d:             expect >85% (signals older than 35 days)
+oos_score:           expect >80% (signals older than 90 days)
+```
+Status: WARN if any field drops 5% below expectation. CRITICAL if 15% below.
+Auto-recommendation: "Run --backfill to recover missing data"
+
+**Check 11: Strategy Readiness**
+Compare strategy-eligible signals vs total eligible:
+```
+eligible = signals with total_score >= 65 AND outcome_30d_filled = 1 AND car_30d IS NOT NULL
+ready = eligible AND price_at_signal > 0
+ratio = ready / eligible
+```
+Status: WARN if ratio < 0.90. CRITICAL if < 0.70.
+This would have caught the 249/1056 = 23.6% readiness rate immediately.
+
+**Check 12: Enrichment Verification**
+After each enrichment step in `run_daily`, log before/after counts:
+- Ingestion: "Ingested X, expected Y based on feed size"
+- Price backfill: "X signals missing entry price → Y recovered"
+- Feature enrichment: "X signals enriched, Z still missing key features"
+- Scoring: "X scored, Y failed — verify model loaded"
+
+**Check 13: Pipeline Step Counters**
+Track each step's success/failure count in `brain_runs` table:
+```sql
+ALTER TABLE brain_runs ADD COLUMN step_counts TEXT;
+-- JSON: {"ingest": 15, "price_backfill": 0, "enrich": 718, "score": 718, "export": 1}
+```
+If any step returns 0 when previous runs returned >0, flag as WARN.
+
+**Check 14: Silent Failure Detection**
+Replace `|| true` patterns in CI with explicit error handling:
+```yaml
+# Before (silent failure):
+git add data/signal_intelligence.json || true
+# After (logged failure):
+git add data/signal_intelligence.json 2>/dev/null || echo "::warning::signal_intelligence.json not found"
+```
+
+**Check 15: Ntfy Alerts for Data Quality**
+Extend the ntfy notification in backtest.yml to include data quality:
+```
+ATLAS daily complete. Brain: OK | Trades: 1054 | Gaps: 0 critical
+```
+If any check is CRITICAL, send separate alert:
+```
+ATLAS DATA QUALITY ALERT: price_at_signal fill rate 23.6% (expect >95%)
+```
+
+### Priority Order
+1. **Check 11 (Strategy Readiness)** — would have caught this exact bug. Add to `run_self_check`.
+2. **Check 10 (Completeness Audit)** — broadens coverage to all critical fields.
+3. **Check 14 (Silent Failure)** — fix CI `|| true` patterns.
+4. **Check 12 (Enrichment Verification)** — log before/after in each pipeline step.
+5. **Check 13 + 15** — pipeline counters + enhanced ntfy alerts.
 
 ---
 

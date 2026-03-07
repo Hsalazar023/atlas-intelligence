@@ -5346,6 +5346,76 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
         if s['avg_car'] is not None and s['avg_car'] < -0.005:
             recommendations.append(f"{s['source']} signals have negative avg CAR ({s['avg_car']:.2%}). Consider source quality down-weighting.")
 
+    # ── 10. Data Completeness Audit ──
+    completeness_check = {'status': 'ok', 'fields': {}}
+    completeness_expectations = {
+        'price_at_signal': {'expect': 0.95, 'scope': 'outcome_30d_filled = 1'},
+        'total_score':     {'expect': 0.90, 'scope': '1=1'},
+        'sector':          {'expect': 0.95, 'scope': '1=1'},
+        'market_cap_bucket': {'expect': 0.80, 'scope': '1=1'},
+        'momentum_1m':     {'expect': 0.75, 'scope': 'outcome_30d_filled = 1'},
+        'vix_at_signal':   {'expect': 0.70, 'scope': '1=1'},
+    }
+    for col, spec in completeness_expectations.items():
+        try:
+            row = cur.execute(
+                f"SELECT COUNT(*) as total, "
+                f"SUM(CASE WHEN {col} IS NOT NULL AND {col} != '' AND {col} != 0 THEN 1 ELSE 0 END) as filled "
+                f"FROM signals WHERE {spec['scope']}"
+            ).fetchone()
+            total, filled = row['total'], row['filled']
+            rate = filled / total if total > 0 else 0
+            completeness_check['fields'][col] = {
+                'fill_rate': round(rate, 3), 'expected': spec['expect'],
+                'total': total, 'filled': filled, 'missing': total - filled,
+            }
+            gap = spec['expect'] - rate
+            if gap > 0.15:
+                completeness_check['status'] = 'critical'
+                recommendations.append(f"CRITICAL: {col} fill rate {rate:.1%} (expect {spec['expect']:.0%}). "
+                                       f"{total - filled} signals missing. Run --backfill.")
+            elif gap > 0.05:
+                if completeness_check['status'] != 'critical':
+                    completeness_check['status'] = 'warn'
+                recommendations.append(f"{col} fill rate {rate:.1%} below target {spec['expect']:.0%} ({total - filled} missing)")
+        except Exception:
+            pass
+    checks['data_completeness'] = completeness_check
+
+    # ── 11. Strategy Readiness ──
+    strat_check = {'status': 'ok'}
+    try:
+        threshold = TRADING_RULES['entry_threshold']
+        eligible_row = cur.execute(
+            "SELECT COUNT(*) FROM signals "
+            "WHERE total_score >= ? AND outcome_30d_filled = 1 AND car_30d IS NOT NULL",
+            (threshold,)
+        ).fetchone()
+        ready_row = cur.execute(
+            "SELECT COUNT(*) FROM signals "
+            "WHERE total_score >= ? AND outcome_30d_filled = 1 AND car_30d IS NOT NULL "
+            "AND price_at_signal IS NOT NULL AND price_at_signal > 0",
+            (threshold,)
+        ).fetchone()
+        eligible = eligible_row[0]
+        ready = ready_row[0]
+        ratio = ready / eligible if eligible > 0 else 0
+        strat_check['eligible'] = eligible
+        strat_check['ready'] = ready
+        strat_check['readiness'] = round(ratio, 3)
+        strat_check['threshold'] = threshold
+        if ratio < 0.70:
+            strat_check['status'] = 'critical'
+            recommendations.append(f"CRITICAL: Strategy readiness {ratio:.1%} — only {ready}/{eligible} signals tradeable. "
+                                   f"Run --backfill to recover entry prices.")
+        elif ratio < 0.90:
+            strat_check['status'] = 'warn'
+            recommendations.append(f"Strategy readiness {ratio:.1%} ({eligible - ready} signals missing entry price)")
+    except Exception as e:
+        strat_check['status'] = 'warn'
+        strat_check['error'] = str(e)
+    checks['strategy_readiness'] = strat_check
+
     # ── Determine overall_status ──
     statuses = [c.get('status', 'ok') for c in checks.values()]
     n_critical = statuses.count('critical')
@@ -5492,68 +5562,160 @@ def compute_signal_intelligence(conn: sqlite3.Connection) -> dict:
 
 def analyze_residuals(conn: sqlite3.Connection) -> dict:
     """Examine worst predictions: high score + negative CAR, low score + high CAR.
-    Logs patterns (sector, source, timing) to brain_health.json as improvement suggestions."""
+
+    Cross-references features to find systematic blind spots:
+    - Sector/source concentration in misses
+    - VIX regime at time of miss
+    - Momentum, market cap, earnings proximity patterns
+    - Repeat offender tickers
+
+    Returns structured dict for brain_health.json and dashboard rendering.
+    """
     import numpy as np
     cur = conn.cursor()
 
-    # False positives: high score (≥70) but negative 30d CAR
+    # False positives: high score (≥70) but lost >5%
     false_pos = cur.execute("""
-        SELECT ticker, sector, source, total_score, car_30d, signal_date,
-               convergence_tier, person_hit_rate_30d, momentum_1m
+        SELECT ticker, sector, source, total_score, oos_score, car_30d, signal_date,
+               price_at_signal, vix_at_signal, momentum_1m, momentum_3m,
+               market_cap_bucket, days_to_earnings, insider_role, insider_name
         FROM signals
         WHERE total_score >= 70 AND car_30d IS NOT NULL AND car_30d < -0.05
-        ORDER BY car_30d ASC LIMIT 20
+        ORDER BY car_30d ASC LIMIT 30
     """).fetchall()
 
-    # False negatives: low score (<40) but positive 30d CAR
+    # False negatives: low score (<50) but gained >15%
     false_neg = cur.execute("""
-        SELECT ticker, sector, source, total_score, car_30d, signal_date,
-               convergence_tier, person_hit_rate_30d, momentum_1m
+        SELECT ticker, sector, source, total_score, oos_score, car_30d, signal_date,
+               price_at_signal, vix_at_signal, momentum_1m, momentum_3m,
+               market_cap_bucket, days_to_earnings, insider_role, insider_name
         FROM signals
-        WHERE total_score < 40 AND car_30d IS NOT NULL AND car_30d > 0.10
+        WHERE total_score < 50 AND car_30d IS NOT NULL AND car_30d > 0.15
+        ORDER BY car_30d DESC LIMIT 30
+    """).fetchall()
+
+    # Missed gems: scored 50-65 (below threshold) but gained >10%
+    missed_gems = cur.execute("""
+        SELECT ticker, sector, source, total_score, oos_score, car_30d, signal_date,
+               market_cap_bucket, insider_role
+        FROM signals
+        WHERE total_score >= 50 AND total_score < 65 AND car_30d IS NOT NULL AND car_30d > 0.10
         ORDER BY car_30d DESC LIMIT 20
     """).fetchall()
 
-    residuals = {'false_positives': [], 'false_negatives': [], 'patterns': []}
+    def _build_entries(rows):
+        entries = []
+        for r in rows:
+            entries.append({
+                'ticker': r['ticker'], 'sector': r['sector'] or 'Unknown',
+                'source': r['source'], 'score': round(r['total_score'], 1),
+                'oos_score': round(r['oos_score'], 1) if r['oos_score'] else None,
+                'car_30d': round(r['car_30d'], 4), 'date': r['signal_date'],
+                'entry_price': round(r['price_at_signal'], 2) if r['price_at_signal'] else None,
+                'vix': round(r['vix_at_signal'], 1) if r['vix_at_signal'] else None,
+                'momentum_1m': round(r['momentum_1m'], 4) if r['momentum_1m'] else None,
+                'market_cap': r['market_cap_bucket'] or 'Unknown',
+                'days_to_earnings': r['days_to_earnings'],
+                'insider': r['insider_role'] or r['insider_name'] or '',
+            })
+        return entries
 
-    # Analyze false positives
-    fp_sectors = {}
-    fp_sources = {}
-    for r in false_pos:
-        residuals['false_positives'].append({
-            'ticker': r['ticker'], 'sector': r['sector'], 'source': r['source'],
-            'score': r['total_score'], 'car_30d': round(r['car_30d'], 4),
-            'date': r['signal_date'],
+    fp_entries = _build_entries(false_pos)
+    fn_entries = _build_entries(false_neg)
+    mg_entries = _build_entries(missed_gems)
+
+    # Cross-reference patterns
+    patterns = []
+
+    def _count_field(entries, field):
+        counts = {}
+        for e in entries:
+            v = e.get(field, 'Unknown')
+            counts[v] = counts.get(v, 0) + 1
+        return counts
+
+    # Sector patterns
+    fp_sectors = _count_field(fp_entries, 'sector')
+    fn_sectors = _count_field(fn_entries, 'sector')
+    for sector, n in fp_sectors.items():
+        if n >= 3:
+            patterns.append({
+                'type': 'sector_blind_spot',
+                'detail': f"{sector}: {n} high-score losers — model overvalues insider buys in this sector",
+                'severity': 'high' if n >= 5 else 'medium',
+            })
+    for sector, n in fn_sectors.items():
+        if n >= 3:
+            patterns.append({
+                'type': 'sector_opportunity',
+                'detail': f"{sector}: {n} low-score winners — model undervalues signals here",
+                'severity': 'medium',
+            })
+
+    # VIX regime at time of miss
+    fp_vix = [e['vix'] for e in fp_entries if e['vix']]
+    fn_vix = [e['vix'] for e in fn_entries if e['vix']]
+    if fp_vix:
+        avg_fp_vix = np.mean(fp_vix)
+        high_vix_misses = sum(1 for v in fp_vix if v > 25)
+        if high_vix_misses >= 3:
+            patterns.append({
+                'type': 'vix_blind_spot',
+                'detail': f"{high_vix_misses}/{len(fp_vix)} false positives occurred during VIX>25 — model doesn't penalize high-vol enough",
+                'severity': 'high',
+            })
+
+    # Market cap pattern
+    fp_caps = _count_field(fp_entries, 'market_cap')
+    for cap, n in fp_caps.items():
+        if n >= 4 and cap in ('micro', 'small', 'Unknown'):
+            patterns.append({
+                'type': 'cap_blind_spot',
+                'detail': f"{n} false positives in {cap}-cap — small/micro stocks more prone to model errors",
+                'severity': 'medium',
+            })
+
+    # Momentum at entry — were losers already in downtrend?
+    fp_neg_mom = [e for e in fp_entries if e['momentum_1m'] is not None and e['momentum_1m'] < -0.05]
+    if len(fp_neg_mom) >= 3:
+        patterns.append({
+            'type': 'momentum_blind_spot',
+            'detail': f"{len(fp_neg_mom)}/{len(fp_entries)} false positives had negative 1m momentum at entry — model should weight momentum higher",
+            'severity': 'medium',
         })
-        fp_sectors[r['sector']] = fp_sectors.get(r['sector'], 0) + 1
-        fp_sources[r['source']] = fp_sources.get(r['source'], 0) + 1
 
-    # Analyze false negatives
-    fn_sectors = {}
-    for r in false_neg:
-        residuals['false_negatives'].append({
-            'ticker': r['ticker'], 'sector': r['sector'], 'source': r['source'],
-            'score': r['total_score'], 'car_30d': round(r['car_30d'], 4),
-            'date': r['signal_date'],
+    # Repeat offender tickers
+    fp_tickers = _count_field(fp_entries, 'ticker')
+    repeat_losers = {t: n for t, n in fp_tickers.items() if n >= 2}
+    if repeat_losers:
+        patterns.append({
+            'type': 'repeat_losers',
+            'detail': f"Repeat false positives: {', '.join(f'{t}({n}x)' for t, n in sorted(repeat_losers.items(), key=lambda x: -x[1])[:5])}",
+            'severity': 'medium',
         })
-        fn_sectors[r['sector']] = fn_sectors.get(r['sector'], 0) + 1
 
-    # Surface patterns
-    if fp_sectors:
-        worst_sector = max(fp_sectors, key=fp_sectors.get)
-        if fp_sectors[worst_sector] >= 3:
-            residuals['patterns'].append(
-                f"False positive cluster in {worst_sector} ({fp_sectors[worst_sector]} signals scored ≥70 but lost >5%)"
-            )
-    if fp_sources:
-        worst_source = max(fp_sources, key=fp_sources.get)
-        if fp_sources[worst_source] >= 3:
-            residuals['patterns'].append(
-                f"False positives concentrated in {worst_source} source ({fp_sources[worst_source]} misses)"
-            )
+    # Summary stats
+    residuals = {
+        'false_positives': fp_entries,
+        'false_negatives': fn_entries,
+        'missed_gems': mg_entries,
+        'patterns': patterns,
+        'summary': {
+            'n_false_positives': len(fp_entries),
+            'n_false_negatives': len(fn_entries),
+            'n_missed_gems': len(mg_entries),
+            'n_patterns': len(patterns),
+            'avg_fp_loss': round(float(np.mean([e['car_30d'] for e in fp_entries])), 4) if fp_entries else 0,
+            'avg_fn_gain': round(float(np.mean([e['car_30d'] for e in fn_entries])), 4) if fn_entries else 0,
+            'avg_mg_gain': round(float(np.mean([e['car_30d'] for e in mg_entries])), 4) if mg_entries else 0,
+            'fp_sectors': dict(sorted(fp_sectors.items(), key=lambda x: -x[1])[:5]),
+            'fn_sectors': dict(sorted(fn_sectors.items(), key=lambda x: -x[1])[:5]),
+        },
+    }
 
-    log.info(f"Residual analysis: {len(false_pos)} false positives, {len(false_neg)} false negatives, "
-             f"{len(residuals['patterns'])} patterns")
+    log.info(f"Residual analysis: {len(fp_entries)} false positives (avg {residuals['summary']['avg_fp_loss']:.2%}), "
+             f"{len(fn_entries)} false negatives (avg +{residuals['summary']['avg_fn_gain']:.2%}), "
+             f"{len(mg_entries)} missed gems, {len(patterns)} patterns")
     return residuals
 
 
