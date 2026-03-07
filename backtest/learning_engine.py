@@ -324,6 +324,12 @@ def _migrate_columns(conn: sqlite3.Connection) -> None:
             conn.execute(f"ALTER TABLE feature_stats ADD COLUMN {col_name} {col_type}")
         except sqlite3.OperationalError:
             pass
+    # brain_runs migrations
+    for col_name, col_type in [("step_counts", "TEXT")]:
+        try:
+            conn.execute(f"ALTER TABLE brain_runs ADD COLUMN {col_name} {col_type}")
+        except sqlite3.OperationalError:
+            pass
 
 
 # ── Signal Insertion ─────────────────────────────────────────────────────────
@@ -789,11 +795,11 @@ def enrich_liquidity_features(conn: sqlite3.Connection) -> int:
         window_end = signal_dt.strftime('%Y-%m-%d')
 
         vols = [
-            p.get('volume', 0)
+            p.get('v', p.get('volume', 0))
             for date_str, p in prices.items()
             if isinstance(p, dict)
             and window_start <= date_str <= window_end
-            and p.get('volume')
+            and (p.get('v') or p.get('volume'))
         ]
 
         if not vols:
@@ -802,12 +808,13 @@ def enrich_liquidity_features(conn: sqlite3.Connection) -> int:
         adv = sum(vols) / len(vols)
 
         # Estimate spread by market cap proxy
-        price = prices.get(row['signal_date'], {}).get('close', 0) if isinstance(prices.get(row['signal_date']), dict) else 0
+        sd_data = prices.get(row['signal_date'])
+        price = (sd_data.get('c', sd_data.get('close', 0)) if isinstance(sd_data, dict) else 0)
         if not price:
             # Try nearest date
             for d in sorted(prices.keys(), reverse=True):
                 if d <= window_end and isinstance(prices[d], dict):
-                    price = prices[d].get('close', 0)
+                    price = prices[d].get('c', prices[d].get('close', 0))
                     if price:
                         break
 
@@ -5067,7 +5074,7 @@ def score_all_signals(conn: sqlite3.Connection) -> int:
 
 def log_brain_run(conn: sqlite3.Connection, run_type: str,
                   oos_ic: float = None, oos_hit_rate: float = None,
-                  notes: str = None) -> None:
+                  notes: str = None, step_counts: dict = None) -> None:
     """Record a Brain run in brain_runs table for health tracking."""
     import numpy as np
 
@@ -5097,14 +5104,15 @@ def log_brain_run(conn: sqlite3.Connection, run_type: str,
     fi = weights.get('_feature_importance')
     fi_json = json.dumps(fi) if fi else None
 
+    sc_json = json.dumps(step_counts) if step_counts else None
     cur.execute("""
         INSERT INTO brain_runs (run_date, run_type, oos_ic, oos_hit_rate,
             n_signals, n_scored, avg_score, max_score, top_ticker, top_ticker_pct,
-            feature_importance_json, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            feature_importance_json, notes, step_counts)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (datetime.now(tz=timezone.utc).strftime('%Y-%m-%d'), run_type,
           oos_ic, oos_hit_rate, n_signals, n_scored, avg_score, max_score,
-          top_ticker, top_ticker_pct, fi_json, notes))
+          top_ticker, top_ticker_pct, fi_json, notes, sc_json))
     conn.commit()
     log.debug(f"Brain run logged: type={run_type}, IC={oos_ic}, scored={n_scored}")
 
@@ -7424,50 +7432,66 @@ def collect_missing_prices(conn: sqlite3.Connection) -> int:
 def run_daily(conn: sqlite3.Connection) -> None:
     """Daily pipeline: ingest new signals + backfill outcomes."""
     log.info("=== ALE Daily Pipeline ===")
+    steps = {}  # Track step counts for pipeline monitoring
 
     # 1. Ingest new signals
     c_count = ingest_congress_feed(conn)
     e_count = ingest_edgar_feed(conn)
     f_count = ingest_13f_feed(conn)
+    steps['ingest'] = c_count + e_count + f_count
     log.info(f"Ingested: {c_count} congress + {e_count} EDGAR + {f_count} 13F signals")
 
     # 2. Collect prices for any new tickers missing price history
     new_prices = collect_missing_prices(conn)
+    steps['price_collect'] = new_prices or 0
     if new_prices:
         log.info(f"Collected prices for {new_prices} new tickers")
 
     # 2b. Backfill entry prices from price cache (recovers older signals)
     price_filled = backfill_entry_prices(conn)
+    steps['price_backfill'] = price_filled
     if price_filled:
         log.info(f"Backfilled entry prices for {price_filled} signals")
 
     # 3. Update aggregate features (incremental: last 60 days only)
     since = (datetime.now(tz=timezone.utc) - timedelta(days=60)).strftime('%Y-%m-%d')
     agg = update_aggregate_features(conn, since_date=since)
+    steps['aggregate'] = agg
     log.info(f"Updated aggregate features for {agg} ticker-date pairs")
 
     # 4. Backfill outcomes
     spy_index = load_price_index('SPY')
     filled = backfill_outcomes(conn, spy_index)
+    steps['outcomes'] = filled
     log.info(f"Backfilled outcomes for {filled} signals")
 
     # 4b. Enrich SPY returns + market-adjusted CARs
     spy_enriched = enrich_spy_returns(conn)
     adj_enriched = enrich_market_adj_returns(conn)
+    steps['spy_adj'] = (spy_enriched or 0) + (adj_enriched or 0)
     if spy_enriched or adj_enriched:
         log.info(f"SPY returns: {spy_enriched} new, market-adj CARs: {adj_enriched} new")
 
     # 5. Update person track records
     person_updated = update_person_track_records(conn)
+    steps['person'] = person_updated
     log.info(f"Updated person track records for {person_updated} signals")
 
     # 6. Enrich price-based and research-backed features
     enriched = enrich_signal_features(conn)
+    steps['enrich'] = enriched
     log.info(f"Enriched {enriched} signal features")
 
     # 7. Enrich market context (VIX, yield curve, credit spread from FRED)
     market_enriched = enrich_market_context(conn)
+    steps['market_ctx'] = market_enriched
     log.info(f"Enriched {market_enriched} signals with market context")
+
+    # 7b. Enrich liquidity features (ADV, spread estimates)
+    liq_enriched = enrich_liquidity_features(conn)
+    steps['liquidity'] = liq_enriched
+    if liq_enriched:
+        log.info(f"Enriched liquidity for {liq_enriched} signals")
 
     # 8. Generate dashboard + diagnostics
     generate_dashboard(conn)
@@ -7476,17 +7500,25 @@ def run_daily(conn: sqlite3.Connection) -> None:
     generate_diagnostics_html(conn)
 
     # 9. Score all signals with ML models
+    scored = 0
     try:
-        scored = score_all_signals(conn)
+        scored = score_all_signals(conn) or 0
         log.info(f"Scored {scored} signals with ML models")
     except Exception as e:
         log.warning(f"Signal scoring failed: {e}")
+    steps['score'] = scored
 
     # 10. Auto-export brain data for frontend
     export_brain_data(conn)
+    steps['export'] = 1
 
-    # 11. Log brain run
-    log_brain_run(conn, 'daily')
+    # 11. Enrichment verification — flag steps that returned 0 unexpectedly
+    zero_steps = [k for k, v in steps.items() if v == 0 and k not in ('ingest', 'price_collect', 'price_backfill')]
+    if zero_steps:
+        log.warning(f"Pipeline steps returned 0: {', '.join(zero_steps)} — verify data feeds")
+
+    # 12. Log brain run with step counts
+    log_brain_run(conn, 'daily', step_counts=steps)
 
 
 def run_analyze(conn: sqlite3.Connection) -> None:
@@ -8424,6 +8456,77 @@ Annualized alpha:{ann_alpha:+.1%}""")
     except Exception as e:
         log.warning(f"Factor analysis failed: {e}")
         import traceback; traceback.print_exc()
+
+    # ── Factor vs Strategy Gap Analysis ──
+    try:
+        gap_analysis = {}
+        # Universe 1: OOS 75+ raw (what factor regression uses)
+        oos75_df = pd.read_sql("""
+            SELECT car_30d, total_score, oos_score, price_at_signal
+            FROM signals WHERE oos_score >= 75 AND car_30d IS NOT NULL
+            AND signal_date < '2026-01-01'
+        """, conn)
+        if len(oos75_df) >= 30:
+            gap_analysis['oos75_raw'] = {
+                'n': len(oos75_df),
+                'avg_car': round(float(oos75_df['car_30d'].mean()), 4),
+                'hit_rate': round(float((oos75_df['car_30d'] > 0).mean()), 3),
+                'has_price': int((oos75_df['price_at_signal'].notna() & (oos75_df['price_at_signal'] > 0)).sum()),
+            }
+
+        # Universe 2: Strategy-eligible (65+ with entry price)
+        strat_df = pd.read_sql(f"""
+            SELECT car_30d, total_score, oos_score, price_at_signal
+            FROM signals WHERE total_score >= {TRADING_RULES['entry_threshold']}
+            AND car_30d IS NOT NULL AND price_at_signal > 0
+            AND signal_date < '2026-01-01'
+        """, conn)
+        if len(strat_df) >= 30:
+            # Apply stop-loss / take-profit caps
+            sl = TRADING_RULES['stop_loss_pct']
+            tp = TRADING_RULES['take_profit_pct']
+            capped = strat_df['car_30d'].clip(lower=sl, upper=tp)
+            gap_analysis['strategy'] = {
+                'n': len(strat_df),
+                'avg_car_raw': round(float(strat_df['car_30d'].mean()), 4),
+                'avg_car_capped': round(float(capped.mean()), 4),
+                'hit_rate': round(float((capped > 0).mean()), 3),
+                'stop_triggered': int((strat_df['car_30d'] < sl).sum()),
+                'tp_triggered': int((strat_df['car_30d'] > tp).sum()),
+            }
+
+        if gap_analysis:
+            # Diagnose gap sources
+            sources = []
+            oos = gap_analysis.get('oos75_raw', {})
+            strat = gap_analysis.get('strategy', {})
+            if oos and strat:
+                car_diff = oos.get('avg_car', 0) - strat.get('avg_car_capped', 0)
+                if car_diff > 0.01:
+                    sources.append(f"Threshold: OOS 75+ avg {oos['avg_car']:.2%} vs strategy 65+ capped {strat['avg_car_capped']:.2%}")
+                missing_pct = 1 - oos.get('has_price', 0) / max(oos.get('n', 1), 1)
+                if missing_pct > 0.05:
+                    sources.append(f"Missing prices: {missing_pct:.0%} of OOS 75+ signals lack entry price")
+                if strat.get('stop_triggered', 0) > 0:
+                    sources.append(f"Stop-loss: {strat['stop_triggered']} trades hit {sl:.0%} floor")
+                if strat.get('tp_triggered', 0) > 0:
+                    sources.append(f"Take-profit: {strat['tp_triggered']} trades hit {tp:.0%} cap")
+            gap_analysis['gap_sources'] = sources
+            report['factor_strategy_gap'] = gap_analysis
+
+            print(f"""
+FACTOR vs STRATEGY GAP ANALYSIS
+{'─'*54}""")
+            if oos:
+                print(f"OOS 75+ raw:     n={oos['n']} avg={oos['avg_car']:+.2%} hit={oos['hit_rate']:.1%}")
+            if strat:
+                print(f"Strategy 65+:    n={strat['n']} avg_raw={strat['avg_car_raw']:+.2%} "
+                      f"avg_capped={strat['avg_car_capped']:+.2%} hit={strat['hit_rate']:.1%}")
+            for s in sources:
+                print(f"  → {s}")
+
+    except Exception as e:
+        log.warning(f"Factor gap analysis failed: {e}")
 
     ofr = db_info.get('outcome_fill_rate')
     ofr_str = f"{ofr:.1%}" if ofr is not None else "?"

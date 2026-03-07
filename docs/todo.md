@@ -1,60 +1,49 @@
 # ATLAS Todo
-_Last updated: Session 19 — March 6, 2026_
+_Last updated: Session 20 — March 6, 2026_
 
 ---
 
-## Session 19 — CI Fix, Trading Rules, Data Quality Plan
+## Session 20 — Data Quality, Model Diagnostics, Liquidity Fix
 
-### Completed
-- [x] **CI pipeline fix** — backtest.yml crashing on `no such column: score_base` + `TimedeltaIndex.dt` error. Moved score columns to `_migrate_columns`, pushed local ml_engine fix.
-- [x] **.gitignore whitelist** — 12 JSON files + `data/dashboard.html` were silently blocked. CI `git add || true` swallowed errors. All dashboard data files now whitelisted.
-- [x] **All 3 dashboards deployed** — `/` (main site), `/dashboard.html` (original), `/data/dashboard.html` (4-tab analysis).
-- [x] **Trading rules engine** — entry threshold (65+), stop-loss (-10%), take-profit (+20%), position sizing by score tier. `simulate_trades()` + `compute_strategy_stats()` wired into portfolio_stats.json.
-- [x] **Entry price backfill** — `backfill_entry_prices()` recovered 3,477 signals missing price_at_signal. Strategy-eligible: 249 → 1,054 trades.
-- [x] **Dashboard Performance tab** — strategy stats, exit reasons bar, score tiers, cumulative equity, expandable closed positions with entry/exit details.
+### Completed (this session)
+- [x] **Data quality checks 10-11** — completeness audit + strategy readiness in self-check
+- [x] **CI silent failure fix** — `|| true` → explicit file checks + `::warning::` annotations
+- [x] **Score vs OOS explainer** — side-by-side card in Intelligence tab
+- [x] **75 folds confirmed** — stale stored value, not a code bug
+- [x] **Model Mistake Tracker** — `analyze_residuals()` with cross-referencing + dashboard rendering (false positives, missed gems, detected patterns)
+- [x] **Liquidity enrichment fix** — price history uses `v`/`c` keys, function was looking for `volume`/`close`. Fixed key lookups.
+- [x] **Check 12: Enrichment verification** — step counters in `run_daily`, warnings for steps returning 0
+- [x] **Check 13: Pipeline step counters** — `step_counts` column added to `brain_runs` table, JSON persisted per run
+- [x] **Check 15: Enhanced ntfy alerts** — now includes brain status, critical checks, trade counts, residual counts
+- [x] **Fama-French gap analysis** — compares OOS 75+ raw vs strategy 65+ capped. Dashboard rendering in Intelligence tab.
+- [x] **Liquidity in daily pipeline** — `enrich_liquidity_features()` now also runs in `run_daily` (was backfill-only)
+
+### Session 19 Completed
+- [x] CI pipeline fix (score_base, TimedeltaIndex)
+- [x] .gitignore whitelist (12 JSON files)
+- [x] All 3 dashboards deployed
+- [x] Trading rules engine (65+, -10% SL, +20% TP, position sizing)
+- [x] Entry price backfill (3,477 recovered)
+- [x] Dashboard Performance tab (strategy stats, exit reasons, score tiers)
 
 ---
 
-## Session 20 Plan — Trading Logic, Performance Accuracy, Model Diagnostics
+## Session 20 Plan Items — DONE (all completed above)
 
-### P0: Trading Rules (Performance is misleading without these)
+Items 1-4 (P0 trading rules): Done in Session 19
+Items 5-7 (P1 dashboard perf): Done in Session 19
+Items 8-9 (P2 score/OOS): Done this session
+Items 10-11 (P3 diagnostics): Done this session
+Checks 12-15 (data quality): Done this session
+Liquidity fix: Done this session
 
-1. **Score threshold for buy** — Model currently "trades" every signal. Define minimum score (e.g. 65+) that constitutes an actionable buy. Backtest performance with threshold applied.
+---
 
-2. **Stop-loss mechanism** — Implement fixed or trailing stop-loss (e.g. -8% or -10%). Apply retroactively to closed signals to see impact on win rate and drawdown.
-
-3. **Position sizing by score** — Higher-score signals get larger weight. Performance should be weighted by position size, not equal-weight averaged.
-
-4. **Sell / exit rules** — Define target-hit exits (e.g. +15%) and time-based exits (30d horizon). Currently only measures CAR at fixed 30d window.
-
-### P1: Dashboard Performance Tab Fixes
-
-5. **Cumulative return chart** — Monthly performance should show cumulative (compounded) return, weighted by position size. Current avg return per month is misleading.
-
-6. **Recently closed: expandable details** — Add dropdown showing: signal date, entry price/date, exit price/date, hold period, score at entry, return. Keep table clean.
-
-7. **Filter out low-score trades** — Closed positions with scores below threshold should be excluded from performance stats (model wouldn't have bought them).
-
-### P2: Score vs OOS Clarity
-
-8. **Score vs OOS explainer** — Add tooltip or info section explaining: score = full-sample ML prediction, OOS = honest walk-forward prediction that never saw the signal's data. OOS is the real metric.
-
-9. **Investigate 52/75 folds** — Walk-forward should produce 75 folds (86 months - 11 min training). Debug why only 52 are completing.
-
-### P3: Model Mistake Tracker
-
-10. **Residual analysis system** — Track signals where model score diverges most from actual outcome:
-    - High-score misses: scored 75+ but returned < -5%
-    - Low-score winners: scored < 50 but returned > 15%
-    - Cross-reference with features to find systematic blind spots
-    - Surface in dashboard Intelligence tab
-
-11. **Fama-French gap analysis** — Factor alpha shows +128.9% annualized but live performance is weaker. Diagnose: is the gap from no score threshold? No stop-loss? Timing of entry? Different signal universe?
+## Next Session (21) Plan
 
 ### Carry Forward
-- [ ] **Liquidity enrichment debug** — 0 signals filled, path issue
-- [ ] **New signal notifications** — 80+ alerts via ntfy
-- [ ] **Strategy memo** — investor-format summary
+- [ ] **New signal notifications** — 80+ score alerts via ntfy when new high-conviction signals appear
+- [ ] **Strategy memo** — investor-format summary with factor alpha, strategy stats, risk metrics
 
 ---
 

@@ -1027,6 +1027,32 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         ih += '</div></div>';
       }
 
+      // Factor vs Strategy Gap
+      const fsg = report?.factor_strategy_gap;
+      if (fsg) {
+        ih += '<div class="section"><div class="section-header">Factor vs Strategy Gap</div><div style="padding:12px 16px">';
+        const oos = fsg.oos75_raw || {};
+        const strat = fsg.strategy || {};
+        if (oos.n || strat.n) {
+          ih += '<div class="stats-row" style="margin-bottom:12px">';
+          if (oos.n) {
+            ih += `<div class="stat-card"><div class="label">OOS 75+ Raw</div><div class="value mono pos">${(oos.avg_car*100).toFixed(1)}%</div><div class="sub">n=${oos.n}, hit=${(oos.hit_rate*100).toFixed(0)}%</div></div>`;
+          }
+          if (strat.n) {
+            ih += `<div class="stat-card"><div class="label">Strategy (capped)</div><div class="value mono">${(strat.avg_car_capped*100).toFixed(1)}%</div><div class="sub">n=${strat.n}, hit=${(strat.hit_rate*100).toFixed(0)}%</div></div>`;
+            ih += `<div class="stat-card"><div class="label">Stops Hit</div><div class="value mono neg">${strat.stop_triggered}</div></div>`;
+            ih += `<div class="stat-card"><div class="label">TP Hit</div><div class="value mono pos">${strat.tp_triggered}</div></div>`;
+          }
+          ih += '</div>';
+        }
+        if (fsg.gap_sources && fsg.gap_sources.length) {
+          fsg.gap_sources.forEach(s => {
+            ih += `<div class="interp-box" style="margin-bottom:4px">${s}</div>`;
+          });
+        }
+        ih += '</div></div>';
+      }
+
       // Model Health
       ih += '<div class="section"><div class="section-header">Model Health</div>';
       const freshness = checks.data_freshness || {};

@@ -139,22 +139,47 @@ jobs:
       - name: Notify brain health on success
         if: success()
         run: |
-          STATUS=$(python3 -c "import json; d=json.load(open('data/brain_health.json')); print(d['overall_status'])" 2>/dev/null || echo "unknown")
-          FEAT_REC=$(python3 -c "
+          NOTIFY=$(python3 -c "
           import json, os
           parts = []
+
+          # Brain status
+          if os.path.exists('data/brain_health.json'):
+              h = json.load(open('data/brain_health.json'))
+              parts.append(f\"Brain: {h.get('overall_status', 'unknown').upper()}\")
+
+              # Data quality checks
+              checks = h.get('checks', {})
+              critical = [k for k, v in checks.items() if v.get('status') == 'critical']
+              if critical:
+                  parts.append(f\"CRITICAL: {', '.join(critical)}\")
+
+              # Strategy readiness
+              sr = checks.get('strategy_readiness', {})
+              if sr.get('readiness'):
+                  parts.append(f\"Trades: {sr.get('ready', '?')}/{sr.get('eligible', '?')}\")
+
+              # Residual patterns
+              res = h.get('residuals', {}).get('summary', {})
+              if res.get('n_false_positives'):
+                  parts.append(f\"FP:{res['n_false_positives']} FN:{res.get('n_false_negatives',0)}\")
+
+          # Feature recs
           if os.path.exists('data/feature_candidates.json'):
               d = json.load(open('data/feature_candidates.json'))
-              recs = [f\"{n} (+{i['ic_delta']:.4f})\" for n, i in d.get('candidates', {}).items()
+              recs = [n for n, i in d.get('candidates', {}).items()
                       if i.get('recommendation') == 'ADD' and i.get('ic_delta', 0) > 0.005]
-              if recs: parts.append(f'Recs: {\", \".join(recs)}')
+              if recs: parts.append(f\"Recs: {', '.join(recs)}\")
+
+          # Hypotheses
           if os.path.exists('data/signal_hypotheses.json'):
-              h = json.load(open('data/signal_hypotheses.json'))
-              n = len(h.get('high_residual_tickers',[])) + len(h.get('feature_interactions',[])) + len(h.get('regime_gaps',[]))
+              sh = json.load(open('data/signal_hypotheses.json'))
+              n = len(sh.get('high_residual_tickers',[])) + len(sh.get('feature_interactions',[])) + len(sh.get('regime_gaps',[]))
               if n: parts.append(f'{n} hypotheses')
-          print((' | ' + ', '.join(parts)) if parts else '')
-          " 2>/dev/null || echo "")
-          curl -s -d "ATLAS daily complete. Brain: $STATUS$FEAT_REC" \
+
+          print('ATLAS daily: ' + ' | '.join(parts) if parts else 'ATLAS daily complete')
+          " 2>/dev/null || echo "ATLAS daily complete")
+          curl -s -d "$NOTIFY" \
             https://ntfy.sh/atlas-${{ secrets.NTFY_CHANNEL }} || true
 
       - name: Notify on failure
