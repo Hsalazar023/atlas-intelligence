@@ -5515,53 +5515,82 @@ def run_self_check(conn: sqlite3.Connection) -> dict:
 
 
 def compute_signal_intelligence(conn: sqlite3.Connection) -> dict:
-    """Profile best/worst signals to surface predictive patterns."""
+    """Profile best/worst signals to surface predictive patterns.
+
+    Filters to tradeable universe (mid+ cap) to avoid micro-cap noise.
+    Uses quarterly earnings proximity (capped at 90 days) instead of raw
+    days_to_earnings which was polluted by annual/missing values.
+    """
     import pandas as pd
+    min_cap = TRADING_RULES.get('min_market_cap', 'mid')
+    min_rank = CAP_ORDER.get(min_cap, 3)
+    valid_caps = [cap for cap, rank in CAP_ORDER.items() if rank >= min_rank]
+
     df = pd.read_sql('''
         SELECT ticker, signal_date, total_score, oos_score,
                car_30d, insider_role, sector, source,
-               vix_at_signal, days_to_earnings
+               vix_at_signal, days_to_earnings, market_cap_bucket
         FROM signals
         WHERE car_30d IS NOT NULL AND oos_score IS NOT NULL
         ORDER BY car_30d DESC
     ''', conn)
+
+    # Filter to tradeable universe
+    if valid_caps:
+        df = df[df['market_cap_bucket'].isin(valid_caps)]
+
     if len(df) < 100:
-        log.info(f"Signal intelligence: only {len(df)} signals with OOS+CAR, skipping")
+        log.info(f"Signal intelligence: only {len(df)} tradeable signals with OOS+CAR, skipping")
         return {}
+
+    # Quarterly earnings: cap at 90 days, exclude 999/bad values
+    df['earnings_q'] = df['days_to_earnings'].apply(
+        lambda x: x if x is not None and 0 <= x <= 90 else None
+    )
 
     top = df.head(50)
     bot = df.tail(50)
 
     def profile(group, label):
+        eq = group['earnings_q'].dropna()
         result = {
             'label': label, 'n': len(group),
             'avg_score': round(float(group.total_score.mean()), 1),
             'avg_oos': round(float(group.oos_score.mean()), 1),
             'avg_car': round(float(group.car_30d.mean() * 100), 2),
             'avg_vix': round(float(group.vix_at_signal.dropna().mean()), 1) if group.vix_at_signal.notna().any() else None,
-            'avg_days_to_earnings': round(float(group.days_to_earnings.dropna().mean()), 1) if group.days_to_earnings.notna().any() else None,
+            'avg_days_to_earnings': round(float(eq.mean()), 1) if len(eq) > 0 else None,
+            'pct_pre_earnings_30d': round(float((eq <= 30).mean()), 3) if len(eq) > 0 else None,
             'top_roles': group.insider_role.value_counts().head(3).to_dict(),
             'top_sectors': group.sector.value_counts().head(3).to_dict(),
+            'top_caps': group.market_cap_bucket.value_counts().head(3).to_dict(),
             'source_split': group.source.value_counts().to_dict(),
             'examples': group[['ticker', 'signal_date', 'car_30d', 'insider_role']].head(10).to_dict('records'),
         }
         return result
 
+    top_eq = top['earnings_q'].dropna()
+    bot_eq = bot['earnings_q'].dropna()
+    earnings_gap = None
+    if len(top_eq) > 5 and len(bot_eq) > 5:
+        earnings_gap = round(float(top_eq.mean() - bot_eq.mean()), 1)
+
     output = {
         'generated': datetime.now(tz=timezone.utc).isoformat(),
         'total_signals': len(df),
+        'universe_filter': f'{min_cap}+ cap ({len(df)} signals)',
         'best_50': profile(top, 'best_50'),
         'worst_50': profile(bot, 'worst_50'),
         'divergence': {
             'score_gap': round(float(top.total_score.mean() - bot.total_score.mean()), 1),
             'oos_gap': round(float(top.oos_score.mean() - bot.oos_score.mean()), 1),
             'vix_gap': round(float(top.vix_at_signal.dropna().mean() - bot.vix_at_signal.dropna().mean()), 1) if top.vix_at_signal.notna().any() and bot.vix_at_signal.notna().any() else None,
-            'earnings_gap': round(float(top.days_to_earnings.dropna().mean() - bot.days_to_earnings.dropna().mean()), 1) if top.days_to_earnings.notna().any() and bot.days_to_earnings.notna().any() else None,
+            'earnings_gap': earnings_gap,
         },
     }
     save_json(SIGNAL_INTELLIGENCE, output)
     div = output['divergence']
-    log.info(f"Signal intelligence: score_gap={div['score_gap']}, oos_gap={div['oos_gap']}, "
+    log.info(f"Signal intelligence ({min_cap}+ cap): score_gap={div['score_gap']}, oos_gap={div['oos_gap']}, "
              f"vix_gap={div.get('vix_gap', '?')}, earnings_gap={div.get('earnings_gap', '?')}")
     return output
 
@@ -6488,6 +6517,7 @@ TRADING_RULES = {
     'entry_threshold': 65,       # minimum total_score to initiate a buy
     'stop_loss_pct': -0.10,      # -10% hard stop from entry price
     'hold_days': 30,             # max hold period (days)
+    'min_market_cap': 'mid',     # minimum cap bucket (options liquidity)
     'position_tiers': [          # (min_score, weight_multiplier)
         (85, 1.5),               # 85+: conviction — 1.5x
         (75, 1.0),               # 75-84: standard — 1.0x
@@ -6503,6 +6533,20 @@ TRADING_RULES = {
         (65, 0.10),              # 65-74: tight trail — protect starter gains
     ],
 }
+
+# Market cap buckets ordered by size (for min_market_cap filter)
+CAP_ORDER = {'mega': 5, 'large': 4, 'mid': 3, 'small': 2, 'micro': 1}
+
+
+def _passes_cap_filter(cap_bucket: str, rules: dict = None) -> bool:
+    """Check if a market cap bucket meets the minimum threshold."""
+    rules = rules or TRADING_RULES
+    min_cap = rules.get('min_market_cap')
+    if not min_cap:
+        return True
+    min_rank = CAP_ORDER.get(min_cap, 0)
+    actual_rank = CAP_ORDER.get(cap_bucket or '', 0)
+    return actual_rank >= min_rank
 
 
 def _position_weight(score: float, rules: dict = None) -> float:
@@ -6550,7 +6594,8 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
 
     rows = conn.execute("""
         SELECT id, ticker, signal_date, total_score, oos_score,
-               price_at_signal, car_30d, source, sector, insider_name
+               price_at_signal, car_30d, source, sector, insider_name,
+               market_cap_bucket
         FROM signals
         WHERE total_score >= ? AND outcome_30d_filled = 1
           AND car_30d IS NOT NULL AND price_at_signal IS NOT NULL
@@ -6560,8 +6605,14 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
 
     trades = []
     _price_cache = {}
+    skipped_cap = 0
 
     for r in rows:
+        # Market cap filter (options liquidity)
+        if not _passes_cap_filter(r['market_cap_bucket'], rules):
+            skipped_cap += 1
+            continue
+
         ticker = r['ticker']
         entry_date = r['signal_date']
         entry_price = float(r['price_at_signal'])
@@ -6667,8 +6718,10 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
             'peak_gain': round(peak_gain, 4),
         })
 
+    cap_note = f", skipped_cap={skipped_cap}" if skipped_cap else ""
     log.info(f"Simulated {len(trades)} trades (threshold={threshold}, "
-             f"stop={stop_pct:.0%}, trail_activate={activate_pct:.0%})")
+             f"stop={stop_pct:.0%}, trail={activate_pct:.0%}, "
+             f"min_cap={rules.get('min_market_cap', 'any')}{cap_note})")
     return trades
 
 
@@ -7038,6 +7091,9 @@ def export_brain_data(conn: sqlite3.Connection) -> None:
             'liquidity_flag': r.get('liquidity_flag'),
             # OOS score (honest walk-forward)
             'oos_score': round(r.get('oos_score'), 1) if r.get('oos_score') is not None else None,
+            # Market cap + tradability
+            'market_cap': r.get('market_cap_bucket') or 'unknown',
+            'tradeable': _passes_cap_filter(r.get('market_cap_bucket')),
             # Regime context
             'regime_multiplier': regime_mult,
             'regime_label': regime_ctx.get('regime', 'UNKNOWN'),

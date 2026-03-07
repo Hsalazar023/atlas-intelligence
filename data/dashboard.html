@@ -711,7 +711,8 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         const daysWarn = s.days_remaining != null && s.days_remaining <= 7;
         const clusterBadge = n >= 2 ? `<span class="cluster-badge">${n} insiders</span>` : '<span class="dim">1</span>';
         html += `<tr class="expand-toggle" data-idx="a${gi}">`;
-        html += `<td class="ticker">${s.ticker} ${sourceTag(s.source)}</td>`;
+        const capWarnA = s.tradeable === false ? ' <span class="tag" style="background:#555;color:#aaa;font-size:0.55rem">LOW CAP</span>' : '';
+        html += `<td class="ticker">${s.ticker}${capWarnA} ${sourceTag(s.source)}</td>`;
         html += `<td>${scoreBar(s.total_score)}</td>`;
         html += `<td>${oosCell(s)}</td>`;
         html += `<td>${clusterBadge}</td>`;
@@ -779,7 +780,8 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         const stopPctVal = (s.stop != null && entryMid) ? ((s.stop - entryMid) / entryMid * 100) : null;
         const clusterMark = n >= 2 ? ` <span class="cluster-badge">${n}</span>` : '';
         html += `<tr class="expand-toggle" data-idx="n${gi}">`;
-        html += `<td class="ticker">${s.ticker}${clusterMark} ${sourceTag(s.source)}</td>`;
+        const capWarn = s.tradeable === false ? ' <span class="tag" style="background:#555;color:#aaa;font-size:0.55rem">LOW CAP</span>' : '';
+        html += `<td class="ticker">${s.ticker}${clusterMark}${capWarn} ${sourceTag(s.source)}</td>`;
         html += `<td>${scoreBar(s.total_score)}</td>`;
         html += `<td>${oosCell(s)}</td>`;
         html += `<td class="dim">${fmtDate(s.signal_date)}</td>`;
@@ -828,7 +830,8 @@ tr:hover td { background: rgba(68,136,255,0.06); }
       if (strat.total_trades) {
         const exitR = strat.exit_reasons || {};
         ph += '<div class="section"><div class="section-header">Strategy Performance';
-        ph += `<span class="dim" style="font-weight:400;font-size:0.7rem;margin-left:8px">score \u2265 ${rules.entry_threshold || 65} | stop ${((rules.stop_loss_pct || -0.1) * 100).toFixed(0)}% | trail ${((rules.trail_activate_pct || 0.08) * 100).toFixed(0)}%+ | ${rules.hold_days || 30}d hold</span>`;
+        const capLabel = rules.min_market_cap ? ` | ${rules.min_market_cap}+ cap` : '';
+        ph += `<span class="dim" style="font-weight:400;font-size:0.7rem;margin-left:8px">score \u2265 ${rules.entry_threshold || 65} | stop ${((rules.stop_loss_pct || -0.1) * 100).toFixed(0)}% | trail ${((rules.trail_activate_pct || 0.08) * 100).toFixed(0)}%+${capLabel} | ${rules.hold_days || 30}d hold</span>`;
         ph += '</div><div style="padding:12px 16px">';
 
         ph += '<div class="stats-row">';
@@ -986,20 +989,21 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         const w = intel.worst_50 || {};
         const d = intel.divergence || {};
 
-        ih += '<div class="section"><div class="section-header">Signal Intelligence</div><div style="padding:12px 16px">';
+        const uFilter = intel.universe_filter || '';
+        ih += `<div class="section"><div class="section-header">Signal Intelligence${uFilter ? ` <span class="dim" style="font-weight:400;font-size:0.7rem">(${uFilter})</span>` : ''}</div><div style="padding:12px 16px">`;
         ih += '<div class="stats-row" style="margin-bottom:12px">';
         ih += `<div class="stat-card"><div class="label">Score Gap</div><div class="value mono ${(d.score_gap||0) > 5 ? 'pos' : 'warn'}">${d.score_gap || '\u2014'}</div><div class="sub">best - worst avg</div></div>`;
         ih += `<div class="stat-card"><div class="label">OOS Gap</div><div class="value mono ${(d.oos_gap||0) > 5 ? 'pos' : 'warn'}">${d.oos_gap || '\u2014'}</div></div>`;
         ih += `<div class="stat-card"><div class="label">VIX Gap</div><div class="value mono">${d.vix_gap || '\u2014'}</div></div>`;
-        ih += `<div class="stat-card"><div class="label">Earnings Gap</div><div class="value mono">${d.earnings_gap || '\u2014'}</div></div>`;
+        ih += `<div class="stat-card"><div class="label">Earnings Gap</div><div class="value mono">${d.earnings_gap != null ? d.earnings_gap + 'd' : '\u2014'}</div><div class="sub">quarterly, 0-90d</div></div>`;
         ih += '</div>';
 
         // Interpretations
         ih += '<div style="margin-bottom:12px">';
-        if (d.score_gap) ih += `<div class="interp-box"><strong>Score gap ${d.score_gap}:</strong> Model discriminates strongly \u2014 high scores do identify better signals</div>`;
-        if (d.oos_gap) ih += `<div class="interp-box"><strong>OOS gap ${d.oos_gap}:</strong> OOS score does not predict extreme tails \u2014 investigate in next session</div>`;
-        if (d.vix_gap != null) ih += `<div class="interp-box"><strong>VIX gap ${d.vix_gap}:</strong> Best/worst signals occur in same regime \u2014 regime is not the differentiator for extremes</div>`;
-        if (d.earnings_gap) ih += `<div class="interp-box"><strong>Earnings gap ${d.earnings_gap}:</strong> Best signals average ${Math.abs(Math.round(d.earnings_gap))} days closer to earnings \u2014 timing relative to catalysts matters</div>`;
+        if (d.score_gap > 10) ih += `<div class="interp-box"><strong>Score gap ${d.score_gap}:</strong> Model discriminates strongly \u2014 high scores identify better signals</div>`;
+        if (d.oos_gap > 5) ih += `<div class="interp-box"><strong>OOS gap +${d.oos_gap}:</strong> Walk-forward predictions separate winners from losers</div>`;
+        else if (d.oos_gap != null && d.oos_gap <= 0) ih += `<div class="interp-box warn"><strong>OOS gap ${d.oos_gap}:</strong> OOS doesn't separate extreme tails \u2014 model predicts direction, not magnitude</div>`;
+        if (d.earnings_gap != null && d.earnings_gap < -5) ih += `<div class="interp-box"><strong>Earnings gap ${d.earnings_gap}d:</strong> Best signals are ${Math.abs(Math.round(d.earnings_gap))}d closer to quarterly earnings \u2014 insiders buy before catalysts</div>`;
         ih += '</div>';
 
         // Best vs Worst table
@@ -1008,7 +1012,8 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         ih += `<tr><td class="dim">Avg Score</td><td class="mono">${b.avg_score || '\u2014'}</td><td class="mono">${w.avg_score || '\u2014'}</td></tr>`;
         ih += `<tr><td class="dim">Avg OOS</td><td class="mono">${b.avg_oos || '\u2014'}</td><td class="mono">${w.avg_oos || '\u2014'}</td></tr>`;
         ih += `<tr><td class="dim">Avg VIX</td><td class="mono">${b.avg_vix || '\u2014'}</td><td class="mono">${w.avg_vix || '\u2014'}</td></tr>`;
-        ih += `<tr><td class="dim">Days to Earnings</td><td class="mono">${b.avg_days_to_earnings || '\u2014'}</td><td class="mono">${w.avg_days_to_earnings || '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Days to Earnings</td><td class="mono">${b.avg_days_to_earnings != null ? b.avg_days_to_earnings + 'd' : '\u2014'}</td><td class="mono">${w.avg_days_to_earnings != null ? w.avg_days_to_earnings + 'd' : '\u2014'}</td></tr>`;
+        ih += `<tr><td class="dim">Pre-Earnings 30d</td><td class="mono">${b.pct_pre_earnings_30d != null ? (b.pct_pre_earnings_30d * 100).toFixed(0) + '%' : '\u2014'}</td><td class="mono">${w.pct_pre_earnings_30d != null ? (w.pct_pre_earnings_30d * 100).toFixed(0) + '%' : '\u2014'}</td></tr>`;
         const bRoles = Object.entries(b.top_roles || {}).map(([k,v]) => `${k}(${v})`).join(', ');
         const wRoles = Object.entries(w.top_roles || {}).map(([k,v]) => `${k}(${v})`).join(', ');
         ih += `<tr><td class="dim">Top Roles</td><td class="dim" style="font-size:0.7rem;white-space:normal">${bRoles || '\u2014'}</td><td class="dim" style="font-size:0.7rem;white-space:normal">${wRoles || '\u2014'}</td></tr>`;
