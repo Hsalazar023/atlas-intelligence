@@ -828,7 +828,7 @@ tr:hover td { background: rgba(68,136,255,0.06); }
       if (strat.total_trades) {
         const exitR = strat.exit_reasons || {};
         ph += '<div class="section"><div class="section-header">Strategy Performance';
-        ph += `<span class="dim" style="font-weight:400;font-size:0.7rem;margin-left:8px">score \u2265 ${rules.entry_threshold || 65} | stop ${((rules.stop_loss_pct || -0.1) * 100).toFixed(0)}% | TP +${((rules.take_profit_pct || 0.2) * 100).toFixed(0)}% | ${rules.hold_days || 30}d hold</span>`;
+        ph += `<span class="dim" style="font-weight:400;font-size:0.7rem;margin-left:8px">score \u2265 ${rules.entry_threshold || 65} | stop ${((rules.stop_loss_pct || -0.1) * 100).toFixed(0)}% | trail ${((rules.trail_activate_pct || 0.08) * 100).toFixed(0)}%+ | ${rules.hold_days || 30}d hold</span>`;
         ph += '</div><div style="padding:12px 16px">';
 
         ph += '<div class="stats-row">';
@@ -843,15 +843,15 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         // Exit reasons bar
         const totalExits = strat.total_trades;
         const stopPct = (exitR.stop_loss || 0) / totalExits * 100;
-        const tpPct = (exitR.take_profit || 0) / totalExits * 100;
+        const trailPct = (exitR.trailing_stop || 0) / totalExits * 100;
         const holdPct = (exitR.hold_expire || 0) / totalExits * 100;
         ph += '<div style="margin:10px 0 6px"><div class="dim" style="font-size:0.7rem;margin-bottom:4px">Exit Reasons</div>';
         ph += '<div style="display:flex;height:12px;border-radius:4px;overflow:hidden;gap:1px">';
-        if (tpPct > 0) ph += `<div style="width:${tpPct}%;background:var(--green)" title="Take Profit: ${exitR.take_profit}"></div>`;
+        if (trailPct > 0) ph += `<div style="width:${trailPct}%;background:var(--green)" title="Trailing Stop: ${exitR.trailing_stop}"></div>`;
         if (holdPct > 0) ph += `<div style="width:${holdPct}%;background:var(--blue)" title="Hold Expire: ${exitR.hold_expire}"></div>`;
         if (stopPct > 0) ph += `<div style="width:${stopPct}%;background:var(--red)" title="Stop Loss: ${exitR.stop_loss}"></div>`;
         ph += '</div>';
-        ph += `<div class="dim" style="font-size:0.65rem;margin-top:3px"><span class="pos">\u25A0</span> TP: ${exitR.take_profit || 0} &nbsp; <span style="color:var(--blue)">\u25A0</span> Hold: ${exitR.hold_expire || 0} &nbsp; <span class="neg">\u25A0</span> Stop: ${exitR.stop_loss || 0}</div>`;
+        ph += `<div class="dim" style="font-size:0.65rem;margin-top:3px"><span class="pos">\u25A0</span> Trail: ${exitR.trailing_stop || 0} &nbsp; <span style="color:var(--blue)">\u25A0</span> Hold: ${exitR.hold_expire || 0} &nbsp; <span class="neg">\u25A0</span> Stop: ${exitR.stop_loss || 0}</div>`;
         ph += '</div>';
 
         // Score tier breakdown
@@ -866,6 +866,18 @@ tr:hover td { background: rgba(68,136,255,0.06); }
             ph += `<td class="mono ${t.avg_weighted >= 0 ? 'pos' : 'neg'}">${t.avg_weighted >= 0 ? '+' : ''}${(t.avg_weighted * 100).toFixed(1)}%</td></tr>`;
           });
           ph += '</tbody></table></div></div>';
+        }
+
+        // Peak gain analysis
+        const ps = strat.peak_stats;
+        if (ps && ps.avg_peak) {
+          ph += '<div style="margin-top:10px"><div class="dim" style="font-size:0.7rem;margin-bottom:4px">Upside Capture</div>';
+          ph += '<div class="stats-row">';
+          ph += `<div class="stat-card"><div class="label">Avg Peak Gain</div><div class="value mono pos">+${(ps.avg_peak * 100).toFixed(1)}%</div></div>`;
+          ph += `<div class="stat-card"><div class="label">Avg Captured</div><div class="value mono pos">+${(ps.avg_captured * 100).toFixed(1)}%</div></div>`;
+          ph += `<div class="stat-card"><div class="label">Capture Ratio</div><div class="value mono">${(ps.capture_ratio * 100).toFixed(0)}%</div><div class="sub">of peak gain realized</div></div>`;
+          ph += `<div class="stat-card"><div class="label">Runners</div><div class="value mono pos">${ps.runners_30pct || 0}</div><div class="sub">trades gained 30%+</div></div>`;
+          ph += '</div></div>';
         }
         ph += '</div></div>';
 
@@ -917,8 +929,8 @@ tr:hover td { background: rgba(68,136,255,0.06); }
         closedList.slice(0, 50).forEach((s, i) => {
           const ret = s.return_pct;
           const win = ret != null && ret > 0;
-          const exitTag = s.exit_reason === 'take_profit' ? '<span class="tag tag-win">TP +20%</span>'
-            : s.exit_reason === 'stop_loss' ? '<span class="tag tag-loss">STOP -10%</span>'
+          const exitTag = s.exit_reason === 'trailing_stop' ? '<span class="tag tag-win">TRAIL</span>'
+            : s.exit_reason === 'stop_loss' ? '<span class="tag tag-loss">STOP</span>'
             : '<span class="tag" style="background:var(--blue);color:#fff">HOLD</span>';
           ph += `<tr class="expandable-row" onclick="this.nextElementSibling.classList.toggle('hidden')" style="cursor:pointer">`;
           ph += `<td class="ticker">${s.ticker}</td>`;
@@ -1039,9 +1051,10 @@ tr:hover td { background: rgba(68,136,255,0.06); }
             ih += `<div class="stat-card"><div class="label">OOS 75+ Raw</div><div class="value mono pos">${(oos.avg_car*100).toFixed(1)}%</div><div class="sub">n=${oos.n}, hit=${(oos.hit_rate*100).toFixed(0)}%</div></div>`;
           }
           if (strat.n) {
-            ih += `<div class="stat-card"><div class="label">Strategy (capped)</div><div class="value mono">${(strat.avg_car_capped*100).toFixed(1)}%</div><div class="sub">n=${strat.n}, hit=${(strat.hit_rate*100).toFixed(0)}%</div></div>`;
+            const stratAvg = strat.avg_car_floored ?? strat.avg_car_capped ?? 0;
+            ih += `<div class="stat-card"><div class="label">Strategy (floored)</div><div class="value mono">${(stratAvg*100).toFixed(1)}%</div><div class="sub">n=${strat.n}, hit=${(strat.hit_rate*100).toFixed(0)}%</div></div>`;
             ih += `<div class="stat-card"><div class="label">Stops Hit</div><div class="value mono neg">${strat.stop_triggered}</div></div>`;
-            ih += `<div class="stat-card"><div class="label">TP Hit</div><div class="value mono pos">${strat.tp_triggered}</div></div>`;
+            ih += `<div class="stat-card"><div class="label">Runners 20%+</div><div class="value mono pos">${strat.runners_20pct || strat.tp_triggered || 0}</div></div>`;
           }
           ih += '</div>';
         }

@@ -6486,13 +6486,21 @@ def compute_kelly_size(oos_score, hit_rate, avg_win, avg_loss,
 
 TRADING_RULES = {
     'entry_threshold': 65,       # minimum total_score to initiate a buy
-    'stop_loss_pct': -0.10,      # -10% trailing stop from entry price
-    'take_profit_pct': 0.20,     # +20% take profit target
+    'stop_loss_pct': -0.10,      # -10% hard stop from entry price
     'hold_days': 30,             # max hold period (days)
     'position_tiers': [          # (min_score, weight_multiplier)
         (85, 1.5),               # 85+: conviction — 1.5x
         (75, 1.0),               # 75-84: standard — 1.0x
         (65, 0.5),               # 65-74: starter — 0.5x
+    ],
+    # Trailing stop: activates after gain exceeds trail_activate_pct,
+    # then trails at trail_pct below the high-water mark.
+    # Score tiers get different trails — higher conviction = wider leash.
+    'trail_activate_pct': 0.08,  # trailing stop activates after +8% gain
+    'trail_tiers': [             # (min_score, trail_pct_from_peak)
+        (85, 0.15),              # 85+: wide trail — give conviction picks room
+        (75, 0.12),              # 75-84: standard trail
+        (65, 0.10),              # 65-74: tight trail — protect starter gains
     ],
 }
 
@@ -6506,15 +6514,30 @@ def _position_weight(score: float, rules: dict = None) -> float:
     return 0.0
 
 
+def _trail_pct(score: float, rules: dict = None) -> float:
+    """Map score to trailing stop percentage (distance from peak)."""
+    rules = rules or TRADING_RULES
+    for min_score, trail in rules.get('trail_tiers', []):
+        if score >= min_score:
+            return trail
+    return 0.10  # default tight trail
+
+
 def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
-    """Simulate trades with entry threshold, stop-loss, take-profit, position sizing.
+    """Simulate trades with entry threshold, hard stop, trailing stop, position sizing.
 
     For each signal above entry_threshold with a filled outcome:
       1. Entry at price_at_signal on signal_date
-      2. Scan daily lows for stop-loss hit (-10% from entry)
-      3. Scan daily highs for take-profit hit (+20% from entry)
-      4. If neither triggered, exit at close on hold_days or last available date
+      2. Hard stop-loss at stop_loss_pct from entry (always active)
+      3. Once gain exceeds trail_activate_pct, trailing stop activates:
+         - Tracks high-water mark (HWM) of daily closes
+         - Exits when price drops trail_pct below HWM
+         - Trail width varies by score tier (higher score = wider trail)
+      4. If neither triggered, exit at close on hold_days
       5. Position weight based on score tier
+
+    This lets winners run: no fixed TP cap. High-conviction signals get
+    a wider trailing stop so the best picks have room to compound.
 
     Returns list of trade dicts with entry/exit details and weighted return.
     """
@@ -6522,7 +6545,7 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
     rules = rules or TRADING_RULES
     threshold = rules['entry_threshold']
     stop_pct = rules['stop_loss_pct']
-    tp_pct = rules['take_profit_pct']
+    activate_pct = rules.get('trail_activate_pct', 0.08)
     max_hold = rules['hold_days']
 
     rows = conn.execute("""
@@ -6536,7 +6559,6 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
     """, (threshold,)).fetchall()
 
     trades = []
-    # Cache loaded price files
     _price_cache = {}
 
     for r in rows:
@@ -6546,6 +6568,7 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
         score = float(r['total_score'])
         oos = float(r['oos_score']) if r['oos_score'] else None
         weight = _position_weight(score, rules)
+        trail = _trail_pct(score, rules)
 
         # Load price data
         if ticker not in _price_cache:
@@ -6561,7 +6584,6 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
 
         prices = _price_cache[ticker]
         if not prices:
-            # No price data — fall back to raw CAR
             trades.append({
                 'id': r['id'], 'ticker': ticker, 'signal_date': entry_date,
                 'score': round(score, 1), 'oos_score': round(oos, 1) if oos else None,
@@ -6572,12 +6594,13 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
                 'weight': weight,
                 'weighted_return': round(float(r['car_30d']) * weight, 4),
                 'source': r['source'], 'sector': r['sector'] or 'Unknown',
+                'peak_gain': None,
             })
             continue
 
         # Get sorted trading days after entry
-        stop_price = entry_price * (1 + stop_pct)
-        tp_price = entry_price * (1 + tp_pct)
+        hard_stop_price = entry_price * (1 + stop_pct)
+        activate_price = entry_price * (1 + activate_pct)
 
         trading_days = sorted([d for d in prices.keys()
                                if d > entry_date and isinstance(prices[d], dict)])[:max_hold]
@@ -6585,27 +6608,40 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
         exit_price = None
         exit_date = None
         exit_reason = 'hold_expire'
+        hwm = entry_price  # high-water mark
+        trailing_active = False
 
         for day in trading_days:
             bar = prices[day]
             low = bar.get('l', bar.get('c', entry_price))
             high = bar.get('h', bar.get('c', entry_price))
+            close = bar.get('c', entry_price)
 
-            # Check stop-loss (low breaches stop price)
-            if low <= stop_price:
-                exit_price = stop_price
+            # Update high-water mark
+            if high > hwm:
+                hwm = high
+
+            # 1. Hard stop-loss (always active, from entry)
+            if low <= hard_stop_price:
+                exit_price = hard_stop_price
                 exit_date = day
                 exit_reason = 'stop_loss'
                 break
 
-            # Check take-profit (high breaches target)
-            if high >= tp_price:
-                exit_price = tp_price
-                exit_date = day
-                exit_reason = 'take_profit'
-                break
+            # 2. Activate trailing stop once gain exceeds threshold
+            if not trailing_active and high >= activate_price:
+                trailing_active = True
 
-        # If no trigger, exit at last day's close (or hold_days close)
+            # 3. Trailing stop: exit if price drops trail% below HWM
+            if trailing_active:
+                trail_stop_price = hwm * (1 - trail)
+                if low <= trail_stop_price:
+                    exit_price = trail_stop_price
+                    exit_date = day
+                    exit_reason = 'trailing_stop'
+                    break
+
+        # If no trigger, exit at last day's close
         if exit_price is None:
             if trading_days:
                 last_day = trading_days[-1]
@@ -6616,6 +6652,7 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
                 exit_date = None
 
         ret = (exit_price - entry_price) / entry_price
+        peak_gain = (hwm - entry_price) / entry_price if hwm > entry_price else 0
 
         trades.append({
             'id': r['id'], 'ticker': ticker, 'signal_date': entry_date,
@@ -6627,10 +6664,11 @@ def simulate_trades(conn: sqlite3.Connection, rules: dict = None) -> list[dict]:
             'weight': weight,
             'weighted_return': round(ret * weight, 4),
             'source': r['source'], 'sector': r['sector'] or 'Unknown',
+            'peak_gain': round(peak_gain, 4),
         })
 
     log.info(f"Simulated {len(trades)} trades (threshold={threshold}, "
-             f"stop={stop_pct:.0%}, tp={tp_pct:.0%})")
+             f"stop={stop_pct:.0%}, trail_activate={activate_pct:.0%})")
     return trades
 
 
@@ -6690,6 +6728,20 @@ def compute_strategy_stats(trades: list[dict]) -> dict:
                 'avg_weighted': round(float(tier['weighted_return'].mean()), 4),
             })
 
+    # Peak gain analysis — how much upside are we capturing?
+    peak_stats = {}
+    if 'peak_gain' in df.columns:
+        peaks = df[df['peak_gain'].notna() & (df['peak_gain'] > 0)]
+        if len(peaks) > 0:
+            captured_ratio = peaks['return_pct'] / peaks['peak_gain']
+            peak_stats = {
+                'avg_peak': round(float(peaks['peak_gain'].mean()), 4),
+                'avg_captured': round(float(peaks['return_pct'].mean()), 4),
+                'capture_ratio': round(float(captured_ratio.mean()), 3),
+                'runners_30pct': int((peaks['peak_gain'] >= 0.30).sum()),
+                'runners_50pct': int((peaks['peak_gain'] >= 0.50).sum()),
+            }
+
     return {
         'rules': TRADING_RULES,
         'total_trades': len(df),
@@ -6703,6 +6755,7 @@ def compute_strategy_stats(trades: list[dict]) -> dict:
         'total_cumulative': round(float(cum), 4) if monthly_sorted else 1.0,
         'exit_reasons': {k: int(v) for k, v in exit_counts.items()},
         'tiers': tier_stats,
+        'peak_stats': peak_stats,
         'monthly': monthly[:24],
     }
 
@@ -8482,17 +8535,17 @@ Annualized alpha:{ann_alpha:+.1%}""")
             AND signal_date < '2026-01-01'
         """, conn)
         if len(strat_df) >= 30:
-            # Apply stop-loss / take-profit caps
+            # Apply hard stop-loss floor only (trailing stop lets winners run)
             sl = TRADING_RULES['stop_loss_pct']
-            tp = TRADING_RULES['take_profit_pct']
-            capped = strat_df['car_30d'].clip(lower=sl, upper=tp)
+            floored = strat_df['car_30d'].clip(lower=sl)
             gap_analysis['strategy'] = {
                 'n': len(strat_df),
                 'avg_car_raw': round(float(strat_df['car_30d'].mean()), 4),
-                'avg_car_capped': round(float(capped.mean()), 4),
-                'hit_rate': round(float((capped > 0).mean()), 3),
+                'avg_car_floored': round(float(floored.mean()), 4),
+                'hit_rate': round(float((floored > 0).mean()), 3),
                 'stop_triggered': int((strat_df['car_30d'] < sl).sum()),
-                'tp_triggered': int((strat_df['car_30d'] > tp).sum()),
+                'runners_20pct': int((strat_df['car_30d'] > 0.20).sum()),
+                'runners_30pct': int((strat_df['car_30d'] > 0.30).sum()),
             }
 
         if gap_analysis:
@@ -8501,16 +8554,17 @@ Annualized alpha:{ann_alpha:+.1%}""")
             oos = gap_analysis.get('oos75_raw', {})
             strat = gap_analysis.get('strategy', {})
             if oos and strat:
-                car_diff = oos.get('avg_car', 0) - strat.get('avg_car_capped', 0)
+                car_diff = oos.get('avg_car', 0) - strat.get('avg_car_floored', strat.get('avg_car_capped', 0))
                 if car_diff > 0.01:
-                    sources.append(f"Threshold: OOS 75+ avg {oos['avg_car']:.2%} vs strategy 65+ capped {strat['avg_car_capped']:.2%}")
+                    strat_avg = strat.get('avg_car_floored', strat.get('avg_car_capped', 0))
+                    sources.append(f"Threshold: OOS 75+ avg {oos['avg_car']:.2%} vs strategy 65+ {strat_avg:.2%}")
                 missing_pct = 1 - oos.get('has_price', 0) / max(oos.get('n', 1), 1)
                 if missing_pct > 0.05:
                     sources.append(f"Missing prices: {missing_pct:.0%} of OOS 75+ signals lack entry price")
                 if strat.get('stop_triggered', 0) > 0:
                     sources.append(f"Stop-loss: {strat['stop_triggered']} trades hit {sl:.0%} floor")
-                if strat.get('tp_triggered', 0) > 0:
-                    sources.append(f"Take-profit: {strat['tp_triggered']} trades hit {tp:.0%} cap")
+                if strat.get('runners_20pct', 0) > 0:
+                    sources.append(f"Runners: {strat['runners_20pct']} trades gained >20%, {strat.get('runners_30pct', 0)} gained >30%")
             gap_analysis['gap_sources'] = sources
             report['factor_strategy_gap'] = gap_analysis
 
@@ -8520,8 +8574,9 @@ FACTOR vs STRATEGY GAP ANALYSIS
             if oos:
                 print(f"OOS 75+ raw:     n={oos['n']} avg={oos['avg_car']:+.2%} hit={oos['hit_rate']:.1%}")
             if strat:
+                strat_avg = strat.get('avg_car_floored', strat.get('avg_car_capped', 0))
                 print(f"Strategy 65+:    n={strat['n']} avg_raw={strat['avg_car_raw']:+.2%} "
-                      f"avg_capped={strat['avg_car_capped']:+.2%} hit={strat['hit_rate']:.1%}")
+                      f"avg_floored={strat_avg:+.2%} hit={strat['hit_rate']:.1%}")
             for s in sources:
                 print(f"  → {s}")
 
