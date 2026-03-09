@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T22:49:42.267454+00:00",
+  "generated": "2026-03-09T22:39:13.639167+00:00",
   "alpha": {
     "value": 0.1125,
     "label": "+11.3%",
@@ -38,13 +38,13 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 29,
-      "match_rate": 0.34
+      "n_trades": 33,
+      "match_rate": 0.36
     },
     {
       "name": "Judiciary",
-      "n_trades": 7,
-      "match_rate": 0.43
+      "n_trades": 9,
+      "match_rate": 0.56
     },
     {
       "name": "Armed Services",
@@ -64,26 +64,44 @@
   ],
   "congress_heatmap": [
     {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 3,
+      "heat": 3
+    },
+    {
+      "ticker": "V",
+      "name": "Visa",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "PG",
       "name": "Procter & Gamble",
       "count": 2,
       "heat": 2
     },
     {
-      "ticker": "BBAI",
-      "name": "BBAI",
+      "ticker": "GOOGL",
+      "name": "Google",
       "count": 2,
       "heat": 2
     },
     {
-      "ticker": "VMW",
-      "name": "VMW",
-      "count": 1,
-      "heat": 1
+      "ticker": "AVGO",
+      "name": "Broadcom",
+      "count": 2,
+      "heat": 2
     },
     {
-      "ticker": "V",
-      "name": "Visa",
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "TTD",
+      "name": "TTD",
       "count": 1,
       "heat": 1
     },
@@ -94,44 +112,32 @@
       "heat": 1
     },
     {
-      "ticker": "MSFT",
-      "name": "Microsoft",
+      "ticker": "NTAP",
+      "name": "NTAP",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "MPWR",
-      "name": "MPWR",
+      "ticker": "NOW",
+      "name": "NOW",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "MCK",
-      "name": "MCK",
+      "ticker": "MEDP",
+      "name": "MEDP",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "LRN",
-      "name": "LRN",
+      "ticker": "LLY",
+      "name": "Eli Lilly",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "GOOGL",
-      "name": "Google",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "GNPX",
-      "name": "GNPX",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "FCFS",
-      "name": "FCFS",
+      "ticker": "KR",
+      "name": "KR",
       "count": 1,
       "heat": 1
     },
@@ -142,31 +148,25 @@
       "heat": 1
     },
     {
-      "ticker": "CRS",
-      "name": "CRS",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "CRM",
       "name": "Salesforce",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "C",
-      "name": "Citigroup",
+      "ticker": "ARLP",
+      "name": "ARLP",
       "count": 1,
       "heat": 1
     }
   ],
   "kpis": {
-    "top_score": 68,
-    "top_score_tickers": "WDFC",
+    "top_score": 67,
+    "top_score_tickers": "PMNT",
     "exceptional_count": 0,
-    "cluster_count": 1,
-    "congress_flags": 25,
-    "convergence_count": 0
+    "cluster_count": 0,
+    "congress_flags": 24,
+    "convergence_count": 1
   },
   "insider_sectors": [],
   "ml": {
@@ -632,12 +632,16 @@
   },
   "pruning_log": [],
   "regime": {
-    "current_regime": "normal",
+    "current_regime": "elevated",
     "distribution": {
-      "normal": 582
+      "elevated": 25,
+      "low_vol": 124,
+      "normal": 490
     },
     "hit_rates": {
-      "normal": 0.524
+      "elevated": 0.36,
+      "low_vol": 0.605,
+      "normal": 0.51
     }
   },
   "features_pruned_history": {
@@ -707,52 +711,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.17,
+        "fill_rate": 0.188,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.17,
+        "fill_rate": 0.188,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.098,
+        "fill_rate": 0.103,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.098,
+        "fill_rate": 0.103,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.102,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.102,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.102,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.102,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.004347,
-    "n_matched_signals": 582,
-    "spy_avg_30d_return": 0.012898,
+    "alpha_all_signals": -0.003873,
+    "n_matched_signals": 639,
+    "spy_avg_30d_return": 0.012319,
     "alpha_80plus": 0.01501,
     "n_80plus": 1,
     "alpha_60_79": 0.139441,
     "n_60_79": 20,
     "alpha_below_60": -0.009507,
     "n_below_60": 561,
-    "alpha_congress": -0.007191,
-    "beta_vs_spy": -0.385,
-    "beta_vs_spy_raw": -0.4398
+    "alpha_congress": -0.007519,
+    "beta_vs_spy": -0.4295,
+    "beta_vs_spy_raw": -0.48
   },
   "signal_concentration": {
     "top_ticker": "NONE",

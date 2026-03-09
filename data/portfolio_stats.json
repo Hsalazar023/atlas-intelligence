@@ -1,2087 +1,237 @@
 {
-  "generated": "2026-03-06T22:49:42.267454+00:00",
+  "generated": "2026-03-09T22:39:13.639167+00:00",
   "closed_signals": [
     {
-      "ticker": "THM",
-      "signal_date": "2026-01-30",
-      "total_score": 69.0,
-      "oos_score": null,
-      "car_30d": 0.3944,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "FINS",
-      "signal_date": "2026-01-30",
-      "total_score": 83.0,
-      "oos_score": null,
-      "car_30d": 0.0069,
-      "source": "edgar",
-      "insider_role": "Other",
-      "sector": null
-    },
-    {
-      "ticker": "NRIM",
-      "signal_date": "2026-01-30",
-      "total_score": 71.9,
-      "oos_score": null,
-      "car_30d": 0.0278,
-      "source": "edgar",
-      "insider_role": "EVP, CFO",
-      "sector": null
-    },
-    {
+      "id": 744,
       "ticker": "IP",
       "signal_date": "2026-01-30",
-      "total_score": 71.0,
+      "score": 71.0,
       "oos_score": null,
-      "car_30d": 0.0831,
+      "entry_price": 39.92,
+      "exit_price": 44.78,
+      "exit_date": "2026-02-23",
+      "exit_reason": "trailing_stop",
+      "return_pct": 0.1217,
+      "weight": 0.5,
+      "weighted_return": 0.0608,
       "source": "edgar",
-      "insider_role": "Chief Executive Officer",
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.2463
     },
     {
-      "ticker": "EMPD",
-      "signal_date": "2026-01-30",
-      "total_score": 13.3,
-      "oos_score": null,
-      "car_30d": -0.15,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "NOMA",
-      "signal_date": "2026-01-30",
-      "total_score": 60.4,
-      "oos_score": null,
-      "car_30d": 0.123,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "PW",
-      "signal_date": "2026-01-30",
-      "total_score": 25.3,
-      "oos_score": null,
-      "car_30d": -0.0244,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "NBBK",
-      "signal_date": "2026-01-30",
-      "total_score": 65.8,
-      "oos_score": null,
-      "car_30d": 0.0043,
-      "source": "edgar",
-      "insider_role": "Director",
-      "sector": null
-    },
-    {
-      "ticker": "WRB",
-      "signal_date": "2026-01-30",
-      "total_score": 59.3,
-      "oos_score": null,
-      "car_30d": 0.0766,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "AUBN",
-      "signal_date": "2026-01-30",
-      "total_score": 41.7,
-      "oos_score": null,
-      "car_30d": -0.0178,
-      "source": "edgar",
-      "insider_role": "Director",
-      "sector": null
-    },
-    {
-      "ticker": "RMBI",
-      "signal_date": "2026-01-30",
-      "total_score": 68.7,
-      "oos_score": null,
-      "car_30d": 0.003,
-      "source": "edgar",
-      "insider_role": "Market President (West Ohio)",
-      "sector": null
-    },
-    {
+      "id": 732,
       "ticker": "HYMC",
       "signal_date": "2026-01-30",
-      "total_score": 67.6,
+      "score": 67.6,
       "oos_score": null,
-      "car_30d": 0.5045,
+      "entry_price": 37.35,
+      "exit_price": 36.38,
+      "exit_date": "2026-02-02",
+      "exit_reason": "trailing_stop",
+      "return_pct": -0.026,
+      "weight": 0.5,
+      "weighted_return": -0.013,
       "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.0822
     },
     {
-      "ticker": "NVDA",
-      "signal_date": "2026-01-30",
-      "total_score": 1.4,
-      "oos_score": null,
-      "car_30d": -0.0375,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SAP",
-      "signal_date": "2026-01-30",
-      "total_score": 0.8,
-      "oos_score": null,
-      "car_30d": -0.0171,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "INTU",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1532,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "WDAY",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.2308,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MELI",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1659,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MSFT",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.0641,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "META",
-      "signal_date": "2026-01-30",
-      "total_score": 4.2,
-      "oos_score": null,
-      "car_30d": -0.0804,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MELI",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1659,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ISRG",
-      "signal_date": "2026-01-30",
-      "total_score": 5.3,
-      "oos_score": null,
-      "car_30d": -0.0078,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AMZN",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1221,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ANET",
-      "signal_date": "2026-01-30",
-      "total_score": 3.9,
-      "oos_score": null,
-      "car_30d": -0.0803,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ASML",
-      "signal_date": "2026-01-30",
-      "total_score": 37.2,
-      "oos_score": null,
-      "car_30d": 0.0099,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AZO",
-      "signal_date": "2026-01-30",
-      "total_score": 29.5,
-      "oos_score": null,
-      "car_30d": 0.0566,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BSX",
-      "signal_date": "2026-01-30",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1784,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "COST",
-      "signal_date": "2026-01-30",
-      "total_score": 32.8,
-      "oos_score": null,
-      "car_30d": 0.0752,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "HD",
-      "signal_date": "2026-01-30",
-      "total_score": 11.9,
-      "oos_score": null,
-      "car_30d": -0.002,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BE",
-      "signal_date": "2026-01-30",
-      "total_score": 32.0,
-      "oos_score": null,
-      "car_30d": 0.1056,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "COIN",
-      "signal_date": "2026-01-30",
-      "total_score": 2.6,
-      "oos_score": null,
-      "car_30d": -0.041,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ETN",
-      "signal_date": "2026-01-30",
-      "total_score": 28.5,
-      "oos_score": null,
-      "car_30d": 0.0827,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "C",
-      "signal_date": "2026-01-30",
-      "total_score": 10.6,
-      "oos_score": null,
-      "car_30d": -0.0239,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GEV",
-      "signal_date": "2026-01-30",
-      "total_score": 39.0,
-      "oos_score": null,
-      "car_30d": 0.223,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AMZN",
-      "signal_date": "2026-01-29",
-      "total_score": 17.3,
-      "oos_score": null,
-      "car_30d": -0.1211,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "JPM",
-      "signal_date": "2026-01-29",
-      "total_score": 13.2,
-      "oos_score": null,
-      "car_30d": -0.0085,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
+      "id": 69,
       "ticker": "IBP",
       "signal_date": "2026-01-29",
-      "total_score": 67.0,
+      "score": 67.0,
       "oos_score": null,
-      "car_30d": 0.133,
+      "entry_price": 292.67,
+      "exit_price": 307.44,
+      "exit_date": "2026-02-11",
+      "exit_reason": "trailing_stop",
+      "return_pct": 0.0505,
+      "weight": 0.5,
+      "weighted_return": 0.0252,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.1672
     },
     {
-      "ticker": "T",
-      "signal_date": "2026-01-29",
-      "total_score": 63.3,
-      "oos_score": null,
-      "car_30d": 0.1277,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PLD",
-      "signal_date": "2026-01-29",
-      "total_score": 59.5,
-      "oos_score": null,
-      "car_30d": 0.1061,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
+      "id": 114,
       "ticker": "RPM",
-      "signal_date": "2026-01-29",
-      "total_score": 59.5,
-      "oos_score": null,
-      "car_30d": 0.0714,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MEDP",
-      "signal_date": "2026-01-29",
-      "total_score": 26.3,
-      "oos_score": null,
-      "car_30d": -0.2293,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AVGO",
-      "signal_date": "2026-01-29",
-      "total_score": 20.4,
-      "oos_score": null,
-      "car_30d": -0.0225,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MSFT",
-      "signal_date": "2026-01-29",
-      "total_score": 1.9,
-      "oos_score": null,
-      "car_30d": -0.0813,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CRM",
-      "signal_date": "2026-01-29",
-      "total_score": 31.5,
-      "oos_score": null,
-      "car_30d": -0.0794,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ABT",
-      "signal_date": "2026-01-29",
-      "total_score": 35.7,
-      "oos_score": null,
-      "car_30d": 0.1096,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CAT",
-      "signal_date": "2026-01-29",
-      "total_score": 36.7,
-      "oos_score": null,
-      "car_30d": 0.1297,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ETN",
-      "signal_date": "2026-01-29",
-      "total_score": 30.1,
-      "oos_score": null,
-      "car_30d": 0.0733,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PYPL",
-      "signal_date": "2026-01-29",
-      "total_score": 1.7,
-      "oos_score": null,
-      "car_30d": -0.1224,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CVS",
-      "signal_date": "2026-01-29",
-      "total_score": 34.4,
-      "oos_score": null,
-      "car_30d": 0.0859,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IREN",
-      "signal_date": "2026-01-28",
-      "total_score": 2.2,
-      "oos_score": null,
-      "car_30d": -0.3404,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LH",
-      "signal_date": "2026-01-28",
-      "total_score": 33.2,
-      "oos_score": null,
-      "car_30d": 0.0962,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SPYV",
-      "signal_date": "2026-01-28",
-      "total_score": 32.8,
-      "oos_score": null,
-      "car_30d": 0.0412,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PICK",
-      "signal_date": "2026-01-28",
-      "total_score": 33.5,
-      "oos_score": null,
-      "car_30d": 0.0635,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "TLH",
-      "signal_date": "2026-01-28",
-      "total_score": 34.8,
-      "oos_score": null,
-      "car_30d": 0.0455,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SPMB",
-      "signal_date": "2026-01-28",
-      "total_score": 30.8,
-      "oos_score": null,
-      "car_30d": 0.0254,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GDX",
-      "signal_date": "2026-01-28",
-      "total_score": 27.0,
-      "oos_score": null,
-      "car_30d": 0.047,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NSIT",
-      "signal_date": "2026-01-28",
-      "total_score": 22.3,
-      "oos_score": null,
-      "car_30d": 0.0062,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DASH",
-      "signal_date": "2026-01-28",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1343,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CSGP",
-      "signal_date": "2026-01-28",
-      "total_score": 5.8,
-      "oos_score": null,
-      "car_30d": -0.3061,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FNV",
-      "signal_date": "2026-01-27",
-      "total_score": 33.3,
-      "oos_score": null,
-      "car_30d": 0.0817,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "EPAC",
-      "signal_date": "2026-01-27",
-      "total_score": 32.4,
-      "oos_score": null,
-      "car_30d": 0.0421,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GILD",
-      "signal_date": "2026-01-27",
-      "total_score": 34.0,
-      "oos_score": null,
-      "car_30d": 0.029,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MELI",
-      "signal_date": "2026-01-26",
-      "total_score": 7.0,
-      "oos_score": null,
-      "car_30d": -0.2016,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ICE",
-      "signal_date": "2026-01-26",
-      "total_score": 4.0,
-      "oos_score": null,
-      "car_30d": -0.0849,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DXCM",
-      "signal_date": "2026-01-26",
-      "total_score": 14.4,
-      "oos_score": null,
-      "car_30d": -0.0031,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SLGL",
-      "signal_date": "2026-01-23",
-      "total_score": 62.7,
-      "oos_score": null,
-      "car_30d": 0.3982,
-      "source": "edgar",
-      "insider_role": "10% Owner",
-      "sector": null
-    },
-    {
-      "ticker": "PEBO",
-      "signal_date": "2026-01-23",
-      "total_score": 68.2,
-      "oos_score": null,
-      "car_30d": 0.0461,
-      "source": "edgar",
-      "insider_role": "Director",
-      "sector": null
-    },
-    {
-      "ticker": "HOG",
-      "signal_date": "2026-01-23",
-      "total_score": 12.6,
-      "oos_score": null,
-      "car_30d": -0.0362,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LITP",
-      "signal_date": "2026-01-23",
-      "total_score": 6.2,
-      "oos_score": null,
-      "car_30d": -0.1642,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "TPYP",
-      "signal_date": "2026-01-23",
-      "total_score": 41.6,
-      "oos_score": null,
-      "car_30d": 0.1238,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "RNWGX",
-      "signal_date": "2026-01-23",
-      "total_score": 40.0,
-      "oos_score": null,
-      "car_30d": 0.0365,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CMBS",
-      "signal_date": "2026-01-23",
-      "total_score": 36.6,
-      "oos_score": null,
-      "car_30d": 0.0208,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IVV",
-      "signal_date": "2026-01-23",
-      "total_score": 36.4,
-      "oos_score": null,
-      "car_30d": 0.0002,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "VNQI",
-      "signal_date": "2026-01-23",
-      "total_score": 38.4,
-      "oos_score": null,
-      "car_30d": 0.0807,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GEM",
-      "signal_date": "2026-01-23",
-      "total_score": 40.4,
-      "oos_score": null,
-      "car_30d": 0.0573,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "TBLL",
-      "signal_date": "2026-01-23",
-      "total_score": 35.1,
-      "oos_score": null,
-      "car_30d": 0.0096,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "JMBS",
-      "signal_date": "2026-01-23",
-      "total_score": 36.0,
-      "oos_score": null,
-      "car_30d": 0.0259,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FTGC",
-      "signal_date": "2026-01-23",
-      "total_score": 39.0,
-      "oos_score": null,
-      "car_30d": 0.0137,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "EIPI",
-      "signal_date": "2026-01-23",
-      "total_score": 37.8,
-      "oos_score": null,
-      "car_30d": 0.0911,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MBB",
-      "signal_date": "2026-01-23",
-      "total_score": 38.6,
-      "oos_score": null,
-      "car_30d": 0.0243,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GIGB",
-      "signal_date": "2026-01-23",
-      "total_score": 37.0,
-      "oos_score": null,
-      "car_30d": 0.0204,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "VSAT",
-      "signal_date": "2026-01-22",
-      "total_score": 27.8,
-      "oos_score": null,
-      "car_30d": 0.0506,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MSFT",
-      "signal_date": "2026-01-21",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1088,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FCN",
-      "signal_date": "2026-01-21",
-      "total_score": 6.4,
-      "oos_score": null,
-      "car_30d": -0.1125,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FMAO",
-      "signal_date": "2026-01-20",
-      "total_score": 26.5,
-      "oos_score": null,
-      "car_30d": 0.0779,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NFLX",
-      "signal_date": "2026-01-20",
-      "total_score": 1.1,
-      "oos_score": null,
-      "car_30d": -0.1265,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IREN",
-      "signal_date": "2026-01-20",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.2102,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GOOGL",
-      "signal_date": "2026-01-20",
-      "total_score": 3.7,
-      "oos_score": null,
-      "car_30d": -0.069,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "META",
-      "signal_date": "2026-01-20",
-      "total_score": 14.8,
-      "oos_score": null,
-      "car_30d": 0.0565,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CP",
-      "signal_date": "2026-01-20",
-      "total_score": 32.7,
-      "oos_score": null,
-      "car_30d": 0.1942,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AEIS",
-      "signal_date": "2026-01-20",
-      "total_score": 40.1,
-      "oos_score": null,
-      "car_30d": 0.2648,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DASH",
-      "signal_date": "2026-01-20",
-      "total_score": 1.2,
-      "oos_score": null,
-      "car_30d": -0.152,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "JPM",
-      "signal_date": "2026-01-20",
-      "total_score": 29.8,
-      "oos_score": null,
-      "car_30d": 0.0073,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IRIX",
       "signal_date": "2026-01-16",
-      "total_score": 19.4,
+      "score": 67.4,
       "oos_score": null,
-      "car_30d": -0.007,
-      "source": "edgar",
-      "insider_role": "Chief Financial Officer",
-      "sector": null
-    },
-    {
-      "ticker": "YORW",
-      "signal_date": "2026-01-16",
-      "total_score": 67.9,
-      "oos_score": null,
-      "car_30d": 0.0008,
-      "source": "edgar",
-      "insider_role": "President & CEO",
-      "sector": null
-    },
-    {
-      "ticker": "NEWT",
-      "signal_date": "2026-01-16",
-      "total_score": 48.6,
-      "oos_score": null,
-      "car_30d": -0.1185,
-      "source": "edgar",
-      "insider_role": "Chief Legal Officer",
-      "sector": null
-    },
-    {
-      "ticker": "YORW",
-      "signal_date": "2026-01-16",
-      "total_score": 69.9,
-      "oos_score": null,
-      "car_30d": 0.0008,
-      "source": "edgar",
-      "insider_role": "CAO & General Counsel",
-      "sector": null
-    },
-    {
-      "ticker": "GOOGL",
-      "signal_date": "2026-01-16",
-      "total_score": 1.6,
-      "oos_score": null,
-      "car_30d": -0.0601,
+      "entry_price": 110.91,
+      "exit_price": 109.6,
+      "exit_date": "2026-03-03",
+      "exit_reason": "trailing_stop",
+      "return_pct": -0.0118,
+      "weight": 0.5,
+      "weighted_return": -0.0059,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.098
     },
     {
-      "ticker": "AB",
-      "signal_date": "2026-01-16",
-      "total_score": 9.9,
-      "oos_score": null,
-      "car_30d": 0.0315,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NVDA",
-      "signal_date": "2026-01-16",
-      "total_score": 1.6,
-      "oos_score": null,
-      "car_30d": -0.0041,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "TEM",
-      "signal_date": "2026-01-16",
-      "total_score": 0.6,
-      "oos_score": null,
-      "car_30d": -0.2506,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "VST",
-      "signal_date": "2026-01-16",
-      "total_score": 8.9,
-      "oos_score": null,
-      "car_30d": 0.0443,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AMZN",
-      "signal_date": "2026-01-16",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1566,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ETN",
-      "signal_date": "2026-01-16",
-      "total_score": 49.0,
-      "oos_score": null,
-      "car_30d": 0.1488,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "JPM",
-      "signal_date": "2026-01-16",
-      "total_score": 19.8,
-      "oos_score": null,
-      "car_30d": -0.0177,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AMGN",
-      "signal_date": "2026-01-16",
-      "total_score": 65.8,
-      "oos_score": null,
-      "car_30d": 0.1415,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
+      "id": 120,
       "ticker": "AEP",
       "signal_date": "2026-01-16",
-      "total_score": 70.9,
+      "score": 70.9,
       "oos_score": null,
-      "car_30d": 0.1076,
+      "entry_price": 119.02,
+      "exit_price": 131.92,
+      "exit_date": "2026-03-03",
+      "exit_reason": "hold_expire",
+      "return_pct": 0.1084,
+      "weight": 0.5,
+      "weighted_return": 0.0542,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.1309
     },
     {
-      "ticker": "PGR",
+      "id": 121,
+      "ticker": "AMGN",
       "signal_date": "2026-01-16",
-      "total_score": 52.4,
+      "score": 65.8,
       "oos_score": null,
-      "car_30d": 0.0254,
+      "entry_price": 328.14,
+      "exit_price": 377.0,
+      "exit_date": "2026-03-03",
+      "exit_reason": "hold_expire",
+      "return_pct": 0.1489,
+      "weight": 0.5,
+      "weighted_return": 0.0745,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.1925
     },
     {
+      "id": 118,
       "ticker": "KR",
       "signal_date": "2026-01-16",
-      "total_score": 67.3,
+      "score": 67.3,
       "oos_score": null,
-      "car_30d": 0.1497,
+      "entry_price": 62.87,
+      "exit_price": 68.64,
+      "exit_date": "2026-03-03",
+      "exit_reason": "hold_expire",
+      "return_pct": 0.0917,
+      "weight": 0.5,
+      "weighted_return": 0.0458,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.1581
     },
     {
-      "ticker": "V",
-      "signal_date": "2026-01-16",
-      "total_score": 20.2,
-      "oos_score": null,
-      "car_30d": -0.0274,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AAPL",
-      "signal_date": "2026-01-16",
-      "total_score": 50.5,
-      "oos_score": null,
-      "car_30d": 0.0165,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MSFT",
-      "signal_date": "2026-01-16",
-      "total_score": 3.1,
-      "oos_score": null,
-      "car_30d": -0.1146,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "RPM",
-      "signal_date": "2026-01-16",
-      "total_score": 67.4,
-      "oos_score": null,
-      "car_30d": 0.0813,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IFF",
-      "signal_date": "2026-01-15",
-      "total_score": 41.1,
-      "oos_score": null,
-      "car_30d": 0.1898,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GBCI",
-      "signal_date": "2026-01-15",
-      "total_score": 37.2,
-      "oos_score": null,
-      "car_30d": 0.0762,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FBK",
-      "signal_date": "2026-01-15",
-      "total_score": 15.9,
-      "oos_score": null,
-      "car_30d": -0.0084,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AZTA",
-      "signal_date": "2026-01-15",
-      "total_score": 5.1,
-      "oos_score": null,
-      "car_30d": -0.2719,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IRT",
-      "signal_date": "2026-01-15",
-      "total_score": 17.5,
-      "oos_score": null,
-      "car_30d": -0.028,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NHI",
-      "signal_date": "2026-01-15",
-      "total_score": 36.1,
-      "oos_score": null,
-      "car_30d": 0.1275,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LGN",
-      "signal_date": "2026-01-15",
-      "total_score": 35.4,
-      "oos_score": null,
-      "car_30d": 0.0481,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LGND",
-      "signal_date": "2026-01-15",
-      "total_score": 11.2,
-      "oos_score": null,
-      "car_30d": -0.048,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "V",
-      "signal_date": "2026-01-15",
-      "total_score": 13.4,
-      "oos_score": null,
-      "car_30d": -0.025,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AAPL",
-      "signal_date": "2026-01-15",
-      "total_score": 27.5,
-      "oos_score": null,
-      "car_30d": 0.0068,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SPGI",
-      "signal_date": "2026-01-14",
-      "total_score": 2.6,
-      "oos_score": null,
-      "car_30d": -0.2391,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ETN",
-      "signal_date": "2026-01-14",
-      "total_score": 35.9,
-      "oos_score": null,
-      "car_30d": 0.1903,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "UBER",
-      "signal_date": "2026-01-14",
-      "total_score": 8.9,
-      "oos_score": null,
-      "car_30d": -0.1627,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MELI",
-      "signal_date": "2026-01-13",
-      "total_score": 18.7,
-      "oos_score": null,
-      "car_30d": -0.0143,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CMCSA",
-      "signal_date": "2026-01-13",
-      "total_score": 35.0,
-      "oos_score": null,
-      "car_30d": 0.1511,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SAP",
-      "signal_date": "2026-01-13",
-      "total_score": 5.0,
-      "oos_score": null,
-      "car_30d": -0.1603,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BAX",
-      "signal_date": "2026-01-13",
-      "total_score": 10.4,
-      "oos_score": null,
-      "car_30d": -0.0304,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IFF",
-      "signal_date": "2026-01-13",
-      "total_score": 41.9,
-      "oos_score": null,
-      "car_30d": 0.1923,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "WMT",
-      "signal_date": "2026-01-13",
-      "total_score": 36.2,
-      "oos_score": null,
-      "car_30d": 0.1307,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GOOGL",
-      "signal_date": "2026-01-12",
-      "total_score": 1.1,
-      "oos_score": null,
-      "car_30d": -0.0586,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SWK",
-      "signal_date": "2026-01-12",
-      "total_score": 36.0,
-      "oos_score": null,
-      "car_30d": 0.1036,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "WPC",
-      "signal_date": "2026-01-12",
-      "total_score": 36.4,
-      "oos_score": null,
-      "car_30d": 0.0874,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PG",
-      "signal_date": "2026-01-09",
-      "total_score": 64.1,
-      "oos_score": null,
-      "car_30d": 0.117,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "T",
-      "signal_date": "2026-01-09",
-      "total_score": 41.0,
-      "oos_score": null,
-      "car_30d": 0.1435,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FDX",
-      "signal_date": "2026-01-09",
-      "total_score": 38.5,
-      "oos_score": null,
-      "car_30d": 0.1674,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SCHW",
-      "signal_date": "2026-01-09",
-      "total_score": 42.0,
-      "oos_score": null,
-      "car_30d": 0.0705,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LIN",
-      "signal_date": "2026-01-09",
-      "total_score": 41.4,
-      "oos_score": null,
-      "car_30d": 0.0278,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LYB",
-      "signal_date": "2026-01-09",
-      "total_score": 40.7,
-      "oos_score": null,
-      "car_30d": 0.139,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GE",
-      "signal_date": "2026-01-09",
-      "total_score": 34.1,
-      "oos_score": null,
-      "car_30d": -0.0149,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "INTC",
-      "signal_date": "2026-01-09",
-      "total_score": 39.9,
-      "oos_score": null,
-      "car_30d": 0.1032,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GD",
-      "signal_date": "2026-01-09",
-      "total_score": 41.0,
-      "oos_score": null,
-      "car_30d": 0.0219,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CME",
-      "signal_date": "2026-01-09",
-      "total_score": 42.1,
-      "oos_score": null,
-      "car_30d": 0.1709,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GEV",
-      "signal_date": "2026-01-09",
-      "total_score": 41.8,
-      "oos_score": null,
-      "car_30d": 0.2878,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DD",
-      "signal_date": "2026-01-09",
-      "total_score": 41.2,
-      "oos_score": null,
-      "car_30d": 0.0753,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AME",
-      "signal_date": "2026-01-09",
-      "total_score": 43.6,
-      "oos_score": null,
-      "car_30d": 0.1083,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MOS",
-      "signal_date": "2026-01-09",
-      "total_score": 42.0,
-      "oos_score": null,
-      "car_30d": 0.138,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CF",
-      "signal_date": "2026-01-09",
-      "total_score": 42.3,
-      "oos_score": null,
-      "car_30d": 0.1496,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CSCO",
-      "signal_date": "2026-01-09",
-      "total_score": 42.7,
-      "oos_score": null,
-      "car_30d": 0.1748,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "KEY",
-      "signal_date": "2026-01-09",
-      "total_score": 41.2,
-      "oos_score": null,
-      "car_30d": 0.0861,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "HST",
-      "signal_date": "2026-01-09",
-      "total_score": 40.6,
-      "oos_score": null,
-      "car_30d": 0.0598,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FSLR",
-      "signal_date": "2026-01-09",
-      "total_score": 21.5,
-      "oos_score": null,
-      "car_30d": -0.0691,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CMCSA",
-      "signal_date": "2026-01-09",
-      "total_score": 43.6,
-      "oos_score": null,
-      "car_30d": 0.1275,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IVZ",
-      "signal_date": "2026-01-09",
-      "total_score": 25.6,
-      "oos_score": null,
-      "car_30d": -0.0586,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IBM",
-      "signal_date": "2026-01-08",
-      "total_score": 10.1,
-      "oos_score": null,
-      "car_30d": -0.0141,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MSFT",
-      "signal_date": "2026-01-08",
-      "total_score": 0.9,
-      "oos_score": null,
-      "car_30d": -0.1623,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "TSM",
-      "signal_date": "2026-01-08",
-      "total_score": 29.0,
-      "oos_score": null,
-      "car_30d": 0.0952,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GPC",
-      "signal_date": "2026-01-08",
-      "total_score": 35.0,
-      "oos_score": null,
-      "car_30d": 0.17,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NFLX",
-      "signal_date": "2026-01-08",
-      "total_score": 0.7,
-      "oos_score": null,
-      "car_30d": -0.0935,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DIS",
-      "signal_date": "2026-01-08",
-      "total_score": 18.9,
-      "oos_score": null,
-      "car_30d": -0.0494,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "XOM",
-      "signal_date": "2026-01-08",
-      "total_score": 34.5,
-      "oos_score": null,
-      "car_30d": 0.2107,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DRI",
-      "signal_date": "2026-01-07",
-      "total_score": 33.6,
-      "oos_score": null,
-      "car_30d": 0.089,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "META",
-      "signal_date": "2026-01-07",
-      "total_score": 19.9,
-      "oos_score": null,
-      "car_30d": 0.0181,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "WM",
-      "signal_date": "2026-01-07",
-      "total_score": 31.9,
-      "oos_score": null,
-      "car_30d": 0.0485,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "RY",
-      "signal_date": "2026-01-07",
-      "total_score": 29.3,
-      "oos_score": null,
-      "car_30d": 0.0058,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "DASH",
-      "signal_date": "2026-01-06",
-      "total_score": 0.5,
-      "oos_score": null,
-      "car_30d": -0.1817,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FBK",
-      "signal_date": "2026-01-05",
-      "total_score": 37.3,
-      "oos_score": null,
-      "car_30d": 0.0757,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LGND",
-      "signal_date": "2026-01-05",
-      "total_score": 39.1,
-      "oos_score": null,
-      "car_30d": 0.0351,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "VSEC",
-      "signal_date": "2026-01-05",
-      "total_score": 15.2,
-      "oos_score": null,
-      "car_30d": -0.0185,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AMKR",
-      "signal_date": "2026-01-05",
-      "total_score": 7.3,
-      "oos_score": null,
-      "car_30d": -0.0865,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "LRN",
-      "signal_date": "2026-01-05",
-      "total_score": 37.8,
-      "oos_score": null,
-      "car_30d": 0.2817,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "APG",
-      "signal_date": "2026-01-05",
-      "total_score": 30.7,
-      "oos_score": null,
-      "car_30d": 0.0474,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MPWR",
-      "signal_date": "2026-01-05",
-      "total_score": 36.5,
-      "oos_score": null,
-      "car_30d": 0.193,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "C",
-      "signal_date": "2026-01-05",
-      "total_score": 11.8,
-      "oos_score": null,
-      "car_30d": -0.0405,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "MCK",
-      "signal_date": "2026-01-05",
-      "total_score": 16.8,
-      "oos_score": null,
-      "car_30d": -0.0013,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ADBE",
-      "signal_date": "2026-01-05",
-      "total_score": 5.3,
-      "oos_score": null,
-      "car_30d": -0.1545,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "FCFS",
-      "signal_date": "2026-01-05",
-      "total_score": 34.3,
-      "oos_score": null,
-      "car_30d": 0.0569,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CRS",
-      "signal_date": "2026-01-05",
-      "total_score": 15.7,
-      "oos_score": null,
-      "car_30d": -0.0159,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "VWLUX",
-      "signal_date": "2026-01-02",
-      "total_score": 12.1,
-      "oos_score": null,
-      "car_30d": -0.014,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "CBRL",
-      "signal_date": "2025-12-31",
-      "total_score": 42.6,
-      "oos_score": null,
-      "car_30d": 0.1766,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BR",
-      "signal_date": "2025-12-31",
-      "total_score": 6.3,
-      "oos_score": null,
-      "car_30d": -0.1296,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "RCL",
-      "signal_date": "2025-12-31",
-      "total_score": 25.8,
-      "oos_score": null,
-      "car_30d": 0.147,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "SNPS",
-      "signal_date": "2025-12-31",
-      "total_score": 16.5,
-      "oos_score": null,
-      "car_30d": -0.0242,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "HY",
-      "signal_date": "2025-12-31",
-      "total_score": 33.6,
-      "oos_score": null,
-      "car_30d": 0.1095,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
+      "id": 204,
       "ticker": "BNPQY",
       "signal_date": "2025-12-31",
-      "total_score": 66.5,
+      "score": 66.5,
       "oos_score": null,
-      "car_30d": 0.1158,
+      "entry_price": 47.4,
+      "exit_price": 52.92,
+      "exit_date": "2026-02-13",
+      "exit_reason": "hold_expire",
+      "return_pct": 0.1165,
+      "weight": 0.5,
+      "weighted_return": 0.0582,
       "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BNS",
-      "signal_date": "2025-12-31",
-      "total_score": 40.8,
-      "oos_score": null,
-      "car_30d": -0.0007,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "BSCQ",
-      "signal_date": "2025-12-31",
-      "total_score": 8.7,
-      "oos_score": null,
-      "car_30d": -0.0124,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "IVW",
-      "signal_date": "2025-12-31",
-      "total_score": 12.4,
-      "oos_score": null,
-      "car_30d": -0.0095,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "JPM",
-      "signal_date": "2025-12-30",
-      "total_score": 11.2,
-      "oos_score": null,
-      "car_30d": -0.0579,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "EFC",
-      "signal_date": "2025-12-30",
-      "total_score": 3.3,
-      "oos_score": null,
-      "car_30d": -0.0189,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "GOOGL",
-      "signal_date": "2025-12-30",
-      "total_score": 9.7,
-      "oos_score": null,
-      "car_30d": 0.0668,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PUK",
-      "signal_date": "2025-12-29",
-      "total_score": 22.2,
-      "oos_score": null,
-      "car_30d": 0.0476,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "PRU",
-      "signal_date": "2025-12-29",
-      "total_score": 13.0,
-      "oos_score": null,
-      "car_30d": -0.0601,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "HD",
-      "signal_date": "2025-12-29",
-      "total_score": 26.6,
-      "oos_score": null,
-      "car_30d": 0.0684,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "INTU",
-      "signal_date": "2025-12-29",
-      "total_score": 10.4,
-      "oos_score": null,
-      "car_30d": -0.2082,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "COST",
-      "signal_date": "2025-12-29",
-      "total_score": 33.6,
-      "oos_score": null,
-      "car_30d": 0.095,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "AAPL",
-      "signal_date": "2025-12-29",
-      "total_score": 16.5,
-      "oos_score": null,
-      "car_30d": -0.0735,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "ICE",
-      "signal_date": "2025-12-29",
-      "total_score": 20.7,
-      "oos_score": null,
-      "car_30d": 0.0401,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
-    },
-    {
-      "ticker": "NOW",
-      "signal_date": "2025-12-29",
-      "total_score": 3.9,
-      "oos_score": null,
-      "car_30d": -0.1706,
-      "source": "congress",
-      "insider_role": null,
-      "sector": null
+      "sector": "Unknown",
+      "peak_gain": 0.192
     }
   ],
-  "summary": {
-    "total_closed": 582,
-    "win_rate": 0.524,
-    "avg_win": 0.0773,
-    "avg_loss": -0.0672,
-    "best": {
-      "ticker": "HYMC",
-      "car_30d": 0.5045
+  "strategy": {
+    "rules": {
+      "entry_threshold": 65,
+      "stop_loss_pct": -0.1,
+      "hold_days": 30,
+      "min_market_cap": "mid",
+      "position_tiers": [
+        [
+          85,
+          1.5
+        ],
+        [
+          75,
+          1.0
+        ],
+        [
+          65,
+          0.5
+        ]
+      ],
+      "trail_activate_pct": 0.08,
+      "trail_tiers": [
+        [
+          85,
+          0.15
+        ],
+        [
+          75,
+          0.12
+        ],
+        [
+          65,
+          0.1
+        ]
+      ]
     },
-    "worst": {
-      "ticker": "UNH",
-      "car_30d": -0.5186
+    "total_trades": 8,
+    "win_rate": 0.75,
+    "avg_return": 0.075,
+    "weighted_avg_return": 0.075,
+    "avg_win": 0.1063,
+    "avg_loss": -0.0189,
+    "best": 0.1489,
+    "worst": -0.026,
+    "total_cumulative": 1.1937,
+    "exit_reasons": {
+      "trailing_stop": 4,
+      "hold_expire": 4
+    },
+    "tiers": [
+      {
+        "tier": "65-74",
+        "n": 8,
+        "weight": 0.5,
+        "win_rate": 0.75,
+        "avg_return": 0.075,
+        "avg_weighted": 0.0375
+      }
+    ],
+    "peak_stats": {
+      "avg_peak": 0.1584,
+      "avg_captured": 0.075,
+      "capture_ratio": 0.393,
+      "runners_30pct": 0,
+      "runners_50pct": 0
     },
     "monthly": [
       {
-        "month": "2026-02",
-        "n": 180,
-        "win_rate": 0.589,
-        "avg_return": 0.0177
-      },
-      {
         "month": "2026-01",
-        "n": 133,
-        "win_rate": 0.534,
-        "avg_return": 0.0081
+        "n": 7,
+        "win_rate": 0.714,
+        "avg_return": 0.0691,
+        "weighted_return": 0.0691,
+        "stops": 0,
+        "targets": 0,
+        "cumulative": 1.1937
       },
       {
         "month": "2025-12",
-        "n": 145,
-        "win_rate": 0.497,
-        "avg_return": 0.0069
-      },
-      {
-        "month": "2025-11",
-        "n": 15,
-        "win_rate": 0.6,
-        "avg_return": 0.0402
-      },
-      {
-        "month": "2025-10",
-        "n": 18,
-        "win_rate": 0.5,
-        "avg_return": 0.0127
-      },
-      {
-        "month": "2025-09",
-        "n": 25,
-        "win_rate": 0.36,
-        "avg_return": -0.0048
-      },
-      {
-        "month": "2025-08",
-        "n": 29,
-        "win_rate": 0.379,
-        "avg_return": -0.0221
-      },
-      {
-        "month": "2025-07",
-        "n": 6,
-        "win_rate": 0.5,
-        "avg_return": 0.0303
-      },
-      {
-        "month": "2025-06",
-        "n": 10,
-        "win_rate": 0.7,
-        "avg_return": 0.0223
-      },
-      {
-        "month": "2025-05",
-        "n": 19,
-        "win_rate": 0.368,
-        "avg_return": -0.0376
-      },
-      {
-        "month": "2025-03",
-        "n": 2,
-        "win_rate": 0.5,
-        "avg_return": -0.0247
+        "n": 1,
+        "win_rate": 1.0,
+        "avg_return": 0.1165,
+        "weighted_return": 0.1165,
+        "stops": 0,
+        "targets": 0,
+        "cumulative": 1.1165
       }
     ]
+  },
+  "raw": {
+    "total_signals": 582,
+    "win_rate": 0.524,
+    "avg_return": 0.0086,
+    "avg_win": 0.0773,
+    "avg_loss": -0.0672
   }
 }
