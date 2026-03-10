@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-09T22:39:13.639167+00:00",
+  "generated": "2026-03-10T22:39:44.645164+00:00",
   "alpha": {
     "value": 0.1125,
     "label": "+11.3%",
@@ -23,9 +23,9 @@
     },
     {
       "tier": "<65",
-      "n": 566,
+      "n": 576,
       "hit_rate": 0.51,
-      "avg_car_30d": 0.0056,
+      "avg_car_30d": 0.0048,
       "note": "in-sample (training data)"
     }
   ],
@@ -70,8 +70,20 @@
       "heat": 3
     },
     {
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "count": 3,
+      "heat": 3
+    },
+    {
       "ticker": "V",
       "name": "Visa",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "TSM",
+      "name": "TSMC",
       "count": 2,
       "heat": 2
     },
@@ -94,10 +106,46 @@
       "heat": 2
     },
     {
-      "ticker": "AMZN",
-      "name": "Amazon",
-      "count": 2,
-      "heat": 2
+      "ticker": "ZTS",
+      "name": "ZTS",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "XOM",
+      "name": "ExxonMobil",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "WMB",
+      "name": "WMB",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "VRSN",
+      "name": "VRSN",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "VRSK",
+      "name": "VRSK",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "VCYT",
+      "name": "VCYT",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "UNH",
+      "name": "UnitedHealth",
+      "count": 1,
+      "heat": 1
     },
     {
       "ticker": "TTD",
@@ -106,56 +154,8 @@
       "heat": 1
     },
     {
-      "ticker": "PGR",
-      "name": "Progressive",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "NTAP",
-      "name": "NTAP",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "NOW",
-      "name": "NOW",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "MEDP",
-      "name": "MEDP",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "LLY",
-      "name": "Eli Lilly",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "KR",
-      "name": "KR",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "DNUT",
-      "name": "DNUT",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "CRM",
-      "name": "Salesforce",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "ARLP",
-      "name": "ARLP",
+      "ticker": "TRGP",
+      "name": "TRGP",
       "count": 1,
       "heat": 1
     }
@@ -165,8 +165,8 @@
     "top_score_tickers": "PMNT",
     "exceptional_count": 0,
     "cluster_count": 0,
-    "congress_flags": 24,
-    "convergence_count": 1
+    "congress_flags": 61,
+    "convergence_count": 3
   },
   "insider_sectors": [],
   "ml": {
@@ -635,13 +635,13 @@
     "current_regime": "elevated",
     "distribution": {
       "elevated": 25,
-      "low_vol": 124,
-      "normal": 490
+      "low_vol": 134,
+      "normal": 518
     },
     "hit_rates": {
       "elevated": 0.36,
-      "low_vol": 0.605,
-      "normal": 0.51
+      "low_vol": 0.604,
+      "normal": 0.498
     }
   },
   "features_pruned_history": {
@@ -711,52 +711,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.188,
+        "fill_rate": 0.18,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.188,
+        "fill_rate": 0.18,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.103,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.103,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.102,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.102,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.102,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.102,
+        "fill_rate": 0.095,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.003873,
-    "n_matched_signals": 639,
-    "spy_avg_30d_return": 0.012319,
+    "alpha_all_signals": -0.003786,
+    "n_matched_signals": 677,
+    "spy_avg_30d_return": 0.011484,
     "alpha_80plus": 0.01501,
     "n_80plus": 1,
     "alpha_60_79": 0.139441,
     "n_60_79": 20,
-    "alpha_below_60": -0.009507,
-    "n_below_60": 561,
-    "alpha_congress": -0.007519,
-    "beta_vs_spy": -0.4295,
-    "beta_vs_spy_raw": -0.48
+    "alpha_below_60": -0.009817,
+    "n_below_60": 571,
+    "alpha_congress": -0.008064,
+    "beta_vs_spy": -0.3648,
+    "beta_vs_spy_raw": -0.4243
   },
   "signal_concentration": {
     "top_ticker": "NONE",
