@@ -1,6 +1,23 @@
 {
-  "generated": "2026-03-12T22:37:28.947333+00:00",
+  "generated": "2026-03-13T22:42:55.157984+00:00",
   "closed_signals": [
+    {
+      "id": 727,
+      "ticker": "WDFC",
+      "signal_date": "2026-02-06",
+      "score": 68.2,
+      "oos_score": null,
+      "entry_price": 238.53,
+      "exit_price": 224.96,
+      "exit_date": "2026-03-13",
+      "exit_reason": "hold_expire",
+      "return_pct": -0.0569,
+      "weight": 0.5,
+      "weighted_return": -0.0284,
+      "source": "edgar",
+      "sector": "Unknown",
+      "peak_gain": 0.0481
+    },
     {
       "id": 744,
       "ticker": "IP",
@@ -174,37 +191,47 @@
         ]
       ]
     },
-    "total_trades": 8,
-    "win_rate": 0.75,
-    "avg_return": 0.075,
-    "weighted_avg_return": 0.075,
+    "total_trades": 9,
+    "win_rate": 0.667,
+    "avg_return": 0.0603,
+    "weighted_avg_return": 0.0603,
     "avg_win": 0.1063,
-    "avg_loss": -0.0189,
+    "avg_loss": -0.0316,
     "best": 0.1489,
-    "worst": -0.026,
-    "total_cumulative": 1.1937,
+    "worst": -0.0569,
+    "total_cumulative": 1.1257,
     "exit_reasons": {
-      "trailing_stop": 4,
-      "hold_expire": 4
+      "hold_expire": 5,
+      "trailing_stop": 4
     },
     "tiers": [
       {
         "tier": "65-74",
-        "n": 8,
+        "n": 9,
         "weight": 0.5,
-        "win_rate": 0.75,
-        "avg_return": 0.075,
-        "avg_weighted": 0.0375
+        "win_rate": 0.667,
+        "avg_return": 0.0603,
+        "avg_weighted": 0.0302
       }
     ],
     "peak_stats": {
-      "avg_peak": 0.1584,
-      "avg_captured": 0.075,
-      "capture_ratio": 0.393,
+      "avg_peak": 0.1461,
+      "avg_captured": 0.0603,
+      "capture_ratio": 0.218,
       "runners_30pct": 0,
       "runners_50pct": 0
     },
     "monthly": [
+      {
+        "month": "2026-02",
+        "n": 1,
+        "win_rate": 0.0,
+        "avg_return": -0.0569,
+        "weighted_return": -0.0569,
+        "stops": 0,
+        "targets": 0,
+        "cumulative": 1.1257
+      },
       {
         "month": "2026-01",
         "n": 7,
@@ -228,10 +255,10 @@
     ]
   },
   "raw": {
-    "total_signals": 603,
-    "win_rate": 0.522,
-    "avg_return": 0.0081,
-    "avg_win": 0.0774,
-    "avg_loss": -0.0677
+    "total_signals": 614,
+    "win_rate": 0.521,
+    "avg_return": 0.0079,
+    "avg_win": 0.0773,
+    "avg_loss": -0.0676
   }
 }

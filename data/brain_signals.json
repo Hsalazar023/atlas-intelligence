@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-12T22:37:28.947333+00:00",
+  "generated": "2026-03-13T22:42:55.157984+00:00",
   "signals": [
     {
       "ticker": "NONE",
@@ -34,7 +34,7 @@
           "percentile": 97,
           "percentile_label": "top 3%",
           "raw_value": 4.0,
-          "importance": 0.0392
+          "importance": 0.0391
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -43,7 +43,7 @@
           "percentile": 99,
           "percentile_label": "top 1%",
           "raw_value": 4.0,
-          "importance": 0.0343
+          "importance": 0.0344
         },
         {
           "feature": "disclosure_delay",
@@ -84,7 +84,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 48,
+      "days_held": 49,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -95,9 +95,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.047
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.04
     },
     {
       "ticker": "FINS",
@@ -150,7 +150,7 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         }
       ],
       "context": {
@@ -171,9 +171,9 @@
       "target1": 13.53,
       "target2": 13.79,
       "stop": 12.48,
-      "current_price": 12.72,
-      "unrealized_pnl_pct": -0.0317,
-      "days_held": 41,
+      "current_price": 12.74,
+      "unrealized_pnl_pct": -0.0301,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 11.56,
@@ -184,9 +184,9 @@
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.039
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.034
     },
     {
       "ticker": "N/A",
@@ -245,10 +245,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -271,7 +271,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 48,
+      "days_held": 49,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -282,9 +282,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.035
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.03
     },
     {
       "ticker": "NRIM",
@@ -334,10 +334,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -358,9 +358,9 @@
       "target1": 24.11,
       "target2": 24.63,
       "stop": 22.23,
-      "current_price": 22.61,
-      "unrealized_pnl_pct": -0.034,
-      "days_held": 41,
+      "current_price": 22.47,
+      "unrealized_pnl_pct": -0.04,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 20.6,
@@ -371,9 +371,9 @@
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.034
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.029
     },
     {
       "ticker": "NONE",
@@ -408,7 +408,7 @@
           "percentile": 97,
           "percentile_label": "top 3%",
           "raw_value": 4.0,
-          "importance": 0.0392
+          "importance": 0.0391
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -417,7 +417,7 @@
           "percentile": 99,
           "percentile_label": "top 1%",
           "raw_value": 4.0,
-          "importance": 0.0343
+          "importance": 0.0344
         },
         {
           "feature": "disclosure_delay",
@@ -458,7 +458,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 48,
+      "days_held": 49,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -469,9 +469,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.034
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.029
     },
     {
       "ticker": "IP",
@@ -530,10 +530,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "High insider buy ratio",
           "direction": "bullish",
-          "percentile": 72,
-          "percentile_label": "72th percentile",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
           "raw_value": 0.6931,
-          "importance": 0.024
+          "importance": 0.0233
         }
       ],
       "context": {
@@ -554,9 +554,9 @@
       "target1": 41.56,
       "target2": 42.87,
       "stop": 37.93,
-      "current_price": 35.65,
-      "unrealized_pnl_pct": -0.107,
-      "days_held": 41,
+      "current_price": 37.25,
+      "unrealized_pnl_pct": -0.0669,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 35.13,
@@ -567,9 +567,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.034
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.029
     },
     {
       "ticker": "AEP",
@@ -601,19 +601,19 @@
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 22,
-          "percentile_label": "22th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 15.86,
-          "importance": 0.0205
+          "importance": 0.021
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -622,16 +622,16 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 25,
-          "percentile_label": "25th percentile",
+          "percentile": 24,
+          "percentile_label": "24th percentile",
           "raw_value": 15.86,
-          "importance": 0.0152
+          "importance": 0.0157
         }
       ],
       "context": {
@@ -652,9 +652,9 @@
       "target1": 126.42,
       "target2": 132.34,
       "stop": 113.07,
-      "current_price": 132.22,
-      "unrealized_pnl_pct": 0.1109,
-      "days_held": 55,
+      "current_price": 133.61,
+      "unrealized_pnl_pct": 0.1226,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 104.74,
@@ -665,9 +665,9 @@
       "oos_score": 58.0,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "YORW",
@@ -708,19 +708,19 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         },
         {
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "person_trade_count",
@@ -750,9 +750,9 @@
       "target1": 34.72,
       "target2": 35.39,
       "stop": 32.02,
-      "current_price": 31.3,
-      "unrealized_pnl_pct": -0.0714,
-      "days_held": 55,
+      "current_price": 31.47,
+      "unrealized_pnl_pct": -0.0663,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 29.66,
@@ -763,8 +763,8 @@
       "oos_score": 33.9,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
       "kelly_size": 0.02
     },
     {
@@ -841,7 +841,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 41,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -852,9 +852,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.033
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.028
     },
     {
       "ticker": "THM",
@@ -904,19 +904,19 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         },
         {
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         }
       ],
       "context": {
@@ -937,9 +937,9 @@
       "target1": 3.16,
       "target2": 3.6,
       "stop": 2.28,
-      "current_price": 2.78,
-      "unrealized_pnl_pct": 0.0651,
-      "days_held": 41,
+      "current_price": 2.57,
+      "unrealized_pnl_pct": -0.0153,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 2.3,
@@ -950,9 +950,9 @@
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.033
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.028
     },
     {
       "ticker": "RMBI",
@@ -1002,10 +1002,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -1026,9 +1026,9 @@
       "target1": 14.3,
       "target2": 14.57,
       "stop": 13.19,
-      "current_price": 13.25,
-      "unrealized_pnl_pct": -0.0454,
-      "days_held": 41,
+      "current_price": 13.33,
+      "unrealized_pnl_pct": -0.0397,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 12.21,
@@ -1039,9 +1039,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.033
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.028
     },
     {
       "ticker": "WDFC",
@@ -1053,7 +1053,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "Director",
-      "car_30d": null,
+      "car_30d": -0.0174,
       "person": "PENDARVIS DAVID",
       "person_hit_rate": null,
       "person_trade_count": 0,
@@ -1094,16 +1094,16 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -1124,9 +1124,9 @@
       "target1": 248.72,
       "target2": 256.87,
       "stop": 226.6,
-      "current_price": 225.75,
-      "unrealized_pnl_pct": -0.0536,
-      "days_held": 34,
+      "current_price": 224.96,
+      "unrealized_pnl_pct": -0.0569,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 209.91,
@@ -1137,9 +1137,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.032
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.028
     },
     {
       "ticker": "PEBO",
@@ -1189,10 +1189,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1201,7 +1201,7 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         }
       ],
       "context": {
@@ -1222,9 +1222,9 @@
       "target1": 31.94,
       "target2": 32.68,
       "stop": 29.45,
-      "current_price": 31.85,
-      "unrealized_pnl_pct": 0.0273,
-      "days_held": 48,
+      "current_price": 31.6,
+      "unrealized_pnl_pct": 0.0192,
+      "days_held": 49,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 27.28,
@@ -1235,9 +1235,9 @@
       "oos_score": 54.3,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "YORW",
@@ -1278,19 +1278,19 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         },
         {
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "person_trade_count",
@@ -1320,9 +1320,9 @@
       "target1": 34.72,
       "target2": 35.39,
       "stop": 32.02,
-      "current_price": 31.3,
-      "unrealized_pnl_pct": -0.0714,
-      "days_held": 55,
+      "current_price": 31.47,
+      "unrealized_pnl_pct": -0.0663,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 29.66,
@@ -1333,8 +1333,8 @@
       "oos_score": 33.9,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
       "kelly_size": 0.02
     },
     {
@@ -1385,10 +1385,10 @@
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "days_since_last_buy",
@@ -1397,7 +1397,7 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 15.0,
-          "importance": 0.0248
+          "importance": 0.0245
         }
       ],
       "context": {
@@ -1418,9 +1418,9 @@
       "target1": 45.51,
       "target2": 52.05,
       "stop": 32.45,
-      "current_price": 40.12,
-      "unrealized_pnl_pct": 0.0742,
-      "days_held": 41,
+      "current_price": 37.93,
+      "unrealized_pnl_pct": 0.0155,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 32.87,
@@ -1431,9 +1431,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.032
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.027
     },
     {
       "ticker": "PMNT",
@@ -1483,10 +1483,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1495,7 +1495,7 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         }
       ],
       "context": {
@@ -1516,10 +1516,10 @@
       "target1": 0.26,
       "target2": 0.27,
       "stop": 0.23,
-      "current_price": 0.23,
-      "unrealized_pnl_pct": -0.0412,
-      "days_held": 13,
-      "days_remaining": 17,
+      "current_price": 0.24,
+      "unrealized_pnl_pct": -0.0171,
+      "days_held": 14,
+      "days_remaining": 16,
       "position_status": "ACTIVE",
       "stop_loss_price": 0.21,
       "stop_loss_triggered": false,
@@ -1529,9 +1529,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.032
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.027
     },
     {
       "ticker": "RPM",
@@ -1563,19 +1563,19 @@
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 22,
-          "percentile_label": "22th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 15.86,
-          "importance": 0.0205
+          "importance": 0.021
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1584,16 +1584,16 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 25,
-          "percentile_label": "25th percentile",
+          "percentile": 24,
+          "percentile_label": "24th percentile",
           "raw_value": 15.86,
-          "importance": 0.0152
+          "importance": 0.0157
         }
       ],
       "context": {
@@ -1614,9 +1614,9 @@
       "target1": 115.75,
       "target2": 119.62,
       "stop": 105.36,
-      "current_price": 99.66,
-      "unrealized_pnl_pct": -0.1014,
-      "days_held": 55,
+      "current_price": 99.76,
+      "unrealized_pnl_pct": -0.1005,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 97.6,
@@ -1627,9 +1627,9 @@
       "oos_score": 80.9,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.038
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.033
     },
     {
       "ticker": "KR",
@@ -1661,19 +1661,19 @@
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 22,
-          "percentile_label": "22th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 15.86,
-          "importance": 0.0205
+          "importance": 0.021
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1682,16 +1682,16 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 25,
-          "percentile_label": "25th percentile",
+          "percentile": 24,
+          "percentile_label": "24th percentile",
           "raw_value": 15.86,
-          "importance": 0.0152
+          "importance": 0.0157
         }
       ],
       "context": {
@@ -1712,9 +1712,9 @@
       "target1": 66.45,
       "target2": 69.31,
       "stop": 59.73,
-      "current_price": 74.96,
-      "unrealized_pnl_pct": 0.1922,
-      "days_held": 55,
+      "current_price": 75.6,
+      "unrealized_pnl_pct": 0.2024,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 55.33,
@@ -1725,9 +1725,9 @@
       "oos_score": 58.8,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "IBP",
@@ -1762,7 +1762,7 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 0.0033,
-          "importance": 0.0252
+          "importance": 0.0255
         },
         {
           "feature": "days_since_last_buy",
@@ -1771,16 +1771,16 @@
           "percentile": 84,
           "percentile_label": "84th percentile",
           "raw_value": 13.0,
-          "importance": 0.0233
+          "importance": 0.0229
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -1801,9 +1801,9 @@
       "target1": 308.23,
       "target2": 320.67,
       "stop": 278.04,
-      "current_price": 272.11,
-      "unrealized_pnl_pct": -0.0702,
-      "days_held": 42,
+      "current_price": 284.69,
+      "unrealized_pnl_pct": -0.0273,
+      "days_held": 43,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 257.55,
@@ -1814,9 +1814,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.032
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.027
     },
     {
       "ticker": "BNPQY",
@@ -1851,25 +1851,25 @@
           "percentile": 85,
           "percentile_label": "85th percentile",
           "raw_value": 37.0,
-          "importance": 0.0341
+          "importance": 0.0339
         },
         {
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 14,
-          "percentile_label": "14th percentile",
+          "percentile": 13,
+          "percentile_label": "13th percentile",
           "raw_value": 14.95,
-          "importance": 0.0262
+          "importance": 0.0266
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1878,7 +1878,7 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         }
       ],
       "context": {
@@ -1899,9 +1899,9 @@
       "target1": 50.02,
       "target2": 52.12,
       "stop": 45.03,
-      "current_price": 49.27,
-      "unrealized_pnl_pct": 0.0395,
-      "days_held": 71,
+      "current_price": 48.1,
+      "unrealized_pnl_pct": 0.0148,
+      "days_held": 72,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 41.71,
@@ -1912,9 +1912,9 @@
       "oos_score": 86.0,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.041
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.035
     },
     {
       "ticker": "RBBN",
@@ -1964,10 +1964,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -1976,16 +1976,16 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         },
         {
           "feature": "vix_at_signal",
           "label": "High volatility environment",
           "direction": "bearish",
-          "percentile": 78,
-          "percentile_label": "78th percentile",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
           "raw_value": 20.6,
-          "importance": 0.0201
+          "importance": 0.0194
         }
       ],
       "context": {
@@ -2006,10 +2006,10 @@
       "target1": 2.15,
       "target2": 2.2,
       "stop": 1.99,
-      "current_price": 2.15,
-      "unrealized_pnl_pct": 0.0287,
-      "days_held": 27,
-      "days_remaining": 3,
+      "current_price": 2.1,
+      "unrealized_pnl_pct": 0.0048,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 1.84,
       "stop_loss_triggered": false,
@@ -2019,9 +2019,9 @@
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.031
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.027
     },
     {
       "ticker": "AMGN",
@@ -2053,19 +2053,19 @@
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 22,
-          "percentile_label": "22th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 15.86,
-          "importance": 0.0205
+          "importance": 0.021
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -2074,16 +2074,16 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 25,
-          "percentile_label": "25th percentile",
+          "percentile": 24,
+          "percentile_label": "24th percentile",
           "raw_value": 15.86,
-          "importance": 0.0152
+          "importance": 0.0157
         }
       ],
       "context": {
@@ -2104,9 +2104,9 @@
       "target1": 343.41,
       "target2": 355.63,
       "stop": 311.73,
-      "current_price": 367.79,
-      "unrealized_pnl_pct": 0.1208,
-      "days_held": 55,
+      "current_price": 366.21,
+      "unrealized_pnl_pct": 0.116,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 288.76,
@@ -2117,9 +2117,9 @@
       "oos_score": 48.5,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.023
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.02
     },
     {
       "ticker": "NBBK",
@@ -2172,7 +2172,7 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         }
       ],
       "context": {
@@ -2193,9 +2193,9 @@
       "target1": 22.3,
       "target2": 22.73,
       "stop": 20.57,
-      "current_price": 21.08,
-      "unrealized_pnl_pct": -0.0264,
-      "days_held": 41,
+      "current_price": 20.82,
+      "unrealized_pnl_pct": -0.0384,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 19.05,
@@ -2206,9 +2206,9 @@
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.031
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.027
     },
     {
       "ticker": "N/A",
@@ -2243,7 +2243,7 @@
           "percentile": 95,
           "percentile_label": "top 5%",
           "raw_value": 3.0,
-          "importance": 0.0375
+          "importance": 0.0372
         },
         {
           "feature": "disclosure_delay",
@@ -2258,10 +2258,10 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 97,
-          "percentile_label": "top 3%",
+          "percentile": 96,
+          "percentile_label": "top 4%",
           "raw_value": 2.0,
-          "importance": 0.0327
+          "importance": 0.0325
         },
         {
           "feature": "person_trade_count",
@@ -2293,7 +2293,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 34,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -2304,9 +2304,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.031
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.026
     },
     {
       "ticker": "PG",
@@ -2341,25 +2341,25 @@
           "percentile": 7,
           "percentile_label": "bottom 7%",
           "raw_value": 14.49,
-          "importance": 0.031
-        },
-        {
-          "feature": "insider_buy_ratio_90d",
-          "label": "High insider buy ratio",
-          "direction": "bullish",
-          "percentile": 72,
-          "percentile_label": "72th percentile",
-          "raw_value": 0.6931,
-          "importance": 0.024
+          "importance": 0.0312
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 13,
-          "percentile_label": "13th percentile",
+          "percentile": 10,
+          "percentile_label": "10th percentile",
           "raw_value": 14.49,
-          "importance": 0.0227
+          "importance": 0.0242
+        },
+        {
+          "feature": "insider_buy_ratio_90d",
+          "label": "High insider buy ratio",
+          "direction": "bullish",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
+          "raw_value": 0.6931,
+          "importance": 0.0233
         },
         {
           "feature": "trade_size_points",
@@ -2368,7 +2368,7 @@
           "percentile": 31,
           "percentile_label": "31th percentile",
           "raw_value": 3.0,
-          "importance": 0.0123
+          "importance": 0.0124
         }
       ],
       "context": {
@@ -2389,9 +2389,9 @@
       "target1": 146.15,
       "target2": 150.37,
       "stop": 133.83,
-      "current_price": 150.5,
-      "unrealized_pnl_pct": 0.0684,
-      "days_held": 62,
+      "current_price": 150.65,
+      "unrealized_pnl_pct": 0.0694,
+      "days_held": 63,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 123.97,
@@ -2402,9 +2402,9 @@
       "oos_score": 45.5,
       "market_cap": "mega",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.022
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.02
     },
     {
       "ticker": "HTGC",
@@ -2445,10 +2445,10 @@
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "person_trade_count",
@@ -2466,7 +2466,7 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         }
       ],
       "context": {
@@ -2489,8 +2489,8 @@
       "stop": 13.5,
       "current_price": 14.04,
       "unrealized_pnl_pct": -0.012,
-      "days_held": 13,
-      "days_remaining": 17,
+      "days_held": 14,
+      "days_remaining": 16,
       "position_status": "ACTIVE",
       "stop_loss_price": 12.5,
       "stop_loss_triggered": false,
@@ -2500,9 +2500,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.03
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.026
     },
     {
       "ticker": "GEF, GEF-B",
@@ -2555,16 +2555,16 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -2587,7 +2587,7 @@
       "stop": null,
       "current_price": null,
       "unrealized_pnl_pct": null,
-      "days_held": 34,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": null,
@@ -2598,9 +2598,9 @@
       "oos_score": null,
       "market_cap": "unknown",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.03
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.026
     },
     {
       "ticker": "GAIA",
@@ -2644,7 +2644,7 @@
           "percentile": 87,
           "percentile_label": "87th percentile",
           "raw_value": 23.75,
-          "importance": 0.027
+          "importance": 0.0264
         },
         {
           "feature": "person_trade_count",
@@ -2659,19 +2659,19 @@
           "feature": "vix_regime_interaction",
           "label": "Favorable VIX regime",
           "direction": "bullish",
-          "percentile": 89,
-          "percentile_label": "89th percentile",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
           "raw_value": 23.75,
-          "importance": 0.0236
+          "importance": 0.023
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -2692,10 +2692,10 @@
       "target1": 3.34,
       "target2": 3.4,
       "stop": 3.08,
-      "current_price": 3.14,
-      "unrealized_pnl_pct": -0.0309,
-      "days_held": 6,
-      "days_remaining": 24,
+      "current_price": 3.12,
+      "unrealized_pnl_pct": -0.037,
+      "days_held": 7,
+      "days_remaining": 23,
       "position_status": "ACTIVE",
       "stop_loss_price": 2.85,
       "stop_loss_triggered": false,
@@ -2705,9 +2705,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.03
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.026
     },
     {
       "ticker": "T",
@@ -2739,10 +2739,10 @@
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "person_avg_car_30d",
@@ -2751,16 +2751,16 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 0.0033,
-          "importance": 0.0252
+          "importance": 0.0255
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "High insider buy ratio",
           "direction": "bullish",
-          "percentile": 72,
-          "percentile_label": "72th percentile",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
           "raw_value": 0.6931,
-          "importance": 0.024
+          "importance": 0.0233
         }
       ],
       "context": {
@@ -2781,9 +2781,9 @@
       "target1": 26.25,
       "target2": 27.14,
       "stop": 23.87,
-      "current_price": 27.39,
-      "unrealized_pnl_pct": 0.0899,
-      "days_held": 42,
+      "current_price": 27.72,
+      "unrealized_pnl_pct": 0.1031,
+      "days_held": 43,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 22.11,
@@ -2794,9 +2794,9 @@
       "oos_score": null,
       "market_cap": "mega",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.03
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.026
     },
     {
       "ticker": "SLGL",
@@ -2849,16 +2849,16 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -2879,9 +2879,9 @@
       "target1": 67.18,
       "target2": 74.18,
       "stop": 53.19,
-      "current_price": 85.31,
-      "unrealized_pnl_pct": 0.4598,
-      "days_held": 48,
+      "current_price": 83.97,
+      "unrealized_pnl_pct": 0.4369,
+      "days_held": 49,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 51.43,
@@ -2892,8 +2892,8 @@
       "oos_score": 40.7,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
       "kelly_size": 0.02
     },
     {
@@ -2906,7 +2906,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "Executive Chair",
-      "car_30d": null,
+      "car_30d": -0.0706,
       "person": "Craps Jan Eli B",
       "person_hit_rate": null,
       "person_trade_count": 0,
@@ -2953,10 +2953,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -2977,9 +2977,9 @@
       "target1": 51.62,
       "target2": 52.63,
       "stop": 47.61,
-      "current_price": 40.45,
-      "unrealized_pnl_pct": -0.1929,
-      "days_held": 34,
+      "current_price": 40.55,
+      "unrealized_pnl_pct": -0.1909,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 44.11,
@@ -2990,9 +2990,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.029
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.025
     },
     {
       "ticker": "NOMA",
@@ -3066,9 +3066,9 @@
       "target1": 3.74,
       "target2": 3.93,
       "stop": 3.33,
-      "current_price": 5.26,
-      "unrealized_pnl_pct": 0.4986,
-      "days_held": 41,
+      "current_price": 4.78,
+      "unrealized_pnl_pct": 0.3618,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 3.09,
@@ -3079,9 +3079,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.029
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "AXR",
@@ -3122,28 +3122,28 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         },
         {
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "High insider buy ratio",
           "direction": "bullish",
-          "percentile": 72,
-          "percentile_label": "72th percentile",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
           "raw_value": 0.6931,
-          "importance": 0.024
+          "importance": 0.0233
         },
         {
           "feature": "days_since_last_buy",
@@ -3152,7 +3152,7 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         }
       ],
       "context": {
@@ -3173,22 +3173,22 @@
       "target1": 29.16,
       "target2": 30.75,
       "stop": 25.81,
-      "current_price": 23.41,
-      "unrealized_pnl_pct": -0.1384,
-      "days_held": 20,
-      "days_remaining": 10,
+      "current_price": 24.43,
+      "unrealized_pnl_pct": -0.1008,
+      "days_held": 21,
+      "days_remaining": 9,
       "position_status": "ACTIVE",
       "stop_loss_price": 23.91,
-      "stop_loss_triggered": true,
+      "stop_loss_triggered": false,
       "estimated_spread_pct": 0.5,
       "avg_daily_volume": 4269,
       "liquidity_flag": "HIGH_COST",
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "RPM",
@@ -3220,10 +3220,10 @@
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         },
         {
           "feature": "person_avg_car_30d",
@@ -3232,16 +3232,16 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 0.0033,
-          "importance": 0.0252
+          "importance": 0.0255
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "High insider buy ratio",
           "direction": "bullish",
-          "percentile": 72,
-          "percentile_label": "72th percentile",
+          "percentile": 71,
+          "percentile_label": "71th percentile",
           "raw_value": 0.6931,
-          "importance": 0.024
+          "importance": 0.0233
         }
       ],
       "context": {
@@ -3262,9 +3262,9 @@
       "target1": 110.99,
       "target2": 113.15,
       "stop": 102.37,
-      "current_price": 99.66,
-      "unrealized_pnl_pct": -0.0752,
-      "days_held": 42,
+      "current_price": 99.76,
+      "unrealized_pnl_pct": -0.0742,
+      "days_held": 43,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 94.83,
@@ -3275,9 +3275,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "PLD",
@@ -3312,7 +3312,7 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 0.0033,
-          "importance": 0.0252
+          "importance": 0.0255
         },
         {
           "feature": "days_since_last_buy",
@@ -3321,16 +3321,16 @@
           "percentile": 84,
           "percentile_label": "84th percentile",
           "raw_value": 13.0,
-          "importance": 0.0233
+          "importance": 0.0229
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -3351,9 +3351,9 @@
       "target1": 134.32,
       "target2": 136.93,
       "stop": 123.89,
-      "current_price": 131.9,
-      "unrealized_pnl_pct": 0.0114,
-      "days_held": 42,
+      "current_price": 131.75,
+      "unrealized_pnl_pct": 0.0103,
+      "days_held": 43,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 114.76,
@@ -3364,9 +3364,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "CHUC",
@@ -3416,10 +3416,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -3428,16 +3428,16 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         },
         {
           "feature": "vix_at_signal",
           "label": "High volatility environment",
           "direction": "bearish",
-          "percentile": 78,
-          "percentile_label": "78th percentile",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
           "raw_value": 20.6,
-          "importance": 0.0201
+          "importance": 0.0194
         }
       ],
       "context": {
@@ -3459,9 +3459,9 @@
       "target2": 0.27,
       "stop": 0.25,
       "current_price": 0.3,
-      "unrealized_pnl_pct": 0.1365,
-      "days_held": 27,
-      "days_remaining": 3,
+      "unrealized_pnl_pct": 0.1538,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 0.23,
       "stop_loss_triggered": false,
@@ -3471,9 +3471,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "WRB",
@@ -3523,19 +3523,19 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         },
         {
           "feature": "same_ticker_signals_30d",
           "label": "Multiple signals in 30d",
           "direction": "bullish",
-          "percentile": 84,
-          "percentile_label": "84th percentile",
+          "percentile": 83,
+          "percentile_label": "83th percentile",
           "raw_value": 1.0,
-          "importance": 0.0287
+          "importance": 0.0277
         }
       ],
       "context": {
@@ -3556,9 +3556,9 @@
       "target1": 72.07,
       "target2": 74.86,
       "stop": 65.15,
-      "current_price": 68.7,
-      "unrealized_pnl_pct": 0.0017,
-      "days_held": 41,
+      "current_price": 68.76,
+      "unrealized_pnl_pct": 0.0026,
+      "days_held": 42,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 60.35,
@@ -3569,9 +3569,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.028
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.024
     },
     {
       "ticker": "CHRW",
@@ -3606,7 +3606,7 @@
           "percentile": 97,
           "percentile_label": "top 3%",
           "raw_value": 4.0,
-          "importance": 0.0392
+          "importance": 0.0391
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -3642,7 +3642,7 @@
           "percentile": 86,
           "percentile_label": "86th percentile",
           "raw_value": 8.0,
-          "importance": 0.0233
+          "importance": 0.0234
         }
       ],
       "context": {
@@ -3663,10 +3663,10 @@
       "target1": 180.67,
       "target2": 184.18,
       "stop": 166.64,
-      "current_price": 171.86,
-      "unrealized_pnl_pct": -0.0202,
-      "days_held": 27,
-      "days_remaining": 3,
+      "current_price": 169.39,
+      "unrealized_pnl_pct": -0.0343,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 154.36,
       "stop_loss_triggered": false,
@@ -3676,9 +3676,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.027
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "SSP",
@@ -3731,7 +3731,7 @@
           "percentile": 87,
           "percentile_label": "87th percentile",
           "raw_value": 23.75,
-          "importance": 0.027
+          "importance": 0.0264
         },
         {
           "feature": "person_trade_count",
@@ -3746,10 +3746,10 @@
           "feature": "vix_regime_interaction",
           "label": "Favorable VIX regime",
           "direction": "bullish",
-          "percentile": 89,
-          "percentile_label": "89th percentile",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
           "raw_value": 23.75,
-          "importance": 0.0236
+          "importance": 0.023
         }
       ],
       "context": {
@@ -3770,22 +3770,22 @@
       "target1": 5.11,
       "target2": 5.54,
       "stop": 4.25,
-      "current_price": 4.07,
-      "unrealized_pnl_pct": -0.1094,
-      "days_held": 6,
-      "days_remaining": 24,
+      "current_price": 3.97,
+      "unrealized_pnl_pct": -0.1313,
+      "days_held": 7,
+      "days_remaining": 23,
       "position_status": "ACTIVE",
       "stop_loss_price": 4.02,
-      "stop_loss_triggered": false,
+      "stop_loss_triggered": true,
       "estimated_spread_pct": 0.5,
       "avg_daily_volume": 563127,
       "liquidity_flag": "HIGH_COST",
       "oos_score": null,
       "market_cap": "small",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.027
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "TSI",
@@ -3835,10 +3835,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -3847,16 +3847,16 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         },
         {
           "feature": "vix_at_signal",
           "label": "High volatility environment",
           "direction": "bearish",
-          "percentile": 78,
-          "percentile_label": "78th percentile",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
           "raw_value": 20.6,
-          "importance": 0.0201
+          "importance": 0.0194
         }
       ],
       "context": {
@@ -3877,10 +3877,10 @@
       "target1": 4.85,
       "target2": 4.94,
       "stop": 4.47,
-      "current_price": 4.61,
-      "unrealized_pnl_pct": -0.0207,
-      "days_held": 27,
-      "days_remaining": 3,
+      "current_price": 4.6,
+      "unrealized_pnl_pct": -0.0229,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 4.14,
       "stop_loss_triggered": false,
@@ -3890,9 +3890,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.027
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "DLHC",
@@ -3942,10 +3942,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -3954,16 +3954,16 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         },
         {
           "feature": "vix_at_signal",
           "label": "High volatility environment",
           "direction": "bearish",
-          "percentile": 78,
-          "percentile_label": "78th percentile",
+          "percentile": 77,
+          "percentile_label": "77th percentile",
           "raw_value": 20.6,
-          "importance": 0.0201
+          "importance": 0.0194
         }
       ],
       "context": {
@@ -3984,10 +3984,10 @@
       "target1": 5.85,
       "target2": 6.09,
       "stop": 5.28,
-      "current_price": 5.97,
-      "unrealized_pnl_pct": 0.0737,
-      "days_held": 27,
-      "days_remaining": 3,
+      "current_price": 5.99,
+      "unrealized_pnl_pct": 0.0773,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 4.89,
       "stop_loss_triggered": false,
@@ -3997,9 +3997,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.027
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "NFRX",
@@ -4034,7 +4034,7 @@
           "percentile": 91,
           "percentile_label": "top 9%",
           "raw_value": 2.0,
-          "importance": 0.0346
+          "importance": 0.0339
         },
         {
           "feature": "disclosure_delay",
@@ -4049,10 +4049,10 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 97,
-          "percentile_label": "top 3%",
+          "percentile": 96,
+          "percentile_label": "top 4%",
           "raw_value": 2.0,
-          "importance": 0.0327
+          "importance": 0.0325
         },
         {
           "feature": "trade_size_points",
@@ -4067,10 +4067,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -4091,10 +4091,10 @@
       "target1": 28.96,
       "target2": 30.36,
       "stop": 25.86,
-      "current_price": 26.57,
-      "unrealized_pnl_pct": -0.024,
-      "days_held": 27,
-      "days_remaining": 3,
+      "current_price": 26.66,
+      "unrealized_pnl_pct": -0.0205,
+      "days_held": 28,
+      "days_remaining": 2,
       "position_status": "ACTIVE",
       "stop_loss_price": 23.95,
       "stop_loss_triggered": false,
@@ -4104,9 +4104,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.027
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.023
     },
     {
       "ticker": "FMBM",
@@ -4118,7 +4118,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "Director",
-      "car_30d": null,
+      "car_30d": 0.0315,
       "person": "Harrison Bret V.",
       "person_hit_rate": null,
       "person_trade_count": 0,
@@ -4156,10 +4156,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -4168,7 +4168,7 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         }
       ],
       "context": {
@@ -4189,9 +4189,9 @@
       "target1": 32.43,
       "target2": 33.06,
       "stop": 29.92,
-      "current_price": 30.98,
-      "unrealized_pnl_pct": -0.0162,
-      "days_held": 34,
+      "current_price": 30.97,
+      "unrealized_pnl_pct": -0.0165,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 27.71,
@@ -4202,9 +4202,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "TPC",
@@ -4257,7 +4257,7 @@
           "percentile": 87,
           "percentile_label": "87th percentile",
           "raw_value": 23.75,
-          "importance": 0.027
+          "importance": 0.0264
         },
         {
           "feature": "person_trade_count",
@@ -4272,10 +4272,10 @@
           "feature": "vix_regime_interaction",
           "label": "Favorable VIX regime",
           "direction": "bullish",
-          "percentile": 89,
-          "percentile_label": "89th percentile",
+          "percentile": 88,
+          "percentile_label": "88th percentile",
           "raw_value": 23.75,
-          "importance": 0.0236
+          "importance": 0.023
         }
       ],
       "context": {
@@ -4296,10 +4296,10 @@
       "target1": 75.14,
       "target2": 77.04,
       "stop": 69.12,
-      "current_price": 69.2,
-      "unrealized_pnl_pct": -0.0489,
-      "days_held": 6,
-      "days_remaining": 24,
+      "current_price": 67.76,
+      "unrealized_pnl_pct": -0.0687,
+      "days_held": 7,
+      "days_remaining": 23,
       "position_status": "ACTIVE",
       "stop_loss_price": 64.03,
       "stop_loss_triggered": false,
@@ -4309,9 +4309,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "WRB",
@@ -4323,7 +4323,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "10% Owner",
-      "car_30d": null,
+      "car_30d": -0.0132,
       "person": "MITSUI SUMITOMO INSURANCE CO LTD",
       "person_hit_rate": null,
       "person_trade_count": 2,
@@ -4346,7 +4346,7 @@
           "percentile": 91,
           "percentile_label": "top 9%",
           "raw_value": 2.0,
-          "importance": 0.0346
+          "importance": 0.0339
         },
         {
           "feature": "disclosure_delay",
@@ -4370,10 +4370,10 @@
           "feature": "same_ticker_signals_7d",
           "label": "Signal cluster forming",
           "direction": "bullish",
-          "percentile": 92,
-          "percentile_label": "top 8%",
+          "percentile": 91,
+          "percentile_label": "top 9%",
           "raw_value": 1.0,
-          "importance": 0.0292
+          "importance": 0.0287
         }
       ],
       "context": {
@@ -4394,9 +4394,9 @@
       "target1": 72.52,
       "target2": 74.07,
       "stop": 66.89,
-      "current_price": 68.7,
-      "unrealized_pnl_pct": -0.0243,
-      "days_held": 34,
+      "current_price": 68.76,
+      "unrealized_pnl_pct": -0.0234,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 61.96,
@@ -4407,9 +4407,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "REXR",
@@ -4459,10 +4459,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -4471,7 +4471,7 @@
           "percentile": 20,
           "percentile_label": "20th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0204
         }
       ],
       "context": {
@@ -4492,10 +4492,10 @@
       "target1": 38.59,
       "target2": 39.34,
       "stop": 35.6,
-      "current_price": 34.86,
-      "unrealized_pnl_pct": -0.0697,
-      "days_held": 13,
-      "days_remaining": 17,
+      "current_price": 34.47,
+      "unrealized_pnl_pct": -0.0801,
+      "days_held": 14,
+      "days_remaining": 16,
       "position_status": "ACTIVE",
       "stop_loss_price": 32.97,
       "stop_loss_triggered": false,
@@ -4505,9 +4505,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "TPL",
@@ -4542,7 +4542,7 @@
           "percentile": 98,
           "percentile_label": "top 2%",
           "raw_value": 5.0,
-          "importance": 0.0404
+          "importance": 0.0403
         },
         {
           "feature": "disclosure_delay",
@@ -4558,18 +4558,18 @@
           "label": "Long gap since last buy",
           "direction": "bearish",
           "percentile": 90,
-          "percentile_label": "top 10%",
+          "percentile_label": "90th percentile",
           "raw_value": 25.0,
-          "importance": 0.0274
+          "importance": 0.0272
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "momentum_3m",
@@ -4599,10 +4599,10 @@
       "target1": 536.19,
       "target2": 565.69,
       "stop": 474.34,
-      "current_price": 528.97,
-      "unrealized_pnl_pct": 0.0594,
-      "days_held": 20,
-      "days_remaining": 10,
+      "current_price": 531.13,
+      "unrealized_pnl_pct": 0.0637,
+      "days_held": 21,
+      "days_remaining": 9,
       "position_status": "ACTIVE",
       "stop_loss_price": 439.39,
       "stop_loss_triggered": false,
@@ -4612,9 +4612,9 @@
       "oos_score": null,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.026
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.022
     },
     {
       "ticker": "TCBI",
@@ -4626,7 +4626,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "Director",
-      "car_30d": null,
+      "car_30d": -0.1015,
       "person": "STALLINGS ROBERT W",
       "person_hit_rate": null,
       "person_trade_count": 0,
@@ -4673,10 +4673,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -4697,9 +4697,9 @@
       "target1": 107.6,
       "target2": 109.69,
       "stop": 99.25,
-      "current_price": 92.34,
-      "unrealized_pnl_pct": -0.1161,
-      "days_held": 34,
+      "current_price": 92.52,
+      "unrealized_pnl_pct": -0.1144,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 91.93,
@@ -4710,9 +4710,9 @@
       "oos_score": null,
       "market_cap": "mid",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.025
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.021
     },
     {
       "ticker": "EIKN",
@@ -4724,7 +4724,7 @@
       "convergence_tier": 0,
       "has_convergence": false,
       "note": "10% Owner",
-      "car_30d": null,
+      "car_30d": 0.047,
       "person": "Foresite Capital Fund IV, L.P.",
       "person_hit_rate": null,
       "person_trade_count": 0,
@@ -4771,10 +4771,10 @@
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         }
       ],
       "context": {
@@ -4795,9 +4795,9 @@
       "target1": 15.17,
       "target2": 15.7,
       "stop": 13.77,
-      "current_price": 11.78,
-      "unrealized_pnl_pct": -0.1876,
-      "days_held": 34,
+      "current_price": 11.46,
+      "unrealized_pnl_pct": -0.2097,
+      "days_held": 35,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 12.76,
@@ -4808,9 +4808,9 @@
       "oos_score": null,
       "market_cap": "micro",
       "tradeable": false,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
-      "kelly_size": 0.025
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
+      "kelly_size": 0.021
     },
     {
       "ticker": "PGR",
@@ -4842,19 +4842,19 @@
           "feature": "vix_at_signal",
           "label": "Low volatility environment",
           "direction": "bullish",
-          "percentile": 22,
-          "percentile_label": "22th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 15.86,
-          "importance": 0.0205
+          "importance": 0.021
         },
         {
           "feature": "insider_buy_ratio_90d",
           "label": "Low insider buy ratio",
           "direction": "bearish",
-          "percentile": 32,
-          "percentile_label": "32th percentile",
+          "percentile": 31,
+          "percentile_label": "31th percentile",
           "raw_value": 0.0,
-          "importance": 0.0203
+          "importance": 0.0207
         },
         {
           "feature": "days_since_last_buy",
@@ -4863,16 +4863,16 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 7.0,
-          "importance": 0.0173
+          "importance": 0.0171
         },
         {
           "feature": "vix_regime_interaction",
           "label": "Unfavorable VIX regime",
           "direction": "bearish",
-          "percentile": 25,
-          "percentile_label": "25th percentile",
+          "percentile": 24,
+          "percentile_label": "24th percentile",
           "raw_value": 15.86,
-          "importance": 0.0152
+          "importance": 0.0157
         }
       ],
       "context": {
@@ -4893,9 +4893,9 @@
       "target1": 208.44,
       "target2": 212.49,
       "stop": 192.25,
-      "current_price": 205.18,
-      "unrealized_pnl_pct": 0.0139,
-      "days_held": 55,
+      "current_price": 205.17,
+      "unrealized_pnl_pct": 0.0138,
+      "days_held": 56,
       "days_remaining": 0,
       "position_status": "EXPIRED",
       "stop_loss_price": 178.09,
@@ -4906,12 +4906,166 @@
       "oos_score": 37.9,
       "market_cap": "large",
       "tradeable": true,
-      "regime_multiplier": 1.0,
-      "regime_label": "OPTIMAL",
+      "regime_multiplier": 0.85,
+      "regime_label": "ELEVATED",
       "kelly_size": 0.02
     }
   ],
   "closed_signals": [
+    {
+      "ticker": "WRB",
+      "signal_date": "2026-02-06",
+      "total_score": 54.68,
+      "oos_score": null,
+      "price_at_signal": 70.41,
+      "car_30d": -0.013173,
+      "person": "MITSUI SUMITOMO INSURANCE CO LTD",
+      "insider_role": "10% Owner",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "TCBI",
+      "signal_date": "2026-02-06",
+      "total_score": 53.15,
+      "oos_score": null,
+      "price_at_signal": 104.47,
+      "car_30d": -0.101478,
+      "person": "STALLINGS ROBERT W",
+      "insider_role": "Director",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "EIKN",
+      "signal_date": "2026-02-06",
+      "total_score": 52.74,
+      "oos_score": null,
+      "price_at_signal": 14.5,
+      "car_30d": 0.046999,
+      "person": "Foresite Capital Fund IV, L.P.",
+      "insider_role": "10% Owner",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "WDFC",
+      "signal_date": "2026-02-06",
+      "total_score": 68.23,
+      "oos_score": null,
+      "price_at_signal": 238.53,
+      "car_30d": -0.01735,
+      "person": "PENDARVIS DAVID",
+      "insider_role": "Director",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "KMB",
+      "signal_date": "2026-02-06",
+      "total_score": 38.01,
+      "oos_score": null,
+      "price_at_signal": 103.0571,
+      "car_30d": 0.016162,
+      "person": "MACLIN TODD",
+      "insider_role": "Director",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "LW",
+      "signal_date": "2026-02-06",
+      "total_score": 62.1,
+      "oos_score": null,
+      "price_at_signal": 50.12,
+      "car_30d": -0.07057,
+      "person": "Craps Jan Eli B",
+      "insider_role": "Executive Chair",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "SNES",
+      "signal_date": "2026-02-06",
+      "total_score": 42.51,
+      "oos_score": null,
+      "price_at_signal": 1.87,
+      "car_30d": 0.154332,
+      "person": "GLENBROOK CAPITAL MANAGEMENT",
+      "insider_role": "10% Owner",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "SOFI",
+      "signal_date": "2026-02-06",
+      "total_score": 16.34,
+      "oos_score": null,
+      "price_at_signal": 20.86,
+      "car_30d": -0.082832,
+      "person": "Lavet Robert S",
+      "insider_role": "General Counsel",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "FMBM",
+      "signal_date": "2026-02-06",
+      "total_score": 55.67,
+      "oos_score": null,
+      "price_at_signal": 31.4899,
+      "car_30d": 0.031468,
+      "person": "Harrison Bret V.",
+      "insider_role": "Director",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "RCG",
+      "signal_date": "2026-02-06",
+      "total_score": 41.5,
+      "oos_score": null,
+      "price_at_signal": 2.68,
+      "car_30d": 0.097993,
+      "person": "STAHL MURRAY",
+      "insider_role": "President/Co-Portfolio Manager",
+      "source": "edgar",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
+    {
+      "ticker": "BBAI",
+      "signal_date": "2026-02-06",
+      "total_score": 35.76,
+      "oos_score": null,
+      "price_at_signal": 4.72,
+      "car_30d": -0.093967,
+      "person": "",
+      "insider_role": null,
+      "source": "congress",
+      "sector": null,
+      "days_held": 35,
+      "position_status": "EXPIRED"
+    },
     {
       "ticker": "GNPX",
       "signal_date": "2026-02-05",
@@ -4923,7 +5077,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 35,
+      "days_held": 36,
       "position_status": "EXPIRED"
     },
     {
@@ -4937,7 +5091,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -4951,7 +5105,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -4965,7 +5119,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -4979,7 +5133,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -4993,7 +5147,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5001,13 +5155,13 @@
       "signal_date": "2026-02-04",
       "total_score": 16.7,
       "oos_score": null,
-      "price_at_signal": 43.87,
+      "price_at_signal": 43.7861,
       "car_30d": -0.032035,
       "person": "",
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5021,7 +5175,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5035,7 +5189,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5049,7 +5203,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5063,7 +5217,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 36,
+      "days_held": 37,
       "position_status": "EXPIRED"
     },
     {
@@ -5077,7 +5231,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5091,7 +5245,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5105,7 +5259,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5119,7 +5273,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5133,7 +5287,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5147,7 +5301,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5161,7 +5315,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5175,7 +5329,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5189,7 +5343,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5203,7 +5357,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 37,
+      "days_held": 38,
       "position_status": "EXPIRED"
     },
     {
@@ -5217,7 +5371,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5231,7 +5385,7 @@
       "insider_role": "Other",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5245,7 +5399,7 @@
       "insider_role": "EVP, CFO",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5259,7 +5413,7 @@
       "insider_role": "Chief Executive Officer",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5273,7 +5427,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5287,7 +5441,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5301,7 +5455,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5315,7 +5469,7 @@
       "insider_role": "Director",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5329,7 +5483,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5343,7 +5497,7 @@
       "insider_role": "Director",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5357,7 +5511,7 @@
       "insider_role": "Market President (West Ohio)",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5371,7 +5525,7 @@
       "insider_role": "10% Owner",
       "source": "edgar",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5385,7 +5539,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5399,7 +5553,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5413,7 +5567,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5427,7 +5581,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5441,7 +5595,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     },
     {
@@ -5455,161 +5609,7 @@
       "insider_role": null,
       "source": "congress",
       "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "META",
-      "signal_date": "2026-01-30",
-      "total_score": 4.17,
-      "oos_score": null,
-      "price_at_signal": 716.5,
-      "car_30d": -0.080415,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "MELI",
-      "signal_date": "2026-01-30",
-      "total_score": 0.46,
-      "oos_score": null,
-      "price_at_signal": 2147.79,
-      "car_30d": -0.1659,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "ISRG",
-      "signal_date": "2026-01-30",
-      "total_score": 5.3,
-      "oos_score": null,
-      "price_at_signal": 504.22,
-      "car_30d": -0.007791,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "AMZN",
-      "signal_date": "2026-01-30",
-      "total_score": 0.46,
-      "oos_score": null,
-      "price_at_signal": 239.3,
-      "car_30d": -0.122076,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "ANET",
-      "signal_date": "2026-01-30",
-      "total_score": 3.89,
-      "oos_score": null,
-      "price_at_signal": 141.74,
-      "car_30d": -0.080337,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "ASML",
-      "signal_date": "2026-01-30",
-      "total_score": 37.21,
-      "oos_score": null,
-      "price_at_signal": 1421.1255,
-      "car_30d": 0.009857,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "AZO",
-      "signal_date": "2026-01-30",
-      "total_score": 29.46,
-      "oos_score": null,
-      "price_at_signal": 3704.29,
-      "car_30d": 0.056637,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "BSX",
-      "signal_date": "2026-01-30",
-      "total_score": 0.46,
-      "oos_score": null,
-      "price_at_signal": 93.53,
-      "car_30d": -0.178437,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "COST",
-      "signal_date": "2026-01-30",
-      "total_score": 32.83,
-      "oos_score": null,
-      "price_at_signal": 940.25,
-      "car_30d": 0.075179,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "HD",
-      "signal_date": "2026-01-30",
-      "total_score": 11.95,
-      "oos_score": null,
-      "price_at_signal": 374.59,
-      "car_30d": -0.002029,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
-      "position_status": "EXPIRED"
-    },
-    {
-      "ticker": "BE",
-      "signal_date": "2026-01-30",
-      "total_score": 31.97,
-      "oos_score": null,
-      "price_at_signal": 151.37,
-      "car_30d": 0.105582,
-      "person": "",
-      "insider_role": null,
-      "source": "congress",
-      "sector": null,
-      "days_held": 41,
+      "days_held": 42,
       "position_status": "EXPIRED"
     }
   ],
@@ -5635,15 +5635,15 @@
     }
   },
   "regime_context": {
-    "current_vix": 24.23,
-    "regime": "OPTIMAL",
-    "multiplier": 1.0,
-    "note": "VIX 15-25: strongest prediction zone (IC=0.10-0.13)"
+    "current_vix": 27.29,
+    "regime": "ELEVATED",
+    "multiplier": 0.85,
+    "note": "VIX 25-30: signal weakening"
   },
   "kelly_params": {
     "hit_rate": 0.55,
     "avg_win": 0.05,
     "avg_loss": -0.04,
-    "regime_multiplier": 1.0
+    "regime_multiplier": 0.85
   }
 }
