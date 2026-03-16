@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-13T22:42:55.157984+00:00",
+  "generated": "2026-03-16T22:43:38.441010+00:00",
   "closed_signals": [
     {
       "id": 727,
@@ -8,12 +8,12 @@
       "score": 68.2,
       "oos_score": null,
       "entry_price": 238.53,
-      "exit_price": 224.96,
-      "exit_date": "2026-03-13",
+      "exit_price": 227.94,
+      "exit_date": "2026-03-16",
       "exit_reason": "hold_expire",
-      "return_pct": -0.0569,
+      "return_pct": -0.0444,
       "weight": 0.5,
-      "weighted_return": -0.0284,
+      "weighted_return": -0.0222,
       "source": "edgar",
       "sector": "Unknown",
       "peak_gain": 0.0481
@@ -58,8 +58,8 @@
       "signal_date": "2026-01-29",
       "score": 67.0,
       "oos_score": null,
-      "entry_price": 292.67,
-      "exit_price": 307.44,
+      "entry_price": 290.31,
+      "exit_price": 304.97,
       "exit_date": "2026-02-11",
       "exit_reason": "trailing_stop",
       "return_pct": 0.0505,
@@ -193,13 +193,13 @@
     },
     "total_trades": 9,
     "win_rate": 0.667,
-    "avg_return": 0.0603,
-    "weighted_avg_return": 0.0603,
+    "avg_return": 0.0617,
+    "weighted_avg_return": 0.0617,
     "avg_win": 0.1063,
-    "avg_loss": -0.0316,
+    "avg_loss": -0.0274,
     "best": 0.1489,
-    "worst": -0.0569,
-    "total_cumulative": 1.1257,
+    "worst": -0.0444,
+    "total_cumulative": 1.1407,
     "exit_reasons": {
       "hold_expire": 5,
       "trailing_stop": 4
@@ -210,14 +210,14 @@
         "n": 9,
         "weight": 0.5,
         "win_rate": 0.667,
-        "avg_return": 0.0603,
-        "avg_weighted": 0.0302
+        "avg_return": 0.0617,
+        "avg_weighted": 0.0308
       }
     ],
     "peak_stats": {
       "avg_peak": 0.1461,
-      "avg_captured": 0.0603,
-      "capture_ratio": 0.218,
+      "avg_captured": 0.0617,
+      "capture_ratio": 0.247,
       "runners_30pct": 0,
       "runners_50pct": 0
     },
@@ -226,11 +226,11 @@
         "month": "2026-02",
         "n": 1,
         "win_rate": 0.0,
-        "avg_return": -0.0569,
-        "weighted_return": -0.0569,
+        "avg_return": -0.0444,
+        "weighted_return": -0.0444,
         "stops": 0,
         "targets": 0,
-        "cumulative": 1.1257
+        "cumulative": 1.1407
       },
       {
         "month": "2026-01",
@@ -255,10 +255,10 @@
     ]
   },
   "raw": {
-    "total_signals": 614,
-    "win_rate": 0.521,
+    "total_signals": 621,
+    "win_rate": 0.522,
     "avg_return": 0.0079,
-    "avg_win": 0.0773,
-    "avg_loss": -0.0676
+    "avg_win": 0.0767,
+    "avg_loss": -0.0671
   }
 }

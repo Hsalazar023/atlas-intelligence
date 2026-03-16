@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-13T22:42:55.157984+00:00",
+  "generated": "2026-03-16T22:43:38.441010+00:00",
   "alpha": {
     "value": 0.1049,
     "label": "+10.5%",
@@ -23,7 +23,7 @@
     },
     {
       "tier": "<65",
-      "n": 597,
+      "n": 604,
       "hit_rate": 0.51,
       "avg_car_30d": 0.0052,
       "note": "in-sample (training data)"
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Finance",
-      "n_trades": 64,
+      "n_trades": 66,
       "match_rate": 0.58
     },
     {
@@ -64,12 +64,6 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "ROL",
-      "name": "ROL",
-      "count": 3,
-      "heat": 3
-    },
-    {
       "ticker": "V",
       "name": "Visa",
       "count": 2,
@@ -82,28 +76,16 @@
       "heat": 2
     },
     {
+      "ticker": "ROL",
+      "name": "ROL",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "MU",
       "name": "Micron",
       "count": 2,
       "heat": 2
-    },
-    {
-      "ticker": "MSFT",
-      "name": "Microsoft",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "LH",
-      "name": "LH",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "WELL",
-      "name": "WELL",
-      "count": 1,
-      "heat": 1
     },
     {
       "ticker": "VST",
@@ -130,12 +112,6 @@
       "heat": 1
     },
     {
-      "ticker": "TEL",
-      "name": "TEL",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "SKY",
       "name": "SKY",
       "count": 1,
@@ -148,14 +124,38 @@
       "heat": 1
     },
     {
-      "ticker": "REGN",
-      "name": "REGN",
+      "ticker": "RARE",
+      "name": "RARE",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "RARE",
-      "name": "RARE",
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "NTAP",
+      "name": "NTAP",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "NDAQ",
+      "name": "NDAQ",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "MEDP",
+      "name": "MEDP",
       "count": 1,
       "heat": 1
     }
@@ -164,9 +164,9 @@
     "top_score": 67,
     "top_score_tickers": "PMNT",
     "exceptional_count": 0,
-    "cluster_count": 2,
-    "congress_flags": 45,
-    "convergence_count": 6
+    "cluster_count": 0,
+    "congress_flags": 31,
+    "convergence_count": 4
   },
   "insider_sectors": [],
   "ml": {
@@ -636,7 +636,7 @@
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 629
+      "normal": 654
     },
     "hit_rates": {
       "elevated": 0.36,
@@ -711,52 +711,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.169,
+        "fill_rate": 0.173,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.168,
+        "fill_rate": 0.17,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.101,
+        "fill_rate": 0.1,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.101,
+        "fill_rate": 0.1,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.1,
+        "fill_rate": 0.099,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.1,
+        "fill_rate": 0.099,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.1,
+        "fill_rate": 0.099,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.1,
+        "fill_rate": 0.099,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.000105,
-    "n_matched_signals": 791,
-    "spy_avg_30d_return": 0.008066,
+    "alpha_all_signals": 0.003568,
+    "n_matched_signals": 816,
+    "spy_avg_30d_return": 0.007067,
     "alpha_80plus": 0.01501,
     "n_80plus": 1,
     "alpha_60_79": 0.124394,
     "n_60_79": 22,
-    "alpha_below_60": -0.008243,
-    "n_below_60": 591,
-    "alpha_congress": -0.006648,
-    "beta_vs_spy": -0.3441,
-    "beta_vs_spy_raw": -0.404
+    "alpha_below_60": -0.007765,
+    "n_below_60": 598,
+    "alpha_congress": -0.006415,
+    "beta_vs_spy": -0.3278,
+    "beta_vs_spy_raw": -0.5504
   },
   "signal_concentration": {
     "top_ticker": "NONE",
