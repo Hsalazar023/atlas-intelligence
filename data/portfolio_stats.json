@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-16T22:43:38.441010+00:00",
+  "generated": "2026-03-17T22:43:43.757859+00:00",
   "closed_signals": [
     {
       "id": 727,
@@ -8,12 +8,12 @@
       "score": 68.2,
       "oos_score": null,
       "entry_price": 238.53,
-      "exit_price": 227.94,
-      "exit_date": "2026-03-16",
+      "exit_price": 222.19,
+      "exit_date": "2026-03-17",
       "exit_reason": "hold_expire",
-      "return_pct": -0.0444,
+      "return_pct": -0.0685,
       "weight": 0.5,
-      "weighted_return": -0.0222,
+      "weighted_return": -0.0343,
       "source": "edgar",
       "sector": "Unknown",
       "peak_gain": 0.0481
@@ -74,7 +74,7 @@
       "ticker": "RPM",
       "signal_date": "2026-01-16",
       "score": 67.4,
-      "oos_score": 80.9,
+      "oos_score": 77.8,
       "entry_price": 110.91,
       "exit_price": 109.6,
       "exit_date": "2026-03-03",
@@ -91,7 +91,7 @@
       "ticker": "AEP",
       "signal_date": "2026-01-16",
       "score": 70.9,
-      "oos_score": 58.0,
+      "oos_score": 51.0,
       "entry_price": 119.02,
       "exit_price": 131.92,
       "exit_date": "2026-03-03",
@@ -108,7 +108,7 @@
       "ticker": "AMGN",
       "signal_date": "2026-01-16",
       "score": 65.8,
-      "oos_score": 48.5,
+      "oos_score": 37.1,
       "entry_price": 328.14,
       "exit_price": 377.0,
       "exit_date": "2026-03-03",
@@ -125,7 +125,7 @@
       "ticker": "KR",
       "signal_date": "2026-01-16",
       "score": 67.3,
-      "oos_score": 58.8,
+      "oos_score": 59.8,
       "entry_price": 62.87,
       "exit_price": 68.64,
       "exit_date": "2026-03-03",
@@ -142,7 +142,7 @@
       "ticker": "BNPQY",
       "signal_date": "2025-12-31",
       "score": 66.5,
-      "oos_score": 86.0,
+      "oos_score": 78.3,
       "entry_price": 47.4,
       "exit_price": 52.92,
       "exit_date": "2026-02-13",
@@ -193,13 +193,13 @@
     },
     "total_trades": 9,
     "win_rate": 0.667,
-    "avg_return": 0.0617,
-    "weighted_avg_return": 0.0617,
+    "avg_return": 0.059,
+    "weighted_avg_return": 0.059,
     "avg_win": 0.1063,
-    "avg_loss": -0.0274,
+    "avg_loss": -0.0354,
     "best": 0.1489,
-    "worst": -0.0444,
-    "total_cumulative": 1.1407,
+    "worst": -0.0685,
+    "total_cumulative": 1.1119,
     "exit_reasons": {
       "hold_expire": 5,
       "trailing_stop": 4
@@ -210,14 +210,14 @@
         "n": 9,
         "weight": 0.5,
         "win_rate": 0.667,
-        "avg_return": 0.0617,
-        "avg_weighted": 0.0308
+        "avg_return": 0.059,
+        "avg_weighted": 0.0295
       }
     ],
     "peak_stats": {
       "avg_peak": 0.1461,
-      "avg_captured": 0.0617,
-      "capture_ratio": 0.247,
+      "avg_captured": 0.059,
+      "capture_ratio": 0.192,
       "runners_30pct": 0,
       "runners_50pct": 0
     },
@@ -226,11 +226,11 @@
         "month": "2026-02",
         "n": 1,
         "win_rate": 0.0,
-        "avg_return": -0.0444,
-        "weighted_return": -0.0444,
+        "avg_return": -0.0685,
+        "weighted_return": -0.0685,
         "stops": 0,
         "targets": 0,
-        "cumulative": 1.1407
+        "cumulative": 1.1119
       },
       {
         "month": "2026-01",
@@ -255,10 +255,10 @@
     ]
   },
   "raw": {
-    "total_signals": 621,
-    "win_rate": 0.522,
-    "avg_return": 0.0079,
-    "avg_win": 0.0767,
+    "total_signals": 622,
+    "win_rate": 0.523,
+    "avg_return": 0.008,
+    "avg_win": 0.0766,
     "avg_loss": -0.0671
   }
 }
