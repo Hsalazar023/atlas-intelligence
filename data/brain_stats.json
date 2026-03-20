@@ -1,10 +1,10 @@
 {
-  "generated": "2026-03-19T22:38:01.959661+00:00",
+  "generated": "2026-03-20T22:42:42.132845+00:00",
   "alpha": {
-    "value": 0.1049,
-    "label": "+10.5%",
+    "value": 0.1023,
+    "label": "+10.2%",
     "horizon": "30d",
-    "n_signals": 17
+    "n_signals": 18
   },
   "score_tiers": [
     {
@@ -16,16 +16,16 @@
     },
     {
       "tier": "65-79",
-      "n": 16,
+      "n": 17,
       "hit_rate": 0.94,
-      "avg_car_30d": 0.111,
+      "avg_car_30d": 0.1079,
       "note": "in-sample (training data)"
     },
     {
       "tier": "<65",
-      "n": 607,
+      "n": 619,
       "hit_rate": 0.51,
-      "avg_car_30d": 0.0054,
+      "avg_car_30d": 0.0057,
       "note": "in-sample (training data)"
     }
   ],
@@ -38,8 +38,8 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 33,
-      "match_rate": 0.36
+      "n_trades": 34,
+      "match_rate": 0.38
     },
     {
       "name": "Judiciary",
@@ -106,8 +106,8 @@
       "heat": 2
     },
     {
-      "ticker": "VST",
-      "name": "VST",
+      "ticker": "WFC",
+      "name": "Wells Fargo",
       "count": 1,
       "heat": 1
     },
@@ -148,14 +148,14 @@
       "heat": 1
     },
     {
-      "ticker": "PG",
-      "name": "Procter & Gamble",
+      "ticker": "NTAP",
+      "name": "NTAP",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "NTAP",
-      "name": "NTAP",
+      "ticker": "NDAQ",
+      "name": "NDAQ",
       "count": 1,
       "heat": 1
     }
@@ -164,8 +164,8 @@
     "top_score": 67,
     "top_score_tickers": "PMNT",
     "exceptional_count": 0,
-    "cluster_count": 2,
-    "congress_flags": 37,
+    "cluster_count": 3,
+    "congress_flags": 35,
     "convergence_count": 6
   },
   "insider_sectors": [],
@@ -645,16 +645,16 @@
     }
   ],
   "regime": {
-    "current_regime": "elevated",
+    "current_regime": "normal",
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 750
+      "normal": 767
     },
     "hit_rates": {
       "elevated": 0.36,
       "low_vol": 0.591,
-      "normal": 0.531
+      "normal": 0.529
     }
   },
   "features_pruned_history": {
@@ -724,52 +724,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.163,
+        "fill_rate": 0.167,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.161,
+        "fill_rate": 0.165,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.095,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.095,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.096,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.011006,
-    "n_matched_signals": 912,
-    "spy_avg_30d_return": 0.00307,
+    "alpha_all_signals": 0.011378,
+    "n_matched_signals": 929,
+    "spy_avg_30d_return": 0.002672,
     "alpha_80plus": 0.01501,
     "n_80plus": 1,
-    "alpha_60_79": 0.124394,
-    "n_60_79": 22,
-    "alpha_below_60": -0.007304,
-    "n_below_60": 601,
-    "alpha_congress": -0.001343,
-    "beta_vs_spy": -0.4894,
-    "beta_vs_spy_raw": -0.6335
+    "alpha_60_79": 0.122319,
+    "n_60_79": 23,
+    "alpha_below_60": -0.006403,
+    "n_below_60": 613,
+    "alpha_congress": -0.001204,
+    "beta_vs_spy": -0.4798,
+    "beta_vs_spy_raw": -0.6231
   },
   "signal_concentration": {
     "top_ticker": "NONE",
