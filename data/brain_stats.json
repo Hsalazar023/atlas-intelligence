@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-26T22:40:57.304629+00:00",
+  "generated": "2026-03-27T22:46:27.698069+00:00",
   "alpha": {
     "value": 0.1023,
     "label": "+10.2%",
@@ -23,9 +23,9 @@
     },
     {
       "tier": "<65",
-      "n": 620,
+      "n": 627,
       "hit_rate": 0.51,
-      "avg_car_30d": 0.0056,
+      "avg_car_30d": 0.0053,
       "note": "in-sample (training data)"
     }
   ],
@@ -72,8 +72,8 @@
     {
       "ticker": "GS",
       "name": "Goldman Sachs",
-      "count": 4,
-      "heat": 4
+      "count": 3,
+      "heat": 3
     },
     {
       "ticker": "RPM",
@@ -136,12 +136,6 @@
       "heat": 1
     },
     {
-      "ticker": "MU",
-      "name": "Micron",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "MEDP",
       "name": "MEDP",
       "count": 1,
@@ -158,6 +152,12 @@
       "name": "Eli Lilly",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "KR",
+      "name": "KR",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
@@ -165,7 +165,7 @@
     "top_score_tickers": "PMNT",
     "exceptional_count": 0,
     "cluster_count": 6,
-    "congress_flags": 36,
+    "congress_flags": 34,
     "convergence_count": 7
   },
   "insider_sectors": [],
@@ -636,12 +636,12 @@
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 799
+      "normal": 813
     },
     "hit_rates": {
       "elevated": 0.36,
       "low_vol": 0.591,
-      "normal": 0.532
+      "normal": 0.531
     }
   },
   "features_pruned_history": {
@@ -711,52 +711,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.161,
+        "fill_rate": 0.163,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.165,
+        "fill_rate": 0.167,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.099,
+        "fill_rate": 0.103,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.099,
+        "fill_rate": 0.103,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.098,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.098,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.015979,
-    "n_matched_signals": 961,
-    "spy_avg_30d_return": 0.00018,
+    "alpha_all_signals": 0.016407,
+    "n_matched_signals": 975,
+    "spy_avg_30d_return": -0.000531,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.123725,
     "n_60_79": 23,
-    "alpha_below_60": -0.005977,
-    "n_below_60": 614,
-    "alpha_congress": 0.000445,
-    "beta_vs_spy": -0.4652,
-    "beta_vs_spy_raw": -0.6868
+    "alpha_below_60": -0.005592,
+    "n_below_60": 621,
+    "alpha_congress": 0.001038,
+    "beta_vs_spy": -0.4235,
+    "beta_vs_spy_raw": -0.6324
   },
   "signal_concentration": {
     "top_ticker": "NONE",
