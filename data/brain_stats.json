@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-31T22:46:44.893600+00:00",
+  "generated": "2026-04-01T22:49:10.471780+00:00",
   "alpha": {
     "value": 0.1023,
     "label": "+10.2%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Finance",
-      "n_trades": 66,
+      "n_trades": 67,
       "match_rate": 0.58
     },
     {
@@ -80,12 +80,6 @@
       "name": "Goldman Sachs",
       "count": 2,
       "heat": 2
-    },
-    {
-      "ticker": "WFC",
-      "name": "Wells Fargo",
-      "count": 1,
-      "heat": 1
     },
     {
       "ticker": "PH",
@@ -146,8 +140,8 @@
     "top_score": 63,
     "top_score_tickers": "GAIA",
     "exceptional_count": 0,
-    "cluster_count": 6,
-    "congress_flags": 18,
+    "cluster_count": 7,
+    "congress_flags": 17,
     "convergence_count": 8
   },
   "insider_sectors": [],
@@ -587,12 +581,12 @@
     "Unknown": 50
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 45,
-    "max_signals_per_ticker": 2,
+    "unique_tickers_in_export": 44,
+    "max_signals_per_ticker": 3,
     "top_5_tickers_by_signal_count": [
       {
         "ticker": "NONE",
-        "count": 2
+        "count": 3
       },
       {
         "ticker": "N/A",
@@ -618,12 +612,12 @@
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 832
+      "normal": 839
     },
     "hit_rates": {
       "elevated": 0.36,
       "low_vol": 0.591,
-      "normal": 0.526
+      "normal": 0.528
     }
   },
   "features_pruned_history": {
@@ -693,58 +687,58 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.159,
+        "fill_rate": 0.16,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.162,
+        "fill_rate": 0.163,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.095,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.095,
+        "fill_rate": 0.097,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.091,
+        "fill_rate": 0.093,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.091,
+        "fill_rate": 0.093,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.091,
+        "fill_rate": 0.093,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.091,
+        "fill_rate": 0.093,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.016012,
-    "n_matched_signals": 994,
-    "spy_avg_30d_return": -0.001431,
+    "alpha_all_signals": 0.016496,
+    "n_matched_signals": 1001,
+    "spy_avg_30d_return": -0.002017,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.123725,
     "n_60_79": 23,
     "alpha_below_60": -0.005592,
     "n_below_60": 621,
-    "alpha_congress": 0.001049,
-    "beta_vs_spy": -0.3347,
-    "beta_vs_spy_raw": -0.5261
+    "alpha_congress": 0.001215,
+    "beta_vs_spy": -0.313,
+    "beta_vs_spy_raw": -0.4816
   },
   "signal_concentration": {
     "top_ticker": "NONE",
-    "top_ticker_pct": 0.04,
-    "top_5_ticker_pct": 0.2,
-    "unique_tickers": 45,
+    "top_ticker_pct": 0.06,
+    "top_5_ticker_pct": 0.22,
+    "unique_tickers": 44,
     "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
