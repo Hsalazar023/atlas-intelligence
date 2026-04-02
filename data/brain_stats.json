@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-01T22:49:10.471780+00:00",
+  "generated": "2026-04-02T22:44:32.906855+00:00",
   "alpha": {
     "value": 0.1023,
     "label": "+10.2%",
@@ -42,14 +42,14 @@
       "match_rate": 0.38
     },
     {
+      "name": "Science & Tech",
+      "n_trades": 10,
+      "match_rate": 0.6
+    },
+    {
       "name": "Judiciary",
       "n_trades": 10,
       "match_rate": 0.5
-    },
-    {
-      "name": "Science & Tech",
-      "n_trades": 9,
-      "match_rate": 0.67
     },
     {
       "name": "Armed Services",
@@ -118,12 +118,6 @@
       "heat": 1
     },
     {
-      "ticker": "FSS",
-      "name": "FSS",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "FITB",
       "name": "FITB",
       "count": 1,
@@ -141,7 +135,7 @@
     "top_score_tickers": "GAIA",
     "exceptional_count": 0,
     "cluster_count": 7,
-    "congress_flags": 17,
+    "congress_flags": 16,
     "convergence_count": 8
   },
   "insider_sectors": [],
@@ -608,16 +602,16 @@
   },
   "pruning_log": [],
   "regime": {
-    "current_regime": "elevated",
+    "current_regime": "normal",
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 839
+      "normal": 855
     },
     "hit_rates": {
       "elevated": 0.36,
       "low_vol": 0.591,
-      "normal": 0.528
+      "normal": 0.527
     }
   },
   "features_pruned_history": {
@@ -687,11 +681,11 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.16,
+        "fill_rate": 0.157,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.163,
+        "fill_rate": 0.161,
         "status": "candidate"
       },
       "institutional_holders": {
@@ -721,18 +715,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.016496,
-    "n_matched_signals": 1001,
-    "spy_avg_30d_return": -0.002017,
+    "alpha_all_signals": 0.017822,
+    "n_matched_signals": 1017,
+    "spy_avg_30d_return": -0.003205,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.123725,
     "n_60_79": 23,
     "alpha_below_60": -0.005592,
     "n_below_60": 621,
-    "alpha_congress": 0.001215,
-    "beta_vs_spy": -0.313,
-    "beta_vs_spy_raw": -0.4816
+    "alpha_congress": 0.002387,
+    "beta_vs_spy": -0.2873,
+    "beta_vs_spy_raw": -0.4432
   },
   "signal_concentration": {
     "top_ticker": "NONE",
