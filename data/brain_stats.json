@@ -1,10 +1,10 @@
 {
-  "generated": "2026-04-02T22:44:32.906855+00:00",
+  "generated": "2026-04-03T22:43:46.264639+00:00",
   "alpha": {
-    "value": 0.1023,
-    "label": "+10.2%",
+    "value": 0.1214,
+    "label": "+12.1%",
     "horizon": "30d",
-    "n_signals": 18
+    "n_signals": 19
   },
   "score_tiers": [
     {
@@ -16,16 +16,16 @@
     },
     {
       "tier": "65-79",
-      "n": 17,
+      "n": 18,
       "hit_rate": 0.94,
-      "avg_car_30d": 0.1079,
+      "avg_car_30d": 0.1278,
       "note": "in-sample (training data)"
     },
     {
       "tier": "<65",
-      "n": 627,
+      "n": 636,
       "hit_rate": 0.51,
-      "avg_car_30d": 0.0053,
+      "avg_car_30d": 0.0058,
       "note": "in-sample (training data)"
     }
   ],
@@ -43,8 +43,8 @@
     },
     {
       "name": "Science & Tech",
-      "n_trades": 10,
-      "match_rate": 0.6
+      "n_trades": 11,
+      "match_rate": 0.55
     },
     {
       "name": "Judiciary",
@@ -76,8 +76,8 @@
       "heat": 2
     },
     {
-      "ticker": "GS",
-      "name": "Goldman Sachs",
+      "ticker": "IBP",
+      "name": "IBP",
       "count": 2,
       "heat": 2
     },
@@ -100,12 +100,6 @@
       "heat": 1
     },
     {
-      "ticker": "IBP",
-      "name": "IBP",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "HOG",
       "name": "HOG",
       "count": 1,
@@ -114,6 +108,12 @@
     {
       "ticker": "HD",
       "name": "Home Depot",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "GS",
+      "name": "Goldman Sachs",
       "count": 1,
       "heat": 1
     },
@@ -606,12 +606,12 @@
     "distribution": {
       "elevated": 25,
       "low_vol": 137,
-      "normal": 855
+      "normal": 869
     },
     "hit_rates": {
       "elevated": 0.36,
       "low_vol": 0.591,
-      "normal": 0.527
+      "normal": 0.53
     }
   },
   "features_pruned_history": {
@@ -681,52 +681,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.157,
+        "fill_rate": 0.159,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.161,
+        "fill_rate": 0.163,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.097,
+        "fill_rate": 0.099,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.097,
+        "fill_rate": 0.099,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.093,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.093,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.093,
+        "fill_rate": 0.095,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.093,
+        "fill_rate": 0.095,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.017822,
-    "n_matched_signals": 1017,
-    "spy_avg_30d_return": -0.003205,
+    "alpha_all_signals": 0.019455,
+    "n_matched_signals": 1031,
+    "spy_avg_30d_return": -0.004197,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
-    "alpha_60_79": 0.123725,
-    "n_60_79": 23,
-    "alpha_below_60": -0.005592,
-    "n_below_60": 621,
-    "alpha_congress": 0.002387,
-    "beta_vs_spy": -0.2873,
-    "beta_vs_spy_raw": -0.4432
+    "alpha_60_79": 0.141832,
+    "n_60_79": 25,
+    "alpha_below_60": -0.004101,
+    "n_below_60": 629,
+    "alpha_congress": 0.00282,
+    "beta_vs_spy": -0.3238,
+    "beta_vs_spy_raw": -0.4594
   },
   "signal_concentration": {
     "top_ticker": "NONE",
