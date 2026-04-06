@@ -1,5 +1,5 @@
 {
-  "baseline_ic": -0.017232,
+  "baseline_ic": 0.006647,
   "baseline_features": 24,
   "horizon": "30d",
   "candidates": {
@@ -15,12 +15,12 @@
     },
     "news_sentiment_30d": {
       "status": "evaluated",
-      "ic": -0.002653,
-      "ic_delta": 0.014579,
-      "hit_rate": 0.481,
+      "ic": 0.001642,
+      "ic_delta": -0.005005,
+      "hit_rate": 0.495,
       "fill_rate": 1.0,
-      "recommendation": "ADD"
+      "recommendation": "SKIP"
     }
   },
-  "evaluated_at": "2026-03-30T22:46:21.912685+00:00"
+  "evaluated_at": "2026-04-06T22:51:12.771683+00:00"
 }
