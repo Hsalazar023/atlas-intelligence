@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-14T22:57:14.845357+00:00",
+  "generated": "2026-04-15T22:51:19.949393+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,8 +33,8 @@
   "committees": [
     {
       "name": "Finance",
-      "n_trades": 67,
-      "match_rate": 0.58
+      "n_trades": 68,
+      "match_rate": 0.59
     },
     {
       "name": "Foreign Affairs",
@@ -43,8 +43,8 @@
     },
     {
       "name": "Science & Tech",
-      "n_trades": 21,
-      "match_rate": 0.52
+      "n_trades": 22,
+      "match_rate": 0.55
     },
     {
       "name": "Judiciary",
@@ -164,9 +164,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 11,
-    "congress_flags": 94,
-    "convergence_count": 28
+    "cluster_count": 13,
+    "congress_flags": 96,
+    "convergence_count": 29
   },
   "insider_sectors": [],
   "ml": {
@@ -636,12 +636,12 @@
     "distribution": {
       "elevated": 72,
       "low_vol": 138,
-      "normal": 959
+      "normal": 983
     },
     "hit_rates": {
       "elevated": 0.5,
       "low_vol": 0.587,
-      "normal": 0.53
+      "normal": 0.527
     }
   },
   "features_pruned_history": {
@@ -715,48 +715,48 @@
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.145,
+        "fill_rate": 0.146,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.087,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.087,
+        "fill_rate": 0.096,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.086,
+        "fill_rate": 0.094,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.086,
+        "fill_rate": 0.094,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.086,
+        "fill_rate": 0.094,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.086,
+        "fill_rate": 0.094,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.020692,
-    "n_matched_signals": 1169,
-    "spy_avg_30d_return": -0.006051,
+    "alpha_all_signals": 0.019965,
+    "n_matched_signals": 1193,
+    "spy_avg_30d_return": -0.005821,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": 0.003267,
-    "beta_vs_spy": -0.2963,
-    "beta_vs_spy_raw": -0.4203
+    "alpha_congress": 0.003563,
+    "beta_vs_spy": -0.3025,
+    "beta_vs_spy_raw": -0.4272
   },
   "signal_concentration": {
     "top_ticker": "NONE",
