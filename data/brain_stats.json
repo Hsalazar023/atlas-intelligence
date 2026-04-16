@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-15T22:51:19.949393+00:00",
+  "generated": "2026-04-16T22:52:20.759352+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,18 +33,18 @@
   "committees": [
     {
       "name": "Finance",
-      "n_trades": 68,
+      "n_trades": 69,
       "match_rate": 0.59
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 47,
-      "match_rate": 0.36
+      "n_trades": 50,
+      "match_rate": 0.38
     },
     {
       "name": "Science & Tech",
-      "n_trades": 22,
-      "match_rate": 0.55
+      "n_trades": 23,
+      "match_rate": 0.57
     },
     {
       "name": "Judiciary",
@@ -88,12 +88,6 @@
       "heat": 3
     },
     {
-      "ticker": "GOOGL",
-      "name": "Google",
-      "count": 3,
-      "heat": 3
-    },
-    {
       "ticker": "VTI",
       "name": "VTI",
       "count": 2,
@@ -108,18 +102,6 @@
     {
       "ticker": "UNH",
       "name": "UnitedHealth",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "TSCO",
-      "name": "TSCO",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "SGI",
-      "name": "SGI",
       "count": 2,
       "heat": 2
     },
@@ -154,8 +136,26 @@
       "heat": 2
     },
     {
+      "ticker": "GOOGL",
+      "name": "Google",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "FN",
       "name": "FN",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "ERIE",
+      "name": "ERIE",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "DASH",
+      "name": "DoorDash",
       "count": 2,
       "heat": 2
     }
@@ -165,7 +165,7 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 13,
-    "congress_flags": 96,
+    "congress_flags": 90,
     "convergence_count": 29
   },
   "insider_sectors": [],
@@ -634,12 +634,12 @@
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "elevated": 72,
+      "elevated": 88,
       "low_vol": 138,
-      "normal": 983
+      "normal": 994
     },
     "hit_rates": {
-      "elevated": 0.5,
+      "elevated": 0.545,
       "low_vol": 0.587,
       "normal": 0.527
     }
@@ -711,52 +711,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.142,
+        "fill_rate": 0.134,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.146,
+        "fill_rate": 0.138,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.084,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.096,
+        "fill_rate": 0.084,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.084,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.084,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.084,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.094,
+        "fill_rate": 0.084,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.019965,
-    "n_matched_signals": 1193,
-    "spy_avg_30d_return": -0.005821,
+    "alpha_all_signals": 0.019674,
+    "n_matched_signals": 1220,
+    "spy_avg_30d_return": -0.005185,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": 0.003563,
-    "beta_vs_spy": -0.3025,
-    "beta_vs_spy_raw": -0.4272
+    "alpha_congress": 0.003764,
+    "beta_vs_spy": -0.2824,
+    "beta_vs_spy_raw": -0.4069
   },
   "signal_concentration": {
     "top_ticker": "NONE",
