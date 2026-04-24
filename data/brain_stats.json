@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-23T22:54:31.641143+00:00",
+  "generated": "2026-04-24T22:52:09.880704+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 58,
+      "n_trades": 61,
       "match_rate": 0.33
     },
     {
@@ -64,12 +64,6 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "SPGI",
-      "name": "S&P Global",
-      "count": 3,
-      "heat": 3
-    },
-    {
       "ticker": "MSFT",
       "name": "Microsoft",
       "count": 3,
@@ -82,14 +76,14 @@
       "heat": 2
     },
     {
-      "ticker": "GOOGL",
-      "name": "Google",
+      "ticker": "SPGI",
+      "name": "S&P Global",
       "count": 2,
       "heat": 2
     },
     {
-      "ticker": "FN",
-      "name": "FN",
+      "ticker": "GOOGL",
+      "name": "Google",
       "count": 2,
       "heat": 2
     },
@@ -124,12 +118,6 @@
       "heat": 1
     },
     {
-      "ticker": "VEA",
-      "name": "VEA",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "URI",
       "name": "URI",
       "count": 1,
@@ -158,15 +146,27 @@
       "name": "TFC",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "SGI",
+      "name": "SGI",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "ROL",
+      "name": "ROL",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 14,
-    "congress_flags": 63,
-    "convergence_count": 24
+    "cluster_count": 13,
+    "congress_flags": 56,
+    "convergence_count": 23
   },
   "insider_sectors": [],
   "ml": {
@@ -605,16 +605,12 @@
     "Unknown": 50
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 45,
+    "unique_tickers_in_export": 46,
     "max_signals_per_ticker": 3,
     "top_5_tickers_by_signal_count": [
       {
         "ticker": "NONE",
         "count": 3
-      },
-      {
-        "ticker": "N/A",
-        "count": 2
       },
       {
         "ticker": "WRB",
@@ -627,6 +623,10 @@
       {
         "ticker": "FINS",
         "count": 1
+      },
+      {
+        "ticker": "NRIM",
+        "count": 1
       }
     ]
   },
@@ -634,14 +634,14 @@
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "elevated": 161,
+      "elevated": 170,
       "low_vol": 138,
-      "normal": 1064
+      "normal": 1084
     },
     "hit_rates": {
-      "elevated": 0.478,
+      "elevated": 0.471,
       "low_vol": 0.587,
-      "normal": 0.523
+      "normal": 0.519
     }
   },
   "features_pruned_history": {
@@ -719,50 +719,50 @@
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.08,
+        "fill_rate": 0.079,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.08,
+        "fill_rate": 0.079,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.009472,
-    "n_matched_signals": 1363,
-    "spy_avg_30d_return": 0.001526,
+    "alpha_all_signals": 0.006732,
+    "n_matched_signals": 1392,
+    "spy_avg_30d_return": 0.003378,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.002227,
-    "beta_vs_spy": -0.3086,
-    "beta_vs_spy_raw": -0.4161
+    "alpha_congress": -0.00366,
+    "beta_vs_spy": -0.3259,
+    "beta_vs_spy_raw": -0.4245
   },
   "signal_concentration": {
     "top_ticker": "NONE",
     "top_ticker_pct": 0.06,
-    "top_5_ticker_pct": 0.2,
-    "unique_tickers": 45,
+    "top_5_ticker_pct": 0.18,
+    "unique_tickers": 46,
     "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
