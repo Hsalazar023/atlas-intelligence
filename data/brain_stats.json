@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27T23:03:33.242591+00:00",
+  "generated": "2026-04-28T23:07:17.844793+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,12 +38,12 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 65,
-      "match_rate": 0.32
+      "n_trades": 67,
+      "match_rate": 0.31
     },
     {
       "name": "Science & Tech",
-      "n_trades": 24,
+      "n_trades": 26,
       "match_rate": 0.58
     },
     {
@@ -72,6 +72,12 @@
     {
       "ticker": "GOOGL",
       "name": "Google",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "FMAO",
+      "name": "FMAO",
       "count": 2,
       "heat": 2
     },
@@ -152,21 +158,15 @@
       "name": "NextEra Energy",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "NDAQ",
-      "name": "NDAQ",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 14,
+    "cluster_count": 15,
     "congress_flags": 40,
-    "convergence_count": 22
+    "convergence_count": 23
   },
   "insider_sectors": [],
   "ml": {
@@ -630,18 +630,31 @@
       }
     ]
   },
-  "pruning_log": [],
+  "pruning_log": [
+    {
+      "feature": "person_accuracy",
+      "value": "strong_70+",
+      "avg_car_30d": -0.0315,
+      "n": 48
+    },
+    {
+      "feature": "cluster_velocity",
+      "value": "burst",
+      "avg_car_30d": -0.0234,
+      "n": 37
+    }
+  ],
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "elevated": 203,
-      "low_vol": 138,
-      "normal": 1122
+      "elevated": 222,
+      "low_vol": 156,
+      "normal": 1104
     },
     "hit_rates": {
-      "elevated": 0.468,
-      "low_vol": 0.587,
-      "normal": 0.517
+      "elevated": 0.455,
+      "low_vol": 0.583,
+      "normal": 0.516
     }
   },
   "features_pruned_history": {
@@ -711,52 +724,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.13,
+        "fill_rate": 0.128,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.134,
+        "fill_rate": 0.132,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.087,
+        "fill_rate": 0.082,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.087,
+        "fill_rate": 0.082,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.084,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.084,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.084,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.084,
+        "fill_rate": 0.078,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": 0.005149,
-    "n_matched_signals": 1463,
-    "spy_avg_30d_return": 0.00511,
+    "alpha_all_signals": 0.003479,
+    "n_matched_signals": 1482,
+    "spy_avg_30d_return": 0.00613,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.004017,
-    "beta_vs_spy": -0.2945,
-    "beta_vs_spy_raw": -0.3606
+    "alpha_congress": -0.004993,
+    "beta_vs_spy": -0.3117,
+    "beta_vs_spy_raw": -0.3756
   },
   "signal_concentration": {
     "top_ticker": "NONE",
