@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-30T23:04:15.502419+00:00",
+  "generated": "2026-05-01T22:59:45.691978+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -32,14 +32,14 @@
   "sectors": [],
   "committees": [
     {
+      "name": "Foreign Affairs",
+      "n_trades": 71,
+      "match_rate": 0.3
+    },
+    {
       "name": "Finance",
       "n_trades": 69,
       "match_rate": 0.59
-    },
-    {
-      "name": "Foreign Affairs",
-      "n_trades": 69,
-      "match_rate": 0.3
     },
     {
       "name": "Science & Tech",
@@ -76,44 +76,8 @@
       "heat": 1
     },
     {
-      "ticker": "VTI",
-      "name": "VTI",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "VOO",
-      "name": "VOO",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "TSM",
       "name": "TSMC",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "TSCO",
-      "name": "TSCO",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPGI",
-      "name": "S&P Global",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SGI",
-      "name": "SGI",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "ROL",
-      "name": "ROL",
       "count": 1,
       "heat": 1
     },
@@ -124,26 +88,8 @@
       "heat": 1
     },
     {
-      "ticker": "NDAQ",
-      "name": "NDAQ",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "MAR",
       "name": "MAR",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "EQT",
-      "name": "EQT",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "ENTG",
-      "name": "ENTG",
       "count": 1,
       "heat": 1
     },
@@ -165,8 +111,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 15,
-    "congress_flags": 18,
-    "convergence_count": 22
+    "congress_flags": 8,
+    "convergence_count": 20
   },
   "insider_sectors": [],
   "ml": {
@@ -609,7 +555,7 @@
     "max_signals_per_ticker": 3,
     "top_5_tickers_by_signal_count": [
       {
-        "ticker": "NONE",
+        "ticker": "TPL",
         "count": 3
       },
       {
@@ -617,15 +563,15 @@
         "count": 2
       },
       {
-        "ticker": "WRB",
-        "count": 2
-      },
-      {
         "ticker": "CCFN",
         "count": 2
       },
       {
-        "ticker": "FINS",
+        "ticker": "NONE",
+        "count": 2
+      },
+      {
+        "ticker": "WDFC",
         "count": 1
       }
     ]
@@ -647,14 +593,14 @@
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "elevated": 266,
+      "elevated": 292,
       "low_vol": 157,
-      "normal": 1109
+      "normal": 1118
     },
     "hit_rates": {
-      "elevated": 0.436,
+      "elevated": 0.425,
       "low_vol": 0.58,
-      "normal": 0.516
+      "normal": 0.513
     }
   },
   "features_pruned_history": {
@@ -724,19 +670,19 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.121,
+        "fill_rate": 0.124,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.125,
+        "fill_rate": 0.128,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.078,
         "status": "candidate"
       },
       "options_bullish": {
@@ -758,21 +704,21 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.000482,
-    "n_matched_signals": 1532,
-    "spy_avg_30d_return": 0.008651,
+    "alpha_all_signals": -0.004419,
+    "n_matched_signals": 1567,
+    "spy_avg_30d_return": 0.011069,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.005667,
-    "beta_vs_spy": -0.3323,
-    "beta_vs_spy_raw": -0.3907
+    "alpha_congress": -0.00809,
+    "beta_vs_spy": -0.3668,
+    "beta_vs_spy_raw": -0.4197
   },
   "signal_concentration": {
-    "top_ticker": "NONE",
+    "top_ticker": "TPL",
     "top_ticker_pct": 0.06,
     "top_5_ticker_pct": 0.2,
     "unique_tickers": 45,
