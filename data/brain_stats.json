@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-04T23:13:48.966170+00:00",
+  "generated": "2026-05-05T23:07:33.560574+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Foreign Affairs",
-      "n_trades": 73,
+      "n_trades": 77,
       "match_rate": 0.3
     },
     {
@@ -634,27 +634,39 @@
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
+      "avg_car_30d": -0.0502,
+      "n": 55
+    },
+    {
+      "feature": "vix_regime",
+      "value": "high_fear",
       "avg_car_30d": -0.0315,
-      "n": 48
+      "n": 79
     },
     {
       "feature": "cluster_velocity",
       "value": "burst",
-      "avg_car_30d": -0.0234,
-      "n": 37
+      "avg_car_30d": -0.0224,
+      "n": 47
+    },
+    {
+      "feature": "cluster_30d",
+      "value": "3+",
+      "avg_car_30d": -0.0202,
+      "n": 118
     }
   ],
   "regime": {
     "current_regime": "normal",
     "distribution": {
-      "elevated": 350,
+      "elevated": 397,
       "low_vol": 157,
-      "normal": 1116
+      "normal": 1109
     },
     "hit_rates": {
-      "elevated": 0.411,
+      "elevated": 0.39,
       "low_vol": 0.58,
-      "normal": 0.514
+      "normal": 0.516
     }
   },
   "features_pruned_history": {
@@ -724,52 +736,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.123,
+        "fill_rate": 0.12,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.126,
+        "fill_rate": 0.123,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.079,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.07,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.009287,
-    "n_matched_signals": 1623,
-    "spy_avg_30d_return": 0.014969,
+    "alpha_all_signals": -0.012599,
+    "n_matched_signals": 1663,
+    "spy_avg_30d_return": 0.017135,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.01169,
-    "beta_vs_spy": -0.3413,
-    "beta_vs_spy_raw": -0.388
+    "alpha_congress": -0.014861,
+    "beta_vs_spy": -0.3541,
+    "beta_vs_spy_raw": -0.3992
   },
   "signal_concentration": {
     "top_ticker": "TPL",
