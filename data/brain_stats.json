@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-06T23:08:15.580999+00:00",
+  "generated": "2026-05-07T23:11:36.763561+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -64,6 +64,18 @@
   ],
   "congress_heatmap": [
     {
+      "ticker": "TDG",
+      "name": "TDG",
+      "count": 5,
+      "heat": 5
+    },
+    {
+      "ticker": "PKG",
+      "name": "PKG",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "FMAO",
       "name": "FMAO",
       "count": 2,
@@ -100,6 +112,12 @@
       "heat": 1
     },
     {
+      "ticker": "STE",
+      "name": "STE",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "RKT",
       "name": "RKT",
       "count": 1,
@@ -112,8 +130,20 @@
       "heat": 1
     },
     {
+      "ticker": "NDAQ",
+      "name": "NDAQ",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "MSFT",
       "name": "Microsoft",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "MKL",
+      "name": "MKL",
       "count": 1,
       "heat": 1
     },
@@ -128,44 +158,14 @@
       "name": "IWF",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "HSY",
-      "name": "Hershey",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "CEG",
-      "name": "CEG",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "CASY",
-      "name": "CASY",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "CARR",
-      "name": "CARR",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "BX",
-      "name": "BX",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 15,
-    "congress_flags": 18,
+    "cluster_count": 16,
+    "congress_flags": 30,
     "convergence_count": 22
   },
   "insider_sectors": [],
@@ -661,12 +661,12 @@
     "distribution": {
       "elevated": 422,
       "low_vol": 157,
-      "normal": 1111
+      "normal": 1116
     },
     "hit_rates": {
       "elevated": 0.382,
       "low_vol": 0.58,
-      "normal": 0.516
+      "normal": 0.513
     }
   },
   "features_pruned_history": {
@@ -740,48 +740,48 @@
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.124,
+        "fill_rate": 0.123,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.069,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.069,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.069,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.069,
+        "fill_rate": 0.073,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.014595,
-    "n_matched_signals": 1690,
-    "spy_avg_30d_return": 0.018456,
+    "alpha_all_signals": -0.015092,
+    "n_matched_signals": 1695,
+    "spy_avg_30d_return": 0.018694,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.015001,
-    "beta_vs_spy": -0.3596,
-    "beta_vs_spy_raw": -0.4041
+    "alpha_congress": -0.015139,
+    "beta_vs_spy": -0.3651,
+    "beta_vs_spy_raw": -0.4094
   },
   "signal_concentration": {
     "top_ticker": "TPL",
