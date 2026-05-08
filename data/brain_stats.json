@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-07T23:11:36.763561+00:00",
+  "generated": "2026-05-08T23:14:04.701845+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -88,8 +88,8 @@
       "heat": 1
     },
     {
-      "ticker": "WAB",
-      "name": "WAB",
+      "ticker": "V",
+      "name": "Visa",
       "count": 1,
       "heat": 1
     },
@@ -124,8 +124,14 @@
       "heat": 1
     },
     {
-      "ticker": "NEE",
-      "name": "NextEra Energy",
+      "ticker": "PGR",
+      "name": "Progressive",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
       "count": 1,
       "heat": 1
     },
@@ -152,21 +158,15 @@
       "name": "MAR",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "IWF",
-      "name": "IWF",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 16,
-    "congress_flags": 30,
-    "convergence_count": 22
+    "cluster_count": 17,
+    "congress_flags": 31,
+    "convergence_count": 23
   },
   "insider_sectors": [],
   "ml": {
@@ -621,11 +621,11 @@
         "count": 2
       },
       {
-        "ticker": "NONE",
+        "ticker": "PG",
         "count": 2
       },
       {
-        "ticker": "WDFC",
+        "ticker": "PMNT",
         "count": 1
       }
     ]
@@ -661,12 +661,12 @@
     "distribution": {
       "elevated": 422,
       "low_vol": 157,
-      "normal": 1116
+      "normal": 1123
     },
     "hit_rates": {
       "elevated": 0.382,
       "low_vol": 0.58,
-      "normal": 0.513
+      "normal": 0.512
     }
   },
   "features_pruned_history": {
@@ -736,52 +736,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.121,
+        "fill_rate": 0.122,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.123,
+        "fill_rate": 0.124,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.015092,
-    "n_matched_signals": 1695,
-    "spy_avg_30d_return": 0.018694,
+    "alpha_all_signals": -0.015719,
+    "n_matched_signals": 1702,
+    "spy_avg_30d_return": 0.018945,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.015139,
-    "beta_vs_spy": -0.3651,
-    "beta_vs_spy_raw": -0.4094
+    "alpha_congress": -0.015091,
+    "beta_vs_spy": -0.3751,
+    "beta_vs_spy_raw": -0.4193
   },
   "signal_concentration": {
     "top_ticker": "TPL",
