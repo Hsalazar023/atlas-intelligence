@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-13T23:18:47.103629+00:00",
+  "generated": "2026-05-14T23:12:42.225091+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Foreign Affairs",
-      "n_trades": 84,
+      "n_trades": 87,
       "match_rate": 0.3
     },
     {
@@ -43,8 +43,8 @@
     },
     {
       "name": "Science & Tech",
-      "n_trades": 42,
-      "match_rate": 0.52
+      "n_trades": 45,
+      "match_rate": 0.53
     },
     {
       "name": "Judiciary",
@@ -76,12 +76,6 @@
       "heat": 4
     },
     {
-      "ticker": "DASH",
-      "name": "DoorDash",
-      "count": 4,
-      "heat": 4
-    },
-    {
       "ticker": "WDAY",
       "name": "WDAY",
       "count": 3,
@@ -90,6 +84,12 @@
     {
       "ticker": "SPGI",
       "name": "S&P Global",
+      "count": 3,
+      "heat": 3
+    },
+    {
+      "ticker": "DASH",
+      "name": "DoorDash",
       "count": 3,
       "heat": 3
     },
@@ -142,12 +142,6 @@
       "heat": 1
     },
     {
-      "ticker": "WFC",
-      "name": "Wells Fargo",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "V",
       "name": "Visa",
       "count": 1,
@@ -158,6 +152,12 @@
       "name": "URI",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "UNH",
+      "name": "UnitedHealth",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 17,
-    "congress_flags": 86,
-    "convergence_count": 32
+    "congress_flags": 82,
+    "convergence_count": 21
   },
   "insider_sectors": [],
   "ml": {
@@ -602,10 +602,10 @@
     ]
   },
   "sector_distribution": {
-    "Unknown": 45
+    "Unknown": 43
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 41,
+    "unique_tickers_in_export": 39,
     "max_signals_per_ticker": 3,
     "top_5_tickers_by_signal_count": [
       {
@@ -661,12 +661,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 157,
-      "normal": 1162
+      "normal": 1187
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.58,
-      "normal": 0.508
+      "normal": 0.503
     }
   },
   "features_pruned_history": {
@@ -736,58 +736,58 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.119,
+        "fill_rate": 0.118,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.122,
+        "fill_rate": 0.121,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.08,
+        "fill_rate": 0.077,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.08,
+        "fill_rate": 0.077,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.019695,
-    "n_matched_signals": 1758,
-    "spy_avg_30d_return": 0.021673,
+    "alpha_all_signals": -0.020959,
+    "n_matched_signals": 1783,
+    "spy_avg_30d_return": 0.022598,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.016946,
-    "beta_vs_spy": -0.3734,
-    "beta_vs_spy_raw": -0.4176
+    "alpha_congress": -0.017125,
+    "beta_vs_spy": -0.3698,
+    "beta_vs_spy_raw": -0.4138
   },
   "signal_concentration": {
     "top_ticker": "TPL",
-    "top_ticker_pct": 0.067,
-    "top_5_ticker_pct": 0.2,
-    "unique_tickers": 41,
+    "top_ticker_pct": 0.07,
+    "top_5_ticker_pct": 0.209,
+    "unique_tickers": 39,
     "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
