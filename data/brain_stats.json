@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-18T23:19:40.413179+00:00",
+  "generated": "2026-05-19T23:19:26.802764+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,8 +38,8 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 88,
-      "match_rate": 0.31
+      "n_trades": 89,
+      "match_rate": 0.3
     },
     {
       "name": "Finance",
@@ -94,6 +94,12 @@
       "heat": 2
     },
     {
+      "ticker": "JPM",
+      "name": "JPMorgan Chase",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "INTU",
       "name": "INTU",
       "count": 2,
@@ -114,6 +120,12 @@
     {
       "ticker": "XLE",
       "name": "XLE",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "VMW",
+      "name": "VMW",
       "count": 1,
       "heat": 1
     },
@@ -146,27 +158,15 @@
       "name": "STE",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "SPYV",
-      "name": "SPYV",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPYG",
-      "name": "SPYG",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 12,
-    "congress_flags": 52,
-    "convergence_count": 18
+    "cluster_count": 13,
+    "congress_flags": 57,
+    "convergence_count": 19
   },
   "insider_sectors": [],
   "ml": {
@@ -602,10 +602,10 @@
     ]
   },
   "sector_distribution": {
-    "Unknown": 30
+    "Unknown": 29
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 27,
+    "unique_tickers_in_export": 26,
     "max_signals_per_ticker": 3,
     "top_5_tickers_by_signal_count": [
       {
@@ -634,39 +634,51 @@
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
-      "avg_car_30d": -0.0521,
-      "n": 56
+      "avg_car_30d": -0.0571,
+      "n": 66
     },
     {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.0478,
-      "n": 30
-    },
-    {
-      "feature": "vix_regime",
-      "value": "high_fear",
-      "avg_car_30d": -0.0291,
-      "n": 95
+      "avg_car_30d": -0.0504,
+      "n": 53
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.0287,
-      "n": 134
+      "avg_car_30d": -0.0393,
+      "n": 174
+    },
+    {
+      "feature": "cluster_velocity",
+      "value": "fast",
+      "avg_car_30d": -0.0274,
+      "n": 118
+    },
+    {
+      "feature": "vix_regime",
+      "value": "high_fear",
+      "avg_car_30d": -0.0271,
+      "n": 96
+    },
+    {
+      "feature": "cluster_velocity",
+      "value": "burst",
+      "avg_car_30d": -0.0206,
+      "n": 51
     }
   ],
   "regime": {
     "current_regime": "normal",
     "distribution": {
       "elevated": 439,
-      "low_vol": 157,
-      "normal": 1313
+      "low_vol": 158,
+      "normal": 1339
     },
     "hit_rates": {
       "elevated": 0.376,
-      "low_vol": 0.58,
-      "normal": 0.471
+      "low_vol": 0.576,
+      "normal": 0.47
     }
   },
   "features_pruned_history": {
@@ -736,19 +748,19 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.119,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.121,
+        "fill_rate": 0.122,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.077,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.077,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bullish": {
@@ -770,24 +782,24 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.028652,
-    "n_matched_signals": 1909,
-    "spy_avg_30d_return": 0.026499,
+    "alpha_all_signals": -0.028997,
+    "n_matched_signals": 1936,
+    "spy_avg_30d_return": 0.027208,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.027574,
-    "beta_vs_spy": -0.4144,
-    "beta_vs_spy_raw": -0.4574
+    "alpha_congress": -0.028497,
+    "beta_vs_spy": -0.4074,
+    "beta_vs_spy_raw": -0.4446
   },
   "signal_concentration": {
     "top_ticker": "TPL",
-    "top_ticker_pct": 0.1,
-    "top_5_ticker_pct": 0.267,
-    "unique_tickers": 27,
+    "top_ticker_pct": 0.103,
+    "top_5_ticker_pct": 0.276,
+    "unique_tickers": 26,
     "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
