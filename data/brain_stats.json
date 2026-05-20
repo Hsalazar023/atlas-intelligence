@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-19T23:19:26.802764+00:00",
+  "generated": "2026-05-20T23:32:08.657198+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 128,
+      "n_trades": 133,
       "match_rate": 0.31
     },
     {
@@ -118,6 +118,12 @@
       "heat": 2
     },
     {
+      "ticker": "AMD",
+      "name": "AMD",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "XLE",
       "name": "XLE",
       "count": 1,
@@ -152,12 +158,6 @@
       "name": "TER",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "STE",
-      "name": "STE",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
@@ -165,7 +165,7 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 13,
-    "congress_flags": 57,
+    "congress_flags": 62,
     "convergence_count": 19
   },
   "insider_sectors": [],
@@ -673,12 +673,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1339
+      "normal": 1364
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.47
+      "normal": 0.464
     }
   },
   "features_pruned_history": {
@@ -748,52 +748,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.119,
+        "fill_rate": 0.121,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.122,
+        "fill_rate": 0.123,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.07,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.028997,
-    "n_matched_signals": 1936,
-    "spy_avg_30d_return": 0.027208,
+    "alpha_all_signals": -0.030179,
+    "n_matched_signals": 1961,
+    "spy_avg_30d_return": 0.027677,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.028497,
-    "beta_vs_spy": -0.4074,
-    "beta_vs_spy_raw": -0.4446
+    "alpha_congress": -0.029063,
+    "beta_vs_spy": -0.4092,
+    "beta_vs_spy_raw": -0.4483
   },
   "signal_concentration": {
     "top_ticker": "TPL",
