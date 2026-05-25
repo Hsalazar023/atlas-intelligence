@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-22T23:08:03.630491+00:00",
+  "generated": "2026-05-25T23:13:31.499688+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,8 +38,8 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 94,
-      "match_rate": 0.29
+      "n_trades": 98,
+      "match_rate": 0.28
     },
     {
       "name": "Finance",
@@ -66,36 +66,18 @@
     {
       "ticker": "GIL",
       "name": "GIL",
-      "count": 4,
-      "heat": 4
-    },
-    {
-      "ticker": "WDAY",
-      "name": "WDAY",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "PKG",
-      "name": "PKG",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "EQT",
-      "name": "EQT",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "AMD",
-      "name": "AMD",
       "count": 2,
       "heat": 2
     },
     {
       "ticker": "XLE",
       "name": "XLE",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "WDAY",
+      "name": "WDAY",
       "count": 1,
       "heat": 1
     },
@@ -108,18 +90,6 @@
     {
       "ticker": "V",
       "name": "Visa",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "URI",
-      "name": "URI",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "UNH",
-      "name": "UnitedHealth",
       "count": 1,
       "heat": 1
     },
@@ -158,6 +128,36 @@
       "name": "SPYG",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "SPY",
+      "name": "SPY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "SPGI",
+      "name": "S&P Global",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "SPG",
+      "name": "SPG",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "SMNEY",
+      "name": "SMNEY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "RYCEY",
+      "name": "RYCEY",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 9,
-    "congress_flags": 52,
-    "convergence_count": 19
+    "congress_flags": 37,
+    "convergence_count": 18
   },
   "insider_sectors": [],
   "ml": {
@@ -673,12 +673,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1400
+      "normal": 1439
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.456
+      "normal": 0.448
     }
   },
   "features_pruned_history": {
@@ -748,52 +748,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.116,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.12,
+        "fill_rate": 0.118,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.07,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.07,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.07,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.07,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.031981,
-    "n_matched_signals": 1997,
-    "spy_avg_30d_return": 0.028008,
+    "alpha_all_signals": -0.034048,
+    "n_matched_signals": 2036,
+    "spy_avg_30d_return": 0.028366,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.029759,
-    "beta_vs_spy": -0.4159,
-    "beta_vs_spy_raw": -0.4562
+    "alpha_congress": -0.030117,
+    "beta_vs_spy": -0.4238,
+    "beta_vs_spy_raw": -0.4646
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
