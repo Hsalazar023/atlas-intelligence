@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-25T23:13:31.499688+00:00",
+  "generated": "2026-05-26T23:22:46.728783+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 134,
+      "n_trades": 135,
       "match_rate": 0.31
     },
     {
@@ -632,28 +632,28 @@
   },
   "pruning_log": [
     {
-      "feature": "person_accuracy",
-      "value": "strong_70+",
-      "avg_car_30d": -0.0571,
-      "n": 66
-    },
-    {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.0504,
-      "n": 53
+      "avg_car_30d": -0.0673,
+      "n": 83
+    },
+    {
+      "feature": "person_accuracy",
+      "value": "strong_70+",
+      "avg_car_30d": -0.054,
+      "n": 76
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.0393,
-      "n": 174
+      "avg_car_30d": -0.048,
+      "n": 218
     },
     {
       "feature": "cluster_velocity",
       "value": "fast",
-      "avg_car_30d": -0.0274,
-      "n": 118
+      "avg_car_30d": -0.0384,
+      "n": 128
     },
     {
       "feature": "vix_regime",
@@ -662,10 +662,22 @@
       "n": 96
     },
     {
+      "feature": "insider_role",
+      "value": "CEO",
+      "avg_car_30d": -0.0252,
+      "n": 142
+    },
+    {
       "feature": "cluster_velocity",
       "value": "burst",
-      "avg_car_30d": -0.0206,
-      "n": 51
+      "avg_car_30d": -0.0245,
+      "n": 54
+    },
+    {
+      "feature": "trade_pattern",
+      "value": "opportunistic",
+      "avg_car_30d": -0.0218,
+      "n": 112
     }
   ],
   "regime": {
@@ -673,12 +685,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1439
+      "normal": 1446
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.448
+      "normal": 0.446
     }
   },
   "features_pruned_history": {
@@ -752,48 +764,48 @@
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.119,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.034048,
-    "n_matched_signals": 2036,
-    "spy_avg_30d_return": 0.028366,
+    "alpha_all_signals": -0.034526,
+    "n_matched_signals": 2043,
+    "spy_avg_30d_return": 0.028457,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.030117,
-    "beta_vs_spy": -0.4238,
-    "beta_vs_spy_raw": -0.4646
+    "alpha_congress": -0.030204,
+    "beta_vs_spy": -0.4273,
+    "beta_vs_spy_raw": -0.4681
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
