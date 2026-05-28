@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-27T23:28:13.872648+00:00",
+  "generated": "2026-05-28T23:31:10.717469+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,12 +33,12 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 135,
-      "match_rate": 0.31
+      "n_trades": 136,
+      "match_rate": 0.32
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 98,
+      "n_trades": 102,
       "match_rate": 0.28
     },
     {
@@ -64,12 +64,6 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "GIL",
-      "name": "GIL",
-      "count": 2,
-      "heat": 2
-    },
-    {
       "ticker": "XLE",
       "name": "XLE",
       "count": 1,
@@ -84,12 +78,6 @@
     {
       "ticker": "VMW",
       "name": "VMW",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "V",
-      "name": "Visa",
       "count": 1,
       "heat": 1
     },
@@ -148,14 +136,26 @@
       "heat": 1
     },
     {
-      "ticker": "SMNEY",
-      "name": "SMNEY",
+      "ticker": "RYCEY",
+      "name": "RYCEY",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "RYCEY",
-      "name": "RYCEY",
+      "ticker": "PKG",
+      "name": "PKG",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "OTIS",
+      "name": "OTIS",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "NOC",
+      "name": "Northrop Grumman",
       "count": 1,
       "heat": 1
     }
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 9,
-    "congress_flags": 37,
-    "convergence_count": 18
+    "congress_flags": 28,
+    "convergence_count": 19
   },
   "insider_sectors": [],
   "ml": {
@@ -685,12 +685,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1457
+      "normal": 1477
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.443
+      "normal": 0.441
     }
   },
   "features_pruned_history": {
@@ -760,52 +760,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.115,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.12,
+        "fill_rate": 0.118,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.035287,
-    "n_matched_signals": 2054,
-    "spy_avg_30d_return": 0.028564,
+    "alpha_all_signals": -0.035717,
+    "n_matched_signals": 2074,
+    "spy_avg_30d_return": 0.028792,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.03028,
-    "beta_vs_spy": -0.4312,
-    "beta_vs_spy_raw": -0.4728
+    "alpha_congress": -0.030069,
+    "beta_vs_spy": -0.4319,
+    "beta_vs_spy_raw": -0.4736
   },
   "signal_concentration": {
     "top_ticker": "CCFN",

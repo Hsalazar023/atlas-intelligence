@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T23:28:14.824854+00:00",
+  "generated_at": "2026-05-28T23:31:11.773291+00:00",
   "overall_status": "critical",
   "checks": {
     "ic_trend": {
@@ -22,8 +22,8 @@
       "threshold_warn_hours": 48,
       "threshold_critical_hours": 96,
       "congress_last_updated": "2026-05-18",
-      "edgar_last_updated": "2026-05-27",
-      "hours_since_congress": 239.5,
+      "edgar_last_updated": "2026-05-28",
+      "hours_since_congress": 263.5,
       "hours_since_edgar": 23.5
     },
     "feature_drift": {
@@ -40,11 +40,11 @@
         "sector": 0.0,
         "market_cap": 95.3,
         "momentum": 93.1,
-        "person_hr": 32.6,
-        "person_car": 32.6,
+        "person_hr": 32.4,
+        "person_car": 32.4,
         "sector_mom": 0.0,
         "insider_role": 100.0,
-        "repeat_buyer": 23.7
+        "repeat_buyer": 23.5
       }
     },
     "score_concentration": {
@@ -114,44 +114,44 @@
         "price_at_signal": {
           "fill_rate": 1.0,
           "expected": 0.95,
-          "total": 2054,
-          "filled": 2054,
+          "total": 2074,
+          "filled": 2074,
           "missing": 0
         },
         "total_score": {
-          "fill_rate": 0.284,
+          "fill_rate": 0.282,
           "expected": 0.9,
-          "total": 2669,
+          "total": 2691,
           "filled": 758,
-          "missing": 1911
+          "missing": 1933
         },
         "sector": {
           "fill_rate": 0.0,
           "expected": 0.95,
-          "total": 2669,
+          "total": 2691,
           "filled": 0,
-          "missing": 2669
+          "missing": 2691
         },
         "market_cap_bucket": {
           "fill_rate": 0.953,
           "expected": 0.8,
-          "total": 2669,
-          "filled": 2544,
-          "missing": 125
+          "total": 2691,
+          "filled": 2565,
+          "missing": 126
         },
         "momentum_1m": {
           "fill_rate": 0.985,
           "expected": 0.75,
-          "total": 2054,
-          "filled": 2023,
+          "total": 2074,
+          "filled": 2043,
           "missing": 31
         },
         "vix_at_signal": {
-          "fill_rate": 1.0,
+          "fill_rate": 0.992,
           "expected": 0.7,
-          "total": 2669,
+          "total": 2691,
           "filled": 2669,
-          "missing": 0
+          "missing": 22
         }
       }
     },
@@ -164,30 +164,30 @@
     },
     "db_integrity": {
       "status": "ok",
-      "size_mb": 1.91,
+      "size_mb": 1.93,
       "indexes": 11
     }
   },
   "recommendations": [
     "No IC history. Run --analyze to train ML models.",
-    "Low fill features: sector=0.0%, person_hr=32.6%, person_car=32.6%, sector_mom=0.0%, repeat_buyer=23.7%",
+    "Low fill features: sector=0.0%, person_hr=32.4%, person_car=32.4%, sector_mom=0.0%, repeat_buyer=23.5%",
     "Harmful feature values detected: cluster_7d=3+, person_accuracy=strong_70+, cluster_30d=3+, cluster_velocity=fast, vix_regime=high_fear. ML trees handle this but monitor for worsening.",
     "Score band inversion: 80+ CAR < 65-79 CAR. Recalibrate scoring coefficients.",
     "Prune candidates (<1% importance for 3+ runs): sect_ticker_momentum=0.004, volume_cluster_signal=0.005, news_sentiment_30d=0.005, market_regime=0.005",
-    "congress signals have negative avg CAR (-0.58%). Consider source quality down-weighting.",
-    "edgar signals have negative avg CAR (-0.82%). Consider source quality down-weighting.",
-    "CRITICAL: total_score fill rate 28.4% (expect 90%). 1911 signals missing. Run --backfill.",
-    "CRITICAL: sector fill rate 0.0% (expect 95%). 2669 signals missing. Run --backfill.",
-    "Candidate features below fill threshold (60%): short_interest_pct=12%, short_interest_change=12%, institutional_holders=7%, institutional_pct_held=7%, options_bullish=7%, options_unusual_calls=7%, options_insider_confluence=7%, options_bearish_divergence=7%",
+    "congress signals have negative avg CAR (-0.54%). Consider source quality down-weighting.",
+    "edgar signals have negative avg CAR (-0.92%). Consider source quality down-weighting.",
+    "CRITICAL: total_score fill rate 28.2% (expect 90%). 1933 signals missing. Run --backfill.",
+    "CRITICAL: sector fill rate 0.0% (expect 95%). 2691 signals missing. Run --backfill.",
+    "Candidate features below fill threshold (60%): short_interest_pct=12%, short_interest_change=12%, institutional_holders=8%, institutional_pct_held=8%, options_bullish=7%, options_unusual_calls=7%, options_insider_confluence=7%, options_bearish_divergence=7%",
     "Auto-promoted features: news_sentiment_30d, market_regime, sect_ticker_momentum, volume_cluster_signal"
   ],
   "ic_history": [],
   "score_bands": [
     {
       "band": "<40",
-      "n": 1953,
-      "avg_car": -0.011,
-      "hit_rate": 42.2
+      "n": 1973,
+      "avg_car": -0.0112,
+      "hit_rate": 42.0
     },
     {
       "band": "80+",
@@ -211,15 +211,15 @@
   "source_alpha": [
     {
       "source": "congress",
-      "n": 1235,
-      "avg_car": -0.0058,
+      "n": 1243,
+      "avg_car": -0.0054,
       "hit_rate": 45.6
     },
     {
       "source": "edgar",
-      "n": 819,
-      "avg_car": -0.0082,
-      "hit_rate": 41.4
+      "n": 831,
+      "avg_car": -0.0092,
+      "hit_rate": 40.9
     }
   ],
   "prune_candidates": [
@@ -260,35 +260,35 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.115,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.12,
+        "fill_rate": 0.118,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       }
     }
@@ -300,26 +300,26 @@
   },
   "db_health": {
     "tables": {
-      "signals": 2669,
+      "signals": 2691,
       "feature_stats": 77,
       "weight_history": 12,
       "feature_importance_history": 276,
-      "brain_runs": 59
+      "brain_runs": 60
     },
-    "db_size_mb": 1.91,
+    "db_size_mb": 1.93,
     "journal_mode": "delete",
     "index_count": 11,
     "integrity": "ok",
     "null_rates": {
-      "car_30d": 0.23,
-      "total_score": 0.716,
+      "car_30d": 0.229,
+      "total_score": 0.718,
       "sector": 1.0,
-      "spy_return_30d": 0.137
+      "spy_return_30d": 0.144
     },
-    "outcome_fill_rate": 0.77,
+    "outcome_fill_rate": 0.771,
     "date_range": {
       "min": "2023-01-03",
-      "max": "2026-05-27"
+      "max": "2026-05-28"
     }
   }
 }
