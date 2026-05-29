@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-28T23:31:10.717469+00:00",
+  "generated": "2026-05-29T23:25:22.895192+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 102,
+      "n_trades": 103,
       "match_rate": 0.28
     },
     {
@@ -64,16 +64,10 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "XLE",
-      "name": "XLE",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "WDAY",
-      "name": "WDAY",
-      "count": 1,
-      "heat": 1
+      "ticker": "T",
+      "name": "AT&T",
+      "count": 2,
+      "heat": 2
     },
     {
       "ticker": "VMW",
@@ -94,38 +88,8 @@
       "heat": 1
     },
     {
-      "ticker": "T",
-      "name": "AT&T",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "STE",
       "name": "STE",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPYV",
-      "name": "SPYV",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPYG",
-      "name": "SPYG",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPY",
-      "name": "SPY",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPGI",
-      "name": "S&P Global",
       "count": 1,
       "heat": 1
     },
@@ -148,6 +112,12 @@
       "heat": 1
     },
     {
+      "ticker": "PH",
+      "name": "PH",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "OTIS",
       "name": "OTIS",
       "count": 1,
@@ -158,15 +128,45 @@
       "name": "Northrop Grumman",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "MKL",
+      "name": "MKL",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "MEDP",
+      "name": "MEDP",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "JPM",
+      "name": "JPMorgan Chase",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "INTU",
+      "name": "INTU",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "IHG",
+      "name": "IHG",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 9,
-    "congress_flags": 28,
-    "convergence_count": 19
+    "cluster_count": 8,
+    "congress_flags": 24,
+    "convergence_count": 18
   },
   "insider_sectors": [],
   "ml": {
@@ -602,10 +602,10 @@
     ]
   },
   "sector_distribution": {
-    "Unknown": 21
+    "Unknown": 11
   },
   "ticker_distribution": {
-    "unique_tickers_in_export": 19,
+    "unique_tickers_in_export": 10,
     "max_signals_per_ticker": 2,
     "top_5_tickers_by_signal_count": [
       {
@@ -613,19 +613,19 @@
         "count": 2
       },
       {
-        "ticker": "TPL",
-        "count": 2
-      },
-      {
-        "ticker": "PMNT",
-        "count": 1
-      },
-      {
-        "ticker": "HTGC",
-        "count": 1
-      },
-      {
         "ticker": "GAIA",
+        "count": 1
+      },
+      {
+        "ticker": "SSP",
+        "count": 1
+      },
+      {
+        "ticker": "TPC",
+        "count": 1
+      },
+      {
+        "ticker": "CBNA",
         "count": 1
       }
     ]
@@ -685,12 +685,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1477
+      "normal": 1497
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.441
+      "normal": 0.438
     }
   },
   "features_pruned_history": {
@@ -760,58 +760,58 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.115,
+        "fill_rate": 0.116,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.119,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.076,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.076,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.074,
+        "fill_rate": 0.075,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.035717,
-    "n_matched_signals": 2074,
-    "spy_avg_30d_return": 0.028792,
+    "alpha_all_signals": -0.036327,
+    "n_matched_signals": 2094,
+    "spy_avg_30d_return": 0.028941,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.030069,
-    "beta_vs_spy": -0.4319,
-    "beta_vs_spy_raw": -0.4736
+    "alpha_congress": -0.030316,
+    "beta_vs_spy": -0.4341,
+    "beta_vs_spy_raw": -0.476
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
-    "top_ticker_pct": 0.095,
-    "top_5_ticker_pct": 0.333,
-    "unique_tickers": 19,
+    "top_ticker_pct": 0.182,
+    "top_5_ticker_pct": 0.545,
+    "unique_tickers": 10,
     "unique_sectors": 1,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
