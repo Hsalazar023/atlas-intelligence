@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-29T23:25:22.895192+00:00",
+  "generated": "2026-06-01T23:41:12.860515+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,13 +33,13 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 136,
+      "n_trades": 138,
       "match_rate": 0.32
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 103,
-      "match_rate": 0.28
+      "n_trades": 104,
+      "match_rate": 0.29
     },
     {
       "name": "Finance",
@@ -76,24 +76,6 @@
       "heat": 1
     },
     {
-      "ticker": "TER",
-      "name": "TER",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "TDG",
-      "name": "TDG",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "STE",
-      "name": "STE",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "SPG",
       "name": "SPG",
       "count": 1,
@@ -106,32 +88,14 @@
       "heat": 1
     },
     {
-      "ticker": "PKG",
-      "name": "PKG",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "PH",
       "name": "PH",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "OTIS",
-      "name": "OTIS",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "NOC",
       "name": "Northrop Grumman",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "MKL",
-      "name": "MKL",
       "count": 1,
       "heat": 1
     },
@@ -148,14 +112,20 @@
       "heat": 1
     },
     {
-      "ticker": "INTU",
-      "name": "INTU",
+      "ticker": "IHG",
+      "name": "IHG",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "IHG",
-      "name": "IHG",
+      "ticker": "HD",
+      "name": "Home Depot",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple",
       "count": 1,
       "heat": 1
     }
@@ -164,9 +134,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 8,
-    "congress_flags": 24,
-    "convergence_count": 18
+    "cluster_count": 7,
+    "congress_flags": 12,
+    "convergence_count": 21
   },
   "insider_sectors": [],
   "ml": {
@@ -685,12 +655,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1497
+      "normal": 1547
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.438
+      "normal": 0.427
     }
   },
   "features_pruned_history": {
@@ -760,52 +730,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.116,
+        "fill_rate": 0.114,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.119,
+        "fill_rate": 0.116,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.076,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.075,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.036327,
-    "n_matched_signals": 2094,
-    "spy_avg_30d_return": 0.028941,
+    "alpha_all_signals": -0.038144,
+    "n_matched_signals": 2144,
+    "spy_avg_30d_return": 0.029405,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.030316,
-    "beta_vs_spy": -0.4341,
-    "beta_vs_spy_raw": -0.476
+    "alpha_congress": -0.030245,
+    "beta_vs_spy": -0.4426,
+    "beta_vs_spy_raw": -0.4845
   },
   "signal_concentration": {
     "top_ticker": "CCFN",

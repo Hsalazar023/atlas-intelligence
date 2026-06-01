@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-05-25T23:13:51.822589+00:00",
+  "generated_at": "2026-06-01T23:41:25.552306+00:00",
   "inventory": {
-    "total_signals": 2639,
-    "congress": 1379,
-    "edgar": 1260,
+    "total_signals": 2786,
+    "congress": 1385,
+    "edgar": 1401,
     "date_range": [
       "2023-01-03",
-      "2026-05-22"
+      "2026-06-01"
     ],
-    "months": 41.2,
-    "avg_per_month": 64.1,
-    "pending_outcome": 603,
-    "with_outcome": 2036,
+    "months": 41.5,
+    "avg_per_month": 67.1,
+    "pending_outcome": 642,
+    "with_outcome": 2144,
     "freshness_days": {
-      "congress": 7,
-      "edgar": 3
+      "congress": 14,
+      "edgar": 0
     }
   },
   "model_performance": {
@@ -38,7 +38,7 @@
     "alpha_80plus": 0.13772,
     "beta_vs_spy": 0.8258,
     "sharpe_market_adjusted_80plus": 1.558,
-    "with_outcome": 2036
+    "with_outcome": 2144
   },
   "features": {
     "active": [
@@ -206,22 +206,22 @@
       },
       {
         "name": "short_interest_pct",
-        "fill_rate": 0.116,
+        "fill_rate": 0.114,
         "status": "candidate"
       },
       {
         "name": "short_interest_change",
-        "fill_rate": 0.118,
+        "fill_rate": 0.116,
         "status": "candidate"
       },
       {
         "name": "institutional_holders",
-        "fill_rate": 0.074,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       {
         "name": "institutional_pct_held",
-        "fill_rate": 0.074,
+        "fill_rate": 0.073,
         "status": "candidate"
       },
       {
@@ -251,10 +251,10 @@
     "score_distribution": [
       {
         "band": "<40",
-        "n": 1935,
-        "avg_car": -0.01,
-        "avg_adj_car": -0.0408,
-        "hit_rate": 42.5
+        "n": 2043,
+        "avg_car": -0.0129,
+        "avg_adj_car": -0.0447,
+        "hit_rate": 41.1
       },
       {
         "band": "80+",
@@ -281,22 +281,22 @@
     "monotonic": false
   },
   "pipeline": {
-    "db_size_mb": 1.89,
-    "db_total_rows": 2639,
+    "db_size_mb": 2.0,
+    "db_total_rows": 2786,
     "data_files": {
       "brain_signals.json": {
         "exists": true,
-        "size_kb": 70.0,
+        "size_kb": 37.8,
         "age_hours": 0.0
       },
       "brain_stats.json": {
         "exists": true,
-        "size_kb": 15.9,
+        "size_kb": 15.7,
         "age_hours": 0.0
       },
       "brain_health.json": {
         "exists": true,
-        "size_kb": 7.8,
+        "size_kb": 8.2,
         "age_hours": 0.3
       },
       "optimal_weights.json": {
@@ -306,27 +306,27 @@
       },
       "edgar_feed.json": {
         "exists": true,
-        "size_kb": 1191.0,
+        "size_kb": 1215.8,
         "age_hours": 0.3
       },
       "congress_feed.json": {
         "exists": true,
-        "size_kb": 435.6,
+        "size_kb": 435.7,
         "age_hours": 0.3
       },
       "news_sentiment.json": {
         "exists": true,
-        "size_kb": 16.1,
+        "size_kb": 16.3,
         "age_hours": 0.2
       },
       "institutional_data.json": {
         "exists": true,
-        "size_kb": 13.2,
+        "size_kb": 13.3,
         "age_hours": 0.2
       },
       "options_flow.json": {
         "exists": true,
-        "size_kb": 18.4,
+        "size_kb": 18.1,
         "age_hours": 0.2
       }
     },
@@ -334,21 +334,21 @@
     "journal_mode": "delete",
     "index_count": 11,
     "integrity": "ok",
-    "outcome_fill_rate": 0.772,
+    "outcome_fill_rate": 0.77,
     "null_rates": {
-      "car_30d": 0.228,
-      "total_score": 0.713,
+      "car_30d": 0.23,
+      "total_score": 0.728,
       "sector": 1.0,
-      "spy_return_30d": 0.155
+      "spy_return_30d": 0.137
     }
   },
   "recommendations": [
     "No IC history. Run --analyze to train ML models.",
-    "Low fill features: sector=0.0%, person_hr=32.9%, person_car=32.9%, sector_mom=0.0%, repeat_buyer=23.8%",
-    "Harmful feature values detected: person_accuracy=strong_70+, cluster_7d=3+, cluster_30d=3+, cluster_velocity=fast, vix_regime=high_fear. ML trees handle this but monitor for worsening."
+    "Low fill features: sector=0.0%, person_hr=32.4%, person_car=32.4%, sector_mom=0.0%, repeat_buyer=23.8%",
+    "Harmful feature values detected: cluster_7d=3+, person_accuracy=strong_70+, cluster_30d=3+, cluster_velocity=fast, vix_regime=high_fear. ML trees handle this but monitor for worsening."
   ],
   "regime_context": {
-    "current_vix": 16.76,
+    "current_vix": 15.32,
     "regime": "OPTIMAL",
     "multiplier": 1.0,
     "note": "VIX 15-25: strongest prediction zone (IC=0.10-0.13)"
@@ -357,27 +357,27 @@
     {
       "regime": "Low vol   (VIX<15)",
       "n": 149,
-      "ic": 0.0267,
-      "p_value": 0.7465,
+      "ic": 0.0274,
+      "p_value": 0.7404,
       "hit_rate": 0.591,
       "status": "WARN",
       "score_type": "oos_score"
     },
     {
       "regime": "Normal    (VIX 15-25)",
-      "n": 856,
-      "ic": 0.0135,
-      "p_value": 0.694,
-      "hit_rate": 0.526,
+      "n": 1230,
+      "ic": -0.1173,
+      "p_value": 0.0,
+      "hit_rate": 0.429,
       "status": "FAIL",
       "score_type": "oos_score"
     },
     {
       "regime": "Elevated  (VIX 25-35)",
-      "n": 190,
-      "ic": 0.0646,
-      "p_value": 0.376,
-      "hit_rate": 0.468,
+      "n": 414,
+      "ic": 0.1895,
+      "p_value": 0.0001,
+      "hit_rate": 0.377,
       "status": "PASS",
       "score_type": "oos_score"
     },
