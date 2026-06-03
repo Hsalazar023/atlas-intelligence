@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-01T23:41:12.860515+00:00",
+  "generated": "2026-06-03T00:00:36.203912+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 104,
+      "n_trades": 108,
       "match_rate": 0.29
     },
     {
@@ -134,7 +134,7 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 7,
+    "cluster_count": 9,
     "congress_flags": 12,
     "convergence_count": 21
   },
@@ -604,50 +604,50 @@
     {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.0673,
-      "n": 83
+      "avg_car_30d": -0.0806,
+      "n": 107
     },
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
-      "avg_car_30d": -0.054,
-      "n": 76
+      "avg_car_30d": -0.0589,
+      "n": 86
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.048,
-      "n": 218
+      "avg_car_30d": -0.0559,
+      "n": 255
     },
     {
       "feature": "cluster_velocity",
       "value": "fast",
-      "avg_car_30d": -0.0384,
-      "n": 128
-    },
-    {
-      "feature": "vix_regime",
-      "value": "high_fear",
-      "avg_car_30d": -0.0271,
-      "n": 96
+      "avg_car_30d": -0.0423,
+      "n": 137
     },
     {
       "feature": "insider_role",
       "value": "CEO",
-      "avg_car_30d": -0.0252,
-      "n": 142
-    },
-    {
-      "feature": "cluster_velocity",
-      "value": "burst",
-      "avg_car_30d": -0.0245,
-      "n": 54
+      "avg_car_30d": -0.0384,
+      "n": 161
     },
     {
       "feature": "trade_pattern",
       "value": "opportunistic",
-      "avg_car_30d": -0.0218,
-      "n": 112
+      "avg_car_30d": -0.0305,
+      "n": 127
+    },
+    {
+      "feature": "cluster_velocity",
+      "value": "burst",
+      "avg_car_30d": -0.0293,
+      "n": 57
+    },
+    {
+      "feature": "vix_regime",
+      "value": "high_fear",
+      "avg_car_30d": -0.0272,
+      "n": 96
     }
   ],
   "regime": {
@@ -655,12 +655,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1547
+      "normal": 1573
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.427
+      "normal": 0.425
     }
   },
   "features_pruned_history": {
@@ -730,52 +730,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.114,
+        "fill_rate": 0.112,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.116,
+        "fill_rate": 0.114,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.038144,
-    "n_matched_signals": 2144,
-    "spy_avg_30d_return": 0.029405,
+    "alpha_all_signals": -0.037315,
+    "n_matched_signals": 2170,
+    "spy_avg_30d_return": 0.029778,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.030245,
-    "beta_vs_spy": -0.4426,
-    "beta_vs_spy_raw": -0.4845
+    "alpha_congress": -0.030659,
+    "beta_vs_spy": -0.4414,
+    "beta_vs_spy_raw": -0.4687
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
