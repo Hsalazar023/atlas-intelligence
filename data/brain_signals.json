@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-03T00:00:36.203912+00:00",
+  "generated": "2026-06-03T23:44:34.850559+00:00",
   "signals": [
     {
       "ticker": "GAIA",
@@ -34,7 +34,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "disclosure_delay",
@@ -43,16 +43,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -61,16 +61,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -91,8 +82,8 @@
       "target1": 3.34,
       "target2": 3.4,
       "stop": 3.08,
-      "current_price": 2.32,
-      "unrealized_pnl_pct": -0.284,
+      "current_price": 2.26,
+      "unrealized_pnl_pct": -0.3025,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -150,7 +141,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "disclosure_delay",
@@ -159,16 +150,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -177,7 +168,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -198,8 +189,8 @@
       "target1": 5.11,
       "target2": 5.54,
       "stop": 4.25,
-      "current_price": 3.44,
-      "unrealized_pnl_pct": -0.2473,
+      "current_price": 3.56,
+      "unrealized_pnl_pct": -0.221,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -257,7 +248,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "disclosure_delay",
@@ -266,16 +257,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -284,7 +275,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -305,8 +296,8 @@
       "target1": 75.08,
       "target2": 76.98,
       "stop": 69.07,
-      "current_price": 74.29,
-      "unrealized_pnl_pct": 0.0218,
+      "current_price": 72.26,
+      "unrealized_pnl_pct": -0.0061,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -355,7 +346,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0215
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -364,16 +364,7 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 1.0,
-          "importance": 0.0217
-        },
-        {
-          "feature": "person_trade_count",
-          "label": "Infrequent trader",
-          "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0214
         },
         {
           "feature": "vix_at_signal",
@@ -382,16 +373,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -412,8 +394,8 @@
       "target1": 20.79,
       "target2": 21.2,
       "stop": 19.18,
-      "current_price": 26.5,
-      "unrealized_pnl_pct": 0.3127,
+      "current_price": 26.0,
+      "unrealized_pnl_pct": 0.288,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -462,7 +444,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "disclosure_delay",
@@ -471,16 +453,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -489,16 +471,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -519,8 +492,8 @@
       "target1": 35.82,
       "target2": 36.52,
       "stop": 33.04,
-      "current_price": 35.95,
-      "unrealized_pnl_pct": 0.0336,
+      "current_price": 36.06,
+      "unrealized_pnl_pct": 0.0368,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -569,7 +542,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
+        },
+        {
+          "feature": "person_trade_count",
+          "label": "Infrequent trader",
+          "direction": "bearish",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
+          "raw_value": 0.0,
+          "importance": 0.0215
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -578,16 +560,7 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 1.0,
-          "importance": 0.0217
-        },
-        {
-          "feature": "person_trade_count",
-          "label": "Infrequent trader",
-          "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0214
         },
         {
           "feature": "vix_at_signal",
@@ -596,16 +569,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -626,8 +590,8 @@
       "target1": 20.79,
       "target2": 21.2,
       "stop": 19.18,
-      "current_price": 26.5,
-      "unrealized_pnl_pct": 0.3127,
+      "current_price": 26.0,
+      "unrealized_pnl_pct": 0.288,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -685,7 +649,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "trade_size_points",
@@ -703,7 +667,7 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "vix_at_signal",
@@ -712,7 +676,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -733,8 +697,8 @@
       "target1": 5.96,
       "target2": 6.08,
       "stop": 5.5,
-      "current_price": 6.18,
-      "unrealized_pnl_pct": 0.0674,
+      "current_price": 6.08,
+      "unrealized_pnl_pct": 0.0501,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -792,7 +756,7 @@
           "percentile": 91,
           "percentile_label": "top 9%",
           "raw_value": 4.0,
-          "importance": 0.0346
+          "importance": 0.0345
         },
         {
           "feature": "insider_buy_ratio_90d",
@@ -801,7 +765,7 @@
           "percentile": 75,
           "percentile_label": "75th percentile",
           "raw_value": 1.0986,
-          "importance": 0.0271
+          "importance": 0.0272
         },
         {
           "feature": "disclosure_delay",
@@ -810,7 +774,7 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "same_ticker_signals_7d",
@@ -819,7 +783,7 @@
           "percentile": 81,
           "percentile_label": "81th percentile",
           "raw_value": 1.0,
-          "importance": 0.0217
+          "importance": 0.0214
         }
       ],
       "context": {
@@ -840,8 +804,8 @@
       "target1": 539.96,
       "target2": 550.44,
       "stop": 498.02,
-      "current_price": 370.82,
-      "unrealized_pnl_pct": -0.2926,
+      "current_price": 406.76,
+      "unrealized_pnl_pct": -0.2241,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -890,7 +854,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "disclosure_delay",
@@ -899,16 +863,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -917,16 +881,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -947,8 +902,8 @@
       "target1": 11.69,
       "target2": 11.91,
       "stop": 10.78,
-      "current_price": 12.0,
-      "unrealized_pnl_pct": 0.0576,
+      "current_price": 10.96,
+      "unrealized_pnl_pct": -0.0341,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -997,7 +952,7 @@
           "percentile": 92,
           "percentile_label": "top 8%",
           "raw_value": 12.0,
-          "importance": 0.0269
+          "importance": 0.027
         },
         {
           "feature": "disclosure_delay",
@@ -1006,16 +961,16 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "person_trade_count",
           "label": "Infrequent trader",
           "direction": "bearish",
-          "percentile": 20,
-          "percentile_label": "20th percentile",
+          "percentile": 21,
+          "percentile_label": "21th percentile",
           "raw_value": 0.0,
-          "importance": 0.0216
+          "importance": 0.0215
         },
         {
           "feature": "vix_at_signal",
@@ -1024,16 +979,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
-        },
-        {
-          "feature": "days_since_last_buy",
-          "label": "Repeat buyer signal",
-          "direction": "bullish",
-          "percentile": 23,
-          "percentile_label": "23th percentile",
-          "raw_value": 0.0,
-          "importance": 0.0183
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -1054,8 +1000,8 @@
       "target1": 296.5,
       "target2": 302.26,
       "stop": 273.47,
-      "current_price": 389.03,
-      "unrealized_pnl_pct": 0.3514,
+      "current_price": 391.27,
+      "unrealized_pnl_pct": 0.3592,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -1104,7 +1050,7 @@
           "percentile": 25,
           "percentile_label": "25th percentile",
           "raw_value": 0.0,
-          "importance": 0.0272
+          "importance": 0.0273
         },
         {
           "feature": "days_since_last_buy",
@@ -1122,7 +1068,7 @@
           "percentile": 26,
           "percentile_label": "26th percentile",
           "raw_value": 0.0,
-          "importance": 0.024
+          "importance": 0.0236
         },
         {
           "feature": "trade_size_points",
@@ -1140,7 +1086,7 @@
           "percentile": 76,
           "percentile_label": "76th percentile",
           "raw_value": 23.75,
-          "importance": 0.0188
+          "importance": 0.0191
         }
       ],
       "context": {
@@ -1161,8 +1107,8 @@
       "target1": 26.04,
       "target2": 26.55,
       "stop": 24.02,
-      "current_price": 24.43,
-      "unrealized_pnl_pct": -0.0338,
+      "current_price": 24.12,
+      "unrealized_pnl_pct": -0.0461,
       "days_held": 89,
       "days_remaining": 0,
       "position_status": "EXPIRED",
@@ -1357,7 +1303,7 @@
     }
   },
   "regime_context": {
-    "current_vix": 16.05,
+    "current_vix": 15.77,
     "regime": "OPTIMAL",
     "multiplier": 1.0,
     "note": "VIX 15-25: strongest prediction zone (IC=0.10-0.13)"

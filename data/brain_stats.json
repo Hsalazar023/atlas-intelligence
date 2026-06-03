@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-03T00:00:36.203912+00:00",
+  "generated": "2026-06-03T23:44:34.850559+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 108,
+      "n_trades": 110,
       "match_rate": 0.29
     },
     {
@@ -124,6 +124,12 @@
       "heat": 1
     },
     {
+      "ticker": "ARLP",
+      "name": "ARLP",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "AAPL",
       "name": "Apple",
       "count": 1,
@@ -135,7 +141,7 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 9,
-    "congress_flags": 12,
+    "congress_flags": 13,
     "convergence_count": 21
   },
   "insider_sectors": [],
@@ -655,12 +661,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1573
+      "normal": 1609
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.425
+      "normal": 0.419
     }
   },
   "features_pruned_history": {
@@ -730,19 +736,19 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.112,
+        "fill_rate": 0.113,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.114,
+        "fill_rate": 0.115,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_bullish": {
@@ -764,18 +770,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.037315,
-    "n_matched_signals": 2170,
-    "spy_avg_30d_return": 0.029778,
+    "alpha_all_signals": -0.039204,
+    "n_matched_signals": 2206,
+    "spy_avg_30d_return": 0.030286,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.030659,
-    "beta_vs_spy": -0.4414,
-    "beta_vs_spy_raw": -0.4687
+    "alpha_congress": -0.031069,
+    "beta_vs_spy": -0.4529,
+    "beta_vs_spy_raw": -0.4807
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
