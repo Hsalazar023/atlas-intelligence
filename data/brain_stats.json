@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-03T23:44:34.850559+00:00",
+  "generated": "2026-06-04T23:21:20.002939+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -70,6 +70,12 @@
       "heat": 2
     },
     {
+      "ticker": "AAPL",
+      "name": "Apple",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "VMW",
       "name": "VMW",
       "count": 1,
@@ -78,6 +84,12 @@
     {
       "ticker": "SPG",
       "name": "SPG",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "SNDK",
+      "name": "SNDK",
       "count": 1,
       "heat": 1
     },
@@ -94,14 +106,32 @@
       "heat": 1
     },
     {
+      "ticker": "PANW",
+      "name": "PANW",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "NOC",
       "name": "Northrop Grumman",
       "count": 1,
       "heat": 1
     },
     {
+      "ticker": "MU",
+      "name": "Micron",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "MEDP",
       "name": "MEDP",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "LITE",
+      "name": "LITE",
       "count": 1,
       "heat": 1
     },
@@ -128,21 +158,15 @@
       "name": "ARLP",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "AAPL",
-      "name": "Apple",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 9,
-    "congress_flags": 13,
-    "convergence_count": 21
+    "cluster_count": 8,
+    "congress_flags": 20,
+    "convergence_count": 12
   },
   "insider_sectors": [],
   "ml": {
@@ -661,12 +685,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1609
+      "normal": 1628
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.419
+      "normal": 0.415
     }
   },
   "features_pruned_history": {
@@ -736,52 +760,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.113,
+        "fill_rate": 0.111,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.115,
+        "fill_rate": 0.114,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.039204,
-    "n_matched_signals": 2206,
-    "spy_avg_30d_return": 0.030286,
+    "alpha_all_signals": -0.039532,
+    "n_matched_signals": 2225,
+    "spy_avg_30d_return": 0.030476,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.031069,
-    "beta_vs_spy": -0.4529,
-    "beta_vs_spy_raw": -0.4807
+    "alpha_congress": -0.031319,
+    "beta_vs_spy": -0.4532,
+    "beta_vs_spy_raw": -0.4811
   },
   "signal_concentration": {
     "top_ticker": "CCFN",
