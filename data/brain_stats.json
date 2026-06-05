@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-04T23:21:20.002939+00:00",
+  "generated": "2026-06-05T23:20:14.070090+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 138,
+      "n_trades": 139,
       "match_rate": 0.32
     },
     {
@@ -124,6 +124,12 @@
       "heat": 1
     },
     {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "MEDP",
       "name": "MEDP",
       "count": 1,
@@ -150,12 +156,6 @@
     {
       "ticker": "HD",
       "name": "Home Depot",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "ARLP",
-      "name": "ARLP",
       "count": 1,
       "heat": 1
     }
@@ -601,35 +601,6 @@
       }
     ]
   },
-  "sector_distribution": {
-    "Unknown": 11
-  },
-  "ticker_distribution": {
-    "unique_tickers_in_export": 10,
-    "max_signals_per_ticker": 2,
-    "top_5_tickers_by_signal_count": [
-      {
-        "ticker": "CCFN",
-        "count": 2
-      },
-      {
-        "ticker": "GAIA",
-        "count": 1
-      },
-      {
-        "ticker": "SSP",
-        "count": 1
-      },
-      {
-        "ticker": "TPC",
-        "count": 1
-      },
-      {
-        "ticker": "CBNA",
-        "count": 1
-      }
-    ]
-  },
   "pruning_log": [
     {
       "feature": "cluster_7d",
@@ -685,12 +656,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1628
+      "normal": 1647
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.415
+      "normal": 0.413
     }
   },
   "features_pruned_history": {
@@ -760,59 +731,59 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.111,
+        "fill_rate": 0.112,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.114,
+        "fill_rate": 0.115,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.07,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.07,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.039532,
-    "n_matched_signals": 2225,
-    "spy_avg_30d_return": 0.030476,
+    "alpha_all_signals": -0.04017,
+    "n_matched_signals": 2244,
+    "spy_avg_30d_return": 0.030651,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.031319,
-    "beta_vs_spy": -0.4532,
-    "beta_vs_spy_raw": -0.4811
+    "alpha_congress": -0.031647,
+    "beta_vs_spy": -0.4558,
+    "beta_vs_spy_raw": -0.4838
   },
   "signal_concentration": {
-    "top_ticker": "CCFN",
-    "top_ticker_pct": 0.182,
-    "top_5_ticker_pct": 0.545,
-    "unique_tickers": 10,
-    "unique_sectors": 1,
+    "top_ticker": null,
+    "top_ticker_pct": 0,
+    "top_5_ticker_pct": 0,
+    "unique_tickers": 0,
+    "unique_sectors": 0,
     "max_per_ticker_cap": 3,
     "max_per_sector_cap": 8
   }
