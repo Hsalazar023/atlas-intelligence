@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-10T16:50:24.170384+00:00Z",
+  "updated": "2026-06-10T19:10:15.332835+00:00Z",
   "count": 162,
   "source": "FMP",
   "trades": [
@@ -79,8 +79,8 @@
       "Ticker": "MSFT",
       "TransactionDate": "2026-05-19",
       "Representative": "Josh Gottheimer",
-      "Transaction": "Purchase",
-      "Range": "$500,001 - $1,000,000",
+      "Transaction": "Sale",
+      "Range": "$250,001 - $500,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-04",
@@ -112,18 +112,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "T",
-      "TransactionDate": "2026-05-18",
-      "Representative": "Tim Moore",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 2,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "TPH",
       "TransactionDate": "2026-05-15",
       "Representative": "Josh Gottheimer",
@@ -148,7 +136,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "T",
+      "Ticker": "PH",
       "TransactionDate": "2026-05-15",
       "Representative": "David Taylor",
       "Transaction": "Purchase",
@@ -172,11 +160,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "MEDP",
       "TransactionDate": "2026-05-15",
       "Representative": "David Taylor",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-05-29",
@@ -196,39 +184,27 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PH",
+      "Ticker": "GOOGL",
       "TransactionDate": "2026-05-15",
       "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-29",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MEDP",
-      "TransactionDate": "2026-05-15",
-      "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-29",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NSRGY",
-      "TransactionDate": "2026-05-14",
-      "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 21,
+      "DisclosureDate": "2026-05-29",
+      "DisclosureDelay": 14,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "T",
+      "TransactionDate": "2026-05-15",
+      "Representative": "David Taylor",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-29",
+      "DisclosureDelay": 14,
       "Source": "FMP"
     },
     {
@@ -248,6 +224,18 @@
       "TransactionDate": "2026-05-14",
       "Representative": "Josh Gottheimer",
       "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 21,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NSRGY",
+      "TransactionDate": "2026-05-14",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -352,18 +340,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "RYCEY",
-      "TransactionDate": "2026-05-07",
-      "Representative": "Tim Moore",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 13,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "ETOR",
       "TransactionDate": "2026-05-06",
       "Representative": "Bernie Moreno",
@@ -400,10 +376,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMD",
+      "Ticker": "ABBV",
       "TransactionDate": "2026-05-05",
       "Representative": "Josh Gottheimer",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -412,10 +388,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ABBV",
+      "Ticker": "AMD",
       "TransactionDate": "2026-05-05",
       "Representative": "Josh Gottheimer",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -460,27 +436,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MMM",
-      "TransactionDate": "2026-04-28",
-      "Representative": "Josh Gottheimer",
+      "Ticker": "ORLY",
+      "TransactionDate": "2026-04-24",
+      "Representative": "Jonathan Jackson",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMD",
-      "TransactionDate": "2026-04-27",
-      "Representative": "Josh Gottheimer",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 23,
+      "DisclosureDate": "2026-05-28",
+      "DisclosureDelay": 34,
       "Source": "FMP"
     },
     {
@@ -489,18 +453,6 @@
       "Representative": "Jonathan Jackson",
       "Transaction": "Sale",
       "Range": "$50,001 - $100,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-28",
-      "DisclosureDelay": 34,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ORLY",
-      "TransactionDate": "2026-04-24",
-      "Representative": "Jonathan Jackson",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-05-28",
@@ -520,7 +472,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NOW",
+      "Ticker": "IBM",
       "TransactionDate": "2026-04-24",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -532,7 +484,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IBM",
+      "Ticker": "NOW",
       "TransactionDate": "2026-04-24",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -577,6 +529,18 @@
       "Party": "",
       "DisclosureDate": "2026-05-11",
       "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AMD",
+      "TransactionDate": "2026-04-23",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 27,
       "Source": "FMP"
     },
     {
@@ -640,6 +604,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "GS",
+      "TransactionDate": "2026-04-16",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 34,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "SBUX",
       "TransactionDate": "2026-04-15",
       "Representative": "James E Hon Banks",
@@ -688,10 +664,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TXN",
+      "Ticker": "FCNCA",
       "TransactionDate": "2026-04-14",
       "Representative": "Thomas H. Kean",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -700,10 +676,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "FCNCA",
+      "Ticker": "TXN",
       "TransactionDate": "2026-04-14",
       "Representative": "Thomas H. Kean",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -940,7 +916,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PFGC",
+      "Ticker": "DLTR",
+      "TransactionDate": "2026-04-09",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "F",
       "TransactionDate": "2026-04-09",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -952,7 +940,31 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TSCO",
+      "Ticker": "ALLY",
+      "TransactionDate": "2026-04-09",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "T",
+      "TransactionDate": "2026-04-09",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "DRI",
       "TransactionDate": "2026-04-09",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -964,7 +976,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SYF",
+      "Ticker": "MKTX",
+      "TransactionDate": "2026-04-09",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MLM",
       "TransactionDate": "2026-04-09",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -988,43 +1012,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "F",
-      "TransactionDate": "2026-04-09",
-      "Representative": "Josh Gottheimer",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MLM",
-      "TransactionDate": "2026-04-09",
-      "Representative": "Josh Gottheimer",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DLTR",
-      "TransactionDate": "2026-04-09",
-      "Representative": "Josh Gottheimer",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-05-20",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "HD",
+      "TransactionDate": "2026-04-09",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-05-20",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "PFGC",
       "TransactionDate": "2026-04-09",
       "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
@@ -1084,7 +1084,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NTES",
+      "Ticker": "CBZ",
       "TransactionDate": "2026-04-06",
       "Representative": "Josh Gottheimer",
       "Transaction": "Purchase",
@@ -1780,78 +1780,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BAC",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "XOM",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMZN",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ETN",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "BA",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CAT",
-      "TransactionDate": "2025-02-07",
-      "Representative": "Tim Walberg",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-04",
-      "DisclosureDelay": 482,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "CVX",
       "TransactionDate": "2025-02-07",
       "Representative": "Tim Walberg",
@@ -1876,11 +1804,83 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "J",
+      "Ticker": "CAT",
       "TransactionDate": "2025-02-07",
       "Representative": "Tim Walberg",
       "Transaction": "Purchase",
       "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "BA",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "XOM",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ETN",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AMZN",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "BAC",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-04",
+      "DisclosureDelay": 482,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "UAA",
+      "TransactionDate": "2025-02-07",
+      "Representative": "Tim Walberg",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-04",
@@ -1912,11 +1912,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "UAA",
+      "Ticker": "WFC",
       "TransactionDate": "2025-02-07",
       "Representative": "Tim Walberg",
       "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-04",
@@ -1936,7 +1936,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "WFC",
+      "Ticker": "J",
       "TransactionDate": "2025-02-07",
       "Representative": "Tim Walberg",
       "Transaction": "Purchase",
