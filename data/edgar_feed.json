@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12T22:53:36.452214+00:00Z",
+  "updated": "2026-06-12T23:12:49.679942+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -301,6 +301,34 @@
       "buy_shares": 2344,
       "sell_shares": 0,
       "direction": "buy"
+    },
+    {
+      "company": "Zevia PBC",
+      "insider": "Ginestro Suzanne Saltzman",
+      "date": "2026-06-12",
+      "period": "2026-06-10",
+      "accession": "0002105894-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/1854139/000210589426000006/0002105894-26-000006-index.htm",
+      "ticker": "ZVIA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 72464.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "DoorDash, Inc.",
@@ -2659,34 +2687,6 @@
       "direction": "other"
     },
     {
-      "company": "Fortrea Holdings Inc.",
-      "insider": "Russell Erin L",
-      "date": "2026-06-12",
-      "period": "2026-06-10",
-      "accession": "0001965040-26-000079",
-      "link": "https://www.sec.gov/Archives/edgar/data/1965040/000196504026000079/0001965040-26-000079-index.htm",
-      "ticker": "FTRE",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 38817.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
       "company": "ANNALY CAPITAL MANAGEMENT INC",
       "insider": "Laguerre Martin",
       "date": "2026-06-12",
@@ -3944,34 +3944,6 @@
       "direction": "grant"
     },
     {
-      "company": "Zevia PBC",
-      "insider": "Ruben Andrew",
-      "date": "2026-06-12",
-      "period": "2026-06-10",
-      "accession": "0001872293-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/1854139/000187229326000002/0001872293-26-000002-index.htm",
-      "ticker": "ZVIA",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 72464.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
       "company": "Krispy Kreme, Inc.",
       "insider": "Capel Patricia",
       "date": "2026-06-12",
@@ -4575,34 +4547,6 @@
         {
           "code": "A",
           "shares": 4304.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Zevia PBC",
-      "insider": "Ruberti Alexandre",
-      "date": "2026-06-12",
-      "period": "2026-06-10",
-      "accession": "0001847944-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/1854139/000184794426000002/0001847944-26-000002-index.htm",
-      "ticker": "ZVIA",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 72464.0,
           "price": 0.0,
           "value": 0.0,
           "acquired": true
@@ -5513,6 +5457,54 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "KIORA PHARMACEUTICALS INC",
+      "insider": "Hollander David",
+      "date": "2026-06-12",
+      "period": "2026-06-10",
+      "accession": "0001793796-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1372514/000179379626000002/0001793796-26-000002-index.htm",
+      "ticker": "KPRX",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "DICK'S SPORTING GOODS, INC.",
+      "insider": "Fink Anne",
+      "date": "2026-06-12",
+      "period": "2026-06-10",
+      "accession": "0001793218-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/1089063/000179321826000004/0001793218-26-000004-index.htm",
+      "ticker": "DKS",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 838.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "Kyndryl Holdings, Inc.",
