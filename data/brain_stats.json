@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T00:00:37.910784+00:00",
+  "generated": "2026-06-16T23:35:47.146197+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 212,
+      "n_trades": 214,
       "match_rate": 0.3
     },
     {
@@ -76,6 +76,18 @@
       "heat": 2
     },
     {
+      "ticker": "XTWO",
+      "name": "XTWO",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "XFIV",
+      "name": "XFIV",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "TSLA",
       "name": "Tesla",
       "count": 1,
@@ -84,6 +96,12 @@
     {
       "ticker": "TOELY",
       "name": "TOELY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "TLH",
+      "name": "TLH",
       "count": 1,
       "heat": 1
     },
@@ -102,6 +120,12 @@
     {
       "ticker": "SFTBY",
       "name": "SFTBY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "SCHP",
+      "name": "SCHP",
       "count": 1,
       "heat": 1
     },
@@ -134,30 +158,6 @@
       "name": "Meta",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "LPLA",
-      "name": "LPLA",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "LITE",
-      "name": "LITE",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "LGND",
-      "name": "LGND",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "KR",
-      "name": "KR",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 6,
-    "congress_flags": 37,
-    "convergence_count": 10
+    "congress_flags": 48,
+    "convergence_count": 11
   },
   "insider_sectors": [],
   "ml": {
@@ -704,12 +704,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1867
+      "normal": 1907
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.407
+      "normal": 0.412
     }
   },
   "features_pruned_history": {
@@ -779,52 +779,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.138,
+        "fill_rate": 0.112,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.139,
+        "fill_rate": 0.112,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.067,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.067,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.067,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.067,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.067,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.067,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.040715,
-    "n_matched_signals": 2464,
-    "spy_avg_30d_return": 0.030222,
+    "alpha_all_signals": -0.039602,
+    "n_matched_signals": 2504,
+    "spy_avg_30d_return": 0.029766,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.033721,
-    "beta_vs_spy": -0.4718,
-    "beta_vs_spy_raw": -0.4982
+    "alpha_congress": -0.033682,
+    "beta_vs_spy": -0.4776,
+    "beta_vs_spy_raw": -0.5035
   },
   "signal_concentration": {
     "top_ticker": null,
