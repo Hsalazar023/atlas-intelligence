@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T23:35:47.146197+00:00",
+  "generated": "2026-06-17T23:34:04.513490+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 214,
+      "n_trades": 215,
       "match_rate": 0.3
     },
     {
@@ -164,7 +164,7 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 6,
+    "cluster_count": 7,
     "congress_flags": 48,
     "convergence_count": 11
   },
@@ -704,12 +704,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 1907
+      "normal": 1957
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.412
+      "normal": 0.418
     }
   },
   "features_pruned_history": {
@@ -779,52 +779,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.112,
+        "fill_rate": 0.117,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.112,
+        "fill_rate": 0.117,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.068,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.068,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.067,
+        "fill_rate": 0.069,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.039602,
-    "n_matched_signals": 2504,
-    "spy_avg_30d_return": 0.029766,
+    "alpha_all_signals": -0.038337,
+    "n_matched_signals": 2554,
+    "spy_avg_30d_return": 0.029156,
     "alpha_80plus": 0.017712,
     "n_80plus": 1,
     "alpha_60_79": 0.129749,
     "n_60_79": 26,
     "alpha_below_60": -0.003561,
     "n_below_60": 639,
-    "alpha_congress": -0.033682,
-    "beta_vs_spy": -0.4776,
-    "beta_vs_spy_raw": -0.5035
+    "alpha_congress": -0.033619,
+    "beta_vs_spy": -0.4838,
+    "beta_vs_spy_raw": -0.5084
   },
   "signal_concentration": {
     "top_ticker": null,
