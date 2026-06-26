@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25T23:28:46.142528+00:00",
+  "generated": "2026-06-26T23:17:35.930841+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 222,
+      "n_trades": 223,
       "match_rate": 0.32
     },
     {
@@ -164,9 +164,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 5,
+    "cluster_count": 4,
     "congress_flags": 35,
-    "convergence_count": 8
+    "convergence_count": 7
   },
   "insider_sectors": [],
   "ml": {
@@ -668,12 +668,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 2156
+      "normal": 2174
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.435
+      "normal": 0.437
     }
   },
   "features_pruned_history": {
@@ -743,52 +743,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.112,
+        "fill_rate": 0.108,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.112,
+        "fill_rate": 0.108,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.063,
+        "fill_rate": 0.057,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.063,
+        "fill_rate": 0.057,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.064,
+        "fill_rate": 0.058,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.064,
+        "fill_rate": 0.058,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.064,
+        "fill_rate": 0.058,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.064,
+        "fill_rate": 0.058,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.030591,
-    "n_matched_signals": 2753,
-    "spy_avg_30d_return": 0.027305,
+    "alpha_all_signals": -0.02959,
+    "n_matched_signals": 2771,
+    "spy_avg_30d_return": 0.027133,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.031549,
-    "beta_vs_spy": -0.5229,
-    "beta_vs_spy_raw": -0.5578
+    "alpha_congress": -0.031567,
+    "beta_vs_spy": -0.5284,
+    "beta_vs_spy_raw": -0.5669
   },
   "signal_concentration": {
     "top_ticker": null,
