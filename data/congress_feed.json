@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29T21:17:03.312565+00:00Z",
+  "updated": "2026-06-29T22:35:35.751572+00:00Z",
   "count": 181,
   "source": "FMP",
   "trades": [
@@ -40,11 +40,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TPR",
+      "Ticker": "META",
       "TransactionDate": "2026-06-16",
       "Representative": "Matt Van Epps",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-17",
@@ -52,11 +52,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMZN",
+      "Ticker": "TPR",
       "TransactionDate": "2026-06-16",
       "Representative": "Matt Van Epps",
       "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-17",
@@ -76,7 +76,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "META",
+      "Ticker": "AMZN",
       "TransactionDate": "2026-06-16",
       "Representative": "Matt Van Epps",
       "Transaction": "Sale",
@@ -124,6 +124,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "XOM",
+      "TransactionDate": "2026-06-16",
+      "Representative": "Matt Van Epps",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-17",
+      "DisclosureDelay": 1,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "GE",
       "TransactionDate": "2026-06-16",
       "Representative": "Matt Van Epps",
@@ -137,18 +149,6 @@
     },
     {
       "Ticker": "GEV",
-      "TransactionDate": "2026-06-16",
-      "Representative": "Matt Van Epps",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-17",
-      "DisclosureDelay": 1,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "XOM",
       "TransactionDate": "2026-06-16",
       "Representative": "Matt Van Epps",
       "Transaction": "Sale",
@@ -184,7 +184,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "INTC",
+      "Ticker": "GD",
       "TransactionDate": "2026-06-10",
       "Representative": "Dwight Evans",
       "Transaction": "Sale",
@@ -196,7 +196,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GD",
+      "Ticker": "INTC",
       "TransactionDate": "2026-06-10",
       "Representative": "Dwight Evans",
       "Transaction": "Sale",
@@ -217,42 +217,6 @@
       "Party": "",
       "DisclosureDate": "2026-06-07",
       "DisclosureDelay": 2,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "LRCX",
-      "TransactionDate": "2026-06-05",
-      "Representative": "David Taylor",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-15",
-      "DisclosureDelay": 10,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "T",
-      "TransactionDate": "2026-06-05",
-      "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-15",
-      "DisclosureDelay": 10,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMGN",
-      "TransactionDate": "2026-06-05",
-      "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-15",
-      "DisclosureDelay": 10,
       "Source": "FMP"
     },
     {
@@ -280,6 +244,30 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "GOOGL",
+      "TransactionDate": "2026-06-05",
+      "Representative": "David Taylor",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-15",
+      "DisclosureDelay": 10,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "T",
+      "TransactionDate": "2026-06-05",
+      "Representative": "David Taylor",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-15",
+      "DisclosureDelay": 10,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "AMZN",
       "TransactionDate": "2026-06-05",
       "Representative": "David Taylor",
@@ -292,10 +280,22 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "AMGN",
       "TransactionDate": "2026-06-05",
       "Representative": "David Taylor",
       "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-15",
+      "DisclosureDelay": 10,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LRCX",
+      "TransactionDate": "2026-06-05",
+      "Representative": "David Taylor",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -316,18 +316,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "EQT",
-      "TransactionDate": "2026-06-01",
-      "Representative": "Thomas H. Kean",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-19",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "CHKP",
       "TransactionDate": "2026-06-01",
       "Representative": "Thomas H. Kean",
@@ -340,15 +328,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "UBER",
-      "TransactionDate": "2026-05-29",
-      "Representative": "Nancy Pelosi",
+      "Ticker": "EQT",
+      "TransactionDate": "2026-06-01",
+      "Representative": "Thomas H. Kean",
       "Transaction": "Purchase",
-      "Range": "$500,001 - $1,000,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-06-24",
-      "DisclosureDelay": 26,
+      "DisclosureDate": "2026-06-19",
+      "DisclosureDelay": 18,
       "Source": "FMP"
     },
     {
@@ -357,6 +345,18 @@
       "Representative": "Nancy Pelosi",
       "Transaction": "Purchase",
       "Range": "$1,000,001 - $5,000,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-24",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "UBER",
+      "TransactionDate": "2026-05-29",
+      "Representative": "Nancy Pelosi",
+      "Transaction": "Purchase",
+      "Range": "$500,001 - $1,000,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-24",
@@ -652,18 +652,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AXTA",
-      "TransactionDate": "2026-05-27",
-      "Representative": "Ro Khanna",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 15,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "MU",
       "TransactionDate": "2026-05-26",
       "Representative": "Ro Khanna",
@@ -757,6 +745,18 @@
       "Party": "",
       "DisclosureDate": "2026-06-16",
       "DisclosureDelay": 32,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ALLY",
+      "TransactionDate": "2026-05-15",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 27,
       "Source": "FMP"
     },
     {
@@ -904,18 +904,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MU",
-      "TransactionDate": "2026-05-12",
-      "Representative": "Ro Khanna",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 30,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "RF",
       "TransactionDate": "2026-05-11",
       "Representative": "Neal P. Dunn",
@@ -940,18 +928,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MU",
-      "TransactionDate": "2026-05-11",
-      "Representative": "Ro Khanna",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 31,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "NVDA",
       "TransactionDate": "2026-05-08",
       "Representative": "Sheldon Whitehouse",
@@ -964,11 +940,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TSM",
+      "Ticker": "ACN",
       "TransactionDate": "2026-05-08",
       "Representative": "Richard W. Allen",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-17",
@@ -988,11 +964,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ACN",
+      "Ticker": "TSM",
       "TransactionDate": "2026-05-08",
       "Representative": "Richard W. Allen",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-17",
@@ -1084,7 +1060,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BRO",
+      "Ticker": "SOLV",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1096,7 +1072,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MA",
+      "Ticker": "TSCO",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1108,199 +1084,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KMB",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CMCSA",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "WAB",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CCI",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MCHP",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "SCHW",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CCL",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "APO",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "VMC",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MS",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NVDA",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "BBY",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "BAX",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ON",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CVS",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "GOOGL",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ROK",
+      "Ticker": "CSX",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1324,11 +1108,83 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ABBV",
+      "Ticker": "UNP",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "COHR",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LEN",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MS",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "SNPS",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CRH",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TT",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-06-11",
@@ -1348,7 +1204,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "CARR",
+      "Ticker": "ISRG",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1360,7 +1216,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "EW",
+      "Ticker": "LII",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1372,7 +1228,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "STLD",
+      "Ticker": "ALL",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1384,7 +1240,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "DASH",
+      "Ticker": "MA",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1396,19 +1252,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMT",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CVNA",
+      "Ticker": "HBAN",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1420,7 +1264,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SOLV",
+      "Ticker": "ITW",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1432,7 +1276,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LUV",
+      "Ticker": "COF",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1444,7 +1288,31 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "WSM",
+      "Ticker": "ZBRA",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "GOOGL",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "SWK",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1480,7 +1348,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BKNG",
+      "Ticker": "CCI",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1492,7 +1360,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TSCO",
+      "Ticker": "EW",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1504,7 +1372,151 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SNPS",
+      "Ticker": "BBY",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CARR",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "SCHW",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MRSH",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NVDA",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "DASH",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NXPI",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CMCSA",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "JNJ",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MCHP",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "VMC",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ABBV",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CVS",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1528,7 +1540,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LII",
+      "Ticker": "AMZN",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1540,7 +1552,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AME",
+      "Ticker": "XYL",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1552,7 +1564,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NSC",
+      "Ticker": "DXCM",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1564,7 +1576,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ZBRA",
+      "Ticker": "FITB",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1576,7 +1588,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IP",
+      "Ticker": "BRO",
+      "TransactionDate": "2026-05-01",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-06-11",
+      "DisclosureDelay": 41,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "UPS",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1600,7 +1624,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "EME",
+      "Ticker": "IP",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
@@ -1612,31 +1636,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "CMG",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "RMD",
-      "TransactionDate": "2026-05-01",
-      "Representative": "Ro Khanna",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-06-11",
-      "DisclosureDelay": 41,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NXPI",
+      "Ticker": "ROK",
       "TransactionDate": "2026-05-01",
       "Representative": "Ro Khanna",
       "Transaction": "Purchase",
