@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-06-22T23:38:09.756985+00:00",
+  "generated_at": "2026-06-29T23:09:20.849775+00:00",
   "inventory": {
-    "total_signals": 3268,
-    "congress": 1577,
-    "edgar": 1691,
+    "total_signals": 3342,
+    "congress": 1583,
+    "edgar": 1759,
     "date_range": [
       "2023-01-03",
-      "2026-06-22"
+      "2026-06-29"
     ],
-    "months": 42.2,
-    "avg_per_month": 77.4,
-    "pending_outcome": 605,
-    "with_outcome": 2663,
+    "months": 42.4,
+    "avg_per_month": 78.8,
+    "pending_outcome": 570,
+    "with_outcome": 2772,
     "freshness_days": {
-      "congress": 17,
+      "congress": 14,
       "edgar": 0
     }
   },
@@ -38,7 +38,7 @@
     "alpha_80plus": 0.13772,
     "beta_vs_spy": 0.8258,
     "sharpe_market_adjusted_80plus": 1.558,
-    "with_outcome": 2663
+    "with_outcome": 2772
   },
   "features": {
     "active": [
@@ -206,42 +206,42 @@
       },
       {
         "name": "short_interest_pct",
-        "fill_rate": 0.107,
+        "fill_rate": 0.12,
         "status": "candidate"
       },
       {
         "name": "short_interest_change",
-        "fill_rate": 0.107,
+        "fill_rate": 0.12,
         "status": "candidate"
       },
       {
         "name": "institutional_holders",
-        "fill_rate": 0.057,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       {
         "name": "institutional_pct_held",
-        "fill_rate": 0.057,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       {
         "name": "options_bullish",
-        "fill_rate": 0.058,
+        "fill_rate": 0.061,
         "status": "candidate"
       },
       {
         "name": "options_unusual_calls",
-        "fill_rate": 0.058,
+        "fill_rate": 0.061,
         "status": "candidate"
       },
       {
         "name": "options_insider_confluence",
-        "fill_rate": 0.058,
+        "fill_rate": 0.061,
         "status": "candidate"
       },
       {
         "name": "options_bearish_divergence",
-        "fill_rate": 0.058,
+        "fill_rate": 0.061,
         "status": "candidate"
       }
     ],
@@ -251,10 +251,10 @@
     "score_distribution": [
       {
         "band": "<40",
-        "n": 2562,
-        "avg_car": -0.0081,
-        "avg_adj_car": -0.0378,
-        "hit_rate": 41.6
+        "n": 2671,
+        "avg_car": -0.0054,
+        "avg_adj_car": -0.0343,
+        "hit_rate": 42.2
       },
       {
         "band": "80+",
@@ -281,8 +281,8 @@
     "monotonic": false
   },
   "pipeline": {
-    "db_size_mb": 2.35,
-    "db_total_rows": 3268,
+    "db_size_mb": 2.44,
+    "db_total_rows": 3342,
     "data_files": {
       "brain_signals.json": {
         "exists": true,
@@ -291,64 +291,64 @@
       },
       "brain_stats.json": {
         "exists": true,
-        "size_kb": 16.5,
+        "size_kb": 15.3,
         "age_hours": 0.0
       },
       "brain_health.json": {
         "exists": true,
-        "size_kb": 9.3,
-        "age_hours": 0.4
+        "size_kb": 8.4,
+        "age_hours": 0.3
       },
       "optimal_weights.json": {
         "exists": true,
         "size_kb": 17.1,
-        "age_hours": 0.4
+        "age_hours": 0.3
       },
       "edgar_feed.json": {
         "exists": true,
-        "size_kb": 1164.8,
-        "age_hours": 0.4
+        "size_kb": 1198.9,
+        "age_hours": 0.3
       },
       "congress_feed.json": {
         "exists": true,
-        "size_kb": 57.8,
-        "age_hours": 0.4
+        "size_kb": 55.7,
+        "age_hours": 0.3
       },
       "news_sentiment.json": {
         "exists": true,
-        "size_kb": 16.1,
-        "age_hours": 0.3
+        "size_kb": 16.2,
+        "age_hours": 0.2
       },
       "institutional_data.json": {
         "exists": true,
         "size_kb": 12.4,
-        "age_hours": 0.3
+        "age_hours": 0.2
       },
       "options_flow.json": {
         "exists": true,
         "size_kb": 17.9,
-        "age_hours": 0.3
+        "age_hours": 0.2
       }
     },
     "missing_critical": [],
     "journal_mode": "delete",
     "index_count": 11,
     "integrity": "ok",
-    "outcome_fill_rate": 0.815,
+    "outcome_fill_rate": 0.829,
     "null_rates": {
-      "car_30d": 0.185,
-      "total_score": 0.768,
+      "car_30d": 0.171,
+      "total_score": 0.773,
       "sector": 1.0,
-      "spy_return_30d": 0.085
+      "spy_return_30d": 0.081
     }
   },
   "recommendations": [
     "No IC history. Run --analyze to train ML models.",
-    "Low fill features: sector=0.0%, person_hr=33.8%, person_car=33.8%, sector_mom=0.0%, repeat_buyer=24.3%",
-    "Harmful feature values detected: cluster_7d=3+, cluster_30d=3+, person_accuracy=strong_70+, insider_role=Officer, cluster_velocity=fast. ML trees handle this but monitor for worsening."
+    "Low fill features: sector=0.0%, person_hr=33.8%, person_car=33.8%, sector_mom=0.0%, repeat_buyer=25.1%",
+    "Harmful feature values detected: cluster_7d=3+, cluster_30d=3+, person_accuracy=strong_70+, cluster_velocity=fast, trade_pattern=opportunistic. ML trees handle this but monitor for worsening."
   ],
   "regime_context": {
-    "current_vix": 16.78,
+    "current_vix": 18.41,
     "regime": "OPTIMAL",
     "multiplier": 1.0,
     "note": "VIX 15-25: strongest prediction zone (IC=0.10-0.13)"
@@ -357,17 +357,17 @@
     {
       "regime": "Low vol   (VIX<15)",
       "n": 149,
-      "ic": 0.0646,
-      "p_value": 0.434,
+      "ic": 0.0454,
+      "p_value": 0.5826,
       "hit_rate": 0.591,
-      "status": "PASS",
+      "status": "WARN",
       "score_type": "oos_score"
     },
     {
       "regime": "Normal    (VIX 15-25)",
       "n": 1241,
-      "ic": -0.1144,
-      "p_value": 0.0001,
+      "ic": -0.1284,
+      "p_value": 0.0,
       "hit_rate": 0.427,
       "status": "FAIL",
       "score_type": "oos_score"
@@ -375,8 +375,8 @@
     {
       "regime": "Elevated  (VIX 25-35)",
       "n": 414,
-      "ic": 0.1688,
-      "p_value": 0.0006,
+      "ic": 0.197,
+      "p_value": 0.0001,
       "hit_rate": 0.377,
       "status": "PASS",
       "score_type": "oos_score"
