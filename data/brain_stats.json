@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-29T23:08:46.344532+00:00",
+  "generated": "2026-06-30T23:23:55.398035+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -70,6 +70,12 @@
       "heat": 2
     },
     {
+      "ticker": "WFC",
+      "name": "Wells Fargo",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "T",
       "name": "AT&T",
       "count": 1,
@@ -128,8 +134,8 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 4,
-    "congress_flags": 11,
+    "cluster_count": 6,
+    "congress_flags": 12,
     "convergence_count": 6
   },
   "insider_sectors": [],
@@ -569,38 +575,44 @@
     {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.0684,
-      "n": 139
+      "avg_car_30d": -0.066,
+      "n": 149
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.0493,
-      "n": 330
+      "avg_car_30d": -0.0479,
+      "n": 345
     },
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
-      "avg_car_30d": -0.0486,
-      "n": 185
+      "avg_car_30d": -0.0478,
+      "n": 191
     },
     {
       "feature": "cluster_velocity",
       "value": "fast",
-      "avg_car_30d": -0.044,
-      "n": 168
+      "avg_car_30d": -0.0434,
+      "n": 174
     },
     {
       "feature": "trade_pattern",
       "value": "opportunistic",
-      "avg_car_30d": -0.0313,
-      "n": 172
+      "avg_car_30d": -0.0327,
+      "n": 187
     },
     {
       "feature": "insider_role",
       "value": "Officer",
-      "avg_car_30d": -0.0297,
-      "n": 41
+      "avg_car_30d": -0.0322,
+      "n": 45
+    },
+    {
+      "feature": "cluster_velocity",
+      "value": "moderate",
+      "avg_car_30d": -0.0287,
+      "n": 108
     },
     {
       "feature": "vix_regime",
@@ -609,22 +621,10 @@
       "n": 96
     },
     {
-      "feature": "cluster_velocity",
-      "value": "burst",
-      "avg_car_30d": -0.0258,
-      "n": 73
-    },
-    {
       "feature": "insider_role",
       "value": "CEO",
-      "avg_car_30d": -0.0244,
-      "n": 233
-    },
-    {
-      "feature": "cluster_velocity",
-      "value": "moderate",
-      "avg_car_30d": -0.0206,
-      "n": 101
+      "avg_car_30d": -0.0218,
+      "n": 250
     }
   ],
   "regime": {
@@ -632,12 +632,12 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 2175
+      "normal": 2194
     },
     "hit_rates": {
       "elevated": 0.376,
       "low_vol": 0.576,
-      "normal": 0.436
+      "normal": 0.437
     }
   },
   "features_pruned_history": {
@@ -707,43 +707,43 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.12,
+        "fill_rate": 0.127,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.12,
+        "fill_rate": 0.127,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.064,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.064,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.061,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.061,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.061,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.061,
+        "fill_rate": 0.065,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.029604,
-    "n_matched_signals": 2772,
-    "spy_avg_30d_return": 0.027131,
+    "alpha_all_signals": -0.029077,
+    "n_matched_signals": 2791,
+    "spy_avg_30d_return": 0.026816,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
@@ -751,8 +751,8 @@
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
     "alpha_congress": -0.031567,
-    "beta_vs_spy": -0.5283,
-    "beta_vs_spy_raw": -0.5668
+    "beta_vs_spy": -0.5314,
+    "beta_vs_spy_raw": -0.5675
   },
   "signal_concentration": {
     "top_ticker": null,
