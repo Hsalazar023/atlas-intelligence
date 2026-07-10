@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-09T23:24:11.954822+00:00",
+  "generated": "2026-07-10T23:10:55.768308+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 266,
+      "n_trades": 283,
       "match_rate": 0.39
     },
     {
@@ -64,14 +64,20 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "HUBB",
-      "name": "HUBB",
-      "count": 3,
-      "heat": 3
-    },
-    {
       "ticker": "IBM",
       "name": "IBM",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "HUBB",
+      "name": "HUBB",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "ABT",
+      "name": "ABT",
       "count": 2,
       "heat": 2
     },
@@ -106,12 +112,6 @@
       "heat": 1
     },
     {
-      "ticker": "TOELY",
-      "name": "TOELY",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "TCBI",
       "name": "TCBI",
       "count": 1,
@@ -124,12 +124,6 @@
       "heat": 1
     },
     {
-      "ticker": "SAN",
-      "name": "SAN",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "PPG",
       "name": "PPG",
       "count": 1,
@@ -138,6 +132,12 @@
     {
       "ticker": "PGR",
       "name": "Progressive",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "NI",
+      "name": "NI",
       "count": 1,
       "heat": 1
     },
@@ -164,9 +164,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 12,
+    "cluster_count": 11,
     "congress_flags": 51,
-    "convergence_count": 13
+    "convergence_count": 14
   },
   "insider_sectors": [],
   "ml": {
@@ -656,7 +656,7 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 2385
+      "normal": 2422
     },
     "hit_rates": {
       "elevated": 0.376,
@@ -731,52 +731,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.108,
+        "fill_rate": 0.118,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.109,
+        "fill_rate": 0.121,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.051,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.051,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.053,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.053,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.053,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.053,
+        "fill_rate": 0.069,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.023755,
-    "n_matched_signals": 2982,
-    "spy_avg_30d_return": 0.023867,
+    "alpha_all_signals": -0.023745,
+    "n_matched_signals": 3019,
+    "spy_avg_30d_return": 0.023797,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.026082,
-    "beta_vs_spy": -0.5515,
-    "beta_vs_spy_raw": -0.581
+    "alpha_congress": -0.026161,
+    "beta_vs_spy": -0.5522,
+    "beta_vs_spy_raw": -0.5818
   },
   "signal_concentration": {
     "top_ticker": null,
