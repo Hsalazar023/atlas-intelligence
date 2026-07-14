@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-13T23:06:32.034431+00:00",
+  "generated": "2026-07-14T23:09:29.147934+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,13 +33,13 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 286,
+      "n_trades": 287,
       "match_rate": 0.4
     },
     {
       "name": "Foreign Affairs",
-      "n_trades": 111,
-      "match_rate": 0.29
+      "n_trades": 125,
+      "match_rate": 0.34
     },
     {
       "name": "Finance",
@@ -64,6 +64,18 @@
   ],
   "congress_heatmap": [
     {
+      "ticker": "SPGI",
+      "name": "S&P Global",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "MA",
+      "name": "Mastercard",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "HUBB",
       "name": "HUBB",
       "count": 2,
@@ -72,6 +84,18 @@
     {
       "ticker": "ZTS",
       "name": "ZTS",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "WDAY",
+      "name": "WDAY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "VTEB",
+      "name": "VTEB",
       "count": 1,
       "heat": 1
     },
@@ -96,6 +120,12 @@
     {
       "ticker": "TXRH",
       "name": "TXRH",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "TSM",
+      "name": "TSMC",
       "count": 1,
       "heat": 1
     },
@@ -128,36 +158,6 @@
       "name": "PALL",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "NI",
-      "name": "NI",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "MU",
-      "name": "Micron",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "MCK",
-      "name": "MCK",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "MCHP",
-      "name": "MCHP",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "LNC",
-      "name": "LNC",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 13,
-    "congress_flags": 46,
-    "convergence_count": 11
+    "congress_flags": 58,
+    "convergence_count": 25
   },
   "insider_sectors": [],
   "ml": {
@@ -605,50 +605,44 @@
     {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.065,
-      "n": 150
+      "avg_car_30d": -0.0651,
+      "n": 151
     },
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
-      "avg_car_30d": -0.0473,
-      "n": 195
+      "avg_car_30d": -0.0479,
+      "n": 198
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.0437,
-      "n": 356
+      "avg_car_30d": -0.043,
+      "n": 370
     },
     {
       "feature": "cluster_velocity",
       "value": "fast",
-      "avg_car_30d": -0.0405,
-      "n": 182
+      "avg_car_30d": -0.0385,
+      "n": 189
     },
     {
       "feature": "trade_pattern",
       "value": "opportunistic",
-      "avg_car_30d": -0.0303,
-      "n": 198
+      "avg_car_30d": -0.0336,
+      "n": 204
     },
     {
       "feature": "insider_role",
       "value": "Officer",
-      "avg_car_30d": -0.0295,
-      "n": 46
+      "avg_car_30d": -0.0315,
+      "n": 48
     },
     {
       "feature": "vix_regime",
       "value": "high_fear",
       "avg_car_30d": -0.0272,
       "n": 96
-    },
-    {
-      "feature": "insider_role",
-      "value": "CEO",
-      "avg_car_30d": -0.0202,
-      "n": 270
     }
   ],
   "regime": {
@@ -656,7 +650,7 @@
     "distribution": {
       "elevated": 439,
       "low_vol": 158,
-      "normal": 2437
+      "normal": 2464
     },
     "hit_rates": {
       "elevated": 0.376,
@@ -731,52 +725,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.107,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.118,
+        "fill_rate": 0.108,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.066,
+        "fill_rate": 0.055,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.023593,
-    "n_matched_signals": 3034,
-    "spy_avg_30d_return": 0.023698,
+    "alpha_all_signals": -0.023341,
+    "n_matched_signals": 3061,
+    "spy_avg_30d_return": 0.02357,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.025745,
-    "beta_vs_spy": -0.554,
-    "beta_vs_spy_raw": -0.5832
+    "alpha_congress": -0.024967,
+    "beta_vs_spy": -0.558,
+    "beta_vs_spy_raw": -0.5869
   },
   "signal_concentration": {
     "top_ticker": null,

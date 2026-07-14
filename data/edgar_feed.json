@@ -1,8 +1,43 @@
 {
-  "updated": "2026-07-14T22:27:54.712714+00:00Z",
+  "updated": "2026-07-14T22:53:48.558085+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
+    {
+      "company": "Nauticus Robotics, Inc.",
+      "insider": "RCB EQUITIES 1, LLC",
+      "date": "2026-07-14",
+      "period": "2026-06-01",
+      "accession": "0002143744-26-000003",
+      "link": "https://www.sec.gov/Archives/edgar/data/1849820/000214374426000003/0002143744-26-000003-index.htm",
+      "ticker": "KITT",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 555556.0,
+          "price": 1.8,
+          "value": 1000000.8,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 32539.0,
+          "price": 2.02,
+          "value": 65761.32,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 65761.32,
+      "buy_shares": 0,
+      "sell_shares": 32539,
+      "direction": "sell"
+    },
     {
       "company": "ALLIANT ENERGY CORP",
       "insider": "Asthana Manu",
@@ -496,6 +531,41 @@
       "direction": "other"
     },
     {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Phillips Joshua",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001871555-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000187155526000002/0001871555-26-000002-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 22426.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 2260.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "Live Nation Entertainment, Inc.",
       "insider": "Hopmans John",
       "date": "2026-07-14",
@@ -890,6 +960,83 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "Joby Aviation, Inc.",
+      "insider": "Allison Eric",
+      "date": "2026-07-14",
+      "period": "2026-07-12",
+      "accession": "0001819848-26-000422",
+      "link": "https://www.sec.gov/Archives/edgar/data/1819848/000181984826000422/0001819848-26-000422-index.htm",
+      "ticker": "JOBY",
+      "title": "Chief Product Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 53549.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 27932.0,
+          "price": 7.53,
+          "value": 210327.96,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 210327.96,
+      "buy_shares": 0,
+      "sell_shares": 27932,
+      "direction": "sell"
+    },
+    {
+      "company": "Joby Aviation, Inc.",
+      "insider": "DeHoff Kate",
+      "date": "2026-07-14",
+      "period": "2026-07-12",
+      "accession": "0001819848-26-000421",
+      "link": "https://www.sec.gov/Archives/edgar/data/1819848/000181984826000421/0001819848-26-000421-index.htm",
+      "ticker": "JOBY",
+      "title": "See Remarks",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 16065.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 8381.0,
+          "price": 7.53,
+          "value": 63108.93,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 14240.0,
+          "price": 7.73,
+          "value": 110075.2,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 173184.13,
+      "buy_shares": 0,
+      "sell_shares": 22621,
+      "direction": "sell"
     },
     {
       "company": "Redwire Corp",
@@ -1339,6 +1486,41 @@
       "buy_shares": 0,
       "sell_shares": 1000,
       "direction": "sell"
+    },
+    {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Barlow Jane F",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001736026-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000173602626000002/0001736026-26-000002-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 22426.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 1949.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "Twin Vee PowerCats, Co.",
@@ -2177,6 +2359,148 @@
       "direction": "exercise"
     },
     {
+      "company": "Duolingo, Inc.",
+      "insider": "Shelton James H",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001628280-26-048225",
+      "link": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026048225/0001628280-26-048225-index.htm",
+      "ticker": "DUOL",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 120.0,
+          "price": 124.76,
+          "value": 14971.2,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Duolingo, Inc.",
+      "insider": "Bohutinsky Amy",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001628280-26-048223",
+      "link": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026048223/0001628280-26-048223-index.htm",
+      "ticker": "DUOL",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 130.0,
+          "price": 124.76,
+          "value": 16218.8,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Duolingo, Inc.",
+      "insider": "Schlosser Mario",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001628280-26-048221",
+      "link": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026048221/0001628280-26-048221-index.htm",
+      "ticker": "DUOL",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 140.0,
+          "price": 124.76,
+          "value": 17466.4,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Duolingo, Inc.",
+      "insider": "Lilly III John Osborne",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001628280-26-048219",
+      "link": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026048219/0001628280-26-048219-index.htm",
+      "ticker": "DUOL",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 118.0,
+          "price": 124.76,
+          "value": 14721.68,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Accelerant Holdings",
+      "insider": "RADKE JEFFREY L",
+      "date": "2026-07-14",
+      "period": "2026-07-13",
+      "accession": "0001628280-26-048218",
+      "link": "https://www.sec.gov/Archives/edgar/data/1997350/000162828026048218/0001628280-26-048218-index.htm",
+      "ticker": "ARX",
+      "title": "Co-Founder, CEO",
+      "roles": [
+        "Officer",
+        "Director",
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 80000.0,
+          "price": 13.18,
+          "value": 1054096.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1054096.0,
+      "buy_shares": 0,
+      "sell_shares": 80000,
+      "direction": "sell"
+    },
+    {
       "company": "Zoetis Inc.",
       "insider": "Sarbaugh Keith",
       "date": "2026-07-14",
@@ -2921,6 +3245,41 @@
       "direction": "sell"
     },
     {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Mirza Mansoor Raza",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001588389-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000158838926000002/0001588389-26-000002-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 22426.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 1771.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "Emerald Holding, Inc.",
       "insider": "Jouaneh Issa",
       "date": "2026-07-14",
@@ -3381,6 +3740,41 @@
           "shares": 7.309,
           "price": 224.2,
           "value": 1638.68,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Kamdar Kim P.",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001535065-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000153506526000002/0001535065-26-000002-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 22426.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 3421.0,
+          "price": 0.0,
+          "value": 0.0,
           "acquired": true
         }
       ],
@@ -5166,6 +5560,41 @@
       "direction": "sell"
     },
     {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Capone Mark Christopher",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001352413-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000135241326000004/0001352413-26-000004-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 42404.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 1975.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "FULTON FINANCIAL CORP",
       "insider": "Wenger E Philip",
       "date": "2026-07-14",
@@ -5312,6 +5741,41 @@
       "buy_shares": 0,
       "sell_shares": 18282,
       "direction": "sell"
+    },
+    {
+      "company": "SERA PROGNOSTICS, INC.",
+      "insider": "Lawrence Sandra AJ",
+      "date": "2026-07-14",
+      "period": "2026-07-10",
+      "accession": "0001306386-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/1534969/000130638626000004/0001306386-26-000004-index.htm",
+      "ticker": "SERA",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 22426.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 2276.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "CONSTELLATION BRANDS, INC.",
@@ -5854,424 +6318,117 @@
       "direction": "sell"
     },
     {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "McClure Teri P",
+      "company": "Emerald Holding, Inc.",
+      "insider": "Gilis Kosty",
       "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303527",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303527/0001193125-26-303527-index.htm",
-      "ticker": "LEN, LEN.B",
+      "period": "2026-07-14",
+      "accession": "0001193125-26-303538",
+      "link": "https://www.sec.gov/Archives/edgar/data/1579214/000119312526303538/0001193125-26-303538-index.htm",
+      "ticker": "EEX",
       "title": "",
       "roles": [
-        "Director"
+        "Director",
+        "10% Owner"
       ],
       "is_10b5_1": false,
       "transactions": [
         {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "Wolfe Serena",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303524",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303524/0001193125-26-303524-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "Smith Dacona",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303517",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303517/0001193125-26-303517-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "Gilliam Theron I",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303510",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303510/0001193125-26-303510-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "HUDSON SHERRILL W",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303507",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303507/0001193125-26-303507-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "OLIVERA ARMANDO J",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303503",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303503/0001193125-26-303503-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 19.0,
-          "price": 84.27,
-          "value": 1601.13,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LifeStance Health Group, Inc.",
-      "insider": "Burdick Kenneth A",
-      "date": "2026-07-14",
-      "period": "2026-07-06",
-      "accession": "0001193125-26-303501",
-      "link": "https://www.sec.gov/Archives/edgar/data/1845257/000119312526303501/0001193125-26-303501-index.htm",
-      "ticker": "LFST",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 45495.0,
+          "code": "D",
+          "shares": 184049617.0,
           "price": 0.0,
           "value": 0.0,
-          "acquired": true
+          "acquired": false
         }
       ],
       "buy_value": 0,
       "sell_value": 0,
       "buy_shares": 0,
       "sell_shares": 0,
-      "direction": "grant"
+      "direction": "other"
     },
     {
-      "company": "LENNAR CORP /NEW/",
-      "insider": "Banse Amy",
+      "company": "Disc Medicine, Inc.",
+      "insider": "Quisel John D",
       "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303500",
-      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303500/0001193125-26-303500-index.htm",
-      "ticker": "LEN, LEN.B",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 14.0,
-          "price": 84.27,
-          "value": 1179.78,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "KORN FERRY",
-      "insider": "BURNISON GARY D",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303493",
-      "link": "https://www.sec.gov/Archives/edgar/data/56679/000119312526303493/0001193125-26-303493-index.htm",
-      "ticker": "KFY",
-      "title": "CEO",
+      "period": "2026-07-13",
+      "accession": "0001193125-26-303535",
+      "link": "https://www.sec.gov/Archives/edgar/data/1816736/000119312526303535/0001193125-26-303535-index.htm",
+      "ticker": "IRON",
+      "title": "Chief Executive Officer",
       "roles": [
         "Officer",
         "Director"
       ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 75200.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 152010.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 77343.0,
-          "price": 75.39,
-          "value": 5830888.77,
-          "acquired": false
-        },
-        {
-          "code": "F",
-          "shares": 31427.0,
-          "price": 75.39,
-          "value": 2369281.53,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Xos, Inc.",
-      "insider": "Yake Alice",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303490",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303490/0001193125-26-303490-index.htm",
-      "ticker": "XOS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
       "is_10b5_1": true,
       "transactions": [
         {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
+          "code": "M",
+          "shares": 25584.0,
+          "price": 9.86,
+          "value": 252258.24,
           "acquired": true
         },
         {
-          "code": "A",
-          "shares": 2292.0,
-          "price": 0.0,
-          "value": 0.0,
+          "code": "M",
+          "shares": 7416.0,
+          "price": 13.5,
+          "value": 100116.0,
           "acquired": true
         },
         {
-          "code": "D",
-          "shares": 2500.0,
-          "price": 2.49,
-          "value": 6229.0,
+          "code": "S",
+          "shares": 9704.0,
+          "price": 74.27,
+          "value": 720744.22,
           "acquired": false
         },
         {
-          "code": "D",
-          "shares": 2500.0,
-          "price": 2.35,
-          "value": 5870.75,
+          "code": "S",
+          "shares": 16896.0,
+          "price": 74.95,
+          "value": 1266302.82,
           "acquired": false
         },
         {
-          "code": "D",
-          "shares": 2500.0,
-          "price": 2.39,
-          "value": 5987.0,
+          "code": "S",
+          "shares": 6400.0,
+          "price": 76.05,
+          "value": 486732.8,
           "acquired": false
         }
       ],
       "buy_value": 0,
-      "sell_value": 0,
+      "sell_value": 2473779.84,
       "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
+      "sell_shares": 33000,
+      "direction": "sell"
     },
     {
-      "company": "Xos, Inc.",
-      "insider": "OSTERMANN DIETMAR",
+      "company": "Emerald Holding, Inc.",
+      "insider": "SCHWARTZ GERALD W",
       "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303489",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303489/0001193125-26-303489-index.htm",
-      "ticker": "XOS",
+      "period": "2026-07-14",
+      "accession": "0001193125-26-303534",
+      "link": "https://www.sec.gov/Archives/edgar/data/1579214/000119312526303534/0001193125-26-303534-index.htm",
+      "ticker": "EEX",
       "title": "",
       "roles": [
-        "Director"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "D",
-          "shares": 4158.0,
-          "price": 2.49,
-          "value": 10368.8,
-          "acquired": false
-        },
-        {
-          "code": "D",
-          "shares": 4159.0,
-          "price": 2.35,
-          "value": 9755.77,
-          "acquired": false
-        },
-        {
-          "code": "D",
-          "shares": 4158.0,
-          "price": 2.39,
-          "value": 9943.03,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "KORN FERRY",
-      "insider": "ROZEK ROBERT P",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303488",
-      "link": "https://www.sec.gov/Archives/edgar/data/56679/000119312526303488/0001193125-26-303488-index.htm",
-      "ticker": "KFY",
-      "title": "EVP, CFO & CCO",
-      "roles": [
-        "Officer"
+        "10% Owner"
       ],
       "is_10b5_1": false,
       "transactions": [
         {
-          "code": "A",
-          "shares": 28030.0,
+          "code": "D",
+          "shares": 184049617.0,
           "price": 0.0,
           "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 62590.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 26507.0,
-          "price": 75.39,
-          "value": 1998362.73,
           "acquired": false
         },
         {
-          "code": "F",
-          "shares": 9984.0,
-          "price": 75.39,
-          "value": 752693.76,
+          "code": "D",
+          "shares": 470583.0,
+          "price": 0.0,
+          "value": 0.0,
           "acquired": false
         }
       ],
@@ -6279,65 +6436,16 @@
       "sell_value": 0,
       "buy_shares": 0,
       "sell_shares": 0,
-      "direction": "grant"
+      "direction": "other"
     },
     {
-      "company": "Xos, Inc.",
-      "insider": "Richardson Michael Paul",
+      "company": "LENNAR CORP /NEW/",
+      "insider": "SONNENFELD JEFFREY",
       "date": "2026-07-14",
       "period": "2026-07-10",
-      "accession": "0001193125-26-303487",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303487/0001193125-26-303487-index.htm",
-      "ticker": "XOS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "D",
-          "shares": 3119.0,
-          "price": 2.49,
-          "value": 7777.23,
-          "acquired": false
-        },
-        {
-          "code": "D",
-          "shares": 3119.0,
-          "price": 2.35,
-          "value": 7321.23,
-          "acquired": false
-        },
-        {
-          "code": "D",
-          "shares": 3119.0,
-          "price": 2.39,
-          "value": 7454.1,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Xos, Inc.",
-      "insider": "Bernstein Stuart N.",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303486",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303486/0001193125-26-303486-index.htm",
-      "ticker": "XOS",
+      "accession": "0001193125-26-303530",
+      "link": "https://www.sec.gov/Archives/edgar/data/920760/000119312526303530/0001193125-26-303530-index.htm",
+      "ticker": "LEN, LEN.B",
       "title": "",
       "roles": [
         "Director"
@@ -6346,150 +6454,10 @@
       "transactions": [
         {
           "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
+          "shares": 17.0,
+          "price": 84.27,
+          "value": 1432.59,
           "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Xos, Inc.",
-      "insider": "Mattson George N",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303483",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303483/0001193125-26-303483-index.htm",
-      "ticker": "XOS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Xos, Inc.",
-      "insider": "RAPP EDWARD J",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303481",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303481/0001193125-26-303481-index.htm",
-      "ticker": "XOS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 2670.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Xos, Inc.",
-      "insider": "Smith John F.",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303478",
-      "link": "https://www.sec.gov/Archives/edgar/data/1819493/000119312526303478/0001193125-26-303478-index.htm",
-      "ticker": "XOS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60584.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "KORN FERRY",
-      "insider": "Distefano Michael",
-      "date": "2026-07-14",
-      "period": "2026-07-10",
-      "accession": "0001193125-26-303476",
-      "link": "https://www.sec.gov/Archives/edgar/data/56679/000119312526303476/0001193125-26-303476-index.htm",
-      "ticker": "KFY",
-      "title": "See Remarks",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 16750.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 35770.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 18200.0,
-          "price": 75.39,
-          "value": 1372098.0,
-          "acquired": false
-        },
-        {
-          "code": "F",
-          "shares": 5926.0,
-          "price": 75.39,
-          "value": 446761.14,
-          "acquired": false
         }
       ],
       "buy_value": 0,
