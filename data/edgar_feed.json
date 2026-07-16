@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-16T22:27:31.511282+00:00Z",
+  "updated": "2026-07-16T22:53:01.492733+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -2152,6 +2152,34 @@
       "direction": "grant"
     },
     {
+      "company": "ROKU, INC",
+      "insider": "Jedda Dan",
+      "date": "2026-07-16",
+      "period": "2026-07-15",
+      "accession": "0001834902-26-000018",
+      "link": "https://www.sec.gov/Archives/edgar/data/1428439/000183490226000018/0001834902-26-000018-index.htm",
+      "ticker": "ROKU",
+      "title": "CFO & COO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 7000.0,
+          "price": 141.9,
+          "value": 993300.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 993300.0,
+      "buy_shares": 0,
+      "sell_shares": 7000,
+      "direction": "sell"
+    },
+    {
       "company": "MILLERKNOLL, INC.",
       "insider": "Michael John P",
       "date": "2026-07-16",
@@ -2528,6 +2556,41 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "Firy Inc.",
+      "insider": "VALLI TODD A.",
+      "date": "2026-07-16",
+      "period": "2026-07-14",
+      "accession": "0001801661-26-000074",
+      "link": "https://www.sec.gov/Archives/edgar/data/1801661/000180166126000074/0001801661-26-000074-index.htm",
+      "ticker": "FIRY",
+      "title": "Chief Accounting Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 12610.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 2958.0,
+          "price": 8.44,
+          "value": 24965.52,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "exercise"
     },
     {
       "company": "CLOVER HEALTH INVESTMENTS, CORP. /DE",
@@ -3982,6 +4045,112 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "Marvell Technology, Inc.",
+      "insider": "Scarpulla Justin",
+      "date": "2026-07-16",
+      "period": "2026-07-15",
+      "accession": "0001628280-26-048543",
+      "link": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026048543/0001628280-26-048543-index.htm",
+      "ticker": "MRVL",
+      "title": "SVP, Chief Accounting Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 510.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 253.0,
+          "price": 206.26,
+          "value": 52183.78,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "exercise"
+    },
+    {
+      "company": "Marvell Technology, Inc.",
+      "insider": "MURPHY MATTHEW J",
+      "date": "2026-07-16",
+      "period": "2026-07-15",
+      "accession": "0001628280-26-048541",
+      "link": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026048541/0001628280-26-048541-index.htm",
+      "ticker": "MRVL",
+      "title": "Chairman of the Board and CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 7500.0,
+          "price": 209.52,
+          "value": 1571400.0,
+          "acquired": false
+        },
+        {
+          "code": "M",
+          "shares": 6969.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 3670.0,
+          "price": 206.26,
+          "value": 756974.2,
+          "acquired": false
+        },
+        {
+          "code": "M",
+          "shares": 8409.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 4428.0,
+          "price": 206.26,
+          "value": 913319.28,
+          "acquired": false
+        },
+        {
+          "code": "M",
+          "shares": 6119.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 3222.0,
+          "price": 206.26,
+          "value": 664569.72,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1571400.0,
+      "buy_shares": 0,
+      "sell_shares": 7500,
+      "direction": "sell"
     },
     {
       "company": "Walt Disney Co",
@@ -6948,125 +7117,6 @@
       "buy_shares": 756,
       "sell_shares": 0,
       "direction": "buy"
-    },
-    {
-      "company": "Cheniere Energy Partners, L.P.",
-      "insider": "RAUF ZAMIR",
-      "date": "2026-07-16",
-      "period": "2026-07-14",
-      "accession": "0001437010-26-000008",
-      "link": "https://www.sec.gov/Archives/edgar/data/1383650/000143701026000008/0001437010-26-000008-index.htm",
-      "ticker": "CQP",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "MATERION Corp",
-      "insider": "Prevost Patrick M.",
-      "date": "2026-07-16",
-      "period": "2026-07-15",
-      "accession": "0001422978-26-000014",
-      "link": "https://www.sec.gov/Archives/edgar/data/1104657/000142297826000014/0001422978-26-000014-index.htm",
-      "ticker": "MTRN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 81.0,
-          "price": 253.27,
-          "value": 20514.87,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "CARPENTER TECHNOLOGY CORP",
-      "insider": "Thene Tony R",
-      "date": "2026-07-16",
-      "period": "2026-07-14",
-      "accession": "0001420435-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/17843/000142043526000002/0001420435-26-000002-index.htm",
-      "ticker": "CRS",
-      "title": "Executive Chairman",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 68860.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 29913.0,
-          "price": 576.87,
-          "value": 17255912.31,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "CHART INDUSTRIES INC",
-      "insider": "Sagehorn David M.",
-      "date": "2026-07-16",
-      "period": "2026-07-16",
-      "accession": "0001414005-26-000008",
-      "link": "https://www.sec.gov/Archives/edgar/data/892553/000141400526000008/0001414005-26-000008-index.htm",
-      "ticker": "GTLS",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "D",
-          "shares": 7849.0,
-          "price": 210.0,
-          "value": 1648290.0,
-          "acquired": false
-        },
-        {
-          "code": "D",
-          "shares": 300.0,
-          "price": 210.0,
-          "value": 63000.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
     },
     {
       "company": "Vipshop Holdings Ltd",
