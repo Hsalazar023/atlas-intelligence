@@ -1,8 +1,48 @@
 {
-  "updated": "2026-07-22T15:20:57.525325+00:00Z",
+  "updated": "2026-07-22T17:47:43.066188+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
+    {
+      "company": "Standard Nuclear, Inc.",
+      "insider": "Fundomo SN-001, LP",
+      "date": "2026-07-22",
+      "period": "2026-07-17",
+      "accession": "0002084264-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/2086716/000208426426000004/0002084264-26-000004-index.htm",
+      "ticker": "STDN",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "ERIE INDEMNITY CO",
+      "insider": "BORNEMAN J RALPH JR",
+      "date": "2026-07-22",
+      "period": "2026-07-21",
+      "accession": "0001628280-26-049141",
+      "link": "https://www.sec.gov/Archives/edgar/data/922621/000162828026049141/0001628280-26-049141-index.htm",
+      "ticker": "ERIE",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
     {
       "company": "KALTURA INC",
       "insider": "Azaria Eynav",
@@ -37,6 +77,34 @@
       "buy_shares": 0,
       "sell_shares": 6257,
       "direction": "sell"
+    },
+    {
+      "company": "Texas Pacific Land Corp",
+      "insider": "HORIZON KINETICS ASSET MANAGEMENT LLC",
+      "date": "2026-07-22",
+      "period": "2026-07-21",
+      "accession": "0001437749-26-024069",
+      "link": "https://www.sec.gov/Archives/edgar/data/1811074/000143774926024069/0001437749-26-024069-index.htm",
+      "ticker": "TPL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 1.0,
+          "price": 413.48,
+          "value": 413.48,
+          "acquired": true
+        }
+      ],
+      "buy_value": 413.48,
+      "sell_value": 0,
+      "buy_shares": 1,
+      "sell_shares": 0,
+      "direction": "buy"
     },
     {
       "company": "RENN Fund, Inc.",
@@ -306,6 +374,35 @@
       "direction": "sell"
     },
     {
+      "company": "TRUIST FINANCIAL CORP",
+      "insider": "ROGERS WILLIAM H JR",
+      "date": "2026-07-22",
+      "period": "2026-07-20",
+      "accession": "0001182002-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/92230/000118200226000006/0001182002-26-000006-index.htm",
+      "ticker": "TFC",
+      "title": "Chairman & CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 13250.0,
+          "price": 52.36,
+          "value": 693809.75,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 693809.75,
+      "buy_shares": 0,
+      "sell_shares": 13250,
+      "direction": "sell"
+    },
+    {
       "company": "Nexxen International Ltd.",
       "insider": "Niri Sagi",
       "date": "2026-07-22",
@@ -409,6 +506,86 @@
       "buy_shares": 18000,
       "sell_shares": 0,
       "direction": "buy"
+    },
+    {
+      "company": "PROGRESSIVE CORP/OH/",
+      "insider": "Quigg Andrew J",
+      "date": "2026-07-22",
+      "period": "2026-07-20",
+      "accession": "0000080661-26-000270",
+      "link": "https://www.sec.gov/Archives/edgar/data/80661/000008066126000270/0000080661-26-000270-index.htm",
+      "ticker": "PGR",
+      "title": "VP and Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "PROGRESSIVE CORP/OH/",
+      "insider": "Niederst Lori A",
+      "date": "2026-07-22",
+      "period": "2026-07-20",
+      "accession": "0000080661-26-000268",
+      "link": "https://www.sec.gov/Archives/edgar/data/80661/000008066126000268/0000080661-26-000268-index.htm",
+      "ticker": "PGR",
+      "title": "Chief Personal Lines Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "PROGRESSIVE CORP/OH/",
+      "insider": "DAY HEATHER E",
+      "date": "2026-07-22",
+      "period": "2026-07-20",
+      "accession": "0000080661-26-000266",
+      "link": "https://www.sec.gov/Archives/edgar/data/80661/000008066126000266/0000080661-26-000266-index.htm",
+      "ticker": "PGR",
+      "title": "CRM President",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Bluejay Diagnostics, Inc.",
+      "insider": "BANK OF AMERICA NA",
+      "date": "2026-07-22",
+      "period": "2026-07-21",
+      "accession": "0000070858-26-000359",
+      "link": "https://www.sec.gov/Archives/edgar/data/1704287/000007085826000359/0000070858-26-000359-index.htm",
+      "ticker": "BJDX",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Nex Neo Tech Inc.",
@@ -5986,251 +6163,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
-    },
-    {
-      "company": "RPM INTERNATIONAL INC/DE/",
-      "insider": "Gordon Russell L",
-      "date": "2026-07-21",
-      "period": "2026-07-19",
-      "accession": "0001193125-26-310375",
-      "link": "https://www.sec.gov/Archives/edgar/data/110621/000119312526310375/0001193125-26-310375-index.htm",
-      "ticker": "RPM",
-      "title": "VP and CFO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 1137.0,
-          "price": 105.08,
-          "value": 119475.96,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "RPM INTERNATIONAL INC/DE/",
-      "insider": "Kastner Janeen B.",
-      "date": "2026-07-21",
-      "period": "2026-07-19",
-      "accession": "0001193125-26-310368",
-      "link": "https://www.sec.gov/Archives/edgar/data/110621/000119312526310368/0001193125-26-310368-index.htm",
-      "ticker": "RPM",
-      "title": "VP Corp. Benefits/Risk Mgmt.",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 1137.0,
-          "price": 105.08,
-          "value": 119475.96,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "RPM INTERNATIONAL INC/DE/",
-      "insider": "Laroche Michael J.",
-      "date": "2026-07-21",
-      "period": "2026-07-19",
-      "accession": "0001193125-26-310362",
-      "link": "https://www.sec.gov/Archives/edgar/data/110621/000119312526310362/0001193125-26-310362-index.htm",
-      "ticker": "RPM",
-      "title": "VP, Controller & CAO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 524.0,
-          "price": 105.08,
-          "value": 55061.92,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Aon plc",
-      "insider": "Zeidel Darren",
-      "date": "2026-07-21",
-      "period": "2026-07-17",
-      "accession": "0001193125-26-310325",
-      "link": "https://www.sec.gov/Archives/edgar/data/315293/000119312526310325/0001193125-26-310325-index.htm",
-      "ticker": "AON",
-      "title": "General Counsel",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 625.0,
-          "price": 370.0,
-          "value": 231250.0,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 650.0,
-          "price": 372.0,
-          "value": 241800.0,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 675.0,
-          "price": 374.0,
-          "value": 252450.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 725500.0,
-      "buy_shares": 0,
-      "sell_shares": 1950,
-      "direction": "sell"
-    },
-    {
-      "company": "KORE Group Holdings, Inc.",
-      "insider": "YUDKOFF ROYCE",
-      "date": "2026-07-21",
-      "period": "2026-07-21",
-      "accession": "0001193125-26-310287",
-      "link": "https://www.sec.gov/Archives/edgar/data/1855457/000119312526310287/0001193125-26-310287-index.htm",
-      "ticker": "KORE",
-      "title": "",
-      "roles": [
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "D",
-          "shares": 4850587.0,
-          "price": 9.25,
-          "value": 44867929.75,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "PAYCHEX INC",
-      "insider": "MUCCI MARTIN",
-      "date": "2026-07-21",
-      "period": "2026-07-17",
-      "accession": "0001193125-26-310270",
-      "link": "https://www.sec.gov/Archives/edgar/data/723531/000119312526310270/0001193125-26-310270-index.htm",
-      "ticker": "PAYX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "G",
-          "shares": 9309.0,
-          "price": 113.98,
-          "value": 1061057.51,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "PAYCHEX INC",
-      "insider": "DOODY JOSEPH",
-      "date": "2026-07-21",
-      "period": "2026-07-20",
-      "accession": "0001193125-26-310269",
-      "link": "https://www.sec.gov/Archives/edgar/data/723531/000119312526310269/0001193125-26-310269-index.htm",
-      "ticker": "PAYX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "J",
-          "shares": 164.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": false
-        },
-        {
-          "code": "J",
-          "shares": 164.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "PAYCHEX INC",
-      "insider": "Schrader Robert L.",
-      "date": "2026-07-21",
-      "period": "2026-07-20",
-      "accession": "0001193125-26-310268",
-      "link": "https://www.sec.gov/Archives/edgar/data/723531/000119312526310268/0001193125-26-310268-index.htm",
-      "ticker": "PAYX",
-      "title": "Sr. VP, CFO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 2600.0,
-          "price": 115.09,
-          "value": 299234.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 299234.0,
-      "buy_shares": 0,
-      "sell_shares": 2600,
-      "direction": "sell"
     },
     {
       "company": "Five9, Inc.",
