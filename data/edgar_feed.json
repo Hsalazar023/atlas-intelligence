@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-23T22:29:13.208540+00:00Z",
+  "updated": "2026-07-23T22:51:41.262072+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -562,6 +562,41 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "Mineralys Therapeutics, Inc.",
+      "insider": "Warren Eric",
+      "date": "2026-07-23",
+      "period": "2026-07-21",
+      "accession": "0001916048-26-000009",
+      "link": "https://www.sec.gov/Archives/edgar/data/1933414/000191604826000009/0001916048-26-000009-index.htm",
+      "ticker": "MLYS",
+      "title": "Chief Commercial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 7438.0,
+          "price": 13.24,
+          "value": 98479.12,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 7438.0,
+          "price": 26.87,
+          "value": 199885.09,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 199885.09,
+      "buy_shares": 0,
+      "sell_shares": 7438,
+      "direction": "sell"
     },
     {
       "company": "Samsara Inc.",
@@ -3637,6 +3672,84 @@
     },
     {
       "company": "Byrna Technologies Inc.",
+      "insider": "Davis Conn Q.",
+      "date": "2026-07-23",
+      "period": "2026-07-22",
+      "accession": "0001437749-26-024355",
+      "link": "https://www.sec.gov/Archives/edgar/data/1354866/000143774926024355/0001437749-26-024355-index.htm",
+      "ticker": "BYRN",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 18767.9201,
+          "price": 3.46,
+          "value": 64963.28,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 3430.0,
+          "price": 3.51,
+          "value": 12039.3,
+          "acquired": true
+        }
+      ],
+      "buy_value": 77002.58,
+      "sell_value": 0,
+      "buy_shares": 22197,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "Byrna Technologies Inc.",
+      "insider": "Hughes Herbert",
+      "date": "2026-07-23",
+      "period": "2026-07-22",
+      "accession": "0001437749-26-024354",
+      "link": "https://www.sec.gov/Archives/edgar/data/1354866/000143774926024354/0001437749-26-024354-index.htm",
+      "ticker": "BYRN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 5478.0,
+          "price": 3.47,
+          "value": 19026.74,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 3703.0,
+          "price": 3.42,
+          "value": 12676.11,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 12500.0,
+          "price": 3.4,
+          "value": 42546.25,
+          "acquired": true
+        }
+      ],
+      "buy_value": 74249.1,
+      "sell_value": 0,
+      "buy_shares": 21681,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "Byrna Technologies Inc.",
       "insider": "Kennedy TJ",
       "date": "2026-07-23",
       "period": "2026-07-22",
@@ -5340,6 +5453,77 @@
       "direction": "buy"
     },
     {
+      "company": "Salesforce, Inc.",
+      "insider": "Tallapragada Srinivas",
+      "date": "2026-07-23",
+      "period": "2026-07-22",
+      "accession": "0001108524-26-000156",
+      "link": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000156/0001108524-26-000156-index.htm",
+      "ticker": "CRM",
+      "title": "Chief Eng/Cust Success Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 1786.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 886.0,
+          "price": 163.0,
+          "value": 144418.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "exercise"
+    },
+    {
+      "company": "Salesforce, Inc.",
+      "insider": "Harris Parker",
+      "date": "2026-07-23",
+      "period": "2026-07-22",
+      "accession": "0001108524-26-000154",
+      "link": "https://www.sec.gov/Archives/edgar/data/1108524/000110852426000154/0001108524-26-000154-index.htm",
+      "ticker": "CRM",
+      "title": "Co-Founder and CTO, Slack",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 1786.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 886.0,
+          "price": 163.0,
+          "value": 144418.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "exercise"
+    },
+    {
       "company": "UNITED THERAPEUTICS Corp",
       "insider": "KURZWEIL RAY",
       "date": "2026-07-23",
@@ -5957,130 +6141,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
-    },
-    {
-      "company": "MCKESSON CORP",
-      "insider": "OZAN KEVIN M",
-      "date": "2026-07-23",
-      "period": "2026-07-22",
-      "accession": "0000927653-26-000201",
-      "link": "https://www.sec.gov/Archives/edgar/data/927653/000092765326000201/0000927653-26-000201-index.htm",
-      "ticker": "MCK",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "MCKESSON CORP",
-      "insider": "Dunsire Deborah",
-      "date": "2026-07-23",
-      "period": "2026-07-22",
-      "accession": "0000927653-26-000200",
-      "link": "https://www.sec.gov/Archives/edgar/data/927653/000092765326000200/0000927653-26-000200-index.htm",
-      "ticker": "MCK",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "ALLIANCEBERNSTEIN GLOBAL HIGH INCOME FUND INC",
-      "insider": "Wrapp Emilie D.",
-      "date": "2026-07-23",
-      "period": "2026-07-21",
-      "accession": "0000919574-26-004512",
-      "link": "https://www.sec.gov/Archives/edgar/data/906013/000091957426004512/0000919574-26-004512-index.htm",
-      "ticker": "AWF",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 3432.0,
-          "price": 10.19,
-          "value": 34971.39,
-          "acquired": true
-        }
-      ],
-      "buy_value": 34971.39,
-      "sell_value": 0,
-      "buy_shares": 3432,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "ALBEMARLE CORP",
-      "insider": "DESALLES BARTOLOMEO EDUARDO",
-      "date": "2026-07-23",
-      "period": "2026-07-21",
-      "accession": "0000915913-26-000097",
-      "link": "https://www.sec.gov/Archives/edgar/data/915913/000091591326000097/0000915913-26-000097-index.htm",
-      "ticker": "ALB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 1375.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SUN COMMUNITIES INC",
-      "insider": "Farrugia Marc",
-      "date": "2026-07-23",
-      "period": "2026-07-21",
-      "accession": "0000912593-26-000227",
-      "link": "https://www.sec.gov/Archives/edgar/data/912593/000091259326000227/0000912593-26-000227-index.htm",
-      "ticker": "SUI",
-      "title": "EVP & Chief Admin. Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 1234.0,
-          "price": 119.04,
-          "value": 146895.36,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
     },
     {
       "company": "Quanterix Corp",
