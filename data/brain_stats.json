@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-24T23:11:29.655730+00:00",
+  "generated": "2026-07-27T23:12:31.249658+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 288,
+      "n_trades": 289,
       "match_rate": 0.4
     },
     {
@@ -64,12 +64,6 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "MU",
-      "name": "Micron",
-      "count": 2,
-      "heat": 2
-    },
-    {
       "ticker": "APH",
       "name": "APH",
       "count": 2,
@@ -78,12 +72,6 @@
     {
       "ticker": "VTEB",
       "name": "VTEB",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "VLTO",
-      "name": "VLTO",
       "count": 1,
       "heat": 1
     },
@@ -112,20 +100,8 @@
       "heat": 1
     },
     {
-      "ticker": "SPGI",
-      "name": "S&P Global",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "PALL",
-      "name": "PALL",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "NVDA",
-      "name": "NVIDIA",
+      "ticker": "MU",
+      "name": "Micron",
       "count": 1,
       "heat": 1
     },
@@ -154,8 +130,32 @@
       "heat": 1
     },
     {
-      "ticker": "LNC",
-      "name": "LNC",
+      "ticker": "HQY",
+      "name": "HQY",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "HON",
+      "name": "Honeywell",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "GEHC",
+      "name": "GEHC",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "FMCC",
+      "name": "FMCC",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "FMAO",
+      "name": "FMAO",
       "count": 1,
       "heat": 1
     }
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 15,
-    "congress_flags": 38,
-    "convergence_count": 21
+    "congress_flags": 30,
+    "convergence_count": 20
   },
   "insider_sectors": [],
   "ml": {
@@ -650,7 +650,7 @@
     "distribution": {
       "elevated": 523,
       "low_vol": 158,
-      "normal": 2601
+      "normal": 2636
     },
     "hit_rates": {
       "elevated": 0.363,
@@ -725,52 +725,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.116,
+        "fill_rate": 0.114,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.119,
+        "fill_rate": 0.116,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.047,
+        "fill_rate": 0.043,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.047,
+        "fill_rate": 0.043,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.039,
+        "fill_rate": 0.036,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.039,
+        "fill_rate": 0.036,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.039,
+        "fill_rate": 0.036,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.039,
+        "fill_rate": 0.036,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.025895,
-    "n_matched_signals": 3282,
-    "spy_avg_30d_return": 0.025734,
+    "alpha_all_signals": -0.025912,
+    "n_matched_signals": 3317,
+    "spy_avg_30d_return": 0.025508,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030688,
-    "beta_vs_spy": -0.5198,
-    "beta_vs_spy_raw": -0.5477
+    "alpha_congress": -0.030573,
+    "beta_vs_spy": -0.5177,
+    "beta_vs_spy_raw": -0.544
   },
   "signal_concentration": {
     "top_ticker": null,
