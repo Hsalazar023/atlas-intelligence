@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-27T21:01:23.378344+00:00Z",
+  "updated": "2026-07-27T22:32:21.656296+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -140,6 +140,26 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "INCYTE CORP",
+      "insider": "Heeson Lee",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0002039219-26-000008",
+      "link": "https://www.sec.gov/Archives/edgar/data/879169/000203921926000008/0002039219-26-000008-index.htm",
+      "ticker": "INCY",
+      "title": "EVP, Head of Incyte Intl",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "USANA HEALTH SCIENCES INC",
@@ -310,6 +330,34 @@
       "buy_shares": 0,
       "sell_shares": 1517,
       "direction": "sell"
+    },
+    {
+      "company": "Metropolitan Bank Holding Corp.",
+      "insider": "Dougherty Daniel F",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0002000276-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/1476034/000200027626000006/0002000276-26-000006-index.htm",
+      "ticker": "MCB",
+      "title": "EVP & Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 1000.0,
+          "price": 89.98,
+          "value": 89980.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 89980.0,
+      "sell_value": 0,
+      "buy_shares": 1000,
+      "sell_shares": 0,
+      "direction": "buy"
     },
     {
       "company": "Immunome Inc.",
@@ -508,6 +556,55 @@
       "direction": "exercise"
     },
     {
+      "company": "Symbotic Inc.",
+      "insider": "Boyd William M III",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001932973-26-000021",
+      "link": "https://www.sec.gov/Archives/edgar/data/1837240/000193297326000021/0001932973-26-000021-index.htm",
+      "ticker": "SYM",
+      "title": "Chief Strategy Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 2909.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "M",
+          "shares": 6285.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 5700.0,
+          "price": 40.79,
+          "value": 232499.01,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 3494.0,
+          "price": 41.46,
+          "value": 144861.94,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 377360.95,
+      "buy_shares": 0,
+      "sell_shares": 9194,
+      "direction": "sell"
+    },
+    {
       "company": "Allegion plc",
       "insider": "Wagnes Michael J.",
       "date": "2026-07-27",
@@ -592,6 +689,34 @@
       "direction": "sell"
     },
     {
+      "company": "InnovAge Holding Corp.",
+      "insider": "BLAIR PATRICK T",
+      "date": "2026-07-27",
+      "period": "2026-07-27",
+      "accession": "0001896463-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/1834376/000189646326000006/0001896463-26-000006-index.htm",
+      "ticker": "INNV",
+      "title": "CHIEF EXECUTIVE OFFICER",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 78397.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "USANA HEALTH SCIENCES INC",
       "insider": "Ding Xia",
       "date": "2026-07-27",
@@ -625,6 +750,197 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "Symbotic Inc.",
+      "insider": "Kuffner James",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001877346-26-000018",
+      "link": "https://www.sec.gov/Archives/edgar/data/1837240/000187734626000018/0001877346-26-000018-index.htm",
+      "ticker": "SYM",
+      "title": "Chief Technology Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 47923.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 18987.0,
+          "price": 40.38,
+          "value": 766695.06,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 766695.06,
+      "buy_shares": 0,
+      "sell_shares": 18987,
+      "direction": "sell"
+    },
+    {
+      "company": "CRA INTERNATIONAL, INC.",
+      "insider": "Tookes Heather",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001868844-26-000016",
+      "link": "https://www.sec.gov/Archives/edgar/data/1053706/000186884426000016/0001868844-26-000016-index.htm",
+      "ticker": "CRAI",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 88.0,
+          "price": 165.9,
+          "value": 14599.2,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 14599.2,
+      "buy_shares": 0,
+      "sell_shares": 88,
+      "direction": "sell"
+    },
+    {
+      "company": "ZIPRECRUITER, INC.",
+      "insider": "SAKAMOTO RYAN T.",
+      "date": "2026-07-27",
+      "period": "2026-07-24",
+      "accession": "0001859442-26-000010",
+      "link": "https://www.sec.gov/Archives/edgar/data/1617553/000185944226000010/0001859442-26-000010-index.htm",
+      "ticker": "ZIP",
+      "title": "EVP, Chief Legal Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 3547.0,
+          "price": 3.91,
+          "value": 13882.25,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 13882.25,
+      "buy_shares": 0,
+      "sell_shares": 3547,
+      "direction": "sell"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "Bronstein Manuel",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001847776-26-000010",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000184777626000010/0001847776-26-000010-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 62.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "Subramanian Anuradha B.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001842720-26-000009",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000184272026000009/0001842720-26-000009-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 36.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "PubMatic, Inc.",
+      "insider": "Goel Rajeev K.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001833511-26-000032",
+      "link": "https://www.sec.gov/Archives/edgar/data/1422930/000183351126000032/0001833511-26-000032-index.htm",
+      "ticker": "PUBM",
+      "title": "CHIEF EXECUTIVE OFFICER",
+      "roles": [
+        "Officer",
+        "Director",
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 21870.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "C",
+          "shares": 12500.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 49979.0,
+          "price": 12.35,
+          "value": 617005.75,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 617005.75,
+      "buy_shares": 0,
+      "sell_shares": 49979,
+      "direction": "sell"
     },
     {
       "company": "Immunome Inc.",
@@ -711,6 +1027,153 @@
       "direction": "exercise"
     },
     {
+      "company": "Symbotic Inc.",
+      "insider": "Freve Maria G",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001807561-26-000019",
+      "link": "https://www.sec.gov/Archives/edgar/data/1837240/000180756126000019/0001807561-26-000019-index.htm",
+      "ticker": "SYM",
+      "title": "See Remarks",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 1144.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "M",
+          "shares": 3457.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 2244.0,
+          "price": 40.28,
+          "value": 90394.15,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 90394.15,
+      "buy_shares": 0,
+      "sell_shares": 2244,
+      "direction": "sell"
+    },
+    {
+      "company": "SCHWAB CHARLES CORP",
+      "insider": "Morgan Peter J. III",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001792910-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/316709/000179291026000006/0001792910-26-000006-index.htm",
+      "ticker": "SCHW",
+      "title": "General Counsel",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 6952.0,
+          "price": 102.03,
+          "value": 709341.06,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 709341.06,
+      "buy_shares": 0,
+      "sell_shares": 6952,
+      "direction": "sell"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "Brooke Beth A.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001786769-26-000011",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000178676926000011/0001786769-26-000011-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 68.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Guidewire Software, Inc.",
+      "insider": "Rosenbaum Michael George",
+      "date": "2026-07-27",
+      "period": "2026-07-27",
+      "accession": "0001784996-26-000070",
+      "link": "https://www.sec.gov/Archives/edgar/data/1528396/000178499626000070/0001784996-26-000070-index.htm",
+      "ticker": "GWRE",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 1200.0,
+          "price": 142.31,
+          "value": 170772.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 170772.0,
+      "buy_shares": 0,
+      "sell_shares": 1200,
+      "direction": "sell"
+    },
+    {
+      "company": "INCYTE CORP",
+      "insider": "Morrissey Michael James",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001780915-26-000010",
+      "link": "https://www.sec.gov/Archives/edgar/data/879169/000178091526000010/0001780915-26-000010-index.htm",
+      "ticker": "INCY",
+      "title": "EVP, Head of Tech. Operations",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
       "company": "USANA HEALTH SCIENCES INC",
       "insider": "Pelosi Peggie",
       "date": "2026-07-27",
@@ -772,6 +1235,62 @@
       "buy_shares": 0,
       "sell_shares": 2045,
       "direction": "sell"
+    },
+    {
+      "company": "FT Vest Total Return Income Fund: Series A2",
+      "insider": "PECK MICHAEL D",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001732966-26-000014",
+      "link": "https://www.sec.gov/Archives/edgar/data/2021966/000173296626000014/0001732966-26-000014-index.htm",
+      "ticker": "NA",
+      "title": "PRESIDENT",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 0.44,
+          "price": 22.71,
+          "value": 9.99,
+          "acquired": true
+        }
+      ],
+      "buy_value": 9.99,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "FT Vest Total Return Income Fund: Series A2",
+      "insider": "CHAD EISENBERG",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001732802-26-000014",
+      "link": "https://www.sec.gov/Archives/edgar/data/2021966/000173280226000014/0001732802-26-000014-index.htm",
+      "ticker": "NA",
+      "title": "TREASURER",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 0.44,
+          "price": 22.71,
+          "value": 9.99,
+          "acquired": true
+        }
+      ],
+      "buy_value": 9.99,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "buy"
     },
     {
       "company": "USANA HEALTH SCIENCES INC",
@@ -848,6 +1367,205 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "Symbotic Inc.",
+      "insider": "Alexander Brian Daniel",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001654009-26-000011",
+      "link": "https://www.sec.gov/Archives/edgar/data/1837240/000165400926000011/0001654009-26-000011-index.htm",
+      "ticker": "SYM",
+      "title": "SVP, Commercial",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 20512.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 9130.0,
+          "price": 40.3,
+          "value": 367953.61,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 367953.61,
+      "buy_shares": 0,
+      "sell_shares": 9130,
+      "direction": "sell"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "VAN DYCK REBECCA",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001641294-26-000008",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000164129426000008/0001641294-26-000008-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 176.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "Bhutani Amanpal Singh",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001628280-26-049875",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000162828026049875/0001628280-26-049875-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 98.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "Lazard, Inc.",
+      "insider": "Elsesser Kathy",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001628280-26-049871",
+      "link": "https://www.sec.gov/Archives/edgar/data/1311370/000162828026049871/0001628280-26-049871-index.htm",
+      "ticker": "LAZ",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Avantor, Inc.",
+      "insider": "Sokenu Claudius",
+      "date": "2026-07-27",
+      "period": "2026-07-24",
+      "accession": "0001628280-26-049853",
+      "link": "https://www.sec.gov/Archives/edgar/data/1722482/000162828026049853/0001628280-26-049853-index.htm",
+      "ticker": "AVTR",
+      "title": "EVP, Chief Legal & Compliance",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 1201.0,
+          "price": 11.44,
+          "value": 13739.44,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Eos Energy Enterprises, Inc.",
+      "insider": "Nigro Joseph",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001628280-26-049850",
+      "link": "https://www.sec.gov/Archives/edgar/data/1805077/000162828026049850/0001628280-26-049850-index.htm",
+      "ticker": "EOSE",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Eos Energy Enterprises, Inc.",
+      "insider": "Walters Marian",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001628280-26-049849",
+      "link": "https://www.sec.gov/Archives/edgar/data/1805077/000162828026049849/0001628280-26-049849-index.htm",
+      "ticker": "EOSE",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Eos Energy Enterprises, Inc.",
+      "insider": "DIMITRIEF ALEXANDER",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001628280-26-049848",
+      "link": "https://www.sec.gov/Archives/edgar/data/1805077/000162828026049848/0001628280-26-049848-index.htm",
+      "ticker": "EOSE",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "PG&E Corp",
@@ -933,6 +1651,187 @@
       "direction": "sell"
     },
     {
+      "company": "FT Vest Total Return Income Fund: Series A2",
+      "insider": "First Trust Capital Management L.P.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001604488-26-000079",
+      "link": "https://www.sec.gov/Archives/edgar/data/2021966/000160448826000079/0001604488-26-000079-index.htm",
+      "ticker": "NA",
+      "title": "",
+      "roles": [],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 0.44,
+          "price": 22.71,
+          "value": 9.99,
+          "acquired": true
+        }
+      ],
+      "buy_value": 9.99,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "Datadog, Inc.",
+      "insider": "Pomel Olivier",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001561550-26-000252",
+      "link": "https://www.sec.gov/Archives/edgar/data/1561550/000156155026000252/0001561550-26-000252-index.htm",
+      "ticker": "DDOG",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 47054.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 2851.0,
+          "price": 242.65,
+          "value": 691806.55,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 6681.0,
+          "price": 243.7,
+          "value": 1628146.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 25234.0,
+          "price": 244.47,
+          "value": 6169026.64,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 4196.0,
+          "price": 245.56,
+          "value": 1030349.2,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 4704.0,
+          "price": 246.56,
+          "value": 1159827.65,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 3082.0,
+          "price": 247.65,
+          "value": 763256.38,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 306.0,
+          "price": 248.33,
+          "value": 75988.25,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 11518401.0,
+      "buy_shares": 0,
+      "sell_shares": 47054,
+      "direction": "sell"
+    },
+    {
+      "company": "Datadog, Inc.",
+      "insider": "Agarwal Amit",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001561550-26-000251",
+      "link": "https://www.sec.gov/Archives/edgar/data/1561550/000156155026000251/0001561550-26-000251-index.htm",
+      "ticker": "DDOG",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 20000.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 1000.0,
+          "price": 242.38,
+          "value": 242382.6,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2900.0,
+          "price": 243.42,
+          "value": 705913.07,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 9775.0,
+          "price": 244.45,
+          "value": 2389490.93,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2134.0,
+          "price": 245.46,
+          "value": 523810.79,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2281.0,
+          "price": 246.54,
+          "value": 562348.84,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1410.0,
+          "price": 247.66,
+          "value": 349201.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 500.0,
+          "price": 248.37,
+          "value": 124186.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 4897333.25,
+      "buy_shares": 0,
+      "sell_shares": 20000,
+      "direction": "sell"
+    },
+    {
       "company": "JEWETT CAMERON TRADING CO LTD",
       "insider": "Bradley Melinda Hodges",
       "date": "2026-07-27",
@@ -959,6 +1858,34 @@
       "buy_shares": 1024,
       "sell_shares": 0,
       "direction": "buy"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "Glaser Rachel C",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001497570-26-000013",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000149757026000013/0001497570-26-000013-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 110.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "Telomir Pharmaceuticals, Inc.",
@@ -1313,6 +2240,69 @@
       "direction": "sell"
     },
     {
+      "company": "Lion Group Holding Ltd",
+      "insider": "HRT FINANCIAL LP",
+      "date": "2026-07-27",
+      "period": "2026-07-15",
+      "accession": "0001475597-26-000166",
+      "link": "https://www.sec.gov/Archives/edgar/data/1806524/000147559726000166/0001475597-26-000166-index.htm",
+      "ticker": "LGHL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 8435.0,
+          "price": 1.43,
+          "value": 12062.05,
+          "acquired": false
+        },
+        {
+          "code": "P",
+          "shares": 27702.0,
+          "price": 0.95,
+          "value": 26427.71,
+          "acquired": true
+        }
+      ],
+      "buy_value": 26427.71,
+      "sell_value": 12062.05,
+      "buy_shares": 27702,
+      "sell_shares": 8435,
+      "direction": "mixed"
+    },
+    {
+      "company": "Lyft, Inc.",
+      "insider": "MINICUCCI BENITO",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001451455-26-000009",
+      "link": "https://www.sec.gov/Archives/edgar/data/1759509/000145145526000009/0001451455-26-000009-index.htm",
+      "ticker": "LYFT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 15454.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "LGL GROUP INC",
       "insider": "Lamb Jason D",
       "date": "2026-07-27",
@@ -1493,6 +2483,26 @@
       "buy_shares": 41,
       "sell_shares": 0,
       "direction": "buy"
+    },
+    {
+      "company": "Flutter Entertainment plc",
+      "insider": "DART KENNETH BRYAN",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001331271-26-000064",
+      "link": "https://www.sec.gov/Archives/edgar/data/1635327/000133127126000064/0001331271-26-000064-index.htm",
+      "ticker": "FLUT",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Weatherford International plc",
@@ -1699,6 +2709,42 @@
       "direction": "grant"
     },
     {
+      "company": "BOK FINANCIAL CORP",
+      "insider": "KYMES STACY",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001286737-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/875357/000128673726000002/0001286737-26-000002-index.htm",
+      "ticker": "BOKF",
+      "title": "President & CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 8.5386,
+          "price": 139.53,
+          "value": 1191.41,
+          "acquired": false
+        },
+        {
+          "code": "G",
+          "shares": 3215.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1191.41,
+      "buy_shares": 0,
+      "sell_shares": 8,
+      "direction": "sell"
+    },
+    {
       "company": "USANA HEALTH SCIENCES INC",
       "insider": "WOOD TIMOTHY E",
       "date": "2026-07-27",
@@ -1762,6 +2808,62 @@
       "direction": "sell"
     },
     {
+      "company": "NEW YORK TIMES CO",
+      "insider": "GOLDEN ARTHUR S.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001214659-26-009074",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000121465926009074/0001214659-26-009074-index.htm",
+      "ticker": "NYT.A",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 70.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "NEW YORK TIMES CO",
+      "insider": "GOLDEN MARGOT",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001214659-26-009073",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000121465926009073/0001214659-26-009073-index.htm",
+      "ticker": "NYT.A",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 31.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "GREAT SOUTHERN BANCORP, INC.",
       "insider": "TURNER WILLIAM V",
       "date": "2026-07-27",
@@ -1816,6 +2918,223 @@
       "buy_shares": 0,
       "sell_shares": 2238,
       "direction": "sell"
+    },
+    {
+      "company": "Cuentas Inc.",
+      "insider": "Maimon Shalom Arik",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001213900-26-081871",
+      "link": "https://www.sec.gov/Archives/edgar/data/1424657/000121390026081871/0001213900-26-081871-index.htm",
+      "ticker": "CUEN",
+      "title": "CEO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.42,
+          "value": 42.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.45,
+          "value": 45.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 200.0,
+          "price": 0.42,
+          "value": 84.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 200.0,
+          "price": 0.44,
+          "value": 88.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 300.0,
+          "price": 0.41,
+          "value": 123.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 400.0,
+          "price": 0.46,
+          "value": 184.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1000.0,
+          "price": 0.45,
+          "value": 450.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2500.0,
+          "price": 0.35,
+          "value": 875.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2500.0,
+          "price": 0.37,
+          "value": 925.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2500.0,
+          "price": 0.39,
+          "value": 975.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2500.0,
+          "price": 0.42,
+          "value": 1050.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.43,
+          "value": 43.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.49,
+          "value": 49.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.49,
+          "value": 49.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.5,
+          "value": 50.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 200.0,
+          "price": 0.49,
+          "value": 98.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 500.0,
+          "price": 0.51,
+          "value": 255.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1500.0,
+          "price": 0.46,
+          "value": 690.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2000.0,
+          "price": 0.46,
+          "value": 920.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 10.0,
+          "price": 0.58,
+          "value": 5.8,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 0.64,
+          "value": 64.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 490.0,
+          "price": 0.5,
+          "value": 245.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 700.0,
+          "price": 0.53,
+          "value": 371.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1000.0,
+          "price": 0.53,
+          "value": 530.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1000.0,
+          "price": 0.55,
+          "value": 550.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1900.0,
+          "price": 0.7,
+          "value": 1330.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 3800.0,
+          "price": 0.55,
+          "value": 2090.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1000.0,
+          "price": 0.68,
+          "value": 680.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 12860.8,
+      "sell_value": 0,
+      "buy_shares": 26900,
+      "sell_shares": 0,
+      "direction": "buy"
     },
     {
       "company": "Weatherford International plc",
@@ -1879,6 +3198,62 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "FIRST FINANCIAL BANKSHARES INC",
+      "insider": "Nickles Robert Clark Jr",
+      "date": "2026-07-27",
+      "period": "2026-07-24",
+      "accession": "0001193125-26-318317",
+      "link": "https://www.sec.gov/Archives/edgar/data/36029/000119312526318317/0001193125-26-318317-index.htm",
+      "ticker": "FFIN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 700.0,
+          "price": 34.89,
+          "value": 24423.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 24423.0,
+      "sell_value": 0,
+      "buy_shares": 700,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "Acadia Healthcare Company, Inc.",
+      "insider": "Farley Brian",
+      "date": "2026-07-27",
+      "period": "2026-07-26",
+      "accession": "0001193125-26-318240",
+      "link": "https://www.sec.gov/Archives/edgar/data/1520697/000119312526318240/0001193125-26-318240-index.htm",
+      "ticker": "ACHC",
+      "title": "EVP, CLAO and Secretary",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 1770.0,
+          "price": 34.51,
+          "value": 61082.7,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Terrestrial Energy Inc. /DE/",
@@ -2958,6 +4333,34 @@
       "direction": "grant"
     },
     {
+      "company": "NEW YORK TIMES CO",
+      "insider": "MCANDREWS BRIAN P",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001193074-26-000010",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000119307426000010/0001193074-26-000010-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 176.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "FIRST INDUSTRIAL REALTY TRUST INC",
       "insider": "MUSIL SCOTT A",
       "date": "2026-07-27",
@@ -3014,6 +4417,55 @@
       "direction": "sell"
     },
     {
+      "company": "Ethos Technologies Inc.",
+      "insider": "GV 2019 GP, L.P.",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001168404-26-000039",
+      "link": "https://www.sec.gov/Archives/edgar/data/1788451/000116840426000039/0001168404-26-000039-index.htm",
+      "ticker": "LIFE",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "J",
+          "shares": 63297.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 63297.0,
+          "price": 19.06,
+          "value": 1206269.92,
+          "acquired": false
+        },
+        {
+          "code": "J",
+          "shares": 23417.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 23417.0,
+          "price": 18.88,
+          "value": 442000.56,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1648270.48,
+      "buy_shares": 0,
+      "sell_shares": 86714,
+      "direction": "sell"
+    },
+    {
       "company": "Immunome Inc.",
       "insider": "SIEGALL CLAY B",
       "date": "2026-07-27",
@@ -3041,6 +4493,69 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
+    },
+    {
+      "company": "ENERGIZER HOLDINGS, INC.",
+      "insider": "Fundacion Omerinta",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001140361-26-029768",
+      "link": "https://www.sec.gov/Archives/edgar/data/1632790/000114036126029768/0001140361-26-029768-index.htm",
+      "ticker": "ENR",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 20.08,
+          "value": 401680.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 20.37,
+          "value": 407350.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 20.29,
+          "value": 405884.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 20.93,
+          "value": 418652.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 21.09,
+          "value": 421732.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 20000.0,
+          "price": 20.93,
+          "value": 418696.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 2473994.0,
+      "sell_value": 0,
+      "buy_shares": 120000,
+      "sell_shares": 0,
+      "direction": "buy"
     },
     {
       "company": "UNITED THERAPEUTICS Corp",
@@ -3119,6 +4634,106 @@
       "buy_shares": 0,
       "sell_shares": 9500,
       "direction": "sell"
+    },
+    {
+      "company": "CATERPILLAR INC",
+      "insider": "Epley Kyle Joseph",
+      "date": "2026-07-27",
+      "period": "2026-07-24",
+      "accession": "0001104659-26-087156",
+      "link": "https://www.sec.gov/Archives/edgar/data/18230/000110465926087156/0001104659-26-087156-index.htm",
+      "ticker": "CAT",
+      "title": "Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "DEEP FISSION, INC.",
+      "insider": "GLANVILLE THOMAS S",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001104659-26-087136",
+      "link": "https://www.sec.gov/Archives/edgar/data/1918102/000110465926087136/0001104659-26-087136-index.htm",
+      "ticker": "FISN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "DEEP FISSION, INC.",
+      "insider": "JANOVER BLAKE",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001104659-26-087135",
+      "link": "https://www.sec.gov/Archives/edgar/data/1918102/000110465926087135/0001104659-26-087135-index.htm",
+      "ticker": "FISN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "DEEP FISSION, INC.",
+      "insider": "Goldman Tepper Leslie",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001104659-26-087134",
+      "link": "https://www.sec.gov/Archives/edgar/data/1918102/000110465926087134/0001104659-26-087134-index.htm",
+      "ticker": "FISN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "DEEP FISSION, INC.",
+      "insider": "Angell Jonathon",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0001104659-26-087133",
+      "link": "https://www.sec.gov/Archives/edgar/data/1918102/000110465926087133/0001104659-26-087133-index.htm",
+      "ticker": "FISN",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "WYNN RESORTS LTD",
@@ -3889,6 +5504,34 @@
       "direction": "grant"
     },
     {
+      "company": "NEW YORK TIMES CO",
+      "insider": "ROGERS JOHN W JR",
+      "date": "2026-07-27",
+      "period": "2026-07-23",
+      "accession": "0000938885-26-000013",
+      "link": "https://www.sec.gov/Archives/edgar/data/71691/000093888526000013/0000938885-26-000013-index.htm",
+      "ticker": "NYT",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 106.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "BIO-TECHNE Corp",
       "insider": "Bohnen Shane",
       "date": "2026-07-27",
@@ -4035,6 +5678,34 @@
       "sell_value": 22941.95,
       "buy_shares": 0,
       "sell_shares": 7783,
+      "direction": "sell"
+    },
+    {
+      "company": "SAFETY INSURANCE GROUP INC",
+      "insider": "SRB CORP",
+      "date": "2026-07-27",
+      "period": "2026-07-24",
+      "accession": "0000904454-26-000418",
+      "link": "https://www.sec.gov/Archives/edgar/data/1172052/000090445426000418/0000904454-26-000418-index.htm",
+      "ticker": "SAFT",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 38835.0,
+          "price": 103.08,
+          "value": 4003018.6,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 4003018.6,
+      "buy_shares": 0,
+      "sell_shares": 38835,
       "direction": "sell"
     },
     {
@@ -4538,1392 +6209,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
-    },
-    {
-      "company": "LEGGETT & PLATT INC",
-      "insider": "HAGALE JAMES TYSON",
-      "date": "2026-07-27",
-      "period": "2026-07-24",
-      "accession": "0000058492-26-000423",
-      "link": "https://www.sec.gov/Archives/edgar/data/58492/000005849226000423/0000058492-26-000423-index.htm",
-      "ticker": "LEG",
-      "title": "EVP, Pres. - Bedding Products",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 118.5231,
-          "price": 9.49,
-          "value": 1124.31,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 266.2321,
-          "price": 8.93,
-          "value": 2376.92,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LEGGETT & PLATT INC",
-      "insider": "GLASSMAN KARL G",
-      "date": "2026-07-27",
-      "period": "2026-07-24",
-      "accession": "0000058492-26-000422",
-      "link": "https://www.sec.gov/Archives/edgar/data/58492/000005849226000422/0000058492-26-000422-index.htm",
-      "ticker": "LEG",
-      "title": "President and CEO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 259.825,
-          "price": 9.49,
-          "value": 2464.7,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LEGGETT & PLATT INC",
-      "insider": "DAVIS JENNIFER JOY",
-      "date": "2026-07-27",
-      "period": "2026-07-24",
-      "accession": "0000058492-26-000421",
-      "link": "https://www.sec.gov/Archives/edgar/data/58492/000005849226000421/0000058492-26-000421-index.htm",
-      "ticker": "LEG",
-      "title": "EVP - GENERAL COUNSEL",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 97.6428,
-          "price": 9.49,
-          "value": 926.24,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "LEGGETT & PLATT INC",
-      "insider": "BURNS BENJAMIN MICHAEL",
-      "date": "2026-07-27",
-      "period": "2026-07-24",
-      "accession": "0000058492-26-000420",
-      "link": "https://www.sec.gov/Archives/edgar/data/58492/000005849226000420/0000058492-26-000420-index.htm",
-      "ticker": "LEG",
-      "title": "Executive Vice President - CFO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 118.5231,
-          "price": 9.49,
-          "value": 1124.31,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "BEXIL INVESTMENT TRUST",
-      "insider": "WINMILL & CO. INC",
-      "date": "2026-07-27",
-      "period": "2026-07-24",
-      "accession": "0000052234-26-000010",
-      "link": "https://www.sec.gov/Archives/edgar/data/1059213/000005223426000010/0000052234-26-000010-index.htm",
-      "ticker": "BXSY",
-      "title": "",
-      "roles": [],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 4700.0,
-          "price": 16.93,
-          "value": 79592.62,
-          "acquired": true
-        },
-        {
-          "code": "P",
-          "shares": 4700.0,
-          "price": 16.93,
-          "value": 79571.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 159163.62,
-      "sell_value": 0,
-      "buy_shares": 9400,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "Avery Dennison Corp",
-      "insider": "Flitman David E",
-      "date": "2026-07-27",
-      "period": "2026-07-23",
-      "accession": "0000008818-26-000123",
-      "link": "https://www.sec.gov/Archives/edgar/data/8818/000000881826000123/0000008818-26-000123-index.htm",
-      "ticker": "AVY",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 765.0,
-          "price": 156.11,
-          "value": 119424.15,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "ENERPAC TOOL GROUP CORP",
-      "insider": "Cunningham Danny L",
-      "date": "2026-07-27",
-      "period": "2026-07-23",
-      "accession": "0000006955-26-000042",
-      "link": "https://www.sec.gov/Archives/edgar/data/6955/000000695526000042/0000006955-26-000042-index.htm",
-      "ticker": "EPAC",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2930.0,
-          "price": 26.95,
-          "value": 78963.5,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 2930.0,
-          "price": 34.35,
-          "value": 100645.5,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 100645.5,
-      "buy_shares": 0,
-      "sell_shares": 2930,
-      "direction": "sell"
-    },
-    {
-      "company": "ENERPAC TOOL GROUP CORP",
-      "insider": "Ferland E James Jr",
-      "date": "2026-07-27",
-      "period": "2026-07-23",
-      "accession": "0000006955-26-000040",
-      "link": "https://www.sec.gov/Archives/edgar/data/6955/000000695526000040/0000006955-26-000040-index.htm",
-      "ticker": "EPAC",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2930.0,
-          "price": 26.95,
-          "value": 78963.5,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 2930.0,
-          "price": 34.35,
-          "value": 100645.5,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 100645.5,
-      "buy_shares": 0,
-      "sell_shares": 2930,
-      "direction": "sell"
-    },
-    {
-      "company": "FIRST INTERSTATE BANCSYSTEM INC",
-      "insider": "Ritter Matthew John",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0002146309-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/860413/000214630926000004/0002146309-26-000004-index.htm",
-      "ticker": "FIBK",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 1806.0,
-          "price": 38.97,
-          "value": 70379.82,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "CORVEL CORP",
-      "insider": "Scott Sarah A.",
-      "date": "2026-07-24",
-      "period": "2026-07-01",
-      "accession": "0002141901-26-000005",
-      "link": "https://www.sec.gov/Archives/edgar/data/874866/000214190126000005/0002141901-26-000005-index.htm",
-      "ticker": "CRVL",
-      "title": "CEO and President",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Hilltop Holdings Inc.",
-      "insider": "Haworth Stephen H",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002133188-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/1265131/000213318826000002/0002133188-26-000002-index.htm",
-      "ticker": "HTH",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 5244.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 291.0,
-          "price": 38.14,
-          "value": 11098.74,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Hilltop Holdings Inc.",
-      "insider": "Bober Dana L",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002133187-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/1265131/000213318726000002/0002133187-26-000002-index.htm",
-      "ticker": "HTH",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 5244.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 291.0,
-          "price": 38.14,
-          "value": 11098.74,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "VALMONT INDUSTRIES INC",
-      "insider": "Schwietz John L",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002129863-26-000008",
-      "link": "https://www.sec.gov/Archives/edgar/data/102729/000212986326000008/0002129863-26-000008-index.htm",
-      "ticker": "VMI",
-      "title": "Executive VP and CFO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 208.0,
-          "price": 486.14,
-          "value": 101118.16,
-          "acquired": true
-        }
-      ],
-      "buy_value": 101118.16,
-      "sell_value": 0,
-      "buy_shares": 208,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "Vesta Real Estate Corporation, S.A.B. de C.V.",
-      "insider": "DEL CASTILLO CACHO GUILLERMO",
-      "date": "2026-07-24",
-      "period": "2026-05-22",
-      "accession": "0002121472-26-000001",
-      "link": "https://www.sec.gov/Archives/edgar/data/1969373/000212147226000001/0002121472-26-000001-index.htm",
-      "ticker": "VTMX",
-      "title": "ENERGY MANAGER",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 8500.0,
-          "price": 3.41,
-          "value": 28985.0,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 3400.0,
-          "price": 3.37,
-          "value": 11458.0,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 3400.0,
-          "price": 3.37,
-          "value": 11458.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 51901.0,
-      "buy_shares": 0,
-      "sell_shares": 15300,
-      "direction": "sell"
-    },
-    {
-      "company": "CONAGRA BRANDS INC.",
-      "insider": "Napier Melissa C.",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0002093210-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/23217/000209321026000004/0002093210-26-000004-index.htm",
-      "ticker": "CAG",
-      "title": "SVP, Corporate Controller",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 1025.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 455.0,
-          "price": 14.83,
-          "value": 6747.65,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Simply Good Foods Co",
-      "insider": "Bealer Christopher J",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0002076611-26-000003",
-      "link": "https://www.sec.gov/Archives/edgar/data/1702744/000207661126000003/0002076611-26-000003-index.htm",
-      "ticker": "SMPL",
-      "title": "Chief Financial Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 73361.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "JOHN WILEY & SONS, INC.",
-      "insider": "Andresen Katherine Dunn",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002076243-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/107140/000207624326000002/0002076243-26-000002-index.htm",
-      "ticker": "WLY, WLYB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "UDR, Inc.",
-      "insider": "Bragg David D.",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002074905-26-000006",
-      "link": "https://www.sec.gov/Archives/edgar/data/74208/000207490526000006/0002074905-26-000006-index.htm",
-      "ticker": "UDR",
-      "title": "SVP - Chief Financial Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 2134.0,
-          "price": 39.48,
-          "value": 84250.32,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Enyard Angela S",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002061480-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000206148026000004/0002061480-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "SVP, Chief Accounting Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "JOHN WILEY & SONS, INC.",
-      "insider": "Madden Karen N",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002060000-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/107140/000206000026000002/0002060000-26-000002-index.htm",
-      "ticker": "WLY, WLYB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Grupo Cibest S.A.",
-      "insider": "Jaramillo Mejia Ricardo",
-      "date": "2026-07-24",
-      "period": "2026-07-16",
-      "accession": "0002058897-26-000256",
-      "link": "https://www.sec.gov/Archives/edgar/data/2058897/000205889726000256/0002058897-26-000256-index.htm",
-      "ticker": "CIB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "KEYCORP /NEW/",
-      "insider": "Ramani Mohit",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0002053125-26-000003",
-      "link": "https://www.sec.gov/Archives/edgar/data/91576/000205312526000003/0002053125-26-000003-index.htm",
-      "ticker": "KEY",
-      "title": "Chief Risk Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 25000.0,
-          "price": 22.74,
-          "value": 568500.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 568500.0,
-      "buy_shares": 0,
-      "sell_shares": 25000,
-      "direction": "sell"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Graven Christina M",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002053121-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000205312126000004/0002053121-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Chief Strategy",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "RYAN SPECIALTY HOLDINGS, INC.",
-      "insider": "Hamilton Janice M",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0002039801-26-000008",
-      "link": "https://www.sec.gov/Archives/edgar/data/1849253/000203980126000008/0002039801-26-000008-index.htm",
-      "ticker": "RYAN",
-      "title": "Chief Financial Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 5821.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 1706.0,
-          "price": 40.89,
-          "value": 69758.34,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "PETMED EXPRESS INC",
-      "insider": "KRULIK DOUGLAS",
-      "date": "2026-07-24",
-      "period": "2026-06-26",
-      "accession": "0002035815-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/1040130/000203581526000004/0002035815-26-000004-index.htm",
-      "ticker": "PETS",
-      "title": "CAO and Interim CFO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 32500.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Nguyen Diane F",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002029882-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000202988226000004/0002029882-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Chief Ppl & Comm",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Carr Michael E Jr",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002012793-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000201279326000004/0002012793-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, General Counsel,Secretary",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Pafilis Yiannis",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0002012427-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000201242726000004/0002012427-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Pres., EU, Africa, Asia",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "LEVI STRAUSS & CO",
-      "insider": "Singh Harmit J",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001999371-26-015876",
-      "link": "https://www.sec.gov/Archives/edgar/data/94845/000199937126015876/0001999371-26-015876-index.htm",
-      "ticker": "LEVI",
-      "title": "EVP & Chief Fin. & Growth Ofc.",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "C",
-          "shares": 17425.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 65789.0,
-          "price": 20.25,
-          "value": 1332227.25,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 50607.0,
-          "price": 21.35,
-          "value": 1080459.45,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 73616.0,
-          "price": 21.0,
-          "value": 1545936.0,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 66207.0,
-          "price": 17.79,
-          "value": 1177822.53,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 47710.0,
-          "price": 16.58,
-          "value": 791031.8,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 31547.0,
-          "price": 19.03,
-          "value": 600339.41,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 256918.0,
-          "price": 24.34,
-          "value": 6253384.12,
-          "acquired": false
-        },
-        {
-          "code": "F",
-          "shares": 47839.0,
-          "price": 24.28,
-          "value": 1161530.92,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 98144.0,
-          "price": 24.22,
-          "value": 2377047.68,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 2377047.68,
-      "buy_shares": 0,
-      "sell_shares": 98144,
-      "direction": "sell"
-    },
-    {
-      "company": "Maplebear Inc.",
-      "insider": "Fong Morgan",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001990106-26-000017",
-      "link": "https://www.sec.gov/Archives/edgar/data/1579091/000199010626000017/0001990106-26-000017-index.htm",
-      "ticker": "CART",
-      "title": "Chief Legal Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 18390.0,
-          "price": 7.32,
-          "value": 134614.8,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 18390.0,
-          "price": 44.34,
-          "value": 815397.89,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 815397.89,
-      "buy_shares": 0,
-      "sell_shares": 18390,
-      "direction": "sell"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Brown Elizabeth M",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001985370-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000198537026000002/0001985370-26-000002-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BeOne Medicines Ltd.",
-      "insider": "Lee Chan Henry",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001980648-26-000019",
-      "link": "https://www.sec.gov/Archives/edgar/data/1651308/000198064826000019/0001980648-26-000019-index.htm",
-      "ticker": "ONC",
-      "title": "SVP, General Counsel",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 514.0,
-          "price": 194.47,
-          "value": 99957.58,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 665.0,
-          "price": 213.32,
-          "value": 141857.8,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 490.0,
-          "price": 159.03,
-          "value": 77924.7,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 1669.0,
-          "price": 325.0,
-          "value": 542425.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 542425.0,
-      "buy_shares": 0,
-      "sell_shares": 1669,
-      "direction": "sell"
-    },
-    {
-      "company": "CONSTELLATION BRANDS, INC.",
-      "insider": "Flatley Edith Morgan",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001962944-26-000009",
-      "link": "https://www.sec.gov/Archives/edgar/data/16918/000196294426000009/0001962944-26-000009-index.htm",
-      "ticker": "STZ",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Shepherd Jeremy J",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001938704-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000193870426000004/0001938704-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Chief Marketing",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Peterson Crystal L",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001934972-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000193497226000004/0001934972-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Chief Incl/Global Comm",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "JOHN WILEY & SONS, INC.",
-      "insider": "Hemphill Brian O",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001934887-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/107140/000193488726000002/0001934887-26-000002-index.htm",
-      "ticker": "WLY, WLYB",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "CONAGRA BRANDS INC.",
-      "insider": "Bartell Carey",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001932635-26-000005",
-      "link": "https://www.sec.gov/Archives/edgar/data/23217/000193263526000005/0001932635-26-000005-index.htm",
-      "ticker": "CAG",
-      "title": "EVP, GC and Corp. Secretary",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 7032.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 3116.0,
-          "price": 14.83,
-          "value": 46210.28,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Southern Cross Acquisition I Corp.",
-      "insider": "Chen Dong (DC)",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001929980-26-000382",
-      "link": "https://www.sec.gov/Archives/edgar/data/2116230/000192998026000382/0001929980-26-000382-index.htm",
-      "ticker": "NCO",
-      "title": "",
-      "roles": [
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 15000.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0.0,
-      "sell_value": 0,
-      "buy_shares": 15000,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "VALVOLINE INC",
-      "insider": "Flees Lori Ann",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001924613-26-000035",
-      "link": "https://www.sec.gov/Archives/edgar/data/1674910/000192461326000035/0001924613-26-000035-index.htm",
-      "ticker": "VVV",
-      "title": "President & CEO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "CONAGRA BRANDS INC.",
-      "insider": "Eboli Alexandre",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001872274-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/23217/000187227426000004/0001872274-26-000004-index.htm",
-      "ticker": "CAG",
-      "title": "EVP, Chief SC & Transformation",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 12500.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "F",
-          "shares": 5538.0,
-          "price": 14.83,
-          "value": 82128.54,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "BROWN FORMAN CORP",
-      "insider": "Nall Timothy M",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001871904-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/14693/000187190426000004/0001871904-26-000004-index.htm",
-      "ticker": "BFA, BFB",
-      "title": "EVP, Chief Supp/Tech",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "VYNE Therapeutics Inc.",
-      "insider": "Zeronda Tyler",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001867033-26-000008",
-      "link": "https://www.sec.gov/Archives/edgar/data/1566044/000186703326000008/0001867033-26-000008-index.htm",
-      "ticker": "VYNE",
-      "title": "CHIEF FINANCIAL OFFICER",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 22516.0,
-          "price": 0.9,
-          "value": 20210.36,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Angel Studios, Inc.",
-      "insider": "Sarowitz Steven I",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001865200-26-000061",
-      "link": "https://www.sec.gov/Archives/edgar/data/1865200/000186520026000061/0001865200-26-000061-index.htm",
-      "ticker": "ANGX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2648.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "Angel Studios, Inc.",
-      "insider": "GAY ROBERT C",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001865200-26-000059",
-      "link": "https://www.sec.gov/Archives/edgar/data/1865200/000186520026000059/0001865200-26-000059-index.htm",
-      "ticker": "ANGX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2648.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "Angel Studios, Inc.",
-      "insider": "Liljenquist Katie",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001865200-26-000057",
-      "link": "https://www.sec.gov/Archives/edgar/data/1865200/000186520026000057/0001865200-26-000057-index.htm",
-      "ticker": "ANGX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2648.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "Angel Studios, Inc.",
-      "insider": "Crane Benton Deloss",
-      "date": "2026-07-24",
-      "period": "2026-07-23",
-      "accession": "0001865200-26-000054",
-      "link": "https://www.sec.gov/Archives/edgar/data/1865200/000186520026000054/0001865200-26-000054-index.htm",
-      "ticker": "ANGX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 2648.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "Doximity, Inc.",
-      "insider": "Tangney Jeffrey",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001863328-26-000002",
-      "link": "https://www.sec.gov/Archives/edgar/data/1516513/000186332826000002/0001863328-26-000002-index.htm",
-      "ticker": "DOCS",
-      "title": "Chief Executive Officer",
-      "roles": [
-        "Officer",
-        "Director",
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "RAPID MICRO BIOSYSTEMS, INC.",
-      "insider": "Spignesi Robert G. Jr.",
-      "date": "2026-07-24",
-      "period": "2026-07-22",
-      "accession": "0001853904-26-000020",
-      "link": "https://www.sec.gov/Archives/edgar/data/1380106/000185390426000020/0001853904-26-000020-index.htm",
-      "ticker": "RPID",
-      "title": "PRESIDENT AND CEO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 1402.0,
-          "price": 0.75,
-          "value": 1051.5,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
     },
     {
       "company": "Capital Bancorp Inc",
