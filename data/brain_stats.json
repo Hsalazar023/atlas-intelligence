@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-30T23:23:49.783158+00:00",
+  "generated": "2026-07-31T23:21:01.327260+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -76,14 +76,8 @@
       "heat": 1
     },
     {
-      "ticker": "TXRH",
-      "name": "TXRH",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "TCBI",
-      "name": "TCBI",
+      "ticker": "TSM",
+      "name": "TSMC",
       "count": 1,
       "heat": 1
     },
@@ -106,26 +100,8 @@
       "heat": 1
     },
     {
-      "ticker": "MCHP",
-      "name": "MCHP",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "HQY",
-      "name": "HQY",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "HON",
       "name": "Honeywell",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "GEHC",
-      "name": "GEHC",
       "count": 1,
       "heat": 1
     },
@@ -154,8 +130,32 @@
       "heat": 1
     },
     {
-      "ticker": "EFC",
-      "name": "EFC",
+      "ticker": "DUK",
+      "name": "DUK",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "ANET",
+      "name": "Arista Networks",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AMCR",
+      "name": "AMCR",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "ACN",
+      "name": "ACN",
       "count": 1,
       "heat": 1
     }
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 16,
-    "congress_flags": 27,
-    "convergence_count": 20
+    "congress_flags": 17,
+    "convergence_count": 19
   },
   "insider_sectors": [],
   "ml": {
@@ -656,7 +656,7 @@
     "distribution": {
       "elevated": 523,
       "low_vol": 158,
-      "normal": 2692
+      "normal": 2702
     },
     "hit_rates": {
       "elevated": 0.363,
@@ -747,36 +747,36 @@
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.035,
+        "fill_rate": 0.034,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.035,
+        "fill_rate": 0.034,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.035,
+        "fill_rate": 0.034,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.035,
+        "fill_rate": 0.034,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.025877,
-    "n_matched_signals": 3373,
-    "spy_avg_30d_return": 0.0252,
+    "alpha_all_signals": -0.025796,
+    "n_matched_signals": 3383,
+    "spy_avg_30d_return": 0.025164,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030656,
-    "beta_vs_spy": -0.5154,
-    "beta_vs_spy_raw": -0.5404
+    "alpha_congress": -0.030595,
+    "beta_vs_spy": -0.5156,
+    "beta_vs_spy_raw": -0.5406
   },
   "signal_concentration": {
     "top_ticker": null,
