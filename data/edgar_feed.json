@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-03T22:32:40.091790+00:00Z",
+  "updated": "2026-08-03T22:55:43.262884+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -2478,6 +2478,70 @@
       "direction": "exercise"
     },
     {
+      "company": "Guidewire Software, Inc.",
+      "insider": "Rosenbaum Michael George",
+      "date": "2026-08-03",
+      "period": "2026-08-03",
+      "accession": "0001784996-26-000072",
+      "link": "https://www.sec.gov/Archives/edgar/data/1528396/000178499626000072/0001784996-26-000072-index.htm",
+      "ticker": "GWRE",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 1200.0,
+          "price": 155.92,
+          "value": 187104.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 187104.0,
+      "buy_shares": 0,
+      "sell_shares": 1200,
+      "direction": "sell"
+    },
+    {
+      "company": "Robinhood Ventures Fund I",
+      "insider": "Robinhood Markets, Inc.  (HOOD)",
+      "date": "2026-08-03",
+      "period": "2026-07-30",
+      "accession": "0001783879-26-000118",
+      "link": "https://www.sec.gov/Archives/edgar/data/2085091/000178387926000118/0001783879-26-000118-index.htm",
+      "ticker": "RVI",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 3965.0,
+          "price": 25.04,
+          "value": 99283.6,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 879.0,
+          "price": 25.08,
+          "value": 22045.32,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 121328.92,
+      "buy_shares": 0,
+      "sell_shares": 4844,
+      "direction": "sell"
+    },
+    {
       "company": "AMES NATIONAL CORP",
       "insider": "Cassabaum Michelle R",
       "date": "2026-08-03",
@@ -3036,6 +3100,41 @@
       "buy_shares": 148,
       "sell_shares": 0,
       "direction": "buy"
+    },
+    {
+      "company": "Groupon, Inc.",
+      "insider": "Kashyap Rana",
+      "date": "2026-08-03",
+      "period": "2026-07-30",
+      "accession": "0001670021-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/1490281/000167002126000004/0001670021-26-000004-index.htm",
+      "ticker": "GRPN",
+      "title": "Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 14374.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 6661.0,
+          "price": 27.89,
+          "value": 185775.29,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "exercise"
     },
     {
       "company": "Entrada Therapeutics, Inc.",
@@ -6496,105 +6595,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
-    },
-    {
-      "company": "Esquire Financial Holdings, Inc.",
-      "insider": "O'ROURKE MICHAEL G",
-      "date": "2026-08-03",
-      "period": "2026-08-01",
-      "accession": "0001437749-26-025413",
-      "link": "https://www.sec.gov/Archives/edgar/data/1531031/000143774926025413/0001437749-26-025413-index.htm",
-      "ticker": "ESQ",
-      "title": "President of Chicago Bank Div",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 66726.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "A",
-          "shares": 18630.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "Orange County Bancorp, Inc. /DE/",
-      "insider": "Sousa Gregory",
-      "date": "2026-08-03",
-      "period": "2026-07-30",
-      "accession": "0001437749-26-025390",
-      "link": "https://www.sec.gov/Archives/edgar/data/1754226/000143774926025390/0001437749-26-025390-index.htm",
-      "ticker": "OBT",
-      "title": "EVP and Deputy CLO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 1165.0,
-          "price": 38.75,
-          "value": 45143.75,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 1882.0,
-          "price": 38.75,
-          "value": 72927.5,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 118071.25,
-      "buy_shares": 0,
-      "sell_shares": 3047,
-      "direction": "sell"
-    },
-    {
-      "company": "Texas Pacific Land Corp",
-      "insider": "HORIZON KINETICS ASSET MANAGEMENT LLC",
-      "date": "2026-08-03",
-      "period": "2026-07-31",
-      "accession": "0001437749-26-025384",
-      "link": "https://www.sec.gov/Archives/edgar/data/1811074/000143774926025384/0001437749-26-025384-index.htm",
-      "ticker": "TPL",
-      "title": "",
-      "roles": [
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 1.0,
-          "price": 400.09,
-          "value": 400.09,
-          "acquired": true
-        }
-      ],
-      "buy_value": 400.09,
-      "sell_value": 0,
-      "buy_shares": 1,
-      "sell_shares": 0,
-      "direction": "buy"
     },
     {
       "company": "Nauticus Robotics, Inc.",
