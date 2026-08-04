@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-04T22:33:43.597815+00:00Z",
+  "updated": "2026-08-04T22:57:59.369161+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -2588,6 +2588,104 @@
       "direction": "buy"
     },
     {
+      "company": "LIGAND PHARMACEUTICALS INC",
+      "insider": "Reardon Andrew",
+      "date": "2026-08-04",
+      "period": "2026-08-03",
+      "accession": "0002001011-26-000111",
+      "link": "https://www.sec.gov/Archives/edgar/data/886163/000200101126000111/0002001011-26-000111-index.htm",
+      "ticker": "LGND",
+      "title": "CLO & Secretary",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 5000.0,
+          "price": 52.27,
+          "value": 261350.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 105.0,
+          "price": 284.14,
+          "value": 29834.44,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 33.0,
+          "price": 284.55,
+          "value": 9390.25,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 157.0,
+          "price": 285.74,
+          "value": 44860.5,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1032.0,
+          "price": 286.8,
+          "value": 295974.3,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1214.0,
+          "price": 287.77,
+          "value": 349356.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 356.0,
+          "price": 288.75,
+          "value": 102794.86,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 503.0,
+          "price": 289.8,
+          "value": 145770.51,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 200.0,
+          "price": 290.6,
+          "value": 58120.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 991.0,
+          "price": 291.71,
+          "value": 289086.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 409.0,
+          "price": 292.82,
+          "value": 119763.01,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1444950.9,
+      "buy_shares": 0,
+      "sell_shares": 5000,
+      "direction": "sell"
+    },
+    {
       "company": "T Stamp Inc",
       "insider": "Potts Charles Edward",
       "date": "2026-08-04",
@@ -2641,6 +2739,34 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "Chord Energy Corp",
+      "insider": "Kinney Shannon Browning",
+      "date": "2026-08-04",
+      "period": "2026-08-01",
+      "accession": "0001987164-26-000011",
+      "link": "https://www.sec.gov/Archives/edgar/data/1486159/000198716426000011/0001987164-26-000011-index.htm",
+      "ticker": "CHRD",
+      "title": "EVP, CAO, GC & Corp Secretary",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 2609.0,
+          "price": 140.38,
+          "value": 366251.42,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Keysight Technologies, Inc.",
@@ -3153,6 +3279,76 @@
           "price": 0.0,
           "value": 0.0,
           "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "IBEX Ltd",
+      "insider": "Afdahl David Martin",
+      "date": "2026-08-04",
+      "period": "2026-07-31",
+      "accession": "0001974087-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/1720420/000197408726000006/0001974087-26-000006-index.htm",
+      "ticker": "IBEX",
+      "title": "Chief Operating Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 2646.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 1304.0,
+          "price": 35.34,
+          "value": 46083.36,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
+      "company": "IBEX Ltd",
+      "insider": "Trofimuk-O'Connor Christina Alice",
+      "date": "2026-08-04",
+      "period": "2026-07-31",
+      "accession": "0001973684-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/1720420/000197368426000006/0001973684-26-000006-index.htm",
+      "ticker": "IBEX",
+      "title": "Chief Legal Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 2646.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "F",
+          "shares": 950.0,
+          "price": 35.34,
+          "value": 33573.0,
+          "acquired": false
         }
       ],
       "buy_value": 0,
@@ -5134,6 +5330,34 @@
       "direction": "sell"
     },
     {
+      "company": "Hinge Health, Inc.",
+      "insider": "Pursley James",
+      "date": "2026-08-04",
+      "period": "2026-08-01",
+      "accession": "0001783108-26-000026",
+      "link": "https://www.sec.gov/Archives/edgar/data/1673743/000178310826000026/0001783108-26-000026-index.htm",
+      "ticker": "HNGE",
+      "title": "President",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 831.0,
+          "price": 74.71,
+          "value": 62084.01,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
       "company": "RLI CORP",
       "insider": "Davis Seth Anthony",
       "date": "2026-08-04",
@@ -5242,6 +5466,34 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
+    },
+    {
+      "company": "STRYKER CORP",
+      "insider": "Fletcher Robert S",
+      "date": "2026-08-04",
+      "period": "2026-08-01",
+      "accession": "0001775075-26-000005",
+      "link": "https://www.sec.gov/Archives/edgar/data/310764/000177507526000005/0001775075-26-000005-index.htm",
+      "ticker": "SYK",
+      "title": "VP, Chief Legal Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 94.0,
+          "price": 325.7,
+          "value": 30615.8,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "SYSCO CORP",
@@ -6071,197 +6323,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
-    },
-    {
-      "company": "FIRST MERCHANTS CORP",
-      "insider": "Harris Steven C",
-      "date": "2026-08-04",
-      "period": "2026-08-02",
-      "accession": "0001724873-26-000005",
-      "link": "https://www.sec.gov/Archives/edgar/data/712534/000172487326000005/0001724873-26-000005-index.htm",
-      "ticker": "FRME",
-      "title": "Chief Human Resources Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 612.0,
-          "price": 43.14,
-          "value": 26401.68,
-          "acquired": false
-        },
-        {
-          "code": "A",
-          "shares": 3000.0,
-          "price": 43.63,
-          "value": 130890.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "ARGAN INC",
-      "insider": "Jeffrey John Ronald Jr.",
-      "date": "2026-08-04",
-      "period": "2026-07-31",
-      "accession": "0001709914-26-000028",
-      "link": "https://www.sec.gov/Archives/edgar/data/100591/000170991426000028/0001709914-26-000028-index.htm",
-      "ticker": "AGX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 5716.0,
-          "price": 579.64,
-          "value": 3313222.24,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 3313222.24,
-      "buy_shares": 0,
-      "sell_shares": 5716,
-      "direction": "sell"
-    },
-    {
-      "company": "GLOBALFOUNDRIES Inc.",
-      "insider": "Pedersen Gregory Johnson",
-      "date": "2026-08-04",
-      "period": "2026-07-31",
-      "accession": "0001709048-26-000213",
-      "link": "https://www.sec.gov/Archives/edgar/data/1709048/000170904826000213/0001709048-26-000213-index.htm",
-      "ticker": "GFS",
-      "title": "Chief Accounting Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 1268.0,
-          "price": 49.89,
-          "value": 63260.52,
-          "acquired": false
-        },
-        {
-          "code": "F",
-          "shares": 761.0,
-          "price": 49.89,
-          "value": 37966.29,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "WILLIAMS COMPANIES, INC.",
-      "insider": "Wilson Terrance Lane",
-      "date": "2026-08-04",
-      "period": "2026-08-03",
-      "accession": "0001703388-26-000021",
-      "link": "https://www.sec.gov/Archives/edgar/data/107263/000170338826000021/0001703388-26-000021-index.htm",
-      "ticker": "WMB",
-      "title": "SVP & General Counsel",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 2000.0,
-          "price": 70.65,
-          "value": 141300.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 141300.0,
-      "buy_shares": 0,
-      "sell_shares": 2000,
-      "direction": "sell"
-    },
-    {
-      "company": "REGENXBIO Inc.",
-      "insider": "PAKOLA STEVE",
-      "date": "2026-08-04",
-      "period": "2026-08-01",
-      "accession": "0001700659-26-000016",
-      "link": "https://www.sec.gov/Archives/edgar/data/1590877/000170065926000016/0001700659-26-000016-index.htm",
-      "ticker": "RGNX",
-      "title": "Chief Medical Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 7468.0,
-          "price": 9.69,
-          "value": 72364.92,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "CARVANA CO.",
-      "insider": "GARCIA ERNEST C. III",
-      "date": "2026-08-04",
-      "period": "2026-08-01",
-      "accession": "0001700548-26-000018",
-      "link": "https://www.sec.gov/Archives/edgar/data/1690820/000170054826000018/0001700548-26-000018-index.htm",
-      "ticker": "CVNA",
-      "title": "Chief Executive Officer",
-      "roles": [
-        "Officer",
-        "Director",
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "F",
-          "shares": 7069.0,
-          "price": 62.36,
-          "value": 440822.84,
-          "acquired": false
-        },
-        {
-          "code": "A",
-          "shares": 134707.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
     },
     {
       "company": "Scribe Therapeutics, Inc.",
