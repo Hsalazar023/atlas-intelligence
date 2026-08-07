@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-07T22:03:38.076972+00:00Z",
+  "updated": "2026-08-07T22:29:17.781100+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -2275,6 +2275,35 @@
       "direction": "sell"
     },
     {
+      "company": "SentinelOne, Inc.",
+      "insider": "Weingarten Tomer",
+      "date": "2026-08-07",
+      "period": "2026-08-06",
+      "accession": "0001866222-26-000037",
+      "link": "https://www.sec.gov/Archives/edgar/data/1583708/000186622226000037/0001866222-26-000037-index.htm",
+      "ticker": "S",
+      "title": "President, CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 53811.0,
+          "price": 20.08,
+          "value": 1080524.88,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1080524.88,
+      "buy_shares": 0,
+      "sell_shares": 53811,
+      "direction": "sell"
+    },
+    {
       "company": "MAGNITE, INC.",
       "insider": "Buckley Sean Patrick",
       "date": "2026-08-07",
@@ -3604,6 +3633,41 @@
       "sell_value": 168250.0,
       "buy_shares": 0,
       "sell_shares": 1000,
+      "direction": "sell"
+    },
+    {
+      "company": "SCHWAB CHARLES CORP",
+      "insider": "Craig Jonathan M.",
+      "date": "2026-08-07",
+      "period": "2026-08-05",
+      "accession": "0001733065-26-000011",
+      "link": "https://www.sec.gov/Archives/edgar/data/316709/000173306526000011/0001733065-26-000011-index.htm",
+      "ticker": "SCHW",
+      "title": "MD, Head of Retail Investing",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 21750.0,
+          "price": 46.81,
+          "value": 1018117.5,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 21750.0,
+          "price": 107.02,
+          "value": 2327752.42,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 2327752.42,
+      "buy_shares": 0,
+      "sell_shares": 21750,
       "direction": "sell"
     },
     {
@@ -5979,6 +6043,34 @@
       "direction": "other"
     },
     {
+      "company": "Chord Energy Corp",
+      "insider": "Brooks Douglas E",
+      "date": "2026-08-07",
+      "period": "2026-08-07",
+      "accession": "0001548147-26-000014",
+      "link": "https://www.sec.gov/Archives/edgar/data/1486159/000154814726000014/0001548147-26-000014-index.htm",
+      "ticker": "CHRD",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 8000.0,
+          "price": 133.14,
+          "value": 1065120.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1065120.0,
+      "buy_shares": 0,
+      "sell_shares": 8000,
+      "direction": "sell"
+    },
+    {
       "company": "Jazz Pharmaceuticals plc",
       "insider": "Mulligan Seamus",
       "date": "2026-08-07",
@@ -6474,84 +6566,6 @@
       "buy_shares": 22500,
       "sell_shares": 0,
       "direction": "buy"
-    },
-    {
-      "company": "Lipocine Inc.",
-      "insider": "Grissinger Michael",
-      "date": "2026-08-07",
-      "period": "2026-08-03",
-      "accession": "0001493152-26-036577",
-      "link": "https://www.sec.gov/Archives/edgar/data/1535955/000149315226036577/0001493152-26-036577-index.htm",
-      "ticker": "LPCN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "JONES SODA CO.",
-      "insider": "Meadows Brian",
-      "date": "2026-08-07",
-      "period": "2026-08-06",
-      "accession": "0001493152-26-036525",
-      "link": "https://www.sec.gov/Archives/edgar/data/1083522/000149315226036525/0001493152-26-036525-index.htm",
-      "ticker": "JSDA",
-      "title": "Chief Financial Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 303030.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0.0,
-      "sell_value": 0,
-      "buy_shares": 303030,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "HWH International Inc.",
-      "insider": "Chan Heng Fai Ambrose",
-      "date": "2026-08-07",
-      "period": "2026-08-05",
-      "accession": "0001493152-26-036447",
-      "link": "https://www.sec.gov/Archives/edgar/data/1897245/000149315226036447/0001493152-26-036447-index.htm",
-      "ticker": "HWH",
-      "title": "Chief Executive Officer",
-      "roles": [
-        "Officer",
-        "Director",
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "J",
-          "shares": 320000.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
     },
     {
       "company": "NXP Semiconductors N.V.",
