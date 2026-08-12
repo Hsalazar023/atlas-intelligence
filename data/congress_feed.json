@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-12T22:10:01.860342+00:00Z",
-  "count": 163,
+  "updated": "2026-08-12T22:36:09.725921+00:00Z",
+  "count": 161,
   "source": "FMP",
   "trades": [
     {
@@ -16,7 +16,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MDLZ",
+      "Ticker": "KVUE",
       "TransactionDate": "2026-08-05",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -28,7 +28,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "DEO",
+      "Ticker": "VSNT",
+      "TransactionDate": "2026-08-05",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-11",
+      "DisclosureDelay": 6,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MDLZ",
       "TransactionDate": "2026-08-05",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -52,7 +64,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KVUE",
+      "Ticker": "DEO",
       "TransactionDate": "2026-08-05",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -65,18 +77,6 @@
     },
     {
       "Ticker": "EL",
-      "TransactionDate": "2026-08-05",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-11",
-      "DisclosureDelay": 6,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "VSNT",
       "TransactionDate": "2026-08-05",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -172,30 +172,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "FITB",
-      "TransactionDate": "2026-07-24",
-      "Representative": "David Taylor",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-07",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MSFT",
-      "TransactionDate": "2026-07-24",
-      "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-07",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "AVGO",
       "TransactionDate": "2026-07-24",
       "Representative": "David Taylor",
@@ -208,7 +184,31 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "FITB",
+      "TransactionDate": "2026-07-24",
+      "Representative": "David Taylor",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-07",
+      "DisclosureDelay": 14,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "KR",
+      "TransactionDate": "2026-07-24",
+      "Representative": "David Taylor",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-07",
+      "DisclosureDelay": 14,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MSFT",
       "TransactionDate": "2026-07-24",
       "Representative": "David Taylor",
       "Transaction": "Purchase",
@@ -316,11 +316,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PEP",
+      "Ticker": "ABT",
       "TransactionDate": "2026-07-17",
       "Representative": "Mike Kelly",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-12",
@@ -328,11 +328,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ABT",
+      "Ticker": "PEP",
       "TransactionDate": "2026-07-17",
       "Representative": "Mike Kelly",
       "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-12",
@@ -400,9 +400,9 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "CRWD",
+      "Ticker": "AMAT",
       "TransactionDate": "2026-07-15",
-      "Representative": "Josh Gottheimer",
+      "Representative": "John McGuire",
       "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
@@ -412,9 +412,9 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMAT",
+      "Ticker": "CRWD",
       "TransactionDate": "2026-07-15",
-      "Representative": "John McGuire",
+      "Representative": "Josh Gottheimer",
       "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
@@ -436,9 +436,9 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "FN",
+      "Ticker": "BLK",
       "TransactionDate": "2026-07-14",
-      "Representative": "Josh Gottheimer",
+      "Representative": "John McGuire",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
@@ -448,9 +448,9 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BLK",
+      "Ticker": "FN",
       "TransactionDate": "2026-07-14",
-      "Representative": "John McGuire",
+      "Representative": "Josh Gottheimer",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
@@ -484,18 +484,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KLAC",
-      "TransactionDate": "2026-07-01",
-      "Representative": "Michael Rulli",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-10",
-      "DisclosureDelay": 40,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "LLY",
       "TransactionDate": "2026-07-01",
       "Representative": "Michael Rulli",
@@ -508,15 +496,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KO",
+      "Ticker": "KLAC",
       "TransactionDate": "2026-07-01",
-      "Representative": "Lloyd Doggett",
+      "Representative": "Michael Rulli",
       "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-08-06",
-      "DisclosureDelay": 36,
+      "DisclosureDate": "2026-08-10",
+      "DisclosureDelay": 40,
       "Source": "FMP"
     },
     {
@@ -556,6 +544,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "MSFT",
+      "TransactionDate": "2026-06-25",
+      "Representative": "Michael Rulli",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-10",
+      "DisclosureDelay": 46,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "AMZN",
       "TransactionDate": "2026-06-25",
       "Representative": "Michael Rulli",
@@ -580,7 +580,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "NVDA",
       "TransactionDate": "2026-06-25",
       "Representative": "Michael Rulli",
       "Transaction": "Purchase",
@@ -604,19 +604,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MSFT",
-      "TransactionDate": "2026-06-25",
-      "Representative": "Michael Rulli",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-10",
-      "DisclosureDelay": 46,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NVDA",
+      "Ticker": "GOOGL",
       "TransactionDate": "2026-06-25",
       "Representative": "Michael Rulli",
       "Transaction": "Purchase",
@@ -625,6 +613,18 @@
       "Party": "",
       "DisclosureDate": "2026-08-10",
       "DisclosureDelay": 46,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "HUBS",
+      "TransactionDate": "2026-06-09",
+      "Representative": "Tony Wied",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-10",
+      "DisclosureDelay": 62,
       "Source": "FMP"
     },
     {
@@ -652,11 +652,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TTD",
+      "Ticker": "AMD",
       "TransactionDate": "2026-06-09",
       "Representative": "Tony Wied",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-10",
@@ -664,7 +664,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "CRM",
+      "Ticker": "TTD",
       "TransactionDate": "2026-06-09",
       "Representative": "Tony Wied",
       "Transaction": "Purchase",
@@ -688,23 +688,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HUBS",
+      "Ticker": "CRM",
       "TransactionDate": "2026-06-09",
       "Representative": "Tony Wied",
       "Transaction": "Purchase",
       "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-10",
-      "DisclosureDelay": 62,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMD",
-      "TransactionDate": "2026-06-09",
-      "Representative": "Tony Wied",
-      "Transaction": "Sale",
-      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-10",
@@ -760,10 +748,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "META",
+      "Ticker": "PLTR",
       "TransactionDate": "2026-01-09",
       "Representative": "Michael Rulli",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -772,10 +760,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PLTR",
+      "Ticker": "META",
       "TransactionDate": "2026-01-09",
       "Representative": "Michael Rulli",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -859,7 +847,7 @@
       "Ticker": "NOW",
       "TransactionDate": "2025-12-08",
       "Representative": "Julie Johnson",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -892,34 +880,22 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "MDLZ",
+      "TransactionDate": "2025-10-30",
+      "Representative": "Julie Johnson",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-06",
+      "DisclosureDelay": 280,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "IP",
       "TransactionDate": "2025-10-30",
       "Representative": "Julie Johnson",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-06",
-      "DisclosureDelay": 280,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "VRSK",
-      "TransactionDate": "2025-10-30",
-      "Representative": "Julie Johnson",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-06",
-      "DisclosureDelay": 280,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ADBE",
-      "TransactionDate": "2025-10-30",
-      "Representative": "Julie Johnson",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -937,18 +913,6 @@
       "Party": "",
       "DisclosureDate": "2026-08-10",
       "DisclosureDelay": 287,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "FFIV",
-      "TransactionDate": "2025-10-21",
-      "Representative": "Julie Johnson",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-06",
-      "DisclosureDelay": 289,
       "Source": "FMP"
     },
     {
@@ -1036,7 +1000,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "VRSN",
+      "Ticker": "CARR",
       "TransactionDate": "2025-10-03",
       "Representative": "Julie Johnson",
       "Transaction": "Sale",
@@ -1048,15 +1012,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "FISV",
-      "TransactionDate": "2025-10-03",
+      "Ticker": "AOS",
+      "TransactionDate": "2025-09-23",
       "Representative": "Julie Johnson",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-06",
-      "DisclosureDelay": 307,
+      "DisclosureDelay": 317,
       "Source": "FMP"
     },
     {
@@ -1072,7 +1036,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AOS",
+      "Ticker": "PAYX",
+      "TransactionDate": "2025-09-23",
+      "Representative": "Julie Johnson",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-06",
+      "DisclosureDelay": 317,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "SRE",
       "TransactionDate": "2025-09-23",
       "Representative": "Julie Johnson",
       "Transaction": "Purchase",
@@ -1087,7 +1063,7 @@
       "Ticker": "CI",
       "TransactionDate": "2025-09-23",
       "Representative": "Julie Johnson",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -1096,7 +1072,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SRE",
+      "Ticker": "DVA",
       "TransactionDate": "2025-09-23",
       "Representative": "Julie Johnson",
       "Transaction": "Sale",
@@ -1120,7 +1096,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AAPL",
+      "Ticker": "NVDA",
       "TransactionDate": "2025-08-01",
       "Representative": "Michael Rulli",
       "Transaction": "Purchase",
@@ -1132,7 +1108,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NVDA",
+      "Ticker": "AAPL",
       "TransactionDate": "2025-08-01",
       "Representative": "Michael Rulli",
       "Transaction": "Purchase",
@@ -1156,7 +1132,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "AMZN",
       "TransactionDate": "2025-07-03",
       "Representative": "Michael Rulli",
       "Transaction": "Sale",
@@ -1168,7 +1144,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMZN",
+      "Ticker": "GOOGL",
       "TransactionDate": "2025-07-03",
       "Representative": "Michael Rulli",
       "Transaction": "Sale",
