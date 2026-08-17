@@ -1,5 +1,5 @@
 {
-  "baseline_ic": 0.027211,
+  "baseline_ic": 0.035957,
   "baseline_features": 24,
   "horizon": "30d",
   "candidates": {
@@ -9,18 +9,21 @@
       "fill_rate": 0.0
     },
     "earnings_surprise": {
-      "status": "skip",
-      "reason": "fill rate too low (0.0%)",
-      "fill_rate": 0.0
+      "status": "evaluated",
+      "ic": 0.035957,
+      "ic_delta": 0.0,
+      "hit_rate": 0.5327,
+      "fill_rate": 0.883,
+      "recommendation": "NEUTRAL"
     },
     "news_sentiment_30d": {
       "status": "evaluated",
-      "ic": 0.02931,
-      "ic_delta": 0.002099,
-      "hit_rate": 0.5263,
+      "ic": 0.02004,
+      "ic_delta": -0.015917,
+      "hit_rate": 0.5255,
       "fill_rate": 1.0,
-      "recommendation": "NEUTRAL"
+      "recommendation": "SKIP"
     }
   },
-  "evaluated_at": "2026-08-10T22:49:11.036022+00:00"
+  "evaluated_at": "2026-08-17T22:41:17.272703+00:00"
 }
