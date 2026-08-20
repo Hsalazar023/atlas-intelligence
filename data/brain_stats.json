@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-19T22:38:49.193038+00:00",
+  "generated": "2026-08-20T22:39:58.778049+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 342,
+      "n_trades": 344,
       "match_rate": 0.44
     },
     {
@@ -72,20 +72,14 @@
     {
       "ticker": "CHRW",
       "name": "CHRW",
-      "count": 6,
-      "heat": 6
+      "count": 5,
+      "heat": 5
     },
     {
       "ticker": "BWXT",
       "name": "BWXT",
       "count": 3,
       "heat": 3
-    },
-    {
-      "ticker": "MLM",
-      "name": "MLM",
-      "count": 2,
-      "heat": 2
     },
     {
       "ticker": "GOOGL",
@@ -158,6 +152,12 @@
       "name": "O",
       "count": 1,
       "heat": 1
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "count": 1,
+      "heat": 1
     }
   ],
   "kpis": {
@@ -165,7 +165,7 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 20,
-    "congress_flags": 42,
+    "congress_flags": 38,
     "convergence_count": 4
   },
   "insider_sectors": [],
@@ -652,16 +652,16 @@
     }
   ],
   "regime": {
-    "current_regime": "normal",
+    "current_regime": "low_vol",
     "distribution": {
       "elevated": 523,
       "low_vol": 160,
-      "normal": 2989
+      "normal": 3002
     },
     "hit_rates": {
       "elevated": 0.363,
       "low_vol": 0.569,
-      "normal": 0.464
+      "normal": 0.463
     }
   },
   "features_pruned_history": {
@@ -731,11 +731,11 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.141,
+        "fill_rate": 0.139,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.142,
+        "fill_rate": 0.139,
         "status": "candidate"
       },
       "institutional_holders": {
@@ -765,18 +765,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026723,
-    "n_matched_signals": 3672,
-    "spy_avg_30d_return": 0.024616,
+    "alpha_all_signals": -0.026894,
+    "n_matched_signals": 3685,
+    "spy_avg_30d_return": 0.024649,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.029664,
-    "beta_vs_spy": -0.5055,
-    "beta_vs_spy_raw": -0.5232
+    "alpha_congress": -0.029658,
+    "beta_vs_spy": -0.5065,
+    "beta_vs_spy_raw": -0.5237
   },
   "signal_concentration": {
     "top_ticker": null,
