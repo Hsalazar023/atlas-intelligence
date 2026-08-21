@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-21T21:45:42.058038+00:00Z",
+  "updated": "2026-08-21T22:18:09.055074+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -1531,6 +1531,26 @@
       "direction": "other"
     },
     {
+      "company": "USA Rare Earth, Inc.",
+      "insider": "Trabuco Carolyn",
+      "date": "2026-08-21",
+      "period": "2026-08-19",
+      "accession": "0001897745-26-000014",
+      "link": "https://www.sec.gov/Archives/edgar/data/1970622/000189774526000014/0001897745-26-000014-index.htm",
+      "ticker": "USAR",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
       "company": "Braze, Inc.",
       "insider": "Hyman Jonathan",
       "date": "2026-08-21",
@@ -1958,6 +1978,41 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "SI-BONE, Inc.",
+      "insider": "Maheshwari Anshul",
+      "date": "2026-08-21",
+      "period": "2026-08-19",
+      "accession": "0001853089-26-000007",
+      "link": "https://www.sec.gov/Archives/edgar/data/1459839/000185308926000007/0001853089-26-000007-index.htm",
+      "ticker": "SIBN",
+      "title": "Chief Op & Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 5747.0,
+          "price": 19.55,
+          "value": 112353.85,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 11228.0,
+          "price": 20.02,
+          "value": 224784.56,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 337138.41,
+      "buy_shares": 0,
+      "sell_shares": 16975,
+      "direction": "sell"
     },
     {
       "company": "WEBSTER FINANCIAL CORP",
@@ -6180,6 +6235,41 @@
       "direction": "grant"
     },
     {
+      "company": "ROCKWELL AUTOMATION, INC",
+      "insider": "Rothe Christian E",
+      "date": "2026-08-21",
+      "period": "2026-08-19",
+      "accession": "0001523212-26-000002",
+      "link": "https://www.sec.gov/Archives/edgar/data/1024478/000152321226000002/0001523212-26-000002-index.htm",
+      "ticker": "ROK",
+      "title": "Sr. VP and CFO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 1257.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 590.0,
+          "price": 434.3,
+          "value": 256237.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 256237.47,
+      "buy_shares": 0,
+      "sell_shares": 590,
+      "direction": "sell"
+    },
+    {
       "company": "Nuvation Bio Inc.",
       "insider": "Hattersley Gary",
       "date": "2026-08-21",
@@ -6431,69 +6521,6 @@
       "link": "https://www.sec.gov/Archives/edgar/data/1484769/000149315226039737/0001493152-26-039737-index.htm",
       "ticker": "FUBO",
       "title": "Chief Executive Officer",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Hepion Pharmaceuticals, Inc.",
-      "insider": "Stetz Gary S.",
-      "date": "2026-08-21",
-      "period": "2026-08-19",
-      "accession": "0001493152-26-039705",
-      "link": "https://www.sec.gov/Archives/edgar/data/1583771/000149315226039705/0001493152-26-039705-index.htm",
-      "ticker": "HEPA",
-      "title": "Interim CEO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Hepion Pharmaceuticals, Inc.",
-      "insider": "LoPriore Vincent S",
-      "date": "2026-08-21",
-      "period": "2026-08-19",
-      "accession": "0001493152-26-039702",
-      "link": "https://www.sec.gov/Archives/edgar/data/1583771/000149315226039702/0001493152-26-039702-index.htm",
-      "ticker": "HEPA",
-      "title": "Executive Chairman",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Hepion Pharmaceuticals, Inc.",
-      "insider": "LoPriore Chase",
-      "date": "2026-08-21",
-      "period": "2026-08-19",
-      "accession": "0001493152-26-039701",
-      "link": "https://www.sec.gov/Archives/edgar/data/1583771/000149315226039701/0001493152-26-039701-index.htm",
-      "ticker": "HEPA",
-      "title": "VP, Corp. Dev.",
       "roles": [
         "Officer",
         "Director"
