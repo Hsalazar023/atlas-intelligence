@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-21T22:39:28.372429+00:00",
+  "generated": "2026-08-24T22:37:48.404127+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 345,
+      "n_trades": 346,
       "match_rate": 0.43
     },
     {
@@ -66,26 +66,20 @@
     {
       "ticker": "FWONK",
       "name": "FWONK",
-      "count": 6,
-      "heat": 6
+      "count": 3,
+      "heat": 3
     },
     {
       "ticker": "CHRW",
       "name": "CHRW",
-      "count": 5,
-      "heat": 5
-    },
-    {
-      "ticker": "GOOGL",
-      "name": "Google",
       "count": 3,
       "heat": 3
     },
     {
       "ticker": "BWXT",
       "name": "BWXT",
-      "count": 3,
-      "heat": 3
+      "count": 2,
+      "heat": 2
     },
     {
       "ticker": "XSHQ",
@@ -106,20 +100,8 @@
       "heat": 1
     },
     {
-      "ticker": "UBER",
-      "name": "UBER",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "TDG",
       "name": "TDG",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "SPYM",
-      "name": "SPYM",
       "count": 1,
       "heat": 1
     },
@@ -154,8 +136,26 @@
       "heat": 1
     },
     {
-      "ticker": "O",
-      "name": "O",
+      "ticker": "JPM",
+      "name": "JPMorgan Chase",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "IEUR",
+      "name": "IEUR",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "IBP",
+      "name": "IBP",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Google",
       "count": 1,
       "heat": 1
     }
@@ -164,9 +164,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 24,
-    "congress_flags": 41,
-    "convergence_count": 3
+    "cluster_count": 20,
+    "congress_flags": 25,
+    "convergence_count": 0
   },
   "insider_sectors": [],
   "ml": {
@@ -657,7 +657,7 @@
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3012
+      "normal": 3028
     },
     "hit_rates": {
       "crisis": 0.333,
@@ -733,11 +733,11 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.138,
+        "fill_rate": 0.132,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.139,
+        "fill_rate": 0.133,
         "status": "candidate"
       },
       "institutional_holders": {
@@ -767,18 +767,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.027348,
-    "n_matched_signals": 3704,
-    "spy_avg_30d_return": 0.02491,
+    "alpha_all_signals": -0.026658,
+    "n_matched_signals": 3720,
+    "spy_avg_30d_return": 0.024959,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030497,
-    "beta_vs_spy": -0.5009,
-    "beta_vs_spy_raw": -0.5209
+    "alpha_congress": -0.03071,
+    "beta_vs_spy": -0.5004,
+    "beta_vs_spy_raw": -0.5166
   },
   "signal_concentration": {
     "top_ticker": null,
