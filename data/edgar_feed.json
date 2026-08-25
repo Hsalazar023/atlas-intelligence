@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-25T21:50:33.912588+00:00Z",
+  "updated": "2026-08-25T22:20:37.244040+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -154,6 +154,34 @@
       "buy_value": 206040.0,
       "sell_value": 0,
       "buy_shares": 9000,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "AMTECH SYSTEMS INC",
+      "insider": "Shechter Guy",
+      "date": "2026-08-25",
+      "period": "2026-08-24",
+      "accession": "0002136935-26-000004",
+      "link": "https://www.sec.gov/Archives/edgar/data/720500/000213693526000004/0002136935-26-000004-index.htm",
+      "ticker": "ASYS",
+      "title": "President & CEO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 3450.0,
+          "price": 14.34,
+          "value": 49455.75,
+          "acquired": true
+        }
+      ],
+      "buy_value": 49455.75,
+      "sell_value": 0,
+      "buy_shares": 3450,
       "sell_shares": 0,
       "direction": "buy"
     },
@@ -752,6 +780,34 @@
       "buy_shares": 0,
       "sell_shares": 111559,
       "direction": "sell"
+    },
+    {
+      "company": "STRATTEC SECURITY CORP",
+      "insider": "Becker-Varto Chey",
+      "date": "2026-08-25",
+      "period": "2026-08-22",
+      "accession": "0002044927-26-000005",
+      "link": "https://www.sec.gov/Archives/edgar/data/933034/000204492726000005/0002044927-26-000005-index.htm",
+      "ticker": "STRT",
+      "title": "SVP & Chief Commercial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 248.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Amrize Ltd",
@@ -1783,6 +1839,35 @@
       "direction": "other"
     },
     {
+      "company": "STRATTEC SECURITY CORP",
+      "insider": "Slater Jennifer Lynn",
+      "date": "2026-08-25",
+      "period": "2026-08-22",
+      "accession": "0001872111-26-000007",
+      "link": "https://www.sec.gov/Archives/edgar/data/933034/000187211126000007/0001872111-26-000007-index.htm",
+      "ticker": "STRT",
+      "title": "President & CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 1594.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
       "company": "CITIZENS & NORTHERN CORP",
       "insider": "Shattuck Katherine W",
       "date": "2026-08-25",
@@ -2680,6 +2765,90 @@
       "direction": "other"
     },
     {
+      "company": "Arcosa, Inc.",
+      "insider": "Hurst Eric D",
+      "date": "2026-08-25",
+      "period": "2026-08-25",
+      "accession": "0001739445-26-000132",
+      "link": "https://www.sec.gov/Archives/edgar/data/1739445/000173944526000132/0001739445-26-000132-index.htm",
+      "ticker": "ACA",
+      "title": "VP Controller (PAO)",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "G",
+          "shares": 2382.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Arcosa, Inc.",
+      "insider": "Stevenson Bryan",
+      "date": "2026-08-25",
+      "period": "2026-08-25",
+      "accession": "0001739445-26-000131",
+      "link": "https://www.sec.gov/Archives/edgar/data/1739445/000173944526000131/0001739445-26-000131-index.htm",
+      "ticker": "ACA",
+      "title": "CLO & Asst Corp Sec.",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "G",
+          "shares": 6900.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Arcosa, Inc.",
+      "insider": "Essl Reid S",
+      "date": "2026-08-25",
+      "period": "2026-08-25",
+      "accession": "0001739445-26-000130",
+      "link": "https://www.sec.gov/Archives/edgar/data/1739445/000173944526000130/0001739445-26-000130-index.htm",
+      "ticker": "ACA",
+      "title": "Group President",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "G",
+          "shares": 5950.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
       "company": "CITIZENS & NORTHERN CORP",
       "insider": "Kilmer Bobbi J",
       "date": "2026-08-25",
@@ -3422,6 +3591,183 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
+    },
+    {
+      "company": "Cerebras Systems Inc.",
+      "insider": "Feldman Andrew D.",
+      "date": "2026-08-25",
+      "period": "2026-08-21",
+      "accession": "0001628280-26-058961",
+      "link": "https://www.sec.gov/Archives/edgar/data/2021728/000162828026058961/0001628280-26-058961-index.htm",
+      "ticker": "CBRS",
+      "title": "CEO, President",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "G",
+          "shares": 50000.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        },
+        {
+          "code": "C",
+          "shares": 237559.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 43553.0,
+          "price": 196.2,
+          "value": 8545098.6,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 21307.0,
+          "price": 197.45,
+          "value": 4207067.15,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 32864.0,
+          "price": 198.18,
+          "value": 6512987.52,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 66237.0,
+          "price": 199.33,
+          "value": 13203021.21,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 33575.0,
+          "price": 200.13,
+          "value": 6719364.75,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 8832.0,
+          "price": 201.12,
+          "value": 1776291.84,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 6699.0,
+          "price": 202.28,
+          "value": 1355073.72,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 12092.0,
+          "price": 203.37,
+          "value": 2459150.04,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 4800.0,
+          "price": 204.44,
+          "value": 981312.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1600.0,
+          "price": 205.32,
+          "value": 328512.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1400.0,
+          "price": 207.28,
+          "value": 290192.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 4594.0,
+          "price": 208.86,
+          "value": 959502.84,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 6.0,
+          "price": 210.21,
+          "value": 1261.26,
+          "acquired": false
+        },
+        {
+          "code": "J",
+          "shares": 120.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 47338834.93,
+      "buy_shares": 0,
+      "sell_shares": 237559,
+      "direction": "sell"
+    },
+    {
+      "company": "StubHub Holdings, Inc.",
+      "insider": "Streams Mark",
+      "date": "2026-08-25",
+      "period": "2026-08-21",
+      "accession": "0001628280-26-058959",
+      "link": "https://www.sec.gov/Archives/edgar/data/1337634/000162828026058959/0001628280-26-058959-index.htm",
+      "ticker": "STUB",
+      "title": "See Remarks",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 6500.0,
+          "price": 6.93,
+          "value": 45045.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 150000.0,
+          "price": 6.76,
+          "value": 1014690.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10176.0,
+          "price": 6.84,
+          "value": 69650.65,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1129385.65,
+      "buy_shares": 0,
+      "sell_shares": 166676,
+      "direction": "sell"
     },
     {
       "company": "A.K.A. BRANDS HOLDING CORP.",
@@ -5315,6 +5661,43 @@
       "direction": "other"
     },
     {
+      "company": "Nu-Med Plus, Inc.",
+      "insider": "TEJADA FRED",
+      "date": "2026-08-25",
+      "period": "2026-07-08",
+      "accession": "0001575872-26-000615",
+      "link": "https://www.sec.gov/Archives/edgar/data/1543637/000157587226000615/0001575872-26-000615-index.htm",
+      "ticker": "NUMD",
+      "title": "SVP and Chief Geologist",
+      "roles": [
+        "Officer",
+        "Director",
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "J",
+          "shares": 16381250.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 1000000.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "Lument Finance Trust, Inc.",
       "insider": "Cummins Neil A.",
       "date": "2026-08-25",
@@ -5572,6 +5955,34 @@
       "buy_shares": 0,
       "sell_shares": 66500,
       "direction": "sell"
+    },
+    {
+      "company": "STRATTEC SECURITY CORP",
+      "insider": "Pauli Matthew",
+      "date": "2026-08-25",
+      "period": "2026-08-22",
+      "accession": "0001495791-26-000005",
+      "link": "https://www.sec.gov/Archives/edgar/data/933034/000149579126000005/0001495791-26-000005-index.htm",
+      "ticker": "STRT",
+      "title": "SVP & CFO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 551.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "Nakamoto Inc.",
@@ -6656,305 +7067,6 @@
       "buy_shares": 1,
       "sell_shares": 0,
       "direction": "buy"
-    },
-    {
-      "company": "BayCom Corp",
-      "insider": "Laverne Robert G.",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001437749-26-028892",
-      "link": "https://www.sec.gov/Archives/edgar/data/1730984/000143774926028892/0001437749-26-028892-index.htm",
-      "ticker": "BCML",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 1000.0,
-          "price": 29.85,
-          "value": 29850.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 29850.0,
-      "sell_value": 0,
-      "buy_shares": 1000,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "RENN Fund, Inc.",
-      "insider": "HORIZON KINETICS ASSET MANAGEMENT LLC",
-      "date": "2026-08-25",
-      "period": "2026-08-24",
-      "accession": "0001437749-26-028889",
-      "link": "https://www.sec.gov/Archives/edgar/data/919567/000143774926028889/0001437749-26-028889-index.htm",
-      "ticker": "RCG",
-      "title": "",
-      "roles": [
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 756.0,
-          "price": 2.95,
-          "value": 2230.2,
-          "acquired": true
-        }
-      ],
-      "buy_value": 2230.2,
-      "sell_value": 0,
-      "buy_shares": 756,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "Horizon Kinetics Holding Corp",
-      "insider": "Brennan Alice C",
-      "date": "2026-08-25",
-      "period": "2026-08-24",
-      "accession": "0001437749-26-028884",
-      "link": "https://www.sec.gov/Archives/edgar/data/88000/000143774926028884/0001437749-26-028884-index.htm",
-      "ticker": "HKHC",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 200.0,
-          "price": 26.87,
-          "value": 5374.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 5374.0,
-      "sell_value": 0,
-      "buy_shares": 200,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "Horizon Kinetics Holding Corp",
-      "insider": "Rosenthal Brent D",
-      "date": "2026-08-25",
-      "period": "2026-08-24",
-      "accession": "0001437749-26-028880",
-      "link": "https://www.sec.gov/Archives/edgar/data/88000/000143774926028880/0001437749-26-028880-index.htm",
-      "ticker": "HKHC",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 2000.0,
-          "price": 27.0,
-          "value": 54000.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 54000.0,
-      "sell_value": 0,
-      "buy_shares": 2000,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "TEEKAY TANKERS LTD.",
-      "insider": "Hvid Kenneth",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001419945-26-000067",
-      "link": "https://www.sec.gov/Archives/edgar/data/1419945/000141994526000067/0001419945-26-000067-index.htm",
-      "ticker": "TNK",
-      "title": "President and CEO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "TEEKAY TANKERS LTD.",
-      "insider": "Schellenberg David",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001419945-26-000066",
-      "link": "https://www.sec.gov/Archives/edgar/data/1419945/000141994526000066/0001419945-26-000066-index.htm",
-      "ticker": "TNK",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "TEEKAY TANKERS LTD.",
-      "insider": "Antturi Peter",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001419945-26-000065",
-      "link": "https://www.sec.gov/Archives/edgar/data/1419945/000141994526000065/0001419945-26-000065-index.htm",
-      "ticker": "TNK",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "LIQUIDITY SERVICES INC",
-      "insider": "Celaya Jorge",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001406206-26-000020",
-      "link": "https://www.sec.gov/Archives/edgar/data/1235468/000140620626000020/0001406206-26-000020-index.htm",
-      "ticker": "LQDT",
-      "title": "EVP & Chief Financial Officer",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 1367.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 1047.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "exercise"
-    },
-    {
-      "company": "Total Return Securities Fund",
-      "insider": "Das Rajeev P",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001398344-26-015537",
-      "link": "https://www.sec.gov/Archives/edgar/data/813623/000139834426015537/0001398344-26-015537-index.htm",
-      "ticker": "SWZ",
-      "title": "Secretary",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 1700.0,
-          "price": 5.93,
-          "value": 10080.32,
-          "acquired": true
-        },
-        {
-          "code": "P",
-          "shares": 1366.0,
-          "price": 5.93,
-          "value": 8100.38,
-          "acquired": true
-        }
-      ],
-      "buy_value": 18180.7,
-      "sell_value": 0,
-      "buy_shares": 3066,
-      "sell_shares": 0,
-      "direction": "buy"
-    },
-    {
-      "company": "AMAZON COM INC",
-      "insider": "Reynolds Shelley",
-      "date": "2026-08-25",
-      "period": "2026-08-21",
-      "accession": "0001397333-26-000006",
-      "link": "https://www.sec.gov/Archives/edgar/data/1018724/000139733326000006/0001397333-26-000006-index.htm",
-      "ticker": "AMZN",
-      "title": "Vice President",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 1800.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "M",
-          "shares": 543.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 675.0,
-          "price": 257.77,
-          "value": 173991.78,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 780.0,
-          "price": 258.58,
-          "value": 201693.34,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 888.0,
-          "price": 260.33,
-          "value": 231168.78,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 606853.89,
-      "buy_shares": 0,
-      "sell_shares": 2343,
-      "direction": "sell"
     },
     {
       "company": "APPFOLIO INC",

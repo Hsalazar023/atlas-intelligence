@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-24T22:37:48.404127+00:00",
+  "generated": "2026-08-25T22:36:25.329439+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -164,7 +164,7 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 20,
+    "cluster_count": 22,
     "congress_flags": 25,
     "convergence_count": 0
   },
@@ -605,50 +605,50 @@
     {
       "feature": "cluster_7d",
       "value": "3+",
-      "avg_car_30d": -0.0534,
-      "n": 192
+      "avg_car_30d": -0.0547,
+      "n": 205
     },
     {
       "feature": "cluster_velocity",
       "value": "fast",
-      "avg_car_30d": -0.0442,
-      "n": 206
+      "avg_car_30d": -0.0466,
+      "n": 220
     },
     {
       "feature": "person_accuracy",
       "value": "strong_70+",
-      "avg_car_30d": -0.0392,
-      "n": 231
+      "avg_car_30d": -0.0383,
+      "n": 234
     },
     {
       "feature": "cluster_30d",
       "value": "3+",
-      "avg_car_30d": -0.0361,
-      "n": 455
+      "avg_car_30d": -0.0369,
+      "n": 476
     },
     {
       "feature": "trade_pattern",
       "value": "opportunistic",
-      "avg_car_30d": -0.0355,
-      "n": 283
+      "avg_car_30d": -0.0364,
+      "n": 308
     },
     {
       "feature": "vix_regime",
       "value": "high_fear",
-      "avg_car_30d": -0.0286,
-      "n": 180
+      "avg_car_30d": -0.0266,
+      "n": 189
     },
     {
       "feature": "insider_role",
       "value": "Officer",
-      "avg_car_30d": -0.0232,
-      "n": 52
+      "avg_car_30d": -0.026,
+      "n": 53
     },
     {
-      "feature": "disclosure_delay",
-      "value": "late",
-      "avg_car_30d": -0.0223,
-      "n": 202
+      "feature": "relative_position",
+      "value": "oversized_2x+",
+      "avg_car_30d": -0.0242,
+      "n": 31
     }
   ],
   "regime": {
@@ -657,7 +657,7 @@
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3028
+      "normal": 3044
     },
     "hit_rates": {
       "crisis": 0.333,
@@ -733,43 +733,43 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.132,
+        "fill_rate": 0.129,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.133,
+        "fill_rate": 0.13,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.058,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.058,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.059,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.059,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.059,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.06,
+        "fill_rate": 0.059,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026658,
-    "n_matched_signals": 3720,
-    "spy_avg_30d_return": 0.024959,
+    "alpha_all_signals": -0.026596,
+    "n_matched_signals": 3736,
+    "spy_avg_30d_return": 0.024934,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
@@ -777,8 +777,8 @@
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
     "alpha_congress": -0.03071,
-    "beta_vs_spy": -0.5004,
-    "beta_vs_spy_raw": -0.5166
+    "beta_vs_spy": -0.5005,
+    "beta_vs_spy_raw": -0.5167
   },
   "signal_concentration": {
     "top_ticker": null,
