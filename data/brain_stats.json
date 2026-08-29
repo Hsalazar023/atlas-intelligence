@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-28T06:09:45.541270+00:00",
+  "generated": "2026-08-29T03:44:33.037501+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -64,14 +64,14 @@
   ],
   "congress_heatmap": [
     {
-      "ticker": "GOOGL",
-      "name": "Google",
-      "count": 2,
-      "heat": 2
+      "ticker": "GS",
+      "name": "Goldman Sachs",
+      "count": 9,
+      "heat": 6
     },
     {
-      "ticker": "FWONK",
-      "name": "FWONK",
+      "ticker": "GOOGL",
+      "name": "Google",
       "count": 2,
       "heat": 2
     },
@@ -112,6 +112,12 @@
       "heat": 1
     },
     {
+      "ticker": "FWONK",
+      "name": "FWONK",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "ENTG",
       "name": "ENTG",
       "count": 1,
@@ -141,7 +147,7 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 23,
-    "congress_flags": 14,
+    "congress_flags": 22,
     "convergence_count": 0
   },
   "insider_sectors": [],
@@ -628,12 +634,12 @@
     }
   ],
   "regime": {
-    "current_regime": "normal",
+    "current_regime": "low_vol",
     "distribution": {
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3129
+      "normal": 3130
     },
     "hit_rates": {
       "crisis": 0.333,
@@ -709,52 +715,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.126,
+        "fill_rate": 0.125,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.127,
+        "fill_rate": 0.126,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.058,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.058,
+        "fill_rate": 0.071,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026675,
-    "n_matched_signals": 3821,
-    "spy_avg_30d_return": 0.025079,
+    "alpha_all_signals": -0.026696,
+    "n_matched_signals": 3822,
+    "spy_avg_30d_return": 0.02508,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030913,
+    "alpha_congress": -0.030953,
     "beta_vs_spy": -0.5003,
-    "beta_vs_spy_raw": -0.5166
+    "beta_vs_spy_raw": -0.5167
   },
   "signal_concentration": {
     "top_ticker": null,
