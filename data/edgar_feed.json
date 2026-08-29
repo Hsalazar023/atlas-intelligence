@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-29T00:36:29.361298+00:00Z",
+  "updated": "2026-08-29T02:34:27.779102+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -709,6 +709,41 @@
       "sell_value": 28009.2,
       "buy_shares": 0,
       "sell_shares": 4000,
+      "direction": "sell"
+    },
+    {
+      "company": "Natera, Inc.",
+      "insider": "Fesko John",
+      "date": "2026-08-28",
+      "period": "2026-08-06",
+      "accession": "0002010135-26-000020",
+      "link": "https://www.sec.gov/Archives/edgar/data/1604821/000201013526000020/0002010135-26-000020-index.htm",
+      "ticker": "NTRA",
+      "title": "PRESIDENT, CHIEF BUS. OFFICER",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 20000.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 6517.0,
+          "price": 321.53,
+          "value": 2095411.01,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 2095411.01,
+      "buy_shares": 0,
+      "sell_shares": 6517,
       "direction": "sell"
     },
     {
@@ -4006,6 +4041,119 @@
       "direction": "other"
     },
     {
+      "company": "BIOVIE INC.",
+      "insider": "Palumbo Joseph M",
+      "date": "2026-08-28",
+      "period": "2026-08-28",
+      "accession": "0001520138-26-000383",
+      "link": "https://www.sec.gov/Archives/edgar/data/1580149/000152013826000383/0001520138-26-000383-index.htm",
+      "ticker": "BIVI",
+      "title": "Chief Medical Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 4843.0,
+          "price": 2.16,
+          "value": 10460.88,
+          "acquired": true
+        }
+      ],
+      "buy_value": 10460.88,
+      "sell_value": 0,
+      "buy_shares": 4843,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "BIOVIE INC.",
+      "insider": "Chappell Amy Suzon",
+      "date": "2026-08-28",
+      "period": "2026-08-28",
+      "accession": "0001520138-26-000382",
+      "link": "https://www.sec.gov/Archives/edgar/data/1580149/000152013826000382/0001520138-26-000382-index.htm",
+      "ticker": "BIVI",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 727.0,
+          "price": 2.16,
+          "value": 1570.32,
+          "acquired": true
+        }
+      ],
+      "buy_value": 1570.32,
+      "sell_value": 0,
+      "buy_shares": 727,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "BIOVIE INC.",
+      "insider": "KIM JOANNE WENDY",
+      "date": "2026-08-28",
+      "period": "2026-08-28",
+      "accession": "0001520138-26-000379",
+      "link": "https://www.sec.gov/Archives/edgar/data/1580149/000152013826000379/0001520138-26-000379-index.htm",
+      "ticker": "BIVI",
+      "title": "Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 2500.0,
+          "price": 2.18,
+          "value": 5450.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 5450.0,
+      "sell_value": 0,
+      "buy_shares": 2500,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "BIOVIE INC.",
+      "insider": "DO CUONG V",
+      "date": "2026-08-28",
+      "period": "2026-08-27",
+      "accession": "0001520138-26-000378",
+      "link": "https://www.sec.gov/Archives/edgar/data/1580149/000152013826000378/0001520138-26-000378-index.htm",
+      "ticker": "BIVI",
+      "title": "President & CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 15210.0,
+          "price": 2.08,
+          "value": 31636.8,
+          "acquired": true
+        }
+      ],
+      "buy_value": 31636.8,
+      "sell_value": 0,
+      "buy_shares": 15210,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
       "company": "NORDSON CORP",
       "insider": "MCDONOUGH JENNIFER L",
       "date": "2026-08-28",
@@ -4559,6 +4707,77 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "VirTra, Inc",
+      "insider": "BARBER GRANT",
+      "date": "2026-08-28",
+      "period": "2026-08-27",
+      "accession": "0001437749-26-029237",
+      "link": "https://www.sec.gov/Archives/edgar/data/1085243/000143774926029237/0001437749-26-029237-index.htm",
+      "ticker": "VTSI",
+      "title": "",
+      "roles": [
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 2000.0,
+          "price": 3.05,
+          "value": 6100.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 1350.0,
+          "price": 2.99,
+          "value": 4036.5,
+          "acquired": true
+        }
+      ],
+      "buy_value": 10136.5,
+      "sell_value": 0,
+      "buy_shares": 3350,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
+      "company": "Nuo Therapeutics, Inc.",
+      "insider": "JORDEN DAVID EMERSON",
+      "date": "2026-08-28",
+      "period": "2026-08-27",
+      "accession": "0001437749-26-029236",
+      "link": "https://www.sec.gov/Archives/edgar/data/1091596/000143774926029236/0001437749-26-029236-index.htm",
+      "ticker": "AURX",
+      "title": "CEO/CFO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 789.0,
+          "price": 1.07,
+          "value": 844.23,
+          "acquired": true
+        },
+        {
+          "code": "A",
+          "shares": 7984.0,
+          "price": 1.09,
+          "value": 8694.58,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
     },
     {
       "company": "Monopar Therapeutics",
@@ -6005,6 +6224,49 @@
       "direction": "grant"
     },
     {
+      "company": "Matson, Inc.",
+      "insider": "COX MATTHEW J",
+      "date": "2026-08-28",
+      "period": "2026-08-28",
+      "accession": "0001225208-26-007379",
+      "link": "https://www.sec.gov/Archives/edgar/data/3453/000122520826007379/0001225208-26-007379-index.htm",
+      "ticker": "MATX",
+      "title": "Chairman & CEO",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 442.0,
+          "price": 225.05,
+          "value": 99472.1,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 3443.0,
+          "price": 223.91,
+          "value": 770922.13,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 6115.0,
+          "price": 223.22,
+          "value": 1364990.3,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 2235384.53,
+      "buy_shares": 0,
+      "sell_shares": 10000,
+      "direction": "sell"
+    },
+    {
       "company": "Edwards Lifesciences Corp",
       "insider": "Bruls Annette",
       "date": "2026-08-28",
@@ -6096,230 +6358,6 @@
       "period": "2026-08-26",
       "accession": "0001225208-26-007374",
       "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007374/0001225208-26-007374-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "Stephenson Dave",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007373",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007373/0001225208-26-007373-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "Salen Kristina",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007372",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007372/0001225208-26-007372-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "Rapino Michael",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007371",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007371/0001225208-26-007371-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "Procope Jonelle",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007370",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007370/0001225208-26-007370-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "Mothner Eve",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007369",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007369/0001225208-26-007369-index.htm",
-      "ticker": "(SIRI)",
-      "title": "EVP, Chief Legal Officer & Sec",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 1528.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "MALONE EVAN DANIEL",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007368",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007368/0001225208-26-007368-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "MAFFEI GREGORY B",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007367",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007367/0001225208-26-007367-index.htm",
-      "ticker": "(SIRI)",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "A",
-          "shares": 60.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "grant"
-    },
-    {
-      "company": "SIRIUS XM HOLDINGS INC.",
-      "insider": "HARTENSTEIN EDDY W",
-      "date": "2026-08-28",
-      "period": "2026-08-26",
-      "accession": "0001225208-26-007366",
-      "link": "https://www.sec.gov/Archives/edgar/data/908937/000122520826007366/0001225208-26-007366-index.htm",
       "ticker": "(SIRI)",
       "title": "",
       "roles": [
