@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-29T03:44:33.037501+00:00",
+  "generated": "2026-09-01T01:18:52.160630+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -48,8 +48,8 @@
     },
     {
       "name": "Judiciary",
-      "n_trades": 14,
-      "match_rate": 0.57
+      "n_trades": 15,
+      "match_rate": 0.6
     },
     {
       "name": "Energy/Enviro",
@@ -76,18 +76,6 @@
       "heat": 2
     },
     {
-      "ticker": "SGI",
-      "name": "SGI",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "PYPL",
-      "name": "PayPal",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "PG",
       "name": "Procter & Gamble",
       "count": 1,
@@ -106,36 +94,6 @@
       "heat": 1
     },
     {
-      "ticker": "GEHC",
-      "name": "GEHC",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "FWONK",
-      "name": "FWONK",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "ENTG",
-      "name": "ENTG",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "CHRW",
-      "name": "CHRW",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "BWXT",
-      "name": "BWXT",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "AAPL",
       "name": "Apple",
       "count": 1,
@@ -146,8 +104,8 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 23,
-    "congress_flags": 22,
+    "cluster_count": 22,
+    "congress_flags": 15,
     "convergence_count": 0
   },
   "insider_sectors": [],
@@ -639,13 +597,13 @@
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3130
+      "normal": 3177
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
       "low_vol": 0.569,
-      "normal": 0.464
+      "normal": 0.463
     }
   },
   "features_pruned_history": {
@@ -715,11 +673,11 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.125,
+        "fill_rate": 0.124,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.126,
+        "fill_rate": 0.125,
         "status": "candidate"
       },
       "institutional_holders": {
@@ -749,18 +707,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026696,
-    "n_matched_signals": 3822,
-    "spy_avg_30d_return": 0.02508,
+    "alpha_all_signals": -0.026759,
+    "n_matched_signals": 3869,
+    "spy_avg_30d_return": 0.02525,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030953,
-    "beta_vs_spy": -0.5003,
-    "beta_vs_spy_raw": -0.5167
+    "alpha_congress": -0.031297,
+    "beta_vs_spy": -0.4996,
+    "beta_vs_spy_raw": -0.516
   },
   "signal_concentration": {
     "top_ticker": null,

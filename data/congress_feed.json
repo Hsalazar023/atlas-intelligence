@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-01T00:45:56.509712+00:00Z",
+  "updated": "2026-09-01T00:58:48.840989+00:00Z",
   "count": 160,
   "source": "FMP",
   "trades": [
@@ -52,11 +52,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "T",
+      "Ticker": "IBP",
       "TransactionDate": "2026-08-14",
-      "Representative": "Tim Moore",
-      "Transaction": "Sale",
-      "Range": "$50,001 - $100,000",
+      "Representative": "David Taylor",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-21",
@@ -64,11 +64,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IBP",
+      "Ticker": "T",
       "TransactionDate": "2026-08-14",
-      "Representative": "David Taylor",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Representative": "Tim Moore",
+      "Transaction": "Sale",
+      "Range": "$50,001 - $100,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-21",
@@ -116,7 +116,7 @@
       "TransactionDate": "2026-08-11",
       "Representative": "Kelly Louise Morrison",
       "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-26",
@@ -124,7 +124,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MBGL",
+      "Ticker": "SOLS",
       "TransactionDate": "2026-08-11",
       "Representative": "Kelly Louise Morrison",
       "Transaction": "Sale",
@@ -148,7 +148,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SOLS",
+      "Ticker": "MBGL",
       "TransactionDate": "2026-08-11",
       "Representative": "Kelly Louise Morrison",
       "Transaction": "Sale",
@@ -157,18 +157,6 @@
       "Party": "",
       "DisclosureDate": "2026-08-26",
       "DisclosureDelay": 15,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MSFT",
-      "TransactionDate": "2026-08-11",
-      "Representative": "David Taylor",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-21",
-      "DisclosureDelay": 10,
       "Source": "FMP"
     },
     {
@@ -189,6 +177,18 @@
       "Representative": "David Taylor",
       "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-21",
+      "DisclosureDelay": 10,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MSFT",
+      "TransactionDate": "2026-08-11",
+      "Representative": "David Taylor",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-21",
@@ -292,115 +292,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BLK",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "HD",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ICE",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ADI",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NEE",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "LHX",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "APD",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MSFT",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "COST",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ABT",
+      "Ticker": "AAPL",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -424,7 +316,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MDT",
+      "Ticker": "MCD",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -436,7 +328,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PEP",
+      "Ticker": "LHX",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -448,7 +340,43 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ADP",
+      "Ticker": "ICE",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MSFT",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ADI",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ABT",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -472,31 +400,19 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "ADP",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "AWK",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AAPL",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "PG",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -520,7 +436,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "O",
+      "Ticker": "CSCO",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -532,7 +448,31 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "CSCO",
+      "Ticker": "APD",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MDT",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "COST",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -556,31 +496,91 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "UNH",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MCD",
-      "TransactionDate": "2026-07-30",
-      "Representative": "Rich McCormick",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-17",
-      "DisclosureDelay": 18,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "EMR",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "BLK",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "PG",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "O",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "HD",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NEE",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "PEP",
+      "TransactionDate": "2026-07-30",
+      "Representative": "Rich McCormick",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-17",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "UNH",
       "TransactionDate": "2026-07-30",
       "Representative": "Rich McCormick",
       "Transaction": "Sale",
@@ -616,42 +616,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GLDM",
-      "TransactionDate": "2026-07-28",
-      "Representative": "Charles J. \"Chuck\" Fleischmann",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 17,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "VPL",
-      "TransactionDate": "2026-07-28",
-      "Representative": "Charles J. \"Chuck\" Fleischmann",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 17,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "SHLD",
-      "TransactionDate": "2026-07-28",
-      "Representative": "Charles J. \"Chuck\" Fleischmann",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 17,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "TLH",
       "TransactionDate": "2026-07-28",
       "Representative": "Charles J. \"Chuck\" Fleischmann",
@@ -676,11 +640,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SPTI",
+      "Ticker": "GLDM",
       "TransactionDate": "2026-07-28",
       "Representative": "Charles J. \"Chuck\" Fleischmann",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-14",
@@ -688,11 +652,23 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GDX",
+      "Ticker": "SHLD",
       "TransactionDate": "2026-07-28",
       "Representative": "Charles J. \"Chuck\" Fleischmann",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 17,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "SPTI",
+      "TransactionDate": "2026-07-28",
+      "Representative": "Charles J. \"Chuck\" Fleischmann",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-14",
@@ -748,6 +724,30 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "GDX",
+      "TransactionDate": "2026-07-28",
+      "Representative": "Charles J. \"Chuck\" Fleischmann",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 17,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "VPL",
+      "TransactionDate": "2026-07-28",
+      "Representative": "Charles J. \"Chuck\" Fleischmann",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 17,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "HAS",
       "TransactionDate": "2026-07-24",
       "Representative": "John Fetterman",
@@ -776,7 +776,7 @@
       "TransactionDate": "2026-07-24",
       "Representative": "Nancy Pelosi",
       "Transaction": "Purchase",
-      "Range": "$500,001 - $1,000,000",
+      "Range": "$250,001 - $500,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-24",
@@ -832,7 +832,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "SYK",
       "TransactionDate": "2026-07-22",
       "Representative": "Thomas H. Kean",
       "Transaction": "Sale",
@@ -844,7 +844,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SYK",
+      "Ticker": "GOOGL",
       "TransactionDate": "2026-07-22",
       "Representative": "Thomas H. Kean",
       "Transaction": "Sale",
@@ -865,18 +865,6 @@
       "Party": "",
       "DisclosureDate": "2026-08-12",
       "DisclosureDelay": 21,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DIS",
-      "TransactionDate": "2026-07-17",
-      "Representative": "Mike Kelly",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-12",
-      "DisclosureDelay": 26,
       "Source": "FMP"
     },
     {
@@ -916,54 +904,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ABT",
-      "TransactionDate": "2026-07-14",
-      "Representative": "Richard W. Allen",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-19",
-      "DisclosureDelay": 36,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMD",
-      "TransactionDate": "2026-07-14",
-      "Representative": "Richard W. Allen",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-19",
-      "DisclosureDelay": 36,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AVGO",
-      "TransactionDate": "2026-07-14",
-      "Representative": "Richard W. Allen",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-19",
-      "DisclosureDelay": 36,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ADBE",
-      "TransactionDate": "2026-07-14",
-      "Representative": "Tony Wied",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-19",
-      "DisclosureDelay": 36,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "CRM",
       "TransactionDate": "2026-07-14",
       "Representative": "Tony Wied",
@@ -988,6 +928,54 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "ADBE",
+      "TransactionDate": "2026-07-14",
+      "Representative": "Tony Wied",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-19",
+      "DisclosureDelay": 36,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AVGO",
+      "TransactionDate": "2026-07-14",
+      "Representative": "Richard W. Allen",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-19",
+      "DisclosureDelay": 36,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AMD",
+      "TransactionDate": "2026-07-14",
+      "Representative": "Richard W. Allen",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-19",
+      "DisclosureDelay": 36,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ABT",
+      "TransactionDate": "2026-07-14",
+      "Representative": "Richard W. Allen",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-19",
+      "DisclosureDelay": 36,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "TKNO",
       "TransactionDate": "2026-07-13",
       "Representative": "Richard Blumenthal",
@@ -1000,7 +988,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GWW",
+      "Ticker": "STE",
       "TransactionDate": "2026-07-13",
       "Representative": "Jared Moskowitz",
       "Transaction": "Sale",
@@ -1024,7 +1012,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "STE",
+      "Ticker": "GWW",
       "TransactionDate": "2026-07-13",
       "Representative": "Jared Moskowitz",
       "Transaction": "Sale",
@@ -1156,6 +1144,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "PFE",
+      "TransactionDate": "2026-07-07",
+      "Representative": "Ro Khanna",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-12",
+      "DisclosureDelay": 36,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "ADSK",
       "TransactionDate": "2026-07-07",
       "Representative": "Ro Khanna",
@@ -1228,11 +1228,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HCA",
+      "Ticker": "COF",
       "TransactionDate": "2026-06-30",
       "Representative": "William R. Keating",
       "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-14",
@@ -1240,11 +1240,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "COF",
+      "Ticker": "HCA",
       "TransactionDate": "2026-06-30",
       "Representative": "William R. Keating",
       "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-08-14",
@@ -1708,30 +1708,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TGT",
-      "TransactionDate": "2025-03-10",
-      "Representative": "Carol Devine Miller",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 522,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "USB",
-      "TransactionDate": "2025-03-10",
-      "Representative": "Carol Devine Miller",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 522,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "PFE",
       "TransactionDate": "2025-03-10",
       "Representative": "Carol Devine Miller",
@@ -1756,6 +1732,30 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "USB",
+      "TransactionDate": "2025-03-10",
+      "Representative": "Carol Devine Miller",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 522,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TGT",
+      "TransactionDate": "2025-03-10",
+      "Representative": "Carol Devine Miller",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 522,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "OC",
       "TransactionDate": "2024-10-29",
       "Representative": "Tommy Tuberville",
@@ -1765,18 +1765,6 @@
       "Party": "",
       "DisclosureDate": "2026-08-05",
       "DisclosureDelay": 645,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AAPL",
-      "TransactionDate": "2024-09-09",
-      "Representative": "Tracey Robert Mann",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-08-14",
-      "DisclosureDelay": 704,
       "Source": "FMP"
     },
     {
@@ -1805,6 +1793,18 @@
     },
     {
       "Ticker": "MSFT",
+      "TransactionDate": "2024-09-09",
+      "Representative": "Tracey Robert Mann",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-08-14",
+      "DisclosureDelay": 704,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AAPL",
       "TransactionDate": "2024-09-09",
       "Representative": "Tracey Robert Mann",
       "Transaction": "Sale",
