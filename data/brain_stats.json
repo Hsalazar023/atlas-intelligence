@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-01T01:18:52.160630+00:00",
+  "generated": "2026-09-02T00:03:31.448943+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -597,13 +597,13 @@
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3177
+      "normal": 3195
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
       "low_vol": 0.569,
-      "normal": 0.463
+      "normal": 0.462
     }
   },
   "features_pruned_history": {
@@ -673,52 +673,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.124,
+        "fill_rate": 0.12,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.125,
+        "fill_rate": 0.121,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.066,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.066,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.068,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.068,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.068,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.072,
+        "fill_rate": 0.068,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026759,
-    "n_matched_signals": 3869,
-    "spy_avg_30d_return": 0.02525,
+    "alpha_all_signals": -0.026851,
+    "n_matched_signals": 3887,
+    "spy_avg_30d_return": 0.025387,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.031297,
-    "beta_vs_spy": -0.4996,
-    "beta_vs_spy_raw": -0.516
+    "alpha_congress": -0.031337,
+    "beta_vs_spy": -0.4975,
+    "beta_vs_spy_raw": -0.5142
   },
   "signal_concentration": {
     "top_ticker": null,

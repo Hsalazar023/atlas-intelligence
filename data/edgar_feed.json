@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-01T23:26:12.705565+00:00Z",
+  "updated": "2026-09-01T23:44:34.703699+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -817,6 +817,49 @@
       "sell_value": 528384.89,
       "buy_shares": 0,
       "sell_shares": 10754,
+      "direction": "sell"
+    },
+    {
+      "company": "Chime Financial, Inc.",
+      "insider": "Britt Christopher R",
+      "date": "2026-09-01",
+      "period": "2026-08-28",
+      "accession": "0002061801-26-000015",
+      "link": "https://www.sec.gov/Archives/edgar/data/1795586/000206180126000015/0002061801-26-000015-index.htm",
+      "ticker": "CHYM",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 88618.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 11382.0,
+          "price": 34.0,
+          "value": 386988.0,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 88618.0,
+          "price": 34.03,
+          "value": 3015626.23,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 3402614.23,
+      "buy_shares": 0,
+      "sell_shares": 100000,
       "direction": "sell"
     },
     {
@@ -3971,6 +4014,35 @@
       "direction": "buy"
     },
     {
+      "company": "Silvaco Group, Inc.",
+      "insider": "RHINES WALDEN C",
+      "date": "2026-09-01",
+      "period": "2026-08-29",
+      "accession": "0001628280-26-059949",
+      "link": "https://www.sec.gov/Archives/edgar/data/1943289/000162828026059949/0001628280-26-059949-index.htm",
+      "ticker": "SVCO",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "A",
+          "shares": 250376.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "grant"
+    },
+    {
       "company": "Block, Inc.",
       "insider": "Eisen Anthony Mathew",
       "date": "2026-09-01",
@@ -6522,90 +6594,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "grant"
-    },
-    {
-      "company": "Roblox Corp",
-      "insider": "Wong Andrea L",
-      "date": "2026-09-01",
-      "period": "2026-08-31",
-      "accession": "0001490754-26-000004",
-      "link": "https://www.sec.gov/Archives/edgar/data/1315098/000149075426000004/0001490754-26-000004-index.htm",
-      "ticker": "RBLX",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 562.0,
-          "price": 40.89,
-          "value": 22979.06,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 22979.06,
-      "buy_shares": 0,
-      "sell_shares": 562,
-      "direction": "sell"
-    },
-    {
-      "company": "Tenon Medical, Inc.",
-      "insider": "HRT FINANCIAL LP",
-      "date": "2026-09-01",
-      "period": "2026-08-26",
-      "accession": "0001475597-26-000226",
-      "link": "https://www.sec.gov/Archives/edgar/data/1560293/000147559726000226/0001475597-26-000226-index.htm",
-      "ticker": "TNON",
-      "title": "",
-      "roles": [
-        "10% Owner"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "P",
-          "shares": 12376.0,
-          "price": 5.21,
-          "value": 64478.96,
-          "acquired": true
-        },
-        {
-          "code": "P",
-          "shares": 5981.0,
-          "price": 6.35,
-          "value": 37979.35,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 4932.0,
-          "price": 7.07,
-          "value": 34869.24,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 2091.0,
-          "price": 7.9,
-          "value": 16518.9,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 1276.0,
-          "price": 4.66,
-          "value": 5946.16,
-          "acquired": false
-        }
-      ],
-      "buy_value": 102458.31,
-      "sell_value": 57334.3,
-      "buy_shares": 18357,
-      "sell_shares": 8299,
-      "direction": "mixed"
     },
     {
       "company": "Criteo S.A.",
