@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T00:06:43.987421+00:00",
+  "generated": "2026-09-05T00:01:58.746768+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -66,12 +66,36 @@
     {
       "ticker": "GS",
       "name": "Goldman Sachs",
-      "count": 7,
+      "count": 12,
       "heat": 6
     },
     {
       "ticker": "GOOGL",
       "name": "Google",
+      "count": 3,
+      "heat": 3
+    },
+    {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "IBP",
+      "name": "IBP",
+      "count": 2,
+      "heat": 2
+    },
+    {
+      "ticker": "EQIX",
+      "name": "EQIX",
       "count": 2,
       "heat": 2
     },
@@ -86,44 +110,14 @@
       "name": "TKNO",
       "count": 1,
       "heat": 1
-    },
-    {
-      "ticker": "PG",
-      "name": "Procter & Gamble",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "NVDA",
-      "name": "NVIDIA",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "JPM",
-      "name": "JPMorgan Chase",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "IBP",
-      "name": "IBP",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "EQIX",
-      "name": "EQIX",
-      "count": 1,
-      "heat": 1
     }
   ],
   "kpis": {
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 23,
-    "congress_flags": 17,
+    "cluster_count": 22,
+    "congress_flags": 26,
     "convergence_count": 0
   },
   "insider_sectors": [],
@@ -610,18 +604,18 @@
     }
   ],
   "regime": {
-    "current_regime": "normal",
+    "current_regime": "low_vol",
     "distribution": {
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3233
+      "normal": 3239
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
       "low_vol": 0.569,
-      "normal": 0.461
+      "normal": 0.462
     }
   },
   "features_pruned_history": {
@@ -695,48 +689,48 @@
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.114,
+        "fill_rate": 0.113,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.071,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.075,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.026671,
-    "n_matched_signals": 3925,
-    "spy_avg_30d_return": 0.025442,
+    "alpha_all_signals": -0.026664,
+    "n_matched_signals": 3931,
+    "spy_avg_30d_return": 0.025457,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.031424,
-    "beta_vs_spy": -0.4969,
-    "beta_vs_spy_raw": -0.5119
+    "alpha_congress": -0.031396,
+    "beta_vs_spy": -0.4966,
+    "beta_vs_spy_raw": -0.5116
   },
   "signal_concentration": {
     "top_ticker": null,
