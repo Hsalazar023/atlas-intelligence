@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-08T00:12:12.421347+00:00",
+  "generated": "2026-09-09T00:10:23.000884+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -94,10 +94,34 @@
       "heat": 2
     },
     {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "count": 2,
+      "heat": 2
+    },
+    {
       "ticker": "AAPL",
       "name": "Apple",
       "count": 2,
       "heat": 2
+    },
+    {
+      "ticker": "WFC",
+      "name": "Wells Fargo",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "TT",
+      "name": "TT",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "TSCO",
+      "name": "TSCO",
+      "count": 1,
+      "heat": 1
     },
     {
       "ticker": "TKNO",
@@ -106,38 +130,32 @@
       "heat": 1
     },
     {
-      "ticker": "NOW",
-      "name": "NOW",
+      "ticker": "T",
+      "name": "AT&T",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "HUBS",
-      "name": "HUBS",
+      "ticker": "QCOM",
+      "name": "Qualcomm",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "FITB",
-      "name": "FITB",
+      "ticker": "Q",
+      "name": "Q",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "CRM",
-      "name": "Salesforce",
+      "ticker": "PWR",
+      "name": "PWR",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "AVGO",
-      "name": "Broadcom",
-      "count": 1,
-      "heat": 1
-    },
-    {
-      "ticker": "AEP",
-      "name": "AEP",
+      "ticker": "PEP",
+      "name": "PepsiCo",
       "count": 1,
       "heat": 1
     }
@@ -147,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 21,
-    "congress_flags": 30,
-    "convergence_count": 0
+    "congress_flags": 53,
+    "convergence_count": 14
   },
   "insider_sectors": [],
   "ml": {
@@ -634,12 +652,12 @@
     }
   ],
   "regime": {
-    "current_regime": "low_vol",
+    "current_regime": "normal",
     "distribution": {
       "crisis": 3,
       "elevated": 529,
       "low_vol": 160,
-      "normal": 3300
+      "normal": 3314
     },
     "hit_rates": {
       "crisis": 0.333,
@@ -715,52 +733,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.089,
+        "fill_rate": 0.103,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.09,
+        "fill_rate": 0.105,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.052,
+        "fill_rate": 0.06,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.025867,
-    "n_matched_signals": 3992,
-    "spy_avg_30d_return": 0.025398,
+    "alpha_all_signals": -0.025804,
+    "n_matched_signals": 4006,
+    "spy_avg_30d_return": 0.025311,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.03124,
-    "beta_vs_spy": -0.4951,
-    "beta_vs_spy_raw": -0.5156
+    "alpha_congress": -0.031196,
+    "beta_vs_spy": -0.4944,
+    "beta_vs_spy_raw": -0.5147
   },
   "signal_concentration": {
     "top_ticker": null,
