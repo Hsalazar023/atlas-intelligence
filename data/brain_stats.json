@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-10T23:58:53.127108+00:00",
+  "generated": "2026-09-12T00:05:56.592854+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 351,
+      "n_trades": 354,
       "match_rate": 0.44
     },
     {
@@ -66,14 +66,8 @@
     {
       "ticker": "GS",
       "name": "Goldman Sachs",
-      "count": 10,
+      "count": 7,
       "heat": 6
-    },
-    {
-      "ticker": "PG",
-      "name": "Procter & Gamble",
-      "count": 4,
-      "heat": 4
     },
     {
       "ticker": "HUBB",
@@ -82,16 +76,16 @@
       "heat": 3
     },
     {
-      "ticker": "GOOGL",
-      "name": "Google",
-      "count": 3,
-      "heat": 3
-    },
-    {
       "ticker": "ESE",
       "name": "ESE",
       "count": 3,
       "heat": 3
+    },
+    {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "count": 2,
+      "heat": 2
     },
     {
       "ticker": "NVDA",
@@ -108,12 +102,6 @@
     {
       "ticker": "FITB",
       "name": "FITB",
-      "count": 2,
-      "heat": 2
-    },
-    {
-      "ticker": "CHRW",
-      "name": "CHRW",
       "count": 2,
       "heat": 2
     },
@@ -136,26 +124,38 @@
       "heat": 2
     },
     {
+      "ticker": "WPM",
+      "name": "Wheaton Precious",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "WMT",
+      "name": "Walmart",
+      "count": 1,
+      "heat": 1
+    },
+    {
       "ticker": "WFC",
       "name": "Wells Fargo",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "SPCX",
-      "name": "SPCX",
+      "ticker": "WDAY",
+      "name": "WDAY",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "RYT",
-      "name": "RYT",
+      "ticker": "TYL",
+      "name": "TYL",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "QCOM",
-      "name": "Qualcomm",
+      "ticker": "TTD",
+      "name": "TTD",
       "count": 1,
       "heat": 1
     }
@@ -165,8 +165,8 @@
     "top_score_tickers": "",
     "exceptional_count": 0,
     "cluster_count": 23,
-    "congress_flags": 50,
-    "convergence_count": 14
+    "congress_flags": 63,
+    "convergence_count": 13
   },
   "insider_sectors": [],
   "ml": {
@@ -656,14 +656,14 @@
     "distribution": {
       "crisis": 3,
       "elevated": 529,
-      "low_vol": 160,
-      "normal": 3352
+      "low_vol": 170,
+      "normal": 3367
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
-      "low_vol": 0.569,
-      "normal": 0.463
+      "low_vol": 0.565,
+      "normal": 0.464
     }
   },
   "features_pruned_history": {
@@ -733,52 +733,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.063,
+        "fill_rate": 0.1,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.063,
+        "fill_rate": 0.101,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.066,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.066,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.065,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.059,
+        "fill_rate": 0.065,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.025625,
-    "n_matched_signals": 4044,
-    "spy_avg_30d_return": 0.02528,
+    "alpha_all_signals": -0.025346,
+    "n_matched_signals": 4069,
+    "spy_avg_30d_return": 0.025102,
     "alpha_80plus": 0.020254,
     "n_80plus": 1,
     "alpha_60_79": 0.130918,
     "n_60_79": 26,
     "alpha_below_60": -0.003123,
     "n_below_60": 639,
-    "alpha_congress": -0.030989,
-    "beta_vs_spy": -0.4937,
-    "beta_vs_spy_raw": -0.5139
+    "alpha_congress": -0.030704,
+    "beta_vs_spy": -0.4943,
+    "beta_vs_spy_raw": -0.5141
   },
   "signal_concentration": {
     "top_ticker": null,
