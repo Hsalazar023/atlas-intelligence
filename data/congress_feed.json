@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-17T19:47:55.745934+00:00Z",
-  "count": 148,
+  "updated": "2026-09-17T22:32:06.811393+00:00Z",
+  "count": 150,
   "source": "FMP",
   "trades": [
     {
@@ -40,11 +40,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MSFT",
+      "Ticker": "JNJ",
       "TransactionDate": "2026-08-27",
       "Representative": "Thomas H. Kean",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-14",
@@ -64,15 +64,27 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "JNJ",
+      "Ticker": "MSFT",
       "TransactionDate": "2026-08-27",
       "Representative": "Thomas H. Kean",
       "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-14",
       "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "PWR",
+      "TransactionDate": "2026-08-27",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 15,
       "Source": "FMP"
     },
     {
@@ -100,19 +112,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PWR",
-      "TransactionDate": "2026-08-27",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 15,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "GS",
+      "Ticker": "WPM",
       "TransactionDate": "2026-08-26",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
@@ -128,6 +128,18 @@
       "TransactionDate": "2026-08-26",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "GS",
+      "TransactionDate": "2026-08-26",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -148,15 +160,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "WPM",
-      "TransactionDate": "2026-08-26",
+      "Ticker": "PHR",
+      "TransactionDate": "2026-08-25",
       "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 16,
+      "DisclosureDelay": 17,
       "Source": "FMP"
     },
     {
@@ -172,19 +184,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PHR",
-      "TransactionDate": "2026-08-25",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 17,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "SIG",
+      "Ticker": "MKL",
       "TransactionDate": "2026-08-25",
       "Representative": "April Delaney",
       "Transaction": "Sale",
@@ -196,7 +196,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "EME",
+      "Ticker": "HUBB",
       "TransactionDate": "2026-08-25",
       "Representative": "April Delaney",
       "Transaction": "Sale",
@@ -208,11 +208,95 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PKG",
+      "Ticker": "MIDD",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ROL",
       "TransactionDate": "2026-08-25",
       "Representative": "April Delaney",
       "Transaction": "Sale",
       "Range": "$50,001 - $100,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "VIK",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "WAB",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LTH",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ITT",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$250,001 - $500,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TSCO",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 16,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LYV",
+      "TransactionDate": "2026-08-25",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-10",
@@ -232,9 +316,9 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IBM",
+      "Ticker": "MIDD",
       "TransactionDate": "2026-08-24",
-      "Representative": "Maria Elvira Salazar",
+      "Representative": "April Delaney",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
@@ -304,6 +388,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "LBRDA",
+      "TransactionDate": "2026-08-20",
+      "Representative": "August Lee Pfluger",
+      "Transaction": "Exchange",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-15",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "CHTR",
       "TransactionDate": "2026-08-20",
       "Representative": "August Lee Pfluger",
@@ -316,15 +412,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LBRDA",
+      "Ticker": "HMN",
       "TransactionDate": "2026-08-20",
-      "Representative": "August Lee Pfluger",
-      "Transaction": "Exchange",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-09-15",
-      "DisclosureDelay": 26,
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 22,
       "Source": "FMP"
     },
     {
@@ -345,6 +441,18 @@
       "Representative": "Gilbert Cisneros",
       "Transaction": "Sale",
       "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 22,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AORT",
+      "TransactionDate": "2026-08-20",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-11",
@@ -373,42 +481,6 @@
       "Party": "",
       "DisclosureDate": "2026-09-11",
       "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AORT",
-      "TransactionDate": "2026-08-20",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "HMN",
-      "TransactionDate": "2026-08-20",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TDY",
-      "TransactionDate": "2026-08-20",
-      "Representative": "April Delaney",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 21,
       "Source": "FMP"
     },
     {
@@ -472,31 +544,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GMED",
-      "TransactionDate": "2026-08-19",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 23,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "FSV",
-      "TransactionDate": "2026-08-19",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 23,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CSGP",
+      "Ticker": "KMX",
       "TransactionDate": "2026-08-19",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
@@ -520,11 +568,47 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "CSGP",
+      "TransactionDate": "2026-08-19",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 23,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "FSV",
+      "TransactionDate": "2026-08-19",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 23,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "CDW",
       "TransactionDate": "2026-08-19",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 23,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "GMED",
+      "TransactionDate": "2026-08-19",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-11",
@@ -544,47 +628,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KMX",
+      "Ticker": "HUBB",
       "TransactionDate": "2026-08-19",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 23,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MRK",
-      "TransactionDate": "2026-08-19",
-      "Representative": "Maria Elvira Salazar",
+      "Representative": "April Delaney",
       "Transaction": "Purchase",
       "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "QCOM",
-      "TransactionDate": "2026-08-19",
-      "Representative": "Maria Elvira Salazar",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 22,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MRNA",
-      "TransactionDate": "2026-08-19",
-      "Representative": "Maria Elvira Salazar",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-10",
@@ -604,7 +652,79 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "INTU",
+      "Ticker": "PODD",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NVDA",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TSLA",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "VRSK",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TYL",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NET",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "WDAY",
       "TransactionDate": "2026-08-18",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
@@ -620,6 +740,42 @@
       "TransactionDate": "2026-08-18",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "COHR",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "INTU",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "IBM",
+      "TransactionDate": "2026-08-18",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -652,7 +808,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IBM",
+      "Ticker": "APH",
       "TransactionDate": "2026-08-18",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
@@ -664,7 +820,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "COHR",
+      "Ticker": "APP",
       "TransactionDate": "2026-08-18",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Sale",
@@ -700,7 +856,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "APH",
+      "Ticker": "GDDY",
       "TransactionDate": "2026-08-18",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
@@ -721,126 +877,6 @@
       "Party": "",
       "DisclosureDate": "2026-09-11",
       "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "APP",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "PODD",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NET",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NVDA",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TYL",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "VRSK",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "WDAY",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TSLA",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "GDDY",
-      "TransactionDate": "2026-08-18",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "HUBB",
-      "TransactionDate": "2026-08-18",
-      "Representative": "April Delaney",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 23,
       "Source": "FMP"
     },
     {
@@ -884,23 +920,11 @@
       "TransactionDate": "2026-08-14",
       "Representative": "Josh Gottheimer",
       "Transaction": "Purchase",
-      "Range": "$250,001 - $500,000",
+      "Range": "$500,001 - $1,000,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-15",
       "DisclosureDelay": 32,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "HUBB",
-      "TransactionDate": "2026-08-14",
-      "Representative": "April Delaney",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 27,
       "Source": "FMP"
     },
     {
@@ -997,18 +1021,6 @@
       "Party": "",
       "DisclosureDate": "2026-09-16",
       "DisclosureDelay": 35,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TSCO",
-      "TransactionDate": "2026-08-12",
-      "Representative": "April Delaney",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 29,
       "Source": "FMP"
     },
     {
@@ -1120,7 +1132,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HWM",
+      "Ticker": "PH",
       "TransactionDate": "2026-08-11",
       "Representative": "Byron Donalds",
       "Transaction": "Sale",
@@ -1132,7 +1144,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "PH",
+      "Ticker": "HWM",
       "TransactionDate": "2026-08-11",
       "Representative": "Byron Donalds",
       "Transaction": "Sale",
@@ -1192,18 +1204,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMCR",
-      "TransactionDate": "2026-08-10",
-      "Representative": "Thomas H. Kean",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-14",
-      "DisclosureDelay": 35,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "LIN",
       "TransactionDate": "2026-08-10",
       "Representative": "Thomas H. Kean",
@@ -1216,15 +1216,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MIDD",
+      "Ticker": "AMCR",
       "TransactionDate": "2026-08-10",
-      "Representative": "April Delaney",
+      "Representative": "Thomas H. Kean",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 31,
+      "DisclosureDate": "2026-09-14",
+      "DisclosureDelay": 35,
       "Source": "FMP"
     },
     {
@@ -1237,6 +1237,30 @@
       "Party": "",
       "DisclosureDate": "2026-09-01",
       "DisclosureDelay": 25,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "STRL",
+      "TransactionDate": "2026-08-07",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 35,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NEO",
+      "TransactionDate": "2026-08-07",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 35,
       "Source": "FMP"
     },
     {
@@ -1264,22 +1288,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NEO",
+      "Ticker": "SNOW",
       "TransactionDate": "2026-08-07",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 35,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DCO",
-      "TransactionDate": "2026-08-07",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -1300,23 +1312,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "SNOW",
-      "TransactionDate": "2026-08-07",
-      "Representative": "Gilbert Cisneros",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 35,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "STRL",
+      "Ticker": "DCO",
       "TransactionDate": "2026-08-07",
       "Representative": "Gilbert Cisneros",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-11",
@@ -1324,11 +1324,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LTH",
+      "Ticker": "FWONK",
       "TransactionDate": "2026-08-07",
       "Representative": "April Delaney",
       "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-10",
@@ -1360,6 +1360,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "AMAT",
+      "TransactionDate": "2026-08-06",
+      "Representative": "Josh Gottheimer",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-15",
+      "DisclosureDelay": 40,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "QSR",
       "TransactionDate": "2026-08-06",
       "Representative": "Josh Gottheimer",
@@ -1381,30 +1393,6 @@
       "Party": "",
       "DisclosureDate": "2026-09-15",
       "DisclosureDelay": 40,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "AMAT",
-      "TransactionDate": "2026-08-06",
-      "Representative": "Josh Gottheimer",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-15",
-      "DisclosureDelay": 40,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "LH",
-      "TransactionDate": "2026-08-06",
-      "Representative": "April Delaney",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-10",
-      "DisclosureDelay": 35,
       "Source": "FMP"
     },
     {
@@ -1444,6 +1432,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "NXPI",
+      "TransactionDate": "2026-08-05",
+      "Representative": "Gilbert Cisneros",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-11",
+      "DisclosureDelay": 37,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "EA",
       "TransactionDate": "2026-08-05",
       "Representative": "Gilbert Cisneros",
@@ -1456,15 +1456,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "NXPI",
+      "Ticker": "VIK",
       "TransactionDate": "2026-08-05",
-      "Representative": "Gilbert Cisneros",
+      "Representative": "April Delaney",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-09-11",
-      "DisclosureDelay": 37,
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 36,
       "Source": "FMP"
     },
     {
@@ -1516,6 +1516,30 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "VIK",
+      "TransactionDate": "2026-08-04",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 37,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "MIDD",
+      "TransactionDate": "2026-08-04",
+      "Representative": "April Delaney",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-10",
+      "DisclosureDelay": 37,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "TKNO",
       "TransactionDate": "2026-08-03",
       "Representative": "Richard Blumenthal",
@@ -1540,11 +1564,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LTH",
+      "Ticker": "BWXT",
       "TransactionDate": "2026-08-03",
       "Representative": "April Delaney",
       "Transaction": "Purchase",
-      "Range": "$15,001 - $50,000",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-10",
@@ -1756,11 +1780,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
+      "Ticker": "AMCPX",
       "TransactionDate": "2025-06-03",
       "Representative": "John Rose",
       "Transaction": "Sale",
-      "Range": "$250,001 - $500,000",
+      "Range": "$500,001 - $1,000,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-14",
@@ -1768,11 +1792,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMCPX",
+      "Ticker": "GOOGL",
       "TransactionDate": "2025-06-03",
       "Representative": "John Rose",
       "Transaction": "Sale",
-      "Range": "$500,001 - $1,000,000",
+      "Range": "$250,001 - $500,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-14",
