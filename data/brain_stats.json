@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-29T01:44:09.063747+00:00",
+  "generated": "2026-10-06T02:20:13.021968+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 387,
+      "n_trades": 388,
       "match_rate": 0.43
     },
     {
@@ -52,14 +52,14 @@
       "match_rate": 0.6
     },
     {
+      "name": "Armed Services",
+      "n_trades": 6,
+      "match_rate": 0.33
+    },
+    {
       "name": "Energy/Enviro",
       "n_trades": 5,
       "match_rate": 0.0
-    },
-    {
-      "name": "Armed Services",
-      "n_trades": 4,
-      "match_rate": 0.5
     }
   ],
   "congress_heatmap": [
@@ -70,32 +70,44 @@
       "heat": 2
     },
     {
-      "ticker": "WFC",
-      "name": "Wells Fargo",
-      "count": 1,
-      "heat": 1
-    },
-    {
       "ticker": "PG",
       "name": "Procter & Gamble",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "KO",
-      "name": "Coca-Cola",
+      "ticker": "NFLX",
+      "name": "Netflix",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "CB",
-      "name": "CB",
+      "ticker": "MSFT",
+      "name": "Microsoft",
       "count": 1,
       "heat": 1
     },
     {
-      "ticker": "BNS",
-      "name": "BNS",
+      "ticker": "HD",
+      "name": "Home Depot",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Google",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AMGN",
+      "name": "AMGN",
+      "count": 1,
+      "heat": 1
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple",
       "count": 1,
       "heat": 1
     }
@@ -104,9 +116,9 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 10,
-    "congress_flags": 7,
-    "convergence_count": 4
+    "cluster_count": 5,
+    "congress_flags": 9,
+    "convergence_count": 2
   },
   "insider_sectors": [],
   "ml": {
@@ -592,18 +604,18 @@
     }
   ],
   "regime": {
-    "current_regime": "low_vol",
+    "current_regime": "normal",
     "distribution": {
       "crisis": 3,
       "elevated": 529,
-      "low_vol": 364,
-      "normal": 3586
+      "low_vol": 471,
+      "normal": 3627
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
-      "low_vol": 0.511,
-      "normal": 0.456
+      "low_vol": 0.471,
+      "normal": 0.452
     }
   },
   "features_pruned_history": {
@@ -673,19 +685,19 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.092,
+        "fill_rate": 0.09,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.095,
+        "fill_rate": 0.09,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.073,
+        "fill_rate": 0.074,
         "status": "candidate"
       },
       "options_bullish": {
@@ -707,18 +719,18 @@
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.023397,
-    "n_matched_signals": 4482,
-    "spy_avg_30d_return": 0.021895,
+    "alpha_all_signals": -0.024698,
+    "n_matched_signals": 4630,
+    "spy_avg_30d_return": 0.021275,
     "alpha_80plus": 0.022698,
     "n_80plus": 1,
     "alpha_60_79": 0.132043,
     "n_60_79": 26,
     "alpha_below_60": -0.002703,
     "n_below_60": 639,
-    "alpha_congress": -0.029769,
-    "beta_vs_spy": -0.4569,
-    "beta_vs_spy_raw": -0.4739
+    "alpha_congress": -0.030091,
+    "beta_vs_spy": -0.4355,
+    "beta_vs_spy_raw": -0.4516
   },
   "signal_concentration": {
     "top_ticker": null,
