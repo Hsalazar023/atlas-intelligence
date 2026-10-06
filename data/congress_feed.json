@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-06T18:55:25.706279+00:00Z",
-  "count": 125,
+  "updated": "2026-10-06T21:06:50.881816+00:00Z",
+  "count": 126,
   "source": "FMP",
   "trades": [
     {
@@ -16,10 +16,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AMGN",
+      "Ticker": "MPC",
       "TransactionDate": "2026-09-22",
       "Representative": "David Taylor",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -40,10 +40,10 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MPC",
+      "Ticker": "AMGN",
       "TransactionDate": "2026-09-22",
       "Representative": "David Taylor",
-      "Transaction": "Sale",
+      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -61,18 +61,6 @@
       "Party": "",
       "DisclosureDate": "2026-10-06",
       "DisclosureDelay": 19,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CNP",
-      "TransactionDate": "2026-09-15",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 13,
       "Source": "FMP"
     },
     {
@@ -112,15 +100,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "GOOGL",
-      "TransactionDate": "2026-09-14",
-      "Representative": "Cleo Fields",
-      "Transaction": "Purchase",
-      "Range": "$1,001 - $15,000",
+      "Ticker": "CNP",
+      "TransactionDate": "2026-09-15",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
-      "DisclosureDate": "2026-10-02",
-      "DisclosureDelay": 18,
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 13,
       "Source": "FMP"
     },
     {
@@ -136,11 +124,23 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MRSH",
+      "Ticker": "GOOGL",
+      "TransactionDate": "2026-09-14",
+      "Representative": "Cleo Fields",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-10-02",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NEE",
       "TransactionDate": "2026-09-14",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
@@ -148,7 +148,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IQV",
+      "Ticker": "EMR",
       "TransactionDate": "2026-09-14",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -172,7 +172,31 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "HD",
+      "TransactionDate": "2026-09-14",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 14,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "AIO",
+      "TransactionDate": "2026-09-14",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 14,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "IQV",
       "TransactionDate": "2026-09-14",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -196,7 +220,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HD",
+      "Ticker": "MRSH",
       "TransactionDate": "2026-09-14",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -209,30 +233,6 @@
     },
     {
       "Ticker": "CDNS",
-      "TransactionDate": "2026-09-14",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "NEE",
-      "TransactionDate": "2026-09-14",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 14,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "EMR",
       "TransactionDate": "2026-09-14",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -292,7 +292,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HD",
+      "Ticker": "UNH",
       "TransactionDate": "2026-09-10",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -316,6 +316,18 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "HD",
+      "TransactionDate": "2026-09-10",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 18,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "NVO",
       "TransactionDate": "2026-09-10",
       "Representative": "Kevin Hern",
@@ -328,15 +340,15 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "UNH",
-      "TransactionDate": "2026-09-10",
+      "Ticker": "MRSH",
+      "TransactionDate": "2026-09-09",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 18,
+      "DisclosureDelay": 19,
       "Source": "FMP"
     },
     {
@@ -376,18 +388,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "MRSH",
-      "TransactionDate": "2026-09-09",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$100,001 - $250,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 19,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "JNJ",
       "TransactionDate": "2026-09-08",
       "Representative": "Lloyd Doggett",
@@ -412,7 +412,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ETV",
+      "Ticker": "IQV",
       "TransactionDate": "2026-09-08",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -436,7 +436,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "IQV",
+      "Ticker": "ETV",
       "TransactionDate": "2026-09-08",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -484,18 +484,6 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "ITW",
-      "TransactionDate": "2026-09-04",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$50,001 - $100,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 24,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "OKE",
       "TransactionDate": "2026-09-04",
       "Representative": "Kevin Hern",
@@ -508,7 +496,19 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BSX",
+      "Ticker": "DVN",
+      "TransactionDate": "2026-09-04",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 24,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "ITW",
       "TransactionDate": "2026-09-04",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -520,11 +520,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "DVN",
+      "Ticker": "BSX",
       "TransactionDate": "2026-09-04",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$100,001 - $250,000",
+      "Range": "$50,001 - $100,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
@@ -556,7 +556,31 @@
       "Source": "FMP"
     },
     {
+      "Ticker": "AIO",
+      "TransactionDate": "2026-09-03",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 25,
+      "Source": "FMP"
+    },
+    {
       "Ticker": "VUZI",
+      "TransactionDate": "2026-09-03",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 25,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "IQV",
       "TransactionDate": "2026-09-03",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -580,31 +604,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AIO",
-      "TransactionDate": "2026-09-03",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 25,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "ITW",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "LOW",
+      "Ticker": "SBUX",
       "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -628,115 +628,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LMT",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "MRSH",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "ROK",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TJX",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "SBUX",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DHR",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DVN",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$100,001 - $250,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CDNS",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CL",
-      "TransactionDate": "2026-09-02",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 26,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "HD",
       "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -760,91 +652,115 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "F",
-      "TransactionDate": "2026-08-31",
+      "Ticker": "DHR",
+      "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
+      "DisclosureDelay": 26,
       "Source": "FMP"
     },
     {
-      "Ticker": "HD",
-      "TransactionDate": "2026-08-31",
+      "Ticker": "DVN",
+      "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
+      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
+      "DisclosureDelay": 26,
       "Source": "FMP"
     },
     {
       "Ticker": "ITW",
-      "TransactionDate": "2026-08-31",
+      "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
       "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
+      "DisclosureDelay": 26,
       "Source": "FMP"
     },
     {
-      "Ticker": "HON",
-      "TransactionDate": "2026-08-31",
+      "Ticker": "CL",
+      "TransactionDate": "2026-09-02",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "TJX",
-      "TransactionDate": "2026-08-31",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "PTC",
-      "TransactionDate": "2026-08-31",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$50,001 - $100,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "CB",
-      "TransactionDate": "2026-08-31",
-      "Representative": "Kevin Hern",
-      "Transaction": "Purchase",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
+      "DisclosureDelay": 26,
       "Source": "FMP"
     },
     {
-      "Ticker": "PRGS",
+      "Ticker": "MRSH",
+      "TransactionDate": "2026-09-02",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LMT",
+      "TransactionDate": "2026-09-02",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TJX",
+      "TransactionDate": "2026-09-02",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CDNS",
+      "TransactionDate": "2026-09-02",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "LIN",
+      "TransactionDate": "2026-09-02",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 26,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "AIO",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -868,10 +784,34 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "KO",
+      "Ticker": "OKE",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
-      "Transaction": "Purchase",
+      "Transaction": "Sale",
+      "Range": "$50,001 - $100,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "PTC",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$50,001 - $100,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "F",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
       "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
@@ -880,11 +820,23 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "BSX",
+      "Ticker": "PRGS",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
       "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "XOM",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$100,001 - $250,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
@@ -893,18 +845,6 @@
     },
     {
       "Ticker": "DHR",
-      "TransactionDate": "2026-08-31",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$15,001 - $50,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "DVN",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -928,23 +868,11 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "OKE",
+      "Ticker": "HD",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
-      "Range": "$50,001 - $100,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 28,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "XOM",
-      "TransactionDate": "2026-08-31",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$100,001 - $250,000",
+      "Range": "$15,001 - $50,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
@@ -964,7 +892,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "AIO",
+      "Ticker": "DVN",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -976,11 +904,95 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "LIN",
+      "Ticker": "ITW",
       "TransactionDate": "2026-08-31",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
       "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CL",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CB",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "HON",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "KO",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Purchase",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "RA",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "TJX",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 28,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "NVO",
+      "TransactionDate": "2026-08-31",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
@@ -1012,7 +1024,7 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "HD",
+      "Ticker": "WMT",
       "TransactionDate": "2026-08-27",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
@@ -1036,35 +1048,35 @@
       "Source": "FMP"
     },
     {
-      "Ticker": "TJX",
-      "TransactionDate": "2026-08-27",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 32,
-      "Source": "FMP"
-    },
-    {
-      "Ticker": "WMT",
-      "TransactionDate": "2026-08-27",
-      "Representative": "Kevin Hern",
-      "Transaction": "Sale",
-      "Range": "$1,001 - $15,000",
-      "Chamber": "House",
-      "Party": "",
-      "DisclosureDate": "2026-09-28",
-      "DisclosureDelay": 32,
-      "Source": "FMP"
-    },
-    {
       "Ticker": "NVS",
       "TransactionDate": "2026-08-27",
       "Representative": "Kevin Hern",
       "Transaction": "Sale",
       "Range": "$15,001 - $50,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 32,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "CL",
+      "TransactionDate": "2026-08-27",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
+      "Chamber": "House",
+      "Party": "",
+      "DisclosureDate": "2026-09-28",
+      "DisclosureDelay": 32,
+      "Source": "FMP"
+    },
+    {
+      "Ticker": "HD",
+      "TransactionDate": "2026-08-27",
+      "Representative": "Kevin Hern",
+      "Transaction": "Sale",
+      "Range": "$1,001 - $15,000",
       "Chamber": "House",
       "Party": "",
       "DisclosureDate": "2026-09-28",
