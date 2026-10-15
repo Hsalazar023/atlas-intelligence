@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-14T22:48:36.651317+00:00Z",
+  "updated": "2026-10-14T23:59:35.278142+00:00Z",
   "count": 1500,
   "source": "SEC EDGAR EFTS + Form 4 XML",
   "filings": [
@@ -1721,6 +1721,97 @@
       "direction": "sell"
     },
     {
+      "company": "CoreWeave, Inc.",
+      "insider": "Agrawal Nitin",
+      "date": "2026-10-14",
+      "period": "2026-10-12",
+      "accession": "0001769628-26-000449",
+      "link": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000449/0001769628-26-000449-index.htm",
+      "ticker": "CRWV",
+      "title": "Chief Financial Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 15388.0,
+          "price": 79.95,
+          "value": 1230332.15,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 7191.0,
+          "price": 80.51,
+          "value": 578927.99,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 1809260.15,
+      "buy_shares": 0,
+      "sell_shares": 22579,
+      "direction": "sell"
+    },
+    {
+      "company": "CoreWeave, Inc.",
+      "insider": "Jones Jonathan",
+      "date": "2026-10-14",
+      "period": "2026-10-11",
+      "accession": "0001769628-26-000448",
+      "link": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000448/0001769628-26-000448-index.htm",
+      "ticker": "CRWV",
+      "title": "Chief Revenue Officer",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "M",
+          "shares": 42772.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        },
+        {
+          "code": "S",
+          "shares": 15811.0,
+          "price": 80.36,
+          "value": 1270651.01,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 15100.0,
+          "price": 77.18,
+          "value": 1165401.39,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 5969.0,
+          "price": 77.92,
+          "value": 465094.33,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 500.0,
+          "price": 78.74,
+          "value": 39372.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 2940518.74,
+      "buy_shares": 0,
+      "sell_shares": 37380,
+      "direction": "sell"
+    },
+    {
       "company": "NEXTERA ENERGY INC",
       "insider": "May James Michael",
       "date": "2026-10-14",
@@ -1927,6 +2018,91 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "exercise"
+    },
+    {
+      "company": "Absci Corp",
+      "insider": "McClain Sean",
+      "date": "2026-10-14",
+      "period": "2026-10-12",
+      "accession": "0001672688-26-000144",
+      "link": "https://www.sec.gov/Archives/edgar/data/1672688/000167268826000144/0001672688-26-000144-index.htm",
+      "ticker": "ABSI",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 23293.0,
+          "price": 10.16,
+          "value": 236656.88,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Absci Corp",
+      "insider": "Bedrick Todd",
+      "date": "2026-10-14",
+      "period": "2026-10-12",
+      "accession": "0001672688-26-000143",
+      "link": "https://www.sec.gov/Archives/edgar/data/1672688/000167268826000143/0001672688-26-000143-index.htm",
+      "ticker": "ABSI",
+      "title": "SVP, CAO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 22325.0,
+          "price": 10.16,
+          "value": 226822.0,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
+    },
+    {
+      "company": "Absci Corp",
+      "insider": "Jonasson Zachariah",
+      "date": "2026-10-14",
+      "period": "2026-10-12",
+      "accession": "0001672688-26-000141",
+      "link": "https://www.sec.gov/Archives/edgar/data/1672688/000167268826000141/0001672688-26-000141-index.htm",
+      "ticker": "ABSI",
+      "title": "CFO / CBO",
+      "roles": [
+        "Officer"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "F",
+          "shares": 387.0,
+          "price": 10.16,
+          "value": 3931.92,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "COMMERCIAL METALS Co",
@@ -4243,6 +4419,70 @@
       "direction": "exercise"
     },
     {
+      "company": "Inhibrx Biosciences, Inc.",
+      "insider": "Lappe Mark",
+      "date": "2026-10-14",
+      "period": "2026-10-14",
+      "accession": "0001366074-26-000006",
+      "link": "https://www.sec.gov/Archives/edgar/data/2007919/000136607426000006/0001366074-26-000006-index.htm",
+      "ticker": "INBX",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "P",
+          "shares": 2470.0,
+          "price": 84.07,
+          "value": 207654.63,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2470.0,
+          "price": 85.0,
+          "value": 209948.02,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 85.76,
+          "value": 8576.0,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2449.0,
+          "price": 84.07,
+          "value": 205889.14,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 2451.0,
+          "price": 85.0,
+          "value": 208333.04,
+          "acquired": true
+        },
+        {
+          "code": "P",
+          "shares": 100.0,
+          "price": 85.76,
+          "value": 8576.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 848976.84,
+      "sell_value": 0,
+      "buy_shares": 10040,
+      "sell_shares": 0,
+      "direction": "buy"
+    },
+    {
       "company": "Cboe Global Markets, Inc.",
       "insider": "Tomczyk Fredric J",
       "date": "2026-10-14",
@@ -5266,6 +5506,386 @@
       "buy_shares": 0,
       "sell_shares": 3300,
       "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "SCHWARZMAN STEPHEN A",
+      "date": "2026-10-14",
+      "period": "2026-10-13",
+      "accession": "0001193125-26-421998",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421998/0001193125-26-421998-index.htm",
+      "ticker": "BMBL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 67021.0,
+          "price": 3.54,
+          "value": 237408.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 922164.0,
+          "price": 3.54,
+          "value": 3266581.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 149705.0,
+          "price": 3.54,
+          "value": 530300.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 399476.0,
+          "price": 3.54,
+          "value": 1415063.83,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1211827.0,
+          "price": 3.54,
+          "value": 4292654.78,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10930.0,
+          "price": 3.54,
+          "value": 38717.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2387.0,
+          "price": 3.54,
+          "value": 8455.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 9789181.47,
+      "buy_shares": 0,
+      "sell_shares": 2763510,
+      "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "Blackstone Strategic Opportunity Associates L.L.C.",
+      "date": "2026-10-14",
+      "period": "2026-10-13",
+      "accession": "0001193125-26-421996",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421996/0001193125-26-421996-index.htm",
+      "ticker": "BMBL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 67021.0,
+          "price": 3.54,
+          "value": 237408.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 922164.0,
+          "price": 3.54,
+          "value": 3266581.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 149705.0,
+          "price": 3.54,
+          "value": 530300.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 399476.0,
+          "price": 3.54,
+          "value": 1415063.83,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1211827.0,
+          "price": 3.54,
+          "value": 4292654.78,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10930.0,
+          "price": 3.54,
+          "value": 38717.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2387.0,
+          "price": 3.54,
+          "value": 8455.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 9789181.47,
+      "buy_shares": 0,
+      "sell_shares": 2763510,
+      "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "BTO DE GP - NQ L.L.C.",
+      "date": "2026-10-14",
+      "period": "2026-10-13",
+      "accession": "0001193125-26-421987",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421987/0001193125-26-421987-index.htm",
+      "ticker": "BMBL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 67021.0,
+          "price": 3.54,
+          "value": 237408.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 922164.0,
+          "price": 3.54,
+          "value": 3266581.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 149705.0,
+          "price": 3.54,
+          "value": 530300.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 399476.0,
+          "price": 3.54,
+          "value": 1415063.83,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1211827.0,
+          "price": 3.54,
+          "value": 4292654.78,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10930.0,
+          "price": 3.54,
+          "value": 38717.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2387.0,
+          "price": 3.54,
+          "value": 8455.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 9789181.47,
+      "buy_shares": 0,
+      "sell_shares": 2763510,
+      "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "BTOA L.L.C.",
+      "date": "2026-10-14",
+      "period": "2026-10-13",
+      "accession": "0001193125-26-421982",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421982/0001193125-26-421982-index.htm",
+      "ticker": "BMBL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 67021.0,
+          "price": 3.54,
+          "value": 237408.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 922164.0,
+          "price": 3.54,
+          "value": 3266581.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 149705.0,
+          "price": 3.54,
+          "value": 530300.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 399476.0,
+          "price": 3.54,
+          "value": 1415063.83,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1211827.0,
+          "price": 3.54,
+          "value": 4292654.78,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10930.0,
+          "price": 3.54,
+          "value": 38717.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2387.0,
+          "price": 3.54,
+          "value": 8455.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 9789181.47,
+      "buy_shares": 0,
+      "sell_shares": 2763510,
+      "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "BX Buzz ML-2 Holdco L.P.",
+      "date": "2026-10-14",
+      "period": "2026-10-13",
+      "accession": "0001193125-26-421979",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421979/0001193125-26-421979-index.htm",
+      "ticker": "BMBL",
+      "title": "",
+      "roles": [
+        "10% Owner"
+      ],
+      "is_10b5_1": true,
+      "transactions": [
+        {
+          "code": "S",
+          "shares": 67021.0,
+          "price": 3.54,
+          "value": 237408.49,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 922164.0,
+          "price": 3.54,
+          "value": 3266581.54,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 149705.0,
+          "price": 3.54,
+          "value": 530300.02,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 399476.0,
+          "price": 3.54,
+          "value": 1415063.83,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 1211827.0,
+          "price": 3.54,
+          "value": 4292654.78,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 10930.0,
+          "price": 3.54,
+          "value": 38717.34,
+          "acquired": false
+        },
+        {
+          "code": "S",
+          "shares": 2387.0,
+          "price": 3.54,
+          "value": 8455.47,
+          "acquired": false
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 9789181.47,
+      "buy_shares": 0,
+      "sell_shares": 2763510,
+      "direction": "sell"
+    },
+    {
+      "company": "Bumble Inc.",
+      "insider": "Herd Whitney Wolfe",
+      "date": "2026-10-14",
+      "period": "2026-10-12",
+      "accession": "0001193125-26-421965",
+      "link": "https://www.sec.gov/Archives/edgar/data/1830043/000119312526421965/0001193125-26-421965-index.htm",
+      "ticker": "BMBL",
+      "title": "Chief Executive Officer",
+      "roles": [
+        "Officer",
+        "Director",
+        "10% Owner"
+      ],
+      "is_10b5_1": false,
+      "transactions": [
+        {
+          "code": "C",
+          "shares": 21230911.0,
+          "price": 0.0,
+          "value": 0.0,
+          "acquired": true
+        }
+      ],
+      "buy_value": 0,
+      "sell_value": 0,
+      "buy_shares": 0,
+      "sell_shares": 0,
+      "direction": "other"
     },
     {
       "company": "PROSPERITY BANCSHARES INC",
@@ -6697,309 +7317,6 @@
       "buy_shares": 0,
       "sell_shares": 0,
       "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Starrs Artie",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421703",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421703/0001193125-26-421703-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Silva Enrique",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421699",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421699/0001193125-26-421699-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Ryan Matthew T.",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421693",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421693/0001193125-26-421693-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Poulter Martha",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421687",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421687/0001193125-26-421687-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "TSAKOS ENERGY NAVIGATION LTD",
-      "insider": "Saroglou Georgios",
-      "date": "2026-10-14",
-      "period": "2026-10-12",
-      "accession": "0001193125-26-421684",
-      "link": "https://www.sec.gov/Archives/edgar/data/1166663/000119312526421684/0001193125-26-421684-index.htm",
-      "ticker": "TEN",
-      "title": "President and COO",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 5000.0,
-          "price": 53.2,
-          "value": 266000.0,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 266000.0,
-      "buy_shares": 0,
-      "sell_shares": 5000,
-      "direction": "sell"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "PASQUALE DOUGLAS M",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421683",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421683/0001193125-26-421683-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Hyter Michael",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421679",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421679/0001193125-26-421679-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Dine Brands Global, Inc.",
-      "insider": "Clark Amanda",
-      "date": "2026-10-14",
-      "period": "2026-10-09",
-      "accession": "0001193125-26-421673",
-      "link": "https://www.sec.gov/Archives/edgar/data/49754/000119312526421673/0001193125-26-421673-index.htm",
-      "ticker": "DIN",
-      "title": "",
-      "roles": [
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [],
-      "buy_value": 0,
-      "sell_value": 0,
-      "buy_shares": 0,
-      "sell_shares": 0,
-      "direction": "other"
-    },
-    {
-      "company": "Marex Group Ltd",
-      "insider": "Van Den Born Simon",
-      "date": "2026-10-14",
-      "period": "2026-10-12",
-      "accession": "0001193125-26-421661",
-      "link": "https://www.sec.gov/Archives/edgar/data/1997464/000119312526421661/0001193125-26-421661-index.htm",
-      "ticker": "MRX",
-      "title": "President",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 14012.0,
-          "price": 71.99,
-          "value": 1008667.83,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 1260.0,
-          "price": 72.63,
-          "value": 91514.81,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 1100182.64,
-      "buy_shares": 0,
-      "sell_shares": 15272,
-      "direction": "sell"
-    },
-    {
-      "company": "Marex Group Ltd",
-      "insider": "Tonucci Paolo",
-      "date": "2026-10-14",
-      "period": "2026-10-12",
-      "accession": "0001193125-26-421660",
-      "link": "https://www.sec.gov/Archives/edgar/data/1997464/000119312526421660/0001193125-26-421660-index.htm",
-      "ticker": "MRX",
-      "title": "See Remarks",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 15506.0,
-          "price": 71.98,
-          "value": 1116151.34,
-          "acquired": false
-        },
-        {
-          "code": "S",
-          "shares": 1160.0,
-          "price": 72.64,
-          "value": 84260.31,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 1200411.65,
-      "buy_shares": 0,
-      "sell_shares": 16666,
-      "direction": "sell"
-    },
-    {
-      "company": "NASDAQ, INC.",
-      "insider": "SKULE JEREMY",
-      "date": "2026-10-14",
-      "period": "2026-10-12",
-      "accession": "0001193125-26-421659",
-      "link": "https://www.sec.gov/Archives/edgar/data/1120193/000119312526421659/0001193125-26-421659-index.htm",
-      "ticker": "NDAQ",
-      "title": "EVP, CSO",
-      "roles": [
-        "Officer"
-      ],
-      "is_10b5_1": true,
-      "transactions": [
-        {
-          "code": "S",
-          "shares": 1125.0,
-          "price": 94.13,
-          "value": 105896.25,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 105896.25,
-      "buy_shares": 0,
-      "sell_shares": 1125,
-      "direction": "sell"
-    },
-    {
-      "company": "MiNK Therapeutics, Inc.",
-      "insider": "Buell Jennifer",
-      "date": "2026-10-14",
-      "period": "2026-10-11",
-      "accession": "0001193125-26-421529",
-      "link": "https://www.sec.gov/Archives/edgar/data/1840229/000119312526421529/0001193125-26-421529-index.htm",
-      "ticker": "INKT",
-      "title": "Chief Executive Officer",
-      "roles": [
-        "Officer",
-        "Director"
-      ],
-      "is_10b5_1": false,
-      "transactions": [
-        {
-          "code": "M",
-          "shares": 23191.0,
-          "price": 0.0,
-          "value": 0.0,
-          "acquired": true
-        },
-        {
-          "code": "S",
-          "shares": 6938.0,
-          "price": 10.56,
-          "value": 73265.28,
-          "acquired": false
-        }
-      ],
-      "buy_value": 0,
-      "sell_value": 73265.28,
-      "buy_shares": 0,
-      "sell_shares": 6938,
-      "direction": "sell"
     },
     {
       "company": "Clean Energy Fuels Corp.",
