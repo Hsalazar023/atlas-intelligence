@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-29T01:51:13.569723+00:00",
+  "generated": "2026-10-30T01:47:44.782420+00:00",
   "alpha": {
     "value": 0.1214,
     "label": "+12.1%",
@@ -33,7 +33,7 @@
   "committees": [
     {
       "name": "Science & Tech",
-      "n_trades": 448,
+      "n_trades": 449,
       "match_rate": 0.43
     },
     {
@@ -63,6 +63,12 @@
     }
   ],
   "congress_heatmap": [
+    {
+      "ticker": "GS",
+      "name": "Goldman Sachs",
+      "count": 3,
+      "heat": 3
+    },
     {
       "ticker": "TSM",
       "name": "TSMC",
@@ -98,8 +104,8 @@
     "top_score": 0,
     "top_score_tickers": "",
     "exceptional_count": 0,
-    "cluster_count": 11,
-    "congress_flags": 5,
+    "cluster_count": 9,
+    "congress_flags": 8,
     "convergence_count": 1
   },
   "insider_sectors": [],
@@ -590,14 +596,14 @@
     "distribution": {
       "crisis": 3,
       "elevated": 529,
-      "low_vol": 512,
-      "normal": 3883
+      "low_vol": 546,
+      "normal": 3869
     },
     "hit_rates": {
       "crisis": 0.333,
       "elevated": 0.367,
-      "low_vol": 0.457,
-      "normal": 0.441
+      "low_vol": 0.445,
+      "normal": 0.442
     }
   },
   "features_pruned_history": {
@@ -667,52 +673,52 @@
         "status": "active"
       },
       "short_interest_pct": {
-        "fill_rate": 0.113,
+        "fill_rate": 0.126,
         "status": "candidate"
       },
       "short_interest_change": {
-        "fill_rate": 0.114,
+        "fill_rate": 0.128,
         "status": "candidate"
       },
       "institutional_holders": {
-        "fill_rate": 0.065,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "institutional_pct_held": {
-        "fill_rate": 0.065,
+        "fill_rate": 0.069,
         "status": "candidate"
       },
       "options_bullish": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_unusual_calls": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_insider_confluence": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.072,
         "status": "candidate"
       },
       "options_bearish_divergence": {
-        "fill_rate": 0.068,
+        "fill_rate": 0.072,
         "status": "candidate"
       }
     }
   },
   "strategy_metrics": {
-    "alpha_all_signals": -0.02699,
-    "n_matched_signals": 4927,
-    "spy_avg_30d_return": 0.020612,
+    "alpha_all_signals": -0.027173,
+    "n_matched_signals": 4947,
+    "spy_avg_30d_return": 0.020511,
     "alpha_80plus": 0.022698,
     "n_80plus": 1,
     "alpha_60_79": 0.132043,
     "n_60_79": 26,
     "alpha_below_60": -0.002703,
     "n_below_60": 639,
-    "alpha_congress": -0.03053,
-    "beta_vs_spy": -0.4168,
-    "beta_vs_spy_raw": -0.433
+    "alpha_congress": -0.030528,
+    "beta_vs_spy": -0.4126,
+    "beta_vs_spy_raw": -0.4274
   },
   "signal_concentration": {
     "top_ticker": null,
